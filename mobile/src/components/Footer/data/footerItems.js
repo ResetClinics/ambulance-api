@@ -2,31 +2,31 @@ export const footerItems = [
   {
     title: 'Бригада',
     url: '/',
-    image: '111'
+    image:  '../../../../src/images/footer1.svg',
   },
   {
     title: 'Текущий вызов',
     url: '/',
-    image: '222'
+    image:  '../../../../src/images/footer2.svg',
   },
   {
     title: 'История вызовов',
     url: '/',
-    image: '333'
+    image:  '../../../../src/images/footer3.svg',
   },
   {
     title: 'Чат',
     url: '/',
-    image: '444'
+    image:  '../../../../src/images/footer4.svg',
   },
   {
     title: 'Уведомления',
     url: '/',
-    image: '555'
+    image:  '../../../../src/images/footer5.svg',
   },
   {
     title: 'Профиль',
     url: '/',
-    image: '666'
+    image:  '../../../../src/images/footer6.svg',
   }
 ]

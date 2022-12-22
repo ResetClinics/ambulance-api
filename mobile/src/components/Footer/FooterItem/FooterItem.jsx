@@ -4,13 +4,14 @@ import React, { useState } from "react";
 import { COLORS, SIZES } from "../../../../constants";
 
 export const FooterItem = (item) => {
+  const {title, image} = item
   const [active, setActive] = useState(null)
 
   return (
     <TouchableHighlight style={styles.root} onPress={() => setActive(item.index)}>
       <View >
-        <Image source={{uri: item.image}} />
-        <Text style={styles.text}>{item.title}</Text>
+        <Image source={require('../../../images/favicon.png')} />
+        <Text style={styles.text}>{title}</Text>
       </View>
     </TouchableHighlight>
   )

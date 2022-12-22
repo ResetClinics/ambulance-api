@@ -6,7 +6,7 @@ export const Header = () => {
     <View style={styles.root}>
       <Image
         style={styles.img}
-        source={require('./favicon.png')}
+        source={require('../../images/favicon.png')}
       />
       <TouchableHighlight onPress={() => Linking.openURL("https://google.com")}>
         <Text>1212</Text>
