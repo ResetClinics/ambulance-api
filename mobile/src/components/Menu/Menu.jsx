@@ -5,7 +5,7 @@ import { Brigade } from "../Brigade";
 import { CurrentCall } from "../CurrentCall";
 import { COLORS } from "../../../constants";
 import { Image } from "react-native";
-import {Chat} from "../Chat";
+import { Chat } from "../Chat";
 
 const Tab = createBottomTabNavigator();
 
@@ -73,6 +73,7 @@ export const Menu = () => {
 
           // You can return any component that you like here!
           return <Image source={require(img5)} size={size} color={color} style={styles.img}/>
+          /*return <Ionicons name={iconName} size={size} color={color} />;*/
         },
         tabBarActiveTintColor: COLORS.primary,
         tabBarInactiveTintColor: COLORS.gray,
