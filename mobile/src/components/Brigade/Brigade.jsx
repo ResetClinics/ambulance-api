@@ -1,7 +1,7 @@
 import {Image, Text} from "react-native";
 import React from "react";
 import { COLORS } from "../../../constants";
-import { Layout } from "../../shared";
+import {Btn, Layout} from "../../shared";
 
 const img = '../../../assets/reload.png'
 
@@ -10,6 +10,7 @@ export const Brigade = () => {
     <Layout>
       <Text style={styles.text}>Бригада еще не сформирована</Text>
       <Image source={require(img)} style={styles.img}/>
+      <Btn>Завершить смену</Btn>
     </Layout>
   );
 }
