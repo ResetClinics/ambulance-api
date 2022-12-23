@@ -1,0 +1,159 @@
+version: "3.9"
+services:
+
+  traefik:
+    image: traefik:2.4
+    command:
+      --providers.docker=true
+      --providers.docker.exposedByDefault=false
+      --entryPoints.http.address=:80
+    ports:
+      - "80:80"
+    networks:
+      - traefik-public
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik-public
+
+  api:
+    build:
+      context: api/docker
+      dockerfile: development/nginx/Dockerfile
+    volumes:
+      - ./api:/app
+    networks:
+      - traefik-public
+      - default
+    ports:
+      - "8080:80"
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik-public
+      - traefik.http.routers.api.rule=(Host(`localhost`) || Host(`www.localhost`)) && (PathPrefix(`/api`) || PathPrefix(`/bundles`))
+      - traefik.http.routers.api.entryPoints=http
+      - traefik.http.services.api.loadBalancer.server.port=80
+      - traefik.http.middlewares.api-redirect.redirectRegex.regex=^(https?://)www.localhost/(.*)$$
+      - traefik.http.middlewares.api-redirect.redirectRegex.replacement=$${1}localhost/$${2}
+      - traefik.http.middlewares.api-redirect.redirectRegex.permanent=true
+      - traefik.http.routers.api.middlewares=api-redirect
+
+  api-php-fpm:
+    build:
+      context: api/docker
+      dockerfile: development/php-fpm/Dockerfile
+    environment:
+      APP_ENV: dev
+      APP_DEBUG: 1
+      PHP_IDE_CONFIG: serverName=API
+      DB_HOST: api-postgres
+      DB_USER: app
+      DB_PASSWORD: secret
+      DB_NAME: app
+      MAILER_HOST: mailer
+      MAILER_PORT: 1025
+      MAILER_USER: app
+      MAILER_PASSWORD: secret
+      MAILER_ENCRYPTION: tcp
+      MAILER_FROM_EMAIL: mail@app.test
+      FRONTEND_URL: http://localhost
+      SENTRY_DSN: ""
+    volumes:
+      - ./api:/app
+
+  api-php-cli:
+    build:
+      context: api/docker
+      dockerfile: development/php-cli/Dockerfile
+    environment:
+      APP_ENV: dev
+      APP_DEBUG: 1
+      DB_HOST: api-postgres
+      DB_USER: app
+      DB_PASSWORD: secret
+      DB_NAME: app
+      MAILER_HOST: mailer
+      MAILER_PORT: 1025
+      MAILER_USER: app
+      MAILER_PASSWORD: secret
+      MAILER_ENCRYPTION: tcp
+      MAILER_FROM_EMAIL: mail@app.test
+      FRONTEND_URL: http://localhost
+      SENTRY_DSN: null
+    volumes:
+      - ./api:/app
+
+  api-postgres:
+    image: postgres:13.1-alpine
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: app
+    volumes:
+      - api-postgres:/var/lib/postgresql/data
+    ports:
+      - "54321:5432"
+
+  api-postgres-backup:
+    build:
+      context: ./api/docker/common
+      dockerfile: postgres-backup/Dockerfile
+    environment:
+      BACKUP_NAME: evosreda_api-postgres
+      POSTGRES_HOST: api-postgres
+      POSTGRES_DB: app
+      POSTGRES_USERNAME: app
+      POSTGRES_PASSWORD: secret
+      AWS_ACCESS_KEY_ID: storage_app
+      AWS_SECRET_ACCESS_KEY_FILE: /run/secrets/backup_aws_secret_access_key
+      AWS_DEFAULT_REGION: region
+      S3_ENDPOINT: http://backup-storage:9000
+      S3_BUCKET: backup
+    secrets:
+      - backup_aws_secret_access_key
+    command: sh -c 'wait-for-it api-postgres:5432 -t 20 && backup'
+
+  mailer:
+    image: mailhog/mailhog
+    networks:
+      - traefik-public
+      - default
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik-public
+      - traefik.http.routers.mailer.rule=Host(`mailer.localhost`)
+      - traefik.http.routers.mailer.entryPoints=http
+      - traefik.http.services.mailer.loadBalancer.server.port=8025
+
+  backup-storage:
+    image: minio/minio
+    environment:
+      MINIO_ROOT_USER: storage_app
+      MINIO_ROOT_PASSWORD_FILE: /run/secrets/backup_aws_secret_access_key
+    secrets:
+      - backup_aws_secret_access_key
+    volumes:
+      - backup-storage:/data
+    entrypoint: sh -c 'mkdir -p /data/backup && docker-entrypoint.sh minio server /data --console-address ":80"'
+    networks:
+      - traefik-public
+      - default
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik-public
+      - traefik.http.routers.backup-storage.rule=Host(`backup-storage.localhost`)
+      - traefik.http.routers.backup-storage.entryPoints=http
+      - traefik.http.services.backup-storage.loadBalancer.server.port=80
+
+secrets:
+  backup_aws_secret_access_key:
+    file: ./docker/development/secrets/backup_aws_secret_access_key
+
+volumes:
+  api-postgres:
+  backup-storage:
+
+networks:
+  traefik-public:
+    name: traefik-public
