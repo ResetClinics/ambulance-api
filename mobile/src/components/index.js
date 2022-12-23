@@ -1,8 +1,1 @@
 export { BottomNav } from './BottomNav'
-export { CurrentCall } from './CurrentCall'
-export { Chat } from './Chat'
-export { CallHistory } from './CallHistory'
-export { Menu } from './Menu'
-export { Notifications } from './Notifications'
-export { Profile } from './Profile'
-export { Team } from './Team'

@@ -1,11 +1,12 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { Menu } from "../components";
+import { Routes } from "../navigation/Routes";
+
 
 export const Main = () => {
   return (
     <NavigationContainer>
-      <Menu />
+      <Routes />
     </NavigationContainer>
   )
 }
