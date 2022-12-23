@@ -23,8 +23,3 @@ const theme = {
     tertiary: '#a1b2c3',
   },
 };
-
-
-for (let key in MD3LightTheme) {
-  console.log(key)
-}
