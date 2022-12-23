@@ -24,7 +24,7 @@ export const Team = () => {
       return <Layout>
         <TeamList />
         <View style={styles.btnHolder}>
-          <Button mode="contained" style={styles.btn} onPress={() => setStatus(STATUSES.NOT_ASSIGNED)}>Завершить</Button>
+          <Button mode="outlined" style={styles.btn} onPress={() => setStatus(STATUSES.NOT_ASSIGNED)}>Завершить смену</Button>
         </View>
       </Layout>
     default:

@@ -1,7 +1,9 @@
-import { View } from "react-native";
+import {Image, View} from "react-native";
 import React from "react";
 import { Card, Title, Paragraph } from 'react-native-paper';
 import { COLORS } from "../../../../constants";
+
+const icon = '../../../../assets/label.png'
 
 const data = [
   {
@@ -9,19 +11,22 @@ const data = [
     speciality: 'Психиатор- нарколог'
   },
   {
-    name: 'Агибалова Татьяна Васильевна',
-    speciality: 'Психиатор- нарколог'
+    name: 'Иван Иванович Иванов',
+    speciality: 'Администратор'
   },
 ]
 
 const CardItem = (item) => {
   return (
-    <Card style={styles.root}>
-      <Card.Content>
-        <Title>{item.name}</Title>
-        <Paragraph>{item.speciality}</Paragraph>
-      </Card.Content>
-    </Card>
+    <View style={styles.wrapper}>
+      <Card style={styles.root}>
+        <Card.Content>
+          <Title>{item.name}</Title>
+          <Paragraph>{item.speciality}</Paragraph>
+        </Card.Content>
+      </Card>
+      <Image style={styles.label} source={require(icon)} />
+    </View>
   )
 }
 
@@ -42,5 +47,17 @@ const styles = {
     borderColor: COLORS.primary,
     borderWidth: 1,
     marginBottom: 32
+  },
+  wrapper: {
+    position: 'relative',
+  },
+  label: {
+    position: 'absolute',
+    width: 46,
+    height: 46,
+    borderRadius: 100,
+    backgroundColor: COLORS.white,
+    right: 10,
+    bottom: 10
   }
 }
