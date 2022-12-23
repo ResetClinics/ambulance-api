@@ -1,1 +1,0 @@
-export { Brigade } from './Brigade'

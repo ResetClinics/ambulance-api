@@ -1,16 +1,20 @@
 import {Image, Text} from "react-native";
 import React from "react";
 import { COLORS } from "../../../constants";
-import {Btn, Layout} from "../../shared";
+import { Layout } from "../../shared";
+import { Button } from "react-native-paper";
 
 const img = '../../../assets/reload.png'
 
-export const Brigade = () => {
+export const Team = () => {
   return (
     <Layout>
       <Text style={styles.text}>Бригада еще не сформирована</Text>
       <Image source={require(img)} style={styles.img}/>
-      <Btn>Завершить смену</Btn>
+      <Button mode="contained-tonal">2121212</Button>
+      <Button mode="outlined" raised >
+        Press me
+      </Button>
     </Layout>
   );
 }

@@ -1,103 +1,97 @@
-import Ionicons from "react-native-vector-icons/Ionicons";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Brigade } from "../Brigade";
+import { Team } from "../Team";
 import { CurrentCall } from "../CurrentCall";
 import { COLORS } from "../../../constants";
 import { Image } from "react-native";
 import { Chat } from "../Chat";
+import { CallHistory } from "../CallHistory";
+import {Notifications} from "../Notifications";
+import {Profile} from "../Profile";
 
 const Tab = createBottomTabNavigator();
 
-const img1 = '../../../assets/menu/img1.png'
-const img1_1 = '../../../assets/menu/img1_1.png'
-const img2 = '../../../assets/menu/img2.png'
-const img2_2 = '../../../assets/menu/img2_2.png'
-const img3 = '../../../assets/menu/img3.png'
-const img3_3 = '../../../assets/menu/img3_3.png'
-const img4 = '../../../assets/menu/img4.png'
-const img4_4 = '../../../assets/menu/img4_4.png'
-const img5 = '../../../assets/menu/img5.png'
-const img5_5 = '../../../assets/menu/img5_5.png'
-const img6 = '../../../assets/menu/img6.png'
-const img6_6 = '../../../assets/menu/img6_6.png'
+const teamIcon = '../../../assets/menu/team.png'
+const teamIcon_color = '../../../assets/menu/team_color.png'
+const currentCallIcon = '../../../assets/menu/currentCall.png'
+const currentCallIcon_color = '../../../assets/menu/currentCall_color.png'
+const callHistoryIcon = '../../../assets/menu/callHistory.png'
+const callHistoryIcon_color = '../../../assets/menu/callHistory_color.png'
+const chatIcon = '../../../assets/menu/chat.png'
+const chatIcon_color = '../../../assets/menu/chat_color.png'
+const notificationIcon = '../../../assets/menu/notification.png'
+const notificationIcon_color = '../../../assets/menu/notification_color.png'
+const profileIcon = '../../../assets/menu/profile.png'
+const profileIcon_color = '../../../assets/menu/profile_color.png'
 
-const menuItems = [
-  {
-    name: "Бригада",
-    component: Brigade
+const icons = {
+  "Бригада": {
+    default: require(teamIcon),
+    focused: require(teamIcon_color),
   },
-  {
-    name: "Текущий вызов",
-    component: CurrentCall
+  "Текущий вызов": {
+    default: require(currentCallIcon),
+    focused: require(currentCallIcon_color),
   },
-  {
-    name: "История вызовов",
-    component: CurrentCall
+  "История вызовов": {
+    default: require(callHistoryIcon),
+    focused: require(callHistoryIcon_color),
   },
-  {
-    name: "Чат",
-    component: Chat
+  "Чат": {
+    default: require(chatIcon),
+    focused: require(chatIcon_color),
   },
-  {
-    name: "Уведомления",
-    component: CurrentCall
+  "Уведомления": {
+    default: require(notificationIcon),
+    focused: require(notificationIcon_color),
   },
-  {
-    name: "Профиль",
-    component: CurrentCall
+  "Профиль": {
+    default: require(profileIcon),
+    focused: require(profileIcon_color),
+  },
+  "default": {
+    default: require(teamIcon),
+    focused: require(teamIcon_color),
   }
-]
+}
+
+const tabBarIcon = (focused, color, size, route) => {
+  let currentIcons;
+  if (icons.hasOwnProperty(route.name)) {
+    currentIcons = icons[route.name]
+  } else {
+    currentIcons = icons["default"]
+  }
+  let iconName = focused ? currentIcons.focused : currentIcons.default
+  return <Image source={iconName} size={size} color={color} style={styles.img} />
+}
 
 export const Menu = () => {
   return (
     <Tab.Navigator
-      screenOptions={({route}) => ({
-        tabBarStyle: {paddingTop: 4, height: 60, paddingBottom: 10},
-        tabBarIcon: ({focused, color, size}) => {
-          let iconName;
-
-          if (route.name === 'Бригада') {
-            iconName = focused ? img1 : img1_1;
-          } else if (route.name === 'Текущий вызов') {
-            iconName = focused ? img2 : img2_2;
-          } else if (route.name === 'История вызовов') {
-            iconName = focused ? img3 : img3_3;
-          } else if (route.name === 'Чат') {
-            iconName = focused ? img4 : img4_4;
-          } else if (route.name === 'Уведомления') {
-            iconName = focused ? img5 : img5_5;
-          } else if (route.name === 'Профиль') {
-            iconName = focused ? img6 : img6_6;
-          }
-
-          // You can return any component that you like here!
-          return <Image source={require(img5)} size={size} color={color} style={styles.img}/>
-          /*return <Ionicons name={iconName} size={size} color={color} />;*/
-        },
-        tabBarActiveTintColor: COLORS.primary,
-        tabBarInactiveTintColor: COLORS.gray,
-      })}
+      screenOptions={({route}) => {
+        return ({
+            tabBarStyle: {paddingTop: 4, height: 60, paddingBottom: 10},
+            tabBarIcon: ({focused, color, size}) => tabBarIcon(focused, color, size, route),
+            tabBarActiveTintColor: COLORS.primary,
+            tabBarInactiveTintColor: COLORS.gray,
+          })
+        }
+      }
     >
-      <Tab.Screen name="Бригада" component={Brigade} style={styles.tab}/>
-      <Tab.Screen name="Текущий вызов" component={CurrentCall} style={styles.tab}/>
-      <Tab.Screen name="История вызовов" component={CurrentCall} style={styles.tab}/>
-      <Tab.Screen name="Чат" component={Chat} style={styles.tab}/>
-      <Tab.Screen name="Уведомления" component={CurrentCall} style={styles.tab} options={{tabBarBadge: 3}}/>
-      <Tab.Screen name="Профиль" component={CurrentCall} style={styles.tab}/>
+      <Tab.Screen name="Бригада" component={Team} />
+      <Tab.Screen name="Текущий вызов" component={CurrentCall} />
+      <Tab.Screen name="История вызовов" component={CallHistory} />
+      <Tab.Screen name="Чат" component={Chat} />
+      <Tab.Screen name="Уведомления" component={Notifications} options={{tabBarBadge: 3}} />
+      <Tab.Screen name="Профиль" component={Profile} />
     </Tab.Navigator>
   );
 }
 
 const styles = {
-  tab: {
-    display: 'inline-block',
-    fontSize: 25,
-    color: COLORS.gray,
-  },
   img: {
     width: 24,
     height: 24,
   }
 }
-
