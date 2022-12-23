@@ -13,11 +13,6 @@ export default function App() {
 }
 AppRegistry.registerComponent(expo.name, () => App)
 
-console.log(MD3LightTheme.colors)
-for (let key in MD3LightTheme.fonts) {
-  console.log(key)
-}
-
 const theme = {
   ...MD3LightTheme, // or MD3DarkTheme
   roundness: 1,
