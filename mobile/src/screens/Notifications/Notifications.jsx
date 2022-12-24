@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Card, Title, Paragraph } from 'react-native-paper';
 import { Layout } from "../../shared";
 import { View, Text, Image } from "react-native";
@@ -22,29 +22,43 @@ const data = [
   },
 ]
 
-const CardItem = (item) => {
+const CardItem = ({ address, subject, date, time, comment, onAccepting } ) => {
+  const [active, setActive] = useState(false)
+
+  const onDetailedClick = () => {
+    setActive(true)
+  }
+
+  const BtnChange = () => {
+    if(active) {
+      return <Button style={styles.btn}>Позвонить заказчику</Button>
+    } else {
+      return <Button onPress={onDetailedClick}>Подробнее</Button>
+    }
+  }
+
   return (
     <Card style={styles.root} children>
       <Card.Content>
-        <Title>{item.address}</Title>
-        <Paragraph>{item.subject}</Paragraph>
+        <Title>{address}</Title>
+        <Paragraph>{subject}</Paragraph>
         <View style={styles.date}>
           <Text style={styles.text}>
             Дата:
             {' '}
-            {item.date}
+            {date}
             {' '}
             г.
           </Text>
           <Text style={styles.text}>
             Время заказа:
             {' '}
-            {item.time}
+            {time}
           </Text>
         </View>
-        <View style={styles.content}>
+        <View style={active ? styles.active : styles.content}>
           <Text style={styles.info}>Коментарий к вызову:</Text>
-          <Text style={styles.info}>{item.comment}</Text>
+          <Text style={styles.info}>{comment}</Text>
           <View style={styles.wrap}>
             <Button style={styles.btn} icon={() => (
               <Image
@@ -62,20 +76,22 @@ const CardItem = (item) => {
         </View>
       </Card.Content>
       <Card.Actions style={styles.actions}>
-        {/*<Button style={styles.btn}>Позвонить заказчику</Button>*/}
-        <Button>Подробнее</Button>
-        <Button>Принять</Button>
+        {BtnChange()}
+        <Button onPress={() => onAccepting()}>Принять</Button>
       </Card.Actions>
     </Card>
   )
 }
 
-export const Notifications = () => {
+export const Notifications = ({navigation}) => {
+  const onAccepting = () => {
+    navigation.navigate('Текущий вызов')
+  }
   return (
     <Layout>
       <View>
         {
-          data.map((item, key) => <CardItem {...item} key={key}/>)
+          data.map((item, key) => <CardItem {...item} key={key} onAccepting={onAccepting} />)
         }
       </View>
     </Layout>
@@ -123,6 +139,9 @@ const styles = {
     marginBottom: 5
   },
   content: {
-    /*display: 'none'*/
+    display: 'none'
+  },
+  active: {
+    display: 'flex'
   }
 }
