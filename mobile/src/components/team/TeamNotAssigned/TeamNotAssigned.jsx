@@ -9,6 +9,7 @@ export const TeamNotAssigned = ({onPress}) => {
     <Layout>
       <Text style={styles.text}>Бригада еще не сформирована</Text>
       <IconButton
+        loading
         style={styles.img}
         mode='contained'
         icon="reload"
