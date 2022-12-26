@@ -2,7 +2,7 @@ import { Image, Text, View } from "react-native";
 import React, { useState } from "react";
 import { CardLayout } from "../../components";
 import { Layout } from "../../shared";
-import { Button } from "react-native-paper";
+import { Button, TextInput } from "react-native-paper";
 import { COLORS, SIZES } from "../../../constants";
 
 const comment = 'Мужчина ,  43 года нужна детоксикация организма , возмоно психотерапевтическая помощь',
@@ -13,6 +13,13 @@ const comment = 'Мужчина ,  43 года нужна детоксикаци
 
 
 export const CurrentCall = () => {
+  const [active, setActive] = useState(false);
+  const [text, setText] = React.useState("");
+
+  const onDetailedClick = () => {
+    setActive(!active)
+  }
+
   const STATUSES = {
     ASSIGNED: 'assigned',
     ROUTE: 'route'
@@ -22,8 +29,7 @@ export const CurrentCall = () => {
     case STATUSES.ROUTE:
       return <Layout>
         <View style={styles.btnHolder}>
-          <Button mode="outlined" raised onPress={() => setStatus(STATUSES.NOT_ASSIGNED)}>Бригада не готова к дежурству</Button>
-          <Button mode="contained" style={styles.btn} onPress={() => setStatus(STATUSES.ACCEPTED)}>Бригада вышла на дежурство</Button>
+          <Button mode="text" onPress={() => setStatus(STATUSES.ASSIGNED)}>Маршрут до места вызова</Button>
         </View>
       </Layout>
     default:
@@ -31,9 +37,9 @@ export const CurrentCall = () => {
         <Layout>
           <CardLayout address={address} subject={subject} date={date} time={time}>
             <View>
-              <Text style={styles.info}>Коментарий к вызову:</Text>
-              <Text style={styles.info}>{comment}</Text>
-              <View style={styles.wrap}>
+              <Text style={active ? styles.activeColor : styles.info}>Коментарий к вызову:</Text>
+              <Text style={active ? styles.activeColor : styles.info}>{comment}</Text>
+              <View style={active ? styles.hide : styles.wrap}>
                 <Button
                   style={styles.btn}
                   onPress={() => setStatus(STATUSES.ROUTE)}
@@ -51,10 +57,62 @@ export const CurrentCall = () => {
                 )}>Отменить вызов</Button>
               </View>
             </View>
+            <View style={active ? styles.show : styles.hide}>
+              <Text style={styles.info}>Данные заказчика:</Text>
+              <View style={styles.inputsHolder}>
+                <TextInput
+                  style={styles.input}
+                  mode="outlined"
+                  focused
+                  label="Фамилия Имя Отчество"
+                  value={text}
+                  onChangeText={text => setText(text)}
+                />
+                <TextInput
+                  style={styles.input}
+                  mode="outlined"
+                  focused
+                  label="Дата рождения"
+                  value={text}
+                  onChangeText={text => setText(text)}
+                />
+                <TextInput
+                  style={styles.input}
+                  mode="outlined"
+                  focused
+                  label="Данные документа"
+                  value={text}
+                  onChangeText={text => setText(text)}
+                />
+              </View>
+              <View style={styles.wrapper}>
+                <Button
+                  style={styles.btn}
+                  icon={() => (
+                    <Image
+                      source={require('../../../assets/close.png')}
+                      style={{ width: 24, height: 24 }}
+                    />
+                  )}>Добавить услуги</Button>
+                <Button icon={() => (
+                  <Image
+                    source={require('../../../assets/close.png')}
+                    style={{ width: 24, height: 24 }}
+                  />
+                )}>Добавить список медикаментов</Button>
+              </View>
+              <Button mode="contained" raised style={styles.gray} textColor={COLORS.gray}>Стоимость оказаных услуг</Button>
+            </View>
           </CardLayout>
-          <View style={styles.btnHolder}>
+          <View style={active ? styles.hide : styles.show}>
             <Button mode="outlined" raised>Позвонить заказчику</Button>
-            <Button mode="contained" style={styles.btn}>Бригада прибыла на вызов</Button>
+            <Button mode="contained" style={styles.btn} onPress={() => onDetailedClick()}>Бригада прибыла на вызов</Button>
+          </View>
+          <View style={active ? styles.show : styles.hide}>
+            <Button  mode="contained" >Вызов завершен</Button>
+            <Button mode="contained" style={styles.btn}>Повтор процедуры</Button>
+            <Button mode="contained" style={styles.btn}>Кодирование</Button>
+            <Button mode="contained" style={styles.btn}>Госпитализация</Button>
           </View>
         </Layout>
       )
@@ -69,20 +127,46 @@ const styles = {
     lineHeight: 16,
     marginTop: 16
   },
+  activeColor: {
+    fontSize: SIZES.fs16,
+    color: COLORS.gray,
+    letterSpacing: 0.4,
+    lineHeight: 16,
+    marginTop: 16
+  },
   wrap: {
     alignItems: 'flex-start',
     marginLeft: -10,
-    marginTop: 24,
-    marginBottom: 10
+    marginVertical: 10,
+    display: 'flex'
+  },
+  wrapper: {
+    alignItems: 'flex-start',
+    marginLeft: -10,
+    marginTop: -10,
+    marginBottom: 16,
+  },
+  hide: {
+    display: 'none'
+  },
+  show: {
+    display: 'flex',
   },
   btn: {
     marginTop: 16
   },
-  content: {
-    display: 'none'
+  gray: {
+    backgroundColor: '#f1f1f199',
+    borderWidth: 1,
+    borderColor: '#0000001f',
+    borderRadius: 4,
+    alignItems: 'flex-start',
   },
-  active: {
-    display: 'flex'
+  inputsHolder: {
+    marginTop: 7
+  },
+  input: {
+    marginBottom: 10,
   }
 }
 
