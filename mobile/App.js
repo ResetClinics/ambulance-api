@@ -20,6 +20,6 @@ const theme = {
     ...MD3LightTheme.colors,
     primary: '#04607A',
     secondary: 'rad',
-    tertiary: '#a1b2c3',
+    tertiary: 'red',
   },
 };

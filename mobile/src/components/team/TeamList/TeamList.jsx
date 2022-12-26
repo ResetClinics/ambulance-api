@@ -1,4 +1,4 @@
-import { Image, View } from "react-native";
+import {FlatList, Image, View} from "react-native";
 import React from "react";
 import { Card, Title, Paragraph } from 'react-native-paper';
 import { COLORS } from "../../../../constants";
@@ -7,6 +7,20 @@ const icon = '../../../../assets/label.png'
 
 const data = [
   {
+    name: 'Агибалова Татьяна Васильевна',
+    speciality: 'Психиатор- нарколог'
+  },
+  {
+    name: 'Иван Иванович Иванов',
+    speciality: 'Администратор'
+  },{
+    name: 'Агибалова Татьяна Васильевна',
+    speciality: 'Психиатор- нарколог'
+  },
+  {
+    name: 'Иван Иванович Иванов',
+    speciality: 'Администратор'
+  },{
     name: 'Агибалова Татьяна Васильевна',
     speciality: 'Психиатор- нарколог'
   },
@@ -32,15 +46,19 @@ const CardItem = (item) => {
 
 export const TeamList = () => {
   return (
-    <View>
-      {
-        data.map((item, key) => <CardItem {...item} key={key} />)
-      }
+    <View style={styles.layout}>
+      <FlatList
+        data={data}
+        renderItem={({item}) => <CardItem {...item} />}
+      />
     </View>
   )
 }
 
 const styles = {
+  layout: {
+    flex: 1
+  },
   root: {
     backgroundColor: COLORS.white,
     borderRadius: 4,

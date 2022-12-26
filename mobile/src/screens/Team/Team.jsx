@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Layout } from "../../shared";
 import { Button } from "react-native-paper";
 import { TeamList, TeamNotAssigned } from "../../components";
+import {COLORS} from "../../../constants";
 
 export const Team = () => {
   const STATUSES = {
@@ -37,6 +38,8 @@ export const Team = () => {
 const styles = {
   btnHolder: {
     marginTop: 'auto',
+    backgroundColor: COLORS.white,
+    paddingTop: 16
   },
   btn: {
     marginTop: 16

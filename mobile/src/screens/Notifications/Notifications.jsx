@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Card, Title, Paragraph } from 'react-native-paper';
 import { Layout } from "../../shared";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, FlatList } from "react-native";
 import { COLORS, SIZES } from "../../../constants";
 
 const data = [
@@ -89,11 +89,10 @@ export const Notifications = ({navigation}) => {
   }
   return (
     <Layout>
-      <View>
-        {
-          data.map((item, key) => <CardItem {...item} key={key} onAccepting={onAccepting} />)
-        }
-      </View>
+      <FlatList
+        data={data}
+        renderItem={({item}) => <CardItem {...item} onAccepting={onAccepting} />}
+      />
     </Layout>
   )
 }
