@@ -12,9 +12,13 @@ const comment = 'Мужчина ,  43 года нужна детоксикаци
   time = '12:45';
 
 
-export const CurrentCall = () => {
+export const CurrentCall = ({navigation}) => {
   const [active, setActive] = useState(false);
   const [text, setText] = React.useState("");
+
+  const onAccepting = () => {
+    navigation.navigate('Уведомления')
+  }
 
   const onDetailedClick = () => {
     setActive(!active)
@@ -110,10 +114,10 @@ export const CurrentCall = () => {
               <Button mode="contained" style={styles.btn} onPress={() => onDetailedClick()}>Бригада прибыла на вызов</Button>
             </View>
             <View style={active ? styles.show : styles.hide}>
-              <Button  mode="contained" >Вызов завершен</Button>
+              <Button  mode="contained" onPress={() => onAccepting()}>Вызов завершен</Button>
               <Button mode="contained" style={styles.btn}>Повтор процедуры</Button>
               <Button mode="contained" style={styles.btn}>Кодирование</Button>
-              <Button mode="contained" style={styles.btn}>Госпитализация</Button>
+              <Button mode="contained" style={styles.btn} onPress={() => onAccepting()}>Госпитализация</Button>
             </View>
           </Layout>
         </ScrollView>

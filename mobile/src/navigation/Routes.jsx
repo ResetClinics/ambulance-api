@@ -2,7 +2,7 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Image } from "react-native";
 import { COLORS } from "../../constants";
-import { CallHistory, Chat, CurrentCall, Notifications, Profile, Team } from "../screens";
+import {CallHistory, Chat, CurrentCall, CurrentCallNext, Notifications, Profile, Team} from "../screens";
 
 const Tab = createBottomTabNavigator();
 

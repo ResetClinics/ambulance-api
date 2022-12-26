@@ -22,7 +22,7 @@ const data = [
   },
 ]
 
-const CardItem = ({ address, subject, date, time, comment, onAccepting } ) => {
+const CardItem = ({ address, subject, date, time, comment, onAccepting, goToMapPage } ) => {
   const [active, setActive] = useState(false)
 
   const onDetailedClick = () => {
@@ -60,7 +60,9 @@ const CardItem = ({ address, subject, date, time, comment, onAccepting } ) => {
           <Text style={styles.info}>Коментарий к вызову:</Text>
           <Text style={styles.info}>{comment}</Text>
           <View style={styles.wrap}>
-            <Button style={styles.btn} icon={() => (
+            <Button
+              onPress={() => goToMapPage()}
+              style={styles.btn} icon={() => (
               <Image
                 source={require('../../../assets/map_marker.png')}
                 style={{ width: 17, height: 23 }}
@@ -87,11 +89,20 @@ export const Notifications = ({navigation}) => {
   const onAccepting = () => {
     navigation.navigate('Текущий вызов')
   }
+
+  const goToMapPage = () => {
+    navigation.navigate('Маршрут', {
+      screen: 'Home',
+      params: {
+        screen: 'Маршрут',
+      },
+    });
+  }
   return (
     <Layout>
       <FlatList
         data={data}
-        renderItem={({item}) => <CardItem {...item} onAccepting={onAccepting} />}
+        renderItem={({item}) => <CardItem {...item} onAccepting={onAccepting} goToMapPage={goToMapPage} />}
       />
     </Layout>
   )
