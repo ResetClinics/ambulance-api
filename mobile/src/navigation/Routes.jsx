@@ -2,16 +2,16 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Image } from "react-native";
 import { COLORS } from "../../constants";
-import {CallHistory, Chat, CurrentCall, CurrentCallNext, Notifications, Profile, Team} from "../screens";
+import { CallHistory, Chat, CurrentCall, Notifications, Profile, Team } from "../screens";
 
 const Tab = createBottomTabNavigator();
 
-const teamIcon = '../../assets/menu/team.png'
-const teamIcon_color = '../../assets/menu/team_color.png'
-const currentCallIcon = '../../assets/menu/currentCall.png'
-const currentCallIcon_color = '../../assets/menu/currentCall_color.png'
-const callHistoryIcon = '../../assets/menu/callHistory.png'
-const callHistoryIcon_color = '../../assets/menu/callHistory_color.png'
+const teamIcon = '../../assets/menu/team.webp'
+const teamIcon_color = '../../assets/menu/team_color.webp'
+const currentCallIcon = '../../assets/menu/currentCall.webp'
+const currentCallIcon_color = '../../assets/menu/currentCall_color.webp'
+const callHistoryIcon = '../../assets/menu/callHistory.webp'
+const callHistoryIcon_color = '../../assets/menu/callHistory_color.webp'
 const chatIcon = '../../assets/menu/chat.png'
 const chatIcon_color = '../../assets/menu/chat_color.png'
 const notificationIcon = '../../assets/menu/notification.png'

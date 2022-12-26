@@ -1,10 +1,19 @@
-import { Text, View } from "react-native";
 import React from "react";
+import { Layout } from "../../shared";
+import { Avatar } from 'react-native-paper';
 
 export const Profile = () => {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'blue', }}>
-      <Text>Home!</Text>
-    </View>
+    <Layout>
+      <Avatar.Image size={140} source={require('../../../assets/image.webp')} style={styles.root} />
+    </Layout>
   );
+}
+
+const styles = {
+  root: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginBottom: 16
+  }
 }

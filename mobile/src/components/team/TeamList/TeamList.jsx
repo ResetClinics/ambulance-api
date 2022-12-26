@@ -1,9 +1,8 @@
-import {FlatList, Image, View} from "react-native";
+import { FlatList, View } from "react-native";
 import React from "react";
 import { Card, Title, Paragraph } from 'react-native-paper';
 import { COLORS } from "../../../../constants";
-
-const icon = '../../../../assets/label.png'
+import SVGImg from '../../../../assets/label.svg';
 
 const data = [
   {
@@ -39,7 +38,7 @@ const CardItem = (item) => {
           <Paragraph>{item.speciality}</Paragraph>
         </Card.Content>
       </Card>
-      <Image style={styles.label} source={require(icon)} />
+      <SVGImg style={styles.label} width={46} height={46} />
     </View>
   )
 }
@@ -71,8 +70,6 @@ const styles = {
   },
   label: {
     position: 'absolute',
-    width: 46,
-    height: 46,
     borderRadius: 100,
     backgroundColor: COLORS.white,
     right: 10,
