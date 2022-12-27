@@ -16,6 +16,7 @@ export const SIZES = {
   fs12: 12,
   fs14: 14,
   fs16: 16,
+  fs18: 18,
   radius: 12,
   padding: 24,
 

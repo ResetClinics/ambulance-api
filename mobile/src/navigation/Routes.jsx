@@ -12,12 +12,12 @@ const currentCallIcon = '../../assets/menu/currentCall.webp'
 const currentCallIcon_color = '../../assets/menu/currentCall_color.webp'
 const callHistoryIcon = '../../assets/menu/callHistory.webp'
 const callHistoryIcon_color = '../../assets/menu/callHistory_color.webp'
-const chatIcon = '../../assets/menu/chat.png'
-const chatIcon_color = '../../assets/menu/chat_color.png'
-const notificationIcon = '../../assets/menu/notification.png'
-const notificationIcon_color = '../../assets/menu/notification_color.png'
-const profileIcon = '../../assets/menu/profile.png'
-const profileIcon_color = '../../assets/menu/profile_color.png'
+const chatIcon = '../../assets/menu/chat.webp'
+const chatIcon_color = '../../assets/menu/chat_color.webp'
+const notificationIcon = '../../assets/menu/notification.webp'
+const notificationIcon_color = '../../assets/menu/notification_color.webp'
+const profileIcon = '../../assets/menu/profile.webp'
+const profileIcon_color = '../../assets/menu/profile_color.webp'
 
 const icons = {
   "Бригада": {
