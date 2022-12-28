@@ -17,8 +17,6 @@ const styles = {
   input: {
     borderRadius: 4,
     backgroundColor: COLORS.white,
-    borderWidth: 1,
-    borderColor: '#0000001f',
     fontSize: SIZES.fs16,
   }
 }

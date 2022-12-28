@@ -198,4 +198,3 @@ const styles = {
     marginBottom: 10,
   },
 }
-

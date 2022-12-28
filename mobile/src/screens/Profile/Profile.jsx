@@ -4,10 +4,13 @@ import { Text } from "react-native";
 import { Avatar } from 'react-native-paper';
 import { COLORS, SIZES } from "../../../constants";
 
-export const Profile = () => {
+const defaultImg = require('../../../assets/default.webp')
+const img = require('../../../assets/image.webp')
+
+export const Profile = (/*{img}*/) => {
   return (
     <Layout>
-      <Avatar.Image size={140} source={require('../../../assets/image.webp')} style={styles.root} />
+      <Avatar.Image size={140} source={img || defaultImg} style={styles.root} />
       <Text style={styles.title}>Иванов Иван Иванович</Text>
       <Text style={styles.text}>Невролог-терапевт</Text>
     </Layout>
@@ -33,6 +36,7 @@ const styles = {
   root: {
     marginLeft: 'auto',
     marginRight: 'auto',
-    marginBottom: 16
+    marginBottom: 16,
+    backgroundColor: 'transparent'
   }
 }

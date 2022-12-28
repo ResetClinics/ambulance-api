@@ -5,6 +5,57 @@ import { Button } from "react-native-paper";
 import { ModalInput } from "../ModalInput";
 import { ModalList } from "../ModalList";
 
+const data = [
+  {
+    name: 'Услуга',
+    id: 1
+  },
+  {
+    name: 'Услуга-2',
+    id: 1
+  },
+  {
+    name: 'Услуга-3',
+    id: 1
+  },
+  {
+    name: 'Услуга',
+    id: 1
+  },
+  {
+    name: 'Услуга-2',
+    id: 1
+  },
+  {
+    name: 'Услуга-3',
+    id: 1
+  },
+  {
+    name: 'Услуга',
+    id: 1
+  },
+  {
+    name: 'Услуга-2',
+    id: 1
+  },
+  {
+    name: 'Услуга-3',
+    id: 1
+  },
+  {
+    name: 'Услуга',
+    id: 1
+  },
+  {
+    name: 'Услуга-2',
+    id: 1
+  },
+  {
+    name: 'Услуга-3',
+    id: 1
+  },
+]
+
 export const ModalWindow = ({label}) => {
   return (
     <View style={styles.container}>
@@ -18,7 +69,7 @@ export const ModalWindow = ({label}) => {
           />
         )} />
       <ModalInput label={label} />
-      <ModalList />
+      <ModalList data={data} />
     </View>
   );
 };
