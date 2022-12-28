@@ -98,7 +98,7 @@ export const CurrentCall = ({navigation}) => {
                 </View>
                 <View style={styles.wrapper}>
                   <TouchableOpacity
-                    onPress={() => magicModal.show(() => <ModalWindow />)}
+                    onPress={() => magicModal.show(() => <ModalWindow label="Поиск услуги" />)}
                   >
                     <Button
                       style={styles.btn}
@@ -110,7 +110,7 @@ export const CurrentCall = ({navigation}) => {
                       )}>Добавить услуги</Button>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => magicModal.show(() => <ModalWindow />)}
+                    onPress={() => magicModal.show(() => <ModalWindow label="Поиск медикаментов" />)}
                   >
                     <Button
                       icon={() => (

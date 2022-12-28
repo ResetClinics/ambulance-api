@@ -2,7 +2,7 @@ import { TextInput } from "react-native-paper";
 import React from "react";
 import { COLORS, SIZES } from "../../../../constants";
 
-export const ModalInput = ({label}) => {
+export const ModalList = ({label}) => {
   const [text, setText] = React.useState('');
   return (
     <TextInput

@@ -2,12 +2,10 @@ import React from 'react';
 import { Image, View } from 'react-native';
 import { magicModal } from 'react-native-magic-modal';
 import { Button } from "react-native-paper";
-import { TextInput } from 'react-native-paper';
-import { COLORS, SIZES } from "../../../../constants";
+import { ModalInput } from "../ModalInput";
+import { ModalList } from "../ModalList";
 
-export const ModalWindow = () => {
-  const [text, setText] = React.useState('');
-
+export const ModalWindow = ({label}) => {
   return (
     <View style={styles.container}>
       <Button
@@ -19,12 +17,8 @@ export const ModalWindow = () => {
             style={{ width: 30, height: 29 }}
           />
         )} />
-      <TextInput
-        style={styles.input}
-        label="Поиск услуги"
-        value={text}
-        onChangeText={text => setText(text)}
-      />
+      <ModalInput label={label} />
+      <ModalList />
     </View>
   );
 };
@@ -40,11 +34,4 @@ const styles = {
     top: -50,
     right: -20
   },
-  input: {
-    borderRadius: 4,
-    backgroundColor: COLORS.white,
-    borderWidth: 1,
-    borderColor: '#0000001f',
-    fontSize: SIZES.fs16,
-  }
 }
