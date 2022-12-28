@@ -1,10 +1,11 @@
-import { Image, ScrollView, Text, View } from "react-native";
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
 import {CardLayout, ModalWindow} from "../../components";
 import { Layout } from "../../shared";
 import { COLORS, SIZES } from "../../../constants";
 import { Appbar } from 'react-native-paper';
 import { Button, TextInput } from 'react-native-paper';
+import { MagicModalPortal, magicModal } from 'react-native-magic-modal';
 
 const comment = 'Мужчина ,  43 года нужна детоксикация организма , возмоно психотерапевтическая помощь',
   address = 'Пресненская наб., 2 (этаж 1)',
@@ -12,15 +13,9 @@ const comment = 'Мужчина ,  43 года нужна детоксикаци
   date = '12.12.2022',
   time = '12:45';
 
-
 export const CurrentCall = ({navigation}) => {
   const [active, setActive] = useState(false);
   const [text, setText] = React.useState("");
-  const [modalWindow, setModalWindow] = useState(false)
-
-  const changState = () => {
-    setModalWindow(true)
-  }
 
   const onAccepting = () => {
     navigation.navigate('Уведомления')
@@ -50,9 +45,7 @@ export const CurrentCall = ({navigation}) => {
       return (
         <ScrollView style={styles.root}>
           <Layout>
-            <ModalWindow state={modalWindow} >
-              <Text onPress={() => setModalWindow(false)}>12121</Text>
-            </ModalWindow>
+            <MagicModalPortal />
             <CardLayout address={address} subject={subject} date={date} time={time}>
               <View>
                 <Text style={active ? styles.activeColor : styles.info}>Коментарий к вызову:</Text>
@@ -63,14 +56,14 @@ export const CurrentCall = ({navigation}) => {
                     onPress={() => setStatus(STATUSES.ROUTE)}
                     icon={() => (
                       <Image
-                        source={require('../../../assets/map_marker.png')}
+                        source={require('../../../assets/map_marker.webp')}
                         style={{ width: 17, height: 23 }}
                       />
                     )}>Посмотреть карту</Button>
                   <Button icon={() => (
                     <Image
-                      source={require('../../../assets/close.png')}
-                      style={{ width: 24, height: 24 }}
+                      source={require('../../../assets/close.webp')}
+                      style={{ width: 25, height: 24 }}
                     />
                   )}>Отменить вызов</Button>
                 </View>
@@ -104,23 +97,29 @@ export const CurrentCall = ({navigation}) => {
                   />
                 </View>
                 <View style={styles.wrapper}>
-                  <Button
-                    onPress={changState}
-                    style={styles.btn}
-                    icon={() => (
-                      <Image
-                        source={require('../../../assets/close.png')}
-                        style={{ width: 24, height: 24 }}
-                      />
-                    )}>Добавить услуги</Button>
-                  <Button
-                    onPress={changState}
-                    icon={() => (
-                    <Image
-                      source={require('../../../assets/close.png')}
-                      style={{ width: 24, height: 24 }}
-                    />
-                  )}>Добавить список медикаментов</Button>
+                  <TouchableOpacity
+                    onPress={() => magicModal.show(() => <ModalWindow />)}
+                  >
+                    <Button
+                      style={styles.btn}
+                      icon={() => (
+                        <Image
+                          source={require('../../../assets/close.webp')}
+                          style={{ width: 25, height: 24 }}
+                        />
+                      )}>Добавить услуги</Button>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => magicModal.show(() => <ModalWindow />)}
+                  >
+                    <Button
+                      icon={() => (
+                        <Image
+                          source={require('../../../assets/close.webp')}
+                          style={{ width: 25, height: 24 }}
+                        />
+                      )}>Добавить список медикаментов</Button>
+                  </TouchableOpacity>
                 </View>
                 <Button mode="contained" raised style={styles.gray} textColor={COLORS.gray}>Стоимость оказаных услуг</Button>
               </View>
@@ -197,6 +196,6 @@ const styles = {
   },
   input: {
     marginBottom: 10,
-  }
+  },
 }
 

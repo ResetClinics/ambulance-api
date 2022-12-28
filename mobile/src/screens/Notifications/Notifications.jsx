@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from 'react-native-paper';
 import { Layout } from "../../shared";
 import { FlatList } from "react-native";
-import {CardItem} from "../../components";
+import { CardItem } from "../../components";
 import { data } from "../data/data";
 
 export const Notifications = ({navigation}) => {

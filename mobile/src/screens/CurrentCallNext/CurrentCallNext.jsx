@@ -39,14 +39,14 @@ const Call = ({ navigation }) => {
                 onPress={() => goToMapPage()}
                 icon={() => (
                   <Image
-                    source={require('../../../assets/map_marker.png')}
+                    source={require('../../../assets/map_marker.webp')}
                     style={{ width: 17, height: 23 }}
                   />
                 )}>Посмотреть карту</Button>
               <Button icon={() => (
                 <Image
-                  source={require('../../../assets/close.png')}
-                  style={{ width: 24, height: 24 }}
+                  source={require('../../../assets/close.webp')}
+                  style={{ width: 25, height: 24 }}
                 />
               )}>Отменить вызов</Button>
             </View>
@@ -84,14 +84,14 @@ const Call = ({ navigation }) => {
                 style={styles.btn}
                 icon={() => (
                   <Image
-                    source={require('../../../assets/close.png')}
-                    style={{ width: 24, height: 24 }}
+                    source={require('../../../assets/close.webp')}
+                    style={{ width: 25, height: 24 }}
                   />
                 )}>Добавить услуги</Button>
               <Button icon={() => (
                 <Image
-                  source={require('../../../assets/close.png')}
-                  style={{ width: 24, height: 24 }}
+                  source={require('../../../assets/close.webp')}
+                  style={{ width: 25, height: 24 }}
                 />
               )}>Добавить список медикаментов</Button>
             </View>

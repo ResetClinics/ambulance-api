@@ -3,10 +3,12 @@ import { Provider as PaperProvider, MD3LightTheme } from 'react-native-paper';
 import React from 'react';
 import { expo } from './app.json';
 import { Main } from "./src/Main/Main";
+import { MagicModalPortal } from 'react-native-magic-modal';
 
 export default function App() {
   return (
     <PaperProvider theme={theme}>
+      <MagicModalPortal />
       <Main />
     </PaperProvider>
   );

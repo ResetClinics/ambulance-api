@@ -3,4 +3,7 @@ export { TeamNotAssigned } from './team/TeamNotAssigned'
 export { TeamList } from './team/TeamList'
 export { CardLayout } from './CardLayout'
 export { CardItem } from './CardItem'
-export { ModalWindow } from './ModalWindow'
+export { ModalWindow } from './modal/ModalWindow'
+export { ModalInput } from './modal/ModalInput'
+
+
