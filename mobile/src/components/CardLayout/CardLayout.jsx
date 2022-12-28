@@ -1,5 +1,5 @@
-import {Button, Card, Paragraph, Title} from "react-native-paper";
-import { Image, Text, View } from "react-native";
+import { Card, Paragraph, Title} from "react-native-paper";
+import { Text, View } from "react-native";
 import React from "react";
 import { COLORS, SIZES } from "../../../constants";
 

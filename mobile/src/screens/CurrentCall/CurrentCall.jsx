@@ -1,9 +1,10 @@
 import { Image, ScrollView, Text, View } from "react-native";
 import React, { useState } from "react";
-import { CardLayout } from "../../components";
+import {CardLayout, ModalWindow} from "../../components";
 import { Layout } from "../../shared";
-import { Button, TextInput } from "react-native-paper";
 import { COLORS, SIZES } from "../../../constants";
+import { Appbar } from 'react-native-paper';
+import { Button, TextInput } from 'react-native-paper';
 
 const comment = 'Мужчина ,  43 года нужна детоксикация организма , возмоно психотерапевтическая помощь',
   address = 'Пресненская наб., 2 (этаж 1)',
@@ -15,6 +16,11 @@ const comment = 'Мужчина ,  43 года нужна детоксикаци
 export const CurrentCall = ({navigation}) => {
   const [active, setActive] = useState(false);
   const [text, setText] = React.useState("");
+  const [modalWindow, setModalWindow] = useState(false)
+
+  const changState = () => {
+    setModalWindow(true)
+  }
 
   const onAccepting = () => {
     navigation.navigate('Уведомления')
@@ -32,14 +38,21 @@ export const CurrentCall = ({navigation}) => {
   switch (status) {
     case STATUSES.ROUTE:
       return <Layout>
-        <View style={styles.btnHolder}>
+        <Appbar.Header>
+          <Appbar.BackAction onPress={() => setStatus(STATUSES.ASSIGNED)} />
+          <Appbar.Content title="Маршрут до места вызова" style={styles.title}/>
+        </Appbar.Header>
+        {/*<View style={styles.btnHolder}>
           <Button mode="text" onPress={() => setStatus(STATUSES.ASSIGNED)}>Маршрут до места вызова</Button>
-        </View>
+        </View>*/}
       </Layout>
     default:
       return (
         <ScrollView style={styles.root}>
           <Layout>
+            <ModalWindow state={modalWindow} >
+              <Text onPress={() => setModalWindow(false)}>12121</Text>
+            </ModalWindow>
             <CardLayout address={address} subject={subject} date={date} time={time}>
               <View>
                 <Text style={active ? styles.activeColor : styles.info}>Коментарий к вызову:</Text>
@@ -92,6 +105,7 @@ export const CurrentCall = ({navigation}) => {
                 </View>
                 <View style={styles.wrapper}>
                   <Button
+                    onPress={changState}
                     style={styles.btn}
                     icon={() => (
                       <Image
@@ -99,7 +113,9 @@ export const CurrentCall = ({navigation}) => {
                         style={{ width: 24, height: 24 }}
                       />
                     )}>Добавить услуги</Button>
-                  <Button icon={() => (
+                  <Button
+                    onPress={changState}
+                    icon={() => (
                     <Image
                       source={require('../../../assets/close.png')}
                       style={{ width: 24, height: 24 }}
@@ -126,6 +142,10 @@ export const CurrentCall = ({navigation}) => {
 }
 
 const styles = {
+  title: {
+    color: COLORS.primary,
+    fontSize: 12
+  },
   root: {
     flex: 1,
     backgroundColor: COLORS.white
