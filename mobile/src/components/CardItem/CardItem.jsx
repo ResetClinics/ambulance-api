@@ -3,7 +3,7 @@ import { Button, Card, Paragraph, Title } from "react-native-paper";
 import { Image, Text, View } from "react-native";
 import { COLORS, SIZES } from "../../../constants";
 
-export  const CardItem = ({ address, subject, date, time, comment, goToMapPage, status, children } ) => {
+export  const CardItem = ({ address, subject, date, time, comment, goToMapPage, status, children, text } ) => {
   const [active, setActive] = useState(false)
 
   const onDetailedClick = () => {
@@ -12,16 +12,18 @@ export  const CardItem = ({ address, subject, date, time, comment, goToMapPage, 
 
   const BtnChange = () => {
     if(active) {
-      return <Button style={styles.btn} onPress={onDetailedClick}>Свернуть</Button>
+      return <Button style={styles.btn} onPress={onDetailedClick} buttonColor={COLORS.white}>{text}</Button>
     } else {
-      return <Button onPress={onDetailedClick}>Подробнее</Button>
+      return <Button onPress={onDetailedClick} buttonColor={COLORS.white}>Подробнее</Button>
     }
   }
 
   return (
     <Card style={styles.root} children>
       <Card.Content>
-        <Text style={styles.status}>{status}</Text>
+        {
+          status && (<Text style={styles.status}>{status}</Text>)
+        }
         <Title>{address}</Title>
         <Paragraph>{subject}</Paragraph>
         <View style={styles.date}>
