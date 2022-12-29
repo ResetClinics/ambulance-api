@@ -1,9 +1,9 @@
-import { View } from "react-native";
+import {StyleSheet, View} from "react-native";
 import React, { useState } from "react";
 import { Layout } from "../../shared";
 import { Button } from "react-native-paper";
 import { TeamList, TeamNotAssigned } from "../../components";
-import {COLORS} from "../../../constants";
+import { COLORS } from "../../../constants";
 
 export const Team = () => {
   const STATUSES = {
@@ -35,7 +35,7 @@ export const Team = () => {
   }
 }
 
-const styles = {
+const styles = StyleSheet.create({
   btnHolder: {
     marginTop: 'auto',
     backgroundColor: COLORS.white,
@@ -44,4 +44,4 @@ const styles = {
   btn: {
     marginTop: 16
   }
-}
+});

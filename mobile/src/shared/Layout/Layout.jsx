@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from "react-native";
+import {StyleSheet, View} from "react-native";
 import { COLORS } from "../../../constants";
 
 export const Layout  = ({ children} ) => {
@@ -10,10 +10,10 @@ export const Layout  = ({ children} ) => {
   )
 }
 
-const styles = {
+const styles = StyleSheet.create({
   root: {
     padding: 16,
     flex: 1,
     backgroundColor: COLORS.white
   }
-}
+});

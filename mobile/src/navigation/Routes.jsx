@@ -1,6 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Image } from "react-native";
+import { Image, StyleSheet } from "react-native";
 import { COLORS } from "../../constants";
 import { CallHistory, Chat, CurrentCall, Notifications, Profile, Team } from "../screens";
 
@@ -84,9 +84,9 @@ export const Routes = () => {
   );
 }
 
-const styles = {
+const styles = StyleSheet.create({
   img: {
     width: 24,
     height: 24,
   }
-}
+});

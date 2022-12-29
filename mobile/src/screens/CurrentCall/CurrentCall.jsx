@@ -1,8 +1,8 @@
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import React, { useState } from "react";
 import {CardLayout, ModalWindow} from "../../components";
 import { Layout } from "../../shared";
-import { COLORS, SIZES } from "../../../constants";
+import {COLORS, FONTS, SIZES} from "../../../constants";
 import { Appbar } from 'react-native-paper';
 import { Button, TextInput } from 'react-native-paper';
 import { MagicModalPortal, magicModal } from 'react-native-magic-modal';
@@ -140,7 +140,7 @@ export const CurrentCall = ({navigation}) => {
   }
 }
 
-const styles = {
+const styles = StyleSheet.create({
   title: {
     color: COLORS.primary,
     fontSize: 12
@@ -150,18 +150,13 @@ const styles = {
     backgroundColor: COLORS.white
   },
   info: {
-    fontSize: SIZES.fs16,
-    color: COLORS.black,
-    letterSpacing: 0.4,
-    lineHeight: 16,
-    marginTop: 16
+    marginTop: 16,
+    ...FONTS.text
   },
   activeColor: {
-    fontSize: SIZES.fs16,
+    marginTop: 16,
+    ...FONTS.text,
     color: COLORS.gray,
-    letterSpacing: 0.4,
-    lineHeight: 16,
-    marginTop: 16
   },
   wrap: {
     alignItems: 'flex-start',
@@ -197,4 +192,4 @@ const styles = {
   input: {
     marginBottom: 10,
   },
-}
+});
