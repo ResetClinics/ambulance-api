@@ -77,7 +77,7 @@ export const CurrentCall = ({navigation}) => {
                     focused
                     label="Фамилия Имя Отчество"
                     value={text}
-                    onChangeText={text => setText(text)}
+                    onChangeText={textName => setText(textName)}
                   />
                   <TextInput
                     style={styles.input}
@@ -85,7 +85,7 @@ export const CurrentCall = ({navigation}) => {
                     focused
                     label="Дата рождения"
                     value={text}
-                    onChangeText={text => setText(text)}
+                    onChangeText={textDate => setText(textDate)}
                   />
                   <TextInput
                     style={styles.input}
@@ -93,7 +93,7 @@ export const CurrentCall = ({navigation}) => {
                     focused
                     label="Данные документа"
                     value={text}
-                    onChangeText={text => setText(text)}
+                    onChangeText={textInfo => setText(textInfo)}
                   />
                 </View>
                 <View style={styles.wrapper}>

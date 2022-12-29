@@ -1,5 +1,5 @@
 import { Layout } from "../../../shared";
-import { Text } from "react-native";
+import {StyleSheet, Text} from "react-native";
 import { IconButton } from "react-native-paper";
 import { COLORS } from "../../../../constants";
 import React from "react";
@@ -22,7 +22,7 @@ export const TeamNotAssigned = ({onPress}) => {
   )
 }
 
-const styles = {
+const styles = StyleSheet.create({
   img: {
     width: 48,
     height: 48,
@@ -33,5 +33,7 @@ const styles = {
   text: {
     fontSize: 30,
     color: COLORS.black,
+    fontFamily: 'Roboto-Medium',
+    lineHeight: 40
   },
-}
+});

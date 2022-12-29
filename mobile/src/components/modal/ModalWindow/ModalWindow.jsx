@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, View } from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 import { magicModal } from 'react-native-magic-modal';
 import { Button } from "react-native-paper";
 import { ModalInput } from "../ModalInput";
@@ -74,7 +74,7 @@ export const ModalWindow = ({label}) => {
   );
 };
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
     backgroundColor: 'transparent',
     margin: 16,
@@ -85,4 +85,4 @@ const styles = {
     top: -50,
     right: -20
   },
-}
+});

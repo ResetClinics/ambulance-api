@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Card, Paragraph, Title } from "react-native-paper";
-import { Image, Text, View } from "react-native";
-import { COLORS, SIZES } from "../../../constants";
+import { Image, StyleSheet, Text, View } from "react-native";
+import { COLORS, FONTS } from "../../../constants";
 
 export  const CardItem = ({ address, subject, date, time, comment, goToMapPage, status, children, text } ) => {
   const [active, setActive] = useState(false)
@@ -24,8 +24,8 @@ export  const CardItem = ({ address, subject, date, time, comment, goToMapPage, 
         {
           status && (<Text style={styles.status}>{status}</Text>)
         }
-        <Title>{address}</Title>
-        <Paragraph>{subject}</Paragraph>
+        <Title style={styles.title}>{address}</Title>
+        <Paragraph style={styles.subtitle}>{subject}</Paragraph>
         <View style={styles.date}>
           <Text style={styles.text}>
             Дата:
@@ -69,7 +69,7 @@ export  const CardItem = ({ address, subject, date, time, comment, goToMapPage, 
   )
 }
 
-const styles = {
+const styles = StyleSheet.create({
   root: {
     backgroundColor: COLORS.white,
     borderRadius: 4,
@@ -77,34 +77,34 @@ const styles = {
     borderWidth: 1,
     marginBottom: 32
   },
+  title: {
+    ...FONTS.title,
+    marginBottom: 16
+  },
+  subtitle: {
+    ...FONTS.text,
+    marginBottom: 16
+  },
   date: {
     flexDirection: 'row',
-    marginTop: 16,
     marginBottom: 8
   },
   status: {
-    letterSpacing: 0.4,
-    lineHeight: 16,
-    fontSize: SIZES.fs16,
+    ...FONTS.text,
     color: COLORS.gray,
+    marginBottom: 16
   },
   text: {
-    color: COLORS.gray,
-    fontSize: SIZES.fs12,
-    letterSpacing: 0.4,
-    lineHeight: 16,
     width: '45%',
+    ...FONTS.smallText
   },
   actions: {
     marginBottom: -27,
     right: 5
   },
   info: {
-    fontSize: SIZES.fs16,
-    color: COLORS.black,
-    letterSpacing: 0.4,
-    lineHeight: 16,
-    marginTop: 16
+    marginTop: 16,
+    ...FONTS.text
   },
   wrap: {
     alignItems: 'flex-start',
@@ -121,4 +121,4 @@ const styles = {
   active: {
     display: 'flex'
   }
-}
+});

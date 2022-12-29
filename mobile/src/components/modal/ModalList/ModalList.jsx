@@ -1,6 +1,6 @@
 import React from "react";
-import { COLORS, SIZES } from "../../../../constants";
-import { Image, Text, View } from "react-native";
+import { COLORS, FONTS } from "../../../../constants";
+import { Image, StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-paper";
 
 export const ModalList = ({data}) => {
@@ -24,30 +24,30 @@ export const ModalList = ({data}) => {
     </View>
   )
 }
-const styles = {
+const styles = StyleSheet.create({
   root: {
     borderRadius: 4,
     backgroundColor: COLORS.white,
     marginTop: 16,
-    padding: 5
+    padding: 10
   },
   item: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 15,
+    padding: 18,
   },
   itemText: {
-    fontSize: SIZES.fs16,
+    ...FONTS.text,
     color: COLORS.primary
   },
   holder: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 15
+    padding: 18
   },
   btn: {
     width: '47%'
   }
-}
+});

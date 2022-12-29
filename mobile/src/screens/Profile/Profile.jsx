@@ -1,6 +1,6 @@
 import React from "react";
 import { Layout } from "../../shared";
-import { Text } from "react-native";
+import { Text, StyleSheet } from "react-native";
 import { Avatar } from 'react-native-paper';
 import {COLORS, FONTS, SIZES} from "../../../constants";
 
@@ -17,7 +17,7 @@ export const Profile = (/*{img}*/) => {
   );
 }
 
-const styles = {
+const styles = StyleSheet.create({
   title: {
     textAlign: 'center',
     fontSize: SIZES.fs18,
@@ -26,7 +26,6 @@ const styles = {
     color: COLORS.black,
     marginBottom: 16,
     ...FONTS.h2,
-
   },
   text: {
     textAlign: 'center',
@@ -42,4 +41,4 @@ const styles = {
     marginBottom: 16,
     backgroundColor: 'transparent'
   }
-}
+});

@@ -1,14 +1,14 @@
-import { Card, Paragraph, Title} from "react-native-paper";
-import { Text, View } from "react-native";
+import { Card, Paragraph, Title } from "react-native-paper";
+import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { COLORS, SIZES } from "../../../constants";
+import { COLORS, FONTS } from "../../../constants";
 
 export const CardLayout = ({ address, subject, date, time, children }) => {
   return (
     <Card style={styles.root} children>
       <Card.Content>
-        <Title>{address}</Title>
-        <Paragraph>{subject}</Paragraph>
+        <Title style={styles.title}>{address}</Title>
+        <Paragraph style={styles.subtitle}>{subject}</Paragraph>
         <View style={styles.date}>
           <Text style={styles.text}>
             Дата:
@@ -31,7 +31,7 @@ export const CardLayout = ({ address, subject, date, time, children }) => {
   )
 }
 
-const styles = {
+const styles = StyleSheet.create({
   root: {
     backgroundColor: COLORS.white,
     borderRadius: 4,
@@ -39,16 +39,20 @@ const styles = {
     borderWidth: 1,
     marginBottom: 16
   },
+  title: {
+    ...FONTS.title,
+    marginBottom: 16
+  },
+  subtitle: {
+    ...FONTS.text,
+    marginBottom: 16
+  },
   date: {
     flexDirection: 'row',
-    marginTop: 16,
     marginBottom: 8
   },
   text: {
-    color: COLORS.gray,
-    fontSize: SIZES.fs12,
-    letterSpacing: 0.4,
-    lineHeight: 16,
     width: '45%',
+    ...FONTS.smallText
   },
-}
+});
