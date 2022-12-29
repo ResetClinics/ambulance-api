@@ -56,13 +56,13 @@ export const CurrentCall = ({navigation}) => {
                     onPress={() => setStatus(STATUSES.ROUTE)}
                     icon={() => (
                       <Image
-                        source={require('../../../assets/map_marker.webp')}
+                        source={require('../../../assets/images/map_marker.webp')}
                         style={{ width: 17, height: 23 }}
                       />
                     )}>Посмотреть карту</Button>
                   <Button icon={() => (
                     <Image
-                      source={require('../../../assets/close.webp')}
+                      source={require('../../../assets/images/close.webp')}
                       style={{ width: 25, height: 24 }}
                     />
                   )}>Отменить вызов</Button>
@@ -104,7 +104,7 @@ export const CurrentCall = ({navigation}) => {
                       style={styles.btn}
                       icon={() => (
                         <Image
-                          source={require('../../../assets/close.webp')}
+                          source={require('../../../assets/images/close.webp')}
                           style={{ width: 25, height: 24 }}
                         />
                       )}>Добавить услуги</Button>
@@ -115,7 +115,7 @@ export const CurrentCall = ({navigation}) => {
                     <Button
                       icon={() => (
                         <Image
-                          source={require('../../../assets/close.webp')}
+                          source={require('../../../assets/images/close.webp')}
                           style={{ width: 25, height: 24 }}
                         />
                       )}>Добавить список медикаментов</Button>

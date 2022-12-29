@@ -11,7 +11,7 @@ export const ModalList = ({data}) => {
           <View style={styles.item} key={key}>
             <Text style={styles.itemText}>{item.name}</Text>
             <Image
-              source={require('../../../../assets/plusColor.webp')}
+              source={require('../../../../assets/images/plusColor.webp')}
               style={{ width: 14, height: 14 }}
             />
           </View>

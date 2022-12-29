@@ -64,7 +64,7 @@ export const ModalWindow = ({label}) => {
         style={styles.btn}
         icon={() => (
           <Image
-            source={require('../../../../assets/close.webp')}
+            source={require('../../../../assets/images/close.webp')}
             style={{ width: 30, height: 29 }}
           />
         )} />

@@ -2,10 +2,10 @@ import React from "react";
 import { Layout } from "../../shared";
 import { Text } from "react-native";
 import { Avatar } from 'react-native-paper';
-import { COLORS, SIZES } from "../../../constants";
+import {COLORS, FONTS, SIZES} from "../../../constants";
 
-const defaultImg = require('../../../assets/default.webp')
-const img = require('../../../assets/image.webp')
+const defaultImg = require('../../../assets/images/default.webp')
+const img = require('../../../assets/images/image.webp')
 
 export const Profile = (/*{img}*/) => {
   return (
@@ -24,14 +24,17 @@ const styles = {
     lineHeight: 16,
     letterSpacing: 0.4,
     color: COLORS.black,
-    marginBottom: 16
+    marginBottom: 16,
+    ...FONTS.h2,
+
   },
   text: {
     textAlign: 'center',
     fontSize: SIZES.fs16,
     lineHeight: 16,
     letterSpacing: 0.4,
-    color: COLORS.black
+    color: COLORS.black,
+    fontFamily: 'Roboto-Regular'
   },
   root: {
     marginLeft: 'auto',

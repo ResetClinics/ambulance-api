@@ -48,13 +48,13 @@ export  const CardItem = ({ address, subject, date, time, comment, goToMapPage, 
               onPress={() => goToMapPage()}
               style={styles.btn} icon={() => (
               <Image
-                source={require('../../../assets/map_marker.webp')}
+                source={require('../../../assets/images/map_marker.webp')}
                 style={{ width: 17, height: 23 }}
               />
             )}>Посмотреть карту</Button>
             <Button icon={() => (
               <Image
-                source={require('../../../assets/close.webp')}
+                source={require('../../../assets/images/close.webp')}
                 style={{ width: 25, height: 24 }}
               />
             )}>Отменить вызов</Button>

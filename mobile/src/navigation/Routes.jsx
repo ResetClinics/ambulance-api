@@ -6,18 +6,18 @@ import { CallHistory, Chat, CurrentCall, Notifications, Profile, Team } from "..
 
 const Tab = createBottomTabNavigator();
 
-const teamIcon = '../../assets/menu/team.webp'
-const teamIcon_color = '../../assets/menu/team_color.webp'
-const currentCallIcon = '../../assets/menu/currentCall.webp'
-const currentCallIcon_color = '../../assets/menu/currentCall_color.webp'
-const callHistoryIcon = '../../assets/menu/callHistory.webp'
-const callHistoryIcon_color = '../../assets/menu/callHistory_color.webp'
-const chatIcon = '../../assets/menu/chat.webp'
-const chatIcon_color = '../../assets/menu/chat_color.webp'
-const notificationIcon = '../../assets/menu/notification.webp'
-const notificationIcon_color = '../../assets/menu/notification_color.webp'
-const profileIcon = '../../assets/menu/profile.webp'
-const profileIcon_color = '../../assets/menu/profile_color.webp'
+const teamIcon = '../../assets/images/menu/team.webp'
+const teamIcon_color = '../../assets/images/menu/team_color.webp'
+const currentCallIcon = '../../assets/images/menu/currentCall.webp'
+const currentCallIcon_color = '../../assets/images/menu/currentCall_color.webp'
+const callHistoryIcon = '../../assets/images/menu/callHistory.webp'
+const callHistoryIcon_color = '../../assets/images/menu/callHistory_color.webp'
+const chatIcon = '../../assets/images/menu/chat.webp'
+const chatIcon_color = '../../assets/images/menu/chat_color.webp'
+const notificationIcon = '../../assets/images/menu/notification.webp'
+const notificationIcon_color = '../../assets/images/menu/notification_color.webp'
+const profileIcon = '../../assets/images/menu/profile.webp'
+const profileIcon_color = '../../assets/images/menu/profile_color.webp'
 
 const icons = {
   "Бригада": {

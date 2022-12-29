@@ -2,7 +2,7 @@ import { FlatList, View } from "react-native";
 import React from "react";
 import { Card, Title, Paragraph } from 'react-native-paper';
 import { COLORS } from "../../../../constants";
-import SVGImg from '../../../../assets/label.svg';
+import SVGImg from '../../../../assets/images/label.svg';
 
 const data = [
   {
