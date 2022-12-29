@@ -35,6 +35,7 @@ export default function App() {
     </PaperProvider>
   );
 }
+
 AppRegistry.registerComponent(expo.name, () => App)
 
 const theme = {
