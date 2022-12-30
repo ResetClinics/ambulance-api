@@ -37,7 +37,8 @@ export const SIZES = {
 };
 export const FONTS = {
   title: {fontFamily: "Roboto-Medium", fontSize: SIZES.fs16, lineHeight: 20, color: COLORS.black, letterSpacing: 0.4},
-  text: {fontFamily: "Roboto-Regular", fontSize: SIZES.fs16, lineHeight: 16, color: COLORS.black, letterSpacing: 0.4},
+  text: {fontFamily: "Roboto-Regular", fontSize: SIZES.fs16, lineHeight: 18, color: COLORS.black, letterSpacing: 0.4},
+  smallTitle: {fontFamily: "Roboto-Medium", fontSize: SIZES.fs18, lineHeight: 20, color: COLORS.black, letterSpacing: 0.4},
   smallText: {fontFamily: "Roboto-Regular", fontSize: SIZES.fs12, lineHeight: 16, color: COLORS.gray, letterSpacing: 0.4},
   h1: {fontFamily: "Roboto-Black", fontSize: SIZES.h1, lineHeight: 36},
   h2: {fontFamily: "Roboto-Bold", fontSize: SIZES.h2, lineHeight: 30},

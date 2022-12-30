@@ -1,11 +1,10 @@
 import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import React, { useState } from "react";
-import {CardLayout, ModalWindow} from "../../components";
-import { Layout } from "../../shared";
-import {COLORS, FONTS, SIZES} from "../../../constants";
-import { Appbar } from 'react-native-paper';
-import { Button, TextInput } from 'react-native-paper';
-import { MagicModalPortal, magicModal } from 'react-native-magic-modal';
+import React, {useState} from "react";
+import {CardLayout, MapSection, ModalWindow} from "../../components";
+import {Layout} from "../../shared";
+import {COLORS, FONTS} from "../../../constants";
+import {Button, TextInput} from 'react-native-paper';
+import {MagicModalPortal, magicModal} from 'react-native-magic-modal';
 
 const comment = 'Мужчина ,  43 года нужна детоксикация организма , возмоно психотерапевтическая помощь',
   address = 'Пресненская наб., 2 (этаж 1)',
@@ -33,19 +32,24 @@ export const CurrentCall = ({navigation}) => {
   switch (status) {
     case STATUSES.ROUTE:
       return <Layout>
-        <Appbar.Header>
+        <Button
+          mode="text"
+          icon="chevron-left"
+          onPress={() => setStatus(STATUSES.ASSIGNED)}
+          style={styles.back}
+        >Маршрут до места вызова
+        </Button>
+        {/*<Appbar.Header>
           <Appbar.BackAction onPress={() => setStatus(STATUSES.ASSIGNED)} />
           <Appbar.Content title="Маршрут до места вызова" style={styles.title}/>
-        </Appbar.Header>
-        {/*<View style={styles.btnHolder}>
-          <Button mode="text" onPress={() => setStatus(STATUSES.ASSIGNED)}>Маршрут до места вызова</Button>
-        </View>*/}
+        </Appbar.Header>*/}
+        <MapSection/>
       </Layout>
     default:
       return (
         <ScrollView style={styles.root}>
           <Layout>
-            <MagicModalPortal />
+            <MagicModalPortal/>
             <CardLayout address={address} subject={subject} date={date} time={time}>
               <View>
                 <Text style={active ? styles.activeColor : styles.info}>Коментарий к вызову:</Text>
@@ -57,13 +61,13 @@ export const CurrentCall = ({navigation}) => {
                     icon={() => (
                       <Image
                         source={require('../../../assets/images/map_marker.webp')}
-                        style={{ width: 17, height: 23 }}
+                        style={{width: 17, height: 23}}
                       />
                     )}>Посмотреть карту</Button>
                   <Button icon={() => (
                     <Image
                       source={require('../../../assets/images/close.webp')}
-                      style={{ width: 25, height: 24 }}
+                      style={{width: 25, height: 24}}
                     />
                   )}>Отменить вызов</Button>
                 </View>
@@ -98,38 +102,40 @@ export const CurrentCall = ({navigation}) => {
                 </View>
                 <View style={styles.wrapper}>
                   <TouchableOpacity
-                    onPress={() => magicModal.show(() => <ModalWindow label="Поиск услуги" />)}
+                    onPress={() => magicModal.show(() => <ModalWindow label="Поиск услуги"/>)}
                   >
                     <Button
                       style={styles.btn}
                       icon={() => (
                         <Image
                           source={require('../../../assets/images/close.webp')}
-                          style={{ width: 25, height: 24 }}
+                          style={{width: 25, height: 24}}
                         />
                       )}>Добавить услуги</Button>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => magicModal.show(() => <ModalWindow label="Поиск медикаментов" />)}
+                    onPress={() => magicModal.show(() => <ModalWindow label="Поиск медикаментов"/>)}
                   >
                     <Button
                       icon={() => (
                         <Image
                           source={require('../../../assets/images/close.webp')}
-                          style={{ width: 25, height: 24 }}
+                          style={{width: 25, height: 24}}
                         />
                       )}>Добавить список медикаментов</Button>
                   </TouchableOpacity>
                 </View>
-                <Button mode="contained" raised style={styles.gray} textColor={COLORS.gray}>Стоимость оказаных услуг</Button>
+                <Button mode="contained" raised style={styles.gray} textColor={COLORS.gray}>Стоимость оказаных
+                  услуг</Button>
               </View>
             </CardLayout>
             <View style={active ? styles.hide : styles.show}>
               <Button mode="outlined" raised>Позвонить заказчику</Button>
-              <Button mode="contained" style={styles.btn} onPress={() => onDetailedClick()}>Бригада прибыла на вызов</Button>
+              <Button mode="contained" style={styles.btn} onPress={() => onDetailedClick()}>Бригада прибыла на
+                вызов</Button>
             </View>
             <View style={active ? styles.show : styles.hide}>
-              <Button  mode="contained" onPress={() => onAccepting()}>Вызов завершен</Button>
+              <Button mode="contained" onPress={() => onAccepting()}>Вызов завершен</Button>
               <Button mode="contained" style={styles.btn}>Повтор процедуры</Button>
               <Button mode="contained" style={styles.btn}>Кодирование</Button>
               <Button mode="contained" style={styles.btn} onPress={() => onAccepting()}>Госпитализация</Button>
@@ -192,4 +198,9 @@ const styles = StyleSheet.create({
   input: {
     marginBottom: 10,
   },
+  back: {
+    marginBottom: 16,
+    alignItems: "flex-start",
+    marginLeft: -15,
+  }
 });
