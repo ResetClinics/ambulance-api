@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     letterSpacing: 0.4,
     color: COLORS.black,
-    fontFamily: 'Roboto-Regular'
+    fontFamily: 'Roboto-Italic'
   },
   root: {
     marginLeft: 'auto',
