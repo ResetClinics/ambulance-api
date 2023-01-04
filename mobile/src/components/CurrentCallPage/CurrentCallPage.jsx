@@ -1,10 +1,11 @@
-import { Image, ScrollView, Text, View } from "react-native";
 import React, { useState } from "react";
-import { CardLayout } from "../../components";
-import { Layout } from "../../shared";
 import { Button, TextInput } from "react-native-paper";
-import { COLORS, SIZES } from "../../../constants";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { COLORS, FONTS } from "../../../constants";
+import { Layout } from "../../shared";
+import { magicModal, MagicModalPortal } from "react-native-magic-modal";
+import { CardLayout } from "../CardLayout";
+import { ModalWindow } from "../modal";
 
 const comment = 'Мужчина ,  43 года нужна детоксикация организма , возмоно психотерапевтическая помощь',
   address = 'Пресненская наб., 2 (этаж 1)',
@@ -12,9 +13,9 @@ const comment = 'Мужчина ,  43 года нужна детоксикаци
   date = '12.12.2022',
   time = '12:45';
 
-const Call = ({ navigation }) => {
+export  const CurrentCallPage = ({ navigation } ) => {
   const [active, setActive] = useState(false);
-  const [text, setText] = React.useState("");
+  const [text, setText] = useState("");
 
   const onAccepting = () => {
     navigation.navigate('Уведомления')
@@ -29,6 +30,7 @@ const Call = ({ navigation }) => {
   return (
     <ScrollView style={styles.root}>
       <Layout>
+        <MagicModalPortal/>
         <CardLayout address={address} subject={subject} date={date} time={time}>
           <View>
             <Text style={active ? styles.activeColor : styles.info}>Коментарий к вызову:</Text>
@@ -40,13 +42,13 @@ const Call = ({ navigation }) => {
                 icon={() => (
                   <Image
                     source={require('../../../assets/images/map_marker.webp')}
-                    style={{ width: 17, height: 23 }}
+                    style={{width: 17, height: 23}}
                   />
                 )}>Посмотреть карту</Button>
               <Button icon={() => (
                 <Image
                   source={require('../../../assets/images/close.webp')}
-                  style={{ width: 25, height: 24 }}
+                  style={{width: 25, height: 24}}
                 />
               )}>Отменить вызов</Button>
             </View>
@@ -60,7 +62,7 @@ const Call = ({ navigation }) => {
                 focused
                 label="Фамилия Имя Отчество"
                 value={text}
-                onChangeText={text => setText(text)}
+                onChangeText={textName => setText(textName)}
               />
               <TextInput
                 style={styles.input}
@@ -68,7 +70,7 @@ const Call = ({ navigation }) => {
                 focused
                 label="Дата рождения"
                 value={text}
-                onChangeText={text => setText(text)}
+                onChangeText={textDate => setText(textDate)}
               />
               <TextInput
                 style={styles.input}
@@ -76,34 +78,45 @@ const Call = ({ navigation }) => {
                 focused
                 label="Данные документа"
                 value={text}
-                onChangeText={text => setText(text)}
+                onChangeText={textInfo => setText(textInfo)}
               />
             </View>
             <View style={styles.wrapper}>
-              <Button
-                style={styles.btn}
-                icon={() => (
-                  <Image
-                    source={require('../../../assets/images/close.webp')}
-                    style={{ width: 25, height: 24 }}
-                  />
-                )}>Добавить услуги</Button>
-              <Button icon={() => (
-                <Image
-                  source={require('../../../assets/images/close.webp')}
-                  style={{ width: 25, height: 24 }}
-                />
-              )}>Добавить список медикаментов</Button>
+              <TouchableOpacity
+                onPress={() => magicModal.show(() => <ModalWindow label="Поиск услуги"/>)}
+              >
+                <Button
+                  style={styles.btn}
+                  icon={() => (
+                    <Image
+                      source={require('../../../assets/images/close.webp')}
+                      style={{width: 25, height: 24}}
+                    />
+                  )}>Добавить услуги</Button>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => magicModal.show(() => <ModalWindow label="Поиск медикаментов"/>)}
+              >
+                <Button
+                  icon={() => (
+                    <Image
+                      source={require('../../../assets/images/close.webp')}
+                      style={{width: 25, height: 24}}
+                    />
+                  )}>Добавить список медикаментов</Button>
+              </TouchableOpacity>
             </View>
-            <Button mode="contained" raised style={styles.gray} textColor={COLORS.gray}>Стоимость оказаных услуг</Button>
+            <Button mode="contained" raised style={styles.costBtn} textColor={COLORS.gray}>Стоимость оказаных
+              услуг</Button>
           </View>
         </CardLayout>
         <View style={active ? styles.hide : styles.show}>
           <Button mode="outlined" raised>Позвонить заказчику</Button>
-          <Button mode="contained" style={styles.btn} onPress={() => onDetailedClick()}>Бригада прибыла на вызов</Button>
+          <Button mode="contained" style={styles.btn} onPress={() => onDetailedClick()}>Бригада прибыла на
+            вызов</Button>
         </View>
         <View style={active ? styles.show : styles.hide}>
-          <Button  mode="contained" onPress={() => onAccepting()}>Вызов завершен</Button>
+          <Button mode="contained" onPress={() => onAccepting()}>Вызов завершен</Button>
           <Button mode="contained" style={styles.btn}>Повтор процедуры</Button>
           <Button mode="contained" style={styles.btn}>Кодирование</Button>
           <Button mode="contained" style={styles.btn} onPress={() => onAccepting()}>Госпитализация</Button>
@@ -113,43 +126,23 @@ const Call = ({ navigation }) => {
   )
 }
 
-const Map = () => {
-  return <Layout>
-    <View style={styles.btnHolder}>
-      <Button mode="text">Map is here</Button>
-    </View>
-  </Layout>
-}
-
-
-const Stack = createNativeStackNavigator()
-export const CurrentCallNext = ({navigation}) => {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="Home" component={Call} options={{title: ''}} />
-      <Stack.Screen name="Маршрут" component={Map} options={{title: 'Маршрут'}} />
-    </Stack.Navigator>
-  )
-}
-
-const styles = {
+const styles = StyleSheet.create({
+  title: {
+    color: COLORS.primary,
+    fontSize: 12
+  },
   root: {
     flex: 1,
     backgroundColor: COLORS.white
   },
   info: {
-    fontSize: SIZES.fs16,
-    color: COLORS.black,
-    letterSpacing: 0.4,
-    lineHeight: 16,
-    marginTop: 16
+    marginTop: 16,
+    ...FONTS.text
   },
   activeColor: {
-    fontSize: SIZES.fs16,
+    marginTop: 16,
+    ...FONTS.text,
     color: COLORS.gray,
-    letterSpacing: 0.4,
-    lineHeight: 16,
-    marginTop: 16
   },
   wrap: {
     alignItems: 'flex-start',
@@ -172,7 +165,7 @@ const styles = {
   btn: {
     marginTop: 16
   },
-  gray: {
+  costBtn: {
     backgroundColor: '#f1f1f199',
     borderWidth: 1,
     borderColor: '#0000001f',
@@ -184,6 +177,5 @@ const styles = {
   },
   input: {
     marginBottom: 10,
-  }
-}
-
+  },
+});

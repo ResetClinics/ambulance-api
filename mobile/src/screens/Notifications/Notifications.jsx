@@ -3,7 +3,7 @@ import { Button } from 'react-native-paper';
 import { Layout } from "../../shared";
 import { FlatList } from "react-native";
 import { CardItem } from "../../components";
-import { data } from "../data/data";
+import { data } from "../../data/data";
 
 export const Notifications = ({navigation}) => {
   const onAccepting = () => {

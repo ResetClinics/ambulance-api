@@ -1,5 +1,7 @@
 export { CardLayout } from './CardLayout'
 export { CardItem } from './CardItem'
+export { CurrentCallPage } from './CurrentCallPage'
+export { Map } from './Map'
 export { MapSection } from './MapSection'
 export { ModalWindow } from './modal/ModalWindow'
 export { ModalInput } from './modal/ModalInput'
