@@ -3,8 +3,7 @@ import { Button, TextInput } from "react-native-paper";
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { COLORS, FONTS } from "../../../../constants";
 import { magicModal, MagicModalPortal } from "react-native-magic-modal";
-import {CardLayout, Layout, ModalWindow} from "../../../components";
-
+import { CardLayout, Layout, ModalWindow } from "../../../components";
 
 const comment = 'Мужчина ,  43 года нужна детоксикация организма , возмоно психотерапевтическая помощь',
   address = 'Пресненская наб., 2 (этаж 1)',
@@ -12,32 +11,18 @@ const comment = 'Мужчина ,  43 года нужна детоксикаци
   date = '12.12.2022',
   time = '12:45';
 
-export  const CurrentCallPage = ({ navigation } ) => {
-  const [active, setActive] = useState(false);
-  const [text, setText] = useState("");
-
-  const onAccepting = () => {
-    navigation.navigate('Уведомления')
-  }
-
-  const goToMapPage = () => {
-    navigation.navigate('Маршрут')
-  }
-  const onDetailedClick = () => {
-    setActive(!active)
-  }
+const Call = ({ navigation, onArrival } ) => {
   return (
     <ScrollView style={styles.root}>
       <Layout>
-        <MagicModalPortal/>
         <CardLayout address={address} subject={subject} date={date} time={time}>
           <View>
-            <Text style={active ? styles.activeColor : styles.info}>Коментарий к вызову:</Text>
-            <Text style={active ? styles.activeColor : styles.info}>{comment}</Text>
-            <View style={active ? styles.hide : styles.wrap}>
+            <Text style={styles.info}>Коментарий к вызову:</Text>
+            <Text style={styles.info}>{comment}</Text>
+            <View style={styles.wrap}>
               <Button
                 style={styles.btn}
-                onPress={() => goToMapPage()}
+                onPress={() => navigation()}
                 icon={() => (
                   <Image
                     source={require('../../../../assets/images/map_marker.webp')}
@@ -52,7 +37,30 @@ export  const CurrentCallPage = ({ navigation } ) => {
               )}>Отменить вызов</Button>
             </View>
           </View>
-          <View style={active ? styles.show : styles.hide}>
+        </CardLayout>
+        <View>
+          <Button mode="outlined" raised>Позвонить заказчику</Button>
+          <Button mode="contained" style={styles.btn} onPress={() => onArrival()}>Бригада прибыла на
+            вызов</Button>
+        </View>
+      </Layout>
+    </ScrollView>
+  )
+}
+
+const AcceptedCall = ({ onAccepting }) => {
+  const [text, setText] = useState("");
+
+  return (
+    <ScrollView style={styles.root}>
+      <Layout>
+        <MagicModalPortal/>
+        <CardLayout address={address} subject={subject} date={date} time={time}>
+          <View>
+            <Text style={styles.activeColor}>Коментарий к вызову:</Text>
+            <Text style={styles.activeColor}>{comment}</Text>
+          </View>
+          <View>
             <Text style={styles.info}>Данные заказчика:</Text>
             <View style={styles.inputsHolder}>
               <TextInput
@@ -109,12 +117,7 @@ export  const CurrentCallPage = ({ navigation } ) => {
               услуг</Button>
           </View>
         </CardLayout>
-        <View style={active ? styles.hide : styles.show}>
-          <Button mode="outlined" raised>Позвонить заказчику</Button>
-          <Button mode="contained" style={styles.btn} onPress={() => onDetailedClick()}>Бригада прибыла на
-            вызов</Button>
-        </View>
-        <View style={active ? styles.show : styles.hide}>
+        <View>
           <Button mode="contained" onPress={() => onAccepting()}>Вызов завершен</Button>
           <Button mode="contained" style={styles.btn}>Повтор процедуры</Button>
           <Button mode="contained" style={styles.btn}>Кодирование</Button>
@@ -123,6 +126,25 @@ export  const CurrentCallPage = ({ navigation } ) => {
       </Layout>
     </ScrollView>
   )
+}
+
+export  const CurrentCallPage = ({ navigation } ) => {
+  const [arrival, setArrival] = useState(false);
+  const goToMapPage = () => {
+    navigation.navigate('Маршрут')
+  }
+  const onArrival = () => {
+    setArrival(true)
+  }
+
+  const onAccepting = () => {
+    navigation.navigate('Уведомления')
+  }
+
+  if(arrival) {
+    return <AcceptedCall onAccepting={onAccepting} />
+  }
+  return  <Call navigation={goToMapPage} onArrival={onArrival} />
 }
 
 const styles = StyleSheet.create({

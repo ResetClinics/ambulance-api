@@ -4,5 +4,3 @@ export { CallHistory } from '../screens/CallHistory'
 export { Notifications } from '../screens/Notifications'
 export { Profile } from '../screens/Profile'
 export { Team } from '../screens/Team'
-
-
