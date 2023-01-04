@@ -1,6 +1,5 @@
 import { StyleSheet, Text } from "react-native";
 import { Avatar } from "react-native-paper";
-import { Layout } from "../Layout";
 import React from "react";
 import { COLORS, FONTS, SIZES } from "../../../constants";
 
@@ -9,11 +8,11 @@ const img = require('../../../assets/images/image.webp')
 
 export const ProfileScreen = (/*{img}*/) => {
   return (
-    <Layout>
+    <>
       <Avatar.Image size={140} source={img || defaultImg} style={styles.root} />
       <Text style={styles.title}>Иванов Иван Иванович</Text>
       <Text style={styles.text}>Невролог-терапевт</Text>
-    </Layout>
+    </>
   )
 }
 

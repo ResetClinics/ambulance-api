@@ -13,7 +13,7 @@ const comment = 'Мужчина ,  43 года нужна детоксикаци
 
 export const Call = ({ navigation, onArrival } ) => {
   return (
-    <ScrollView style={styles.root}>
+    <ScrollView style={{ backgroundColor: COLORS.white}}>
       <Layout>
         <CardLayout address={address} subject={subject} date={date} time={time}>
           <View>
@@ -21,7 +21,7 @@ export const Call = ({ navigation, onArrival } ) => {
             <Text style={styles.info}>{comment}</Text>
             <View style={styles.wrap}>
               <Button
-                style={styles.btn}
+                style={{marginTop: 16}}
                 onPress={() => navigation()}
                 icon={() => (
                   <Image
@@ -40,7 +40,7 @@ export const Call = ({ navigation, onArrival } ) => {
         </CardLayout>
         <View>
           <Button mode="outlined" raised>Позвонить заказчику</Button>
-          <Button mode="contained" style={styles.btn} onPress={() => onArrival()}>Бригада прибыла на
+          <Button mode="contained" style={{marginTop: 16}} onPress={() => onArrival()}>Бригада прибыла на
             вызов</Button>
         </View>
       </Layout>
@@ -49,55 +49,14 @@ export const Call = ({ navigation, onArrival } ) => {
 }
 
 const styles = StyleSheet.create({
-  title: {
-    color: COLORS.primary,
-    fontSize: 12
-  },
-  root: {
-    flex: 1,
-    backgroundColor: COLORS.white
-  },
   info: {
     marginTop: 16,
     ...FONTS.text
-  },
-  activeColor: {
-    marginTop: 16,
-    ...FONTS.text,
-    color: COLORS.gray,
   },
   wrap: {
     alignItems: 'flex-start',
     marginLeft: -10,
     marginVertical: 10,
     display: 'flex'
-  },
-  wrapper: {
-    alignItems: 'flex-start',
-    marginLeft: -10,
-    marginTop: -10,
-    marginBottom: 16,
-  },
-  hide: {
-    display: 'none'
-  },
-  show: {
-    display: 'flex',
-  },
-  btn: {
-    marginTop: 16
-  },
-  costBtn: {
-    backgroundColor: '#f1f1f199',
-    borderWidth: 1,
-    borderColor: '#0000001f',
-    borderRadius: 4,
-    alignItems: 'flex-start',
-  },
-  inputsHolder: {
-    marginTop: 7
-  },
-  input: {
-    marginBottom: 10,
   },
 });

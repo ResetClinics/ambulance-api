@@ -2,7 +2,7 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Image } from "react-native";
 import { COLORS } from "../../constants";
-import { CallHistory, Chat, CurrentCall, Notifications, Profile, Team } from "../screens";
+import { CallHistory, CurrentCall, Notifications, Profile, Team } from "../screens";
 
 const Tab = createBottomTabNavigator();
 
@@ -12,8 +12,6 @@ const currentCallIcon = '../../assets/images/menu/currentCall.webp'
 const currentCallIcon_color = '../../assets/images/menu/currentCall_color.webp'
 const callHistoryIcon = '../../assets/images/menu/callHistory.webp'
 const callHistoryIcon_color = '../../assets/images/menu/callHistory_color.webp'
-const chatIcon = '../../assets/images/menu/chat.webp'
-const chatIcon_color = '../../assets/images/menu/chat_color.webp'
 const notificationIcon = '../../assets/images/menu/notification.webp'
 const notificationIcon_color = '../../assets/images/menu/notification_color.webp'
 const profileIcon = '../../assets/images/menu/profile.webp'
@@ -31,10 +29,6 @@ const icons = {
   "История вызовов": {
     default: require(callHistoryIcon),
     focused: require(callHistoryIcon_color),
-  },
-  "Чат": {
-    default: require(chatIcon),
-    focused: require(chatIcon_color),
   },
   "Уведомления": {
     default: require(notificationIcon),
@@ -77,7 +71,6 @@ export const Routes = () => {
       <Tab.Screen name="Бригада" component={Team} />
       <Tab.Screen name="Текущий вызов" component={CurrentCall} />
       <Tab.Screen name="История вызовов" component={CallHistory} />
-      <Tab.Screen name="Чат" component={Chat} />
       <Tab.Screen name="Уведомления" component={Notifications} options={{tabBarBadge: 3}} />
       <Tab.Screen name="Профиль" component={Profile} />
     </Tab.Navigator>

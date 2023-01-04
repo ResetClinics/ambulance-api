@@ -1,6 +1,10 @@
 import React from "react";
-import { ProfileScreen } from "../../components";
+import { Layout, ProfileScreen } from "../../components";
 
 export const Profile = () => {
-  return <ProfileScreen />
+  return (
+      <Layout>
+        <ProfileScreen />
+      </Layout>
+    )
 }

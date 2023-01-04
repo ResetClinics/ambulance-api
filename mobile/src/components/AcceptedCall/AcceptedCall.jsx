@@ -17,7 +17,7 @@ export const AcceptedCall = ({ onAccepting }) => {
   const [text, setText] = useState("");
 
   return (
-    <ScrollView style={styles.root}>
+    <ScrollView style={{ backgroundColor: COLORS.white, flex: 1 }}>
       <Layout>
         <MagicModalPortal/>
         <CardLayout address={address} subject={subject} date={date} time={time}>
@@ -27,7 +27,7 @@ export const AcceptedCall = ({ onAccepting }) => {
           </View>
           <View>
             <Text style={styles.info}>Данные заказчика:</Text>
-            <View style={styles.inputsHolder}>
+            <View>
               <TextInput
                 style={styles.input}
                 mode="outlined"
@@ -58,7 +58,7 @@ export const AcceptedCall = ({ onAccepting }) => {
                 onPress={() => magicModal.show(() => <ModalWindow label="Поиск услуги"/>)}
               >
                 <Button
-                  style={styles.btn}
+                  style={{marginTop: 16}}
                   icon={() => (
                     <Image
                       source={require('../../../assets/images/close.webp')}
@@ -84,9 +84,9 @@ export const AcceptedCall = ({ onAccepting }) => {
         </CardLayout>
         <View>
           <Button mode="contained" onPress={() => onAccepting()}>Вызов завершен</Button>
-          <Button mode="contained" style={styles.btn}>Повтор процедуры</Button>
-          <Button mode="contained" style={styles.btn}>Кодирование</Button>
-          <Button mode="contained" style={styles.btn} onPress={() => onAccepting()}>Госпитализация</Button>
+          <Button mode="contained" style={{marginTop: 16}}>Повтор процедуры</Button>
+          <Button mode="contained" style={{marginTop: 16}}>Кодирование</Button>
+          <Button mode="contained" style={{marginTop: 16}} onPress={() => onAccepting()}>Госпитализация</Button>
         </View>
       </Layout>
     </ScrollView>
@@ -94,28 +94,15 @@ export const AcceptedCall = ({ onAccepting }) => {
 }
 
 const styles = StyleSheet.create({
-  title: {
-    color: COLORS.primary,
-    fontSize: 12
-  },
-  root: {
-    flex: 1,
-    backgroundColor: COLORS.white
-  },
   info: {
     marginTop: 16,
-    ...FONTS.text
+    ...FONTS.text,
+    marginBottom: 7
   },
   activeColor: {
     marginTop: 16,
     ...FONTS.text,
     color: COLORS.gray,
-  },
-  wrap: {
-    alignItems: 'flex-start',
-    marginLeft: -10,
-    marginVertical: 10,
-    display: 'flex'
   },
   wrapper: {
     alignItems: 'flex-start',
@@ -123,26 +110,11 @@ const styles = StyleSheet.create({
     marginTop: -10,
     marginBottom: 16,
   },
-  hide: {
-    display: 'none'
-  },
-  show: {
-    display: 'flex',
-  },
-  btn: {
-    marginTop: 16
-  },
   costBtn: {
     backgroundColor: '#f1f1f199',
     borderWidth: 1,
     borderColor: '#0000001f',
     borderRadius: 4,
     alignItems: 'flex-start',
-  },
-  inputsHolder: {
-    marginTop: 7
-  },
-  input: {
-    marginBottom: 10,
   },
 });
