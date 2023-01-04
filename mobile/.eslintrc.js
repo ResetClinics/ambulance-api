@@ -31,8 +31,12 @@ module.exports = {
         namedComponents: 'arrow-function'
       }
     ],
+    semi: [
+      'warn',
+      'never'
+    ],
   },
   globals: {
     fetch: false
   }
-};
+}
