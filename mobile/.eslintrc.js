@@ -19,7 +19,7 @@ module.exports = {
     'react/prop-types': 'off',
     'comma-dangle': 'off',
     'padded-blocks': 'off',
-    'arrow-body-style': 'off',
+
     'react-hooks/exhaustive-deps': 'warn',
     'react-native/no-unused-styles': 2,
     'react-native/split-platform-components': 2,
