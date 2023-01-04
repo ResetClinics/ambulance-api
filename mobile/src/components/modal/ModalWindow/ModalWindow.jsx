@@ -1,9 +1,9 @@
-import React from 'react';
-import {Image, StyleSheet, View} from 'react-native';
-import { magicModal } from 'react-native-magic-modal';
-import { Button } from "react-native-paper";
-import { ModalInput } from "../ModalInput";
-import { ModalList } from "../ModalList";
+import React from 'react'
+import { Image, StyleSheet, View } from 'react-native'
+import { magicModal } from 'react-native-magic-modal'
+import { Button } from 'react-native-paper'
+import { ModalInput } from '../ModalInput'
+import { ModalList } from '../ModalList'
 
 const data = [
   {
@@ -56,23 +56,22 @@ const data = [
   },
 ]
 
-export const ModalWindow = ({label}) => {
-  return (
-    <View style={styles.container}>
-      <Button
-        onPress={() => magicModal.hide('close button pressed')}
-        style={styles.btn}
-        icon={() => (
-          <Image
-            source={require('../../../../assets/images/close.webp')}
-            style={{ width: 30, height: 29 }}
-          />
-        )} />
-      <ModalInput label={label} />
-      <ModalList data={data} />
-    </View>
-  );
-};
+export const ModalWindow = ({ label }) => (
+  <View style={styles.container}>
+    <Button
+      onPress={() => magicModal.hide('close button pressed')}
+      style={styles.btn}
+      icon={() => (
+        <Image
+          source={require('../../../../assets/images/close.webp')}
+          style={{ width: 30, height: 29 }}
+        />
+      )}
+    />
+    <ModalInput label={label} />
+    <ModalList data={data} />
+  </View>
+)
 
 const styles = StyleSheet.create({
   container: {
@@ -85,4 +84,4 @@ const styles = StyleSheet.create({
     top: -50,
     right: -20
   },
-});
+})

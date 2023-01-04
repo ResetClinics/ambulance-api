@@ -1,20 +1,20 @@
-import { AppRegistry, View } from 'react-native';
-import { Provider as PaperProvider, MD3LightTheme } from 'react-native-paper';
-import React, {useCallback, useEffect, useState} from 'react';
-import { expo } from './app.json';
-import { Main } from "./src/Main/Main";
-import { MagicModalPortal } from 'react-native-magic-modal';
-import * as Font from 'expo-font';
-import * as SplashScreen from "expo-splash-screen";
+import { AppRegistry, View } from 'react-native'
+import { Provider as PaperProvider, MD3LightTheme } from 'react-native-paper'
+import React, { useCallback, useEffect, useState } from 'react'
+import { MagicModalPortal } from 'react-native-magic-modal'
+import * as Font from 'expo-font'
+import * as SplashScreen from 'expo-splash-screen'
+import { Main } from './src/Main/Main'
+import { expo } from './app.json'
 
 export default function App() {
-  const [appIsReady, setAppIsReady] = useState(false);
+  const [appIsReady, setAppIsReady] = useState(false)
 
   useEffect(() => {
     async function prepare() {
       try {
-        await SplashScreen.preventAutoHideAsync();
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await SplashScreen.preventAutoHideAsync()
+        await new Promise((resolve) => setTimeout(resolve, 2000))
         await Font.loadAsync(
           {
             'Roboto-Regular': require('./assets/fonts/Roboto-Regular.ttf'),
@@ -22,35 +22,34 @@ export default function App() {
             'Roboto-Bold': require('./assets/fonts/Roboto-Bold.ttf'),
             'Roboto-Italic': require('./assets/fonts/Roboto-Italic.ttf'),
           }
-        );
+        )
       } catch (e) {
-        console.warn(e);
+        console.warn(e)
       } finally {
-        setAppIsReady(true);
+        setAppIsReady(true)
       }
     }
-    prepare();
-  }, []);
+    prepare()
+  }, [])
 
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
-      await SplashScreen.hideAsync();
+      await SplashScreen.hideAsync()
     }
-  }, [appIsReady]);
-
+  }, [appIsReady])
 
   if (!appIsReady) {
-    return null;
+    return null
   }
 
   return (
-    <View onLayout={onLayoutRootView} style={{flex: 1}}>
+    <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
       <PaperProvider theme={theme}>
         <MagicModalPortal />
         <Main />
       </PaperProvider>
     </View>
-  );
+  )
 }
 
 AppRegistry.registerComponent(expo.name, () => App)
@@ -64,4 +63,4 @@ const theme = {
     secondary: 'rad',
     tertiary: 'red',
   },
-};
+}

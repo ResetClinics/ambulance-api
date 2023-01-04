@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { AcceptedCall, Call } from "../../../components";
+import React, { useState } from 'react'
+import { AcceptedCall, Call } from '../../../components'
 
-export  const CurrentCallPage = ({ navigation } ) => {
-  const [arrival, setArrival] = useState(false);
+export const CurrentCallPage = ({ navigation }) => {
+  const [arrival, setArrival] = useState(false)
   const goToMapPage = () => {
     navigation.navigate('Маршрут')
   }
@@ -14,8 +14,8 @@ export  const CurrentCallPage = ({ navigation } ) => {
     navigation.navigate('Уведомления')
   }
 
-  if(arrival) {
+  if (arrival) {
     return <AcceptedCall onAccepting={onAccepting} />
   }
-  return  <Call navigation={goToMapPage} onArrival={onArrival} />
+  return <Call navigation={goToMapPage} onArrival={onArrival} />
 }

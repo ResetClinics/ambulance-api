@@ -1,14 +1,12 @@
 import React from 'react'
-import {StyleSheet, View} from "react-native";
-import { COLORS } from "../../../constants";
+import { StyleSheet, View } from 'react-native'
+import { COLORS } from '../../../constants'
 
-export const Layout  = ({ children} ) => {
-  return (
-    <View style={styles.root}>
-      {children}
-    </View>
-  )
-}
+export const Layout = ({ children }) => (
+  <View style={styles.root}>
+    {children}
+  </View>
+)
 
 const styles = StyleSheet.create({
   root: {
@@ -16,4 +14,4 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.white
   }
-});
+})

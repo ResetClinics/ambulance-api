@@ -1,35 +1,35 @@
-import { Card, Paragraph, Title } from "react-native-paper";
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
-import { COLORS, FONTS } from "../../../constants";
+import { Card, Paragraph, Title } from 'react-native-paper'
+import { StyleSheet, Text, View } from 'react-native'
+import React from 'react'
+import { COLORS, FONTS } from '../../../constants'
 
-export const CardLayout = ({ address, subject, date, time, children }) => {
-  return (
-    <Card style={styles.root} children>
-      <Card.Content>
-        <Title style={styles.title}>{address}</Title>
-        <Paragraph style={styles.subtitle}>{subject}</Paragraph>
-        <View style={styles.date}>
-          <Text style={styles.text}>
-            Дата:
-            {' '}
-            {date}
-            {' '}
-            г.
-          </Text>
-          <Text style={styles.text}>
-            Время заказа:
-            {' '}
-            {time}
-          </Text>
-        </View>
-        {
+export const CardLayout = ({
+  address, subject, date, time, children
+}) => (
+  <Card style={styles.root} children>
+    <Card.Content>
+      <Title style={styles.title}>{address}</Title>
+      <Paragraph style={styles.subtitle}>{subject}</Paragraph>
+      <View style={styles.date}>
+        <Text style={styles.text}>
+          Дата:
+          {' '}
+          {date}
+          {' '}
+          г.
+        </Text>
+        <Text style={styles.text}>
+          Время заказа:
+          {' '}
+          {time}
+        </Text>
+      </View>
+      {
           children
         }
-      </Card.Content>
-    </Card>
-  )
-}
+    </Card.Content>
+  </Card>
+)
 
 const styles = StyleSheet.create({
   root: {
@@ -55,4 +55,4 @@ const styles = StyleSheet.create({
     width: '45%',
     ...FONTS.smallText
   },
-});
+})
