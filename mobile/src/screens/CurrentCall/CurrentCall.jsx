@@ -1,6 +1,7 @@
 import React from "react";
-import { Map, CurrentCallPage } from "../../components";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { CurrentCallPage } from "./CurrentCallPage";
+import {Map} from "./Map"
 
 const Stack = createNativeStackNavigator()
 export const CurrentCall = () => {

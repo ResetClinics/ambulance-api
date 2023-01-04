@@ -1,8 +1,8 @@
-import { Layout } from "../../../shared";
 import {StyleSheet, Text} from "react-native";
 import { IconButton } from "react-native-paper";
 import { COLORS } from "../../../../constants";
 import React from "react";
+import { Layout } from "../../Layout";
 
 export const TeamNotAssigned = ({onPress}) => {
   return (

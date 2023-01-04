@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { Button, TextInput } from "react-native-paper";
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { COLORS, FONTS } from "../../../constants";
-import { Layout } from "../../shared";
+import { COLORS, FONTS } from "../../../../constants";
 import { magicModal, MagicModalPortal } from "react-native-magic-modal";
-import { CardLayout } from "../CardLayout";
-import { ModalWindow } from "../modal";
+import {CardLayout, Layout, ModalWindow} from "../../../components";
+
 
 const comment = 'Мужчина ,  43 года нужна детоксикация организма , возмоно психотерапевтическая помощь',
   address = 'Пресненская наб., 2 (этаж 1)',
@@ -41,13 +40,13 @@ export  const CurrentCallPage = ({ navigation } ) => {
                 onPress={() => goToMapPage()}
                 icon={() => (
                   <Image
-                    source={require('../../../assets/images/map_marker.webp')}
+                    source={require('../../../../assets/images/map_marker.webp')}
                     style={{width: 17, height: 23}}
                   />
                 )}>Посмотреть карту</Button>
               <Button icon={() => (
                 <Image
-                  source={require('../../../assets/images/close.webp')}
+                  source={require('../../../../assets/images/close.webp')}
                   style={{width: 25, height: 24}}
                 />
               )}>Отменить вызов</Button>
@@ -89,7 +88,7 @@ export  const CurrentCallPage = ({ navigation } ) => {
                   style={styles.btn}
                   icon={() => (
                     <Image
-                      source={require('../../../assets/images/close.webp')}
+                      source={require('../../../../assets/images/close.webp')}
                       style={{width: 25, height: 24}}
                     />
                   )}>Добавить услуги</Button>
@@ -100,7 +99,7 @@ export  const CurrentCallPage = ({ navigation } ) => {
                 <Button
                   icon={() => (
                     <Image
-                      source={require('../../../assets/images/close.webp')}
+                      source={require('../../../../assets/images/close.webp')}
                       style={{width: 25, height: 24}}
                     />
                   )}>Добавить список медикаментов</Button>

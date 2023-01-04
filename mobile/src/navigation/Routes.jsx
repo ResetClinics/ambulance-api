@@ -1,6 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Image, StyleSheet } from "react-native";
+import { Image } from "react-native";
 import { COLORS } from "../../constants";
 import { CallHistory, Chat, CurrentCall, Notifications, Profile, Team } from "../screens";
 
@@ -58,7 +58,7 @@ const tabBarIcon = (focused, color, size, route) => {
     currentIcons = icons["default"]
   }
   let iconName = focused ? currentIcons.focused : currentIcons.default
-  return <Image source={iconName} size={size} color={color} style={styles.img} />
+  return <Image source={iconName} size={size} color={color} style={{ width: 24,  height: 24 }} />
 }
 
 export const Routes = () => {
@@ -83,10 +83,3 @@ export const Routes = () => {
     </Tab.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  img: {
-    width: 24,
-    height: 24,
-  }
-});
