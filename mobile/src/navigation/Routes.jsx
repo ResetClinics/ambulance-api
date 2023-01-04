@@ -5,50 +5,49 @@ import { COLORS } from '../../constants'
 import {
   CallHistory, CurrentCall, Notifications, Profile, Team
 } from '../screens'
-import {teamIcon} from '../../assets/images/menu/team.webp'
+import teamIcon from '../../assets/images/menu/team.webp'
+import teamIconColor from '../../assets/images/menu/team_color.webp'
+import currentCallIcon from '../../assets/images/menu/currentCall.webp'
+import currentCallIconColor from '../../assets/images/menu/currentCall_color.webp'
+import callHistoryIcon from '../../assets/images/menu/callHistory.webp'
+import callHistoryIconColor from '../../assets/images/menu/callHistory_color.webp'
+import notificationIcon from '../../assets/images/menu/notification.webp'
+import notificationIconColor from '../../assets/images/menu/notification_color.webp'
+import profileIcon from '../../assets/images/menu/profile.webp'
+import profileIconColor from '../../assets/images/menu/profile_color.webp'
 
 const Tab = createBottomTabNavigator()
-
-/*const teamIcon = '../../assets/images/menu/team.webp'*/
-const teamIcon_color = '../../assets/images/menu/team_color.webp'
-const currentCallIcon = '../../assets/images/menu/currentCall.webp'
-const currentCallIcon_color = '../../assets/images/menu/currentCall_color.webp'
-const callHistoryIcon = '../../assets/images/menu/callHistory.webp'
-const callHistoryIcon_color = '../../assets/images/menu/callHistory_color.webp'
-const notificationIcon = '../../assets/images/menu/notification.webp'
-const notificationIcon_color = '../../assets/images/menu/notification_color.webp'
-const profileIcon = '../../assets/images/menu/profile.webp'
-const profileIcon_color = '../../assets/images/menu/profile_color.webp'
 
 const icons = {
   Бригада: {
     default: teamIcon,
-    focused: require(teamIcon_color),
+    focused: teamIconColor,
   },
   'Текущий вызов': {
-    default: require(currentCallIcon),
-    focused: require(currentCallIcon_color),
+    default: currentCallIcon,
+    focused: currentCallIconColor,
   },
   'История вызовов': {
-    default: require(callHistoryIcon),
-    focused: require(callHistoryIcon_color),
+    default: callHistoryIcon,
+    focused: callHistoryIconColor,
   },
   Уведомления: {
-    default: require(notificationIcon),
-    focused: require(notificationIcon_color),
+    default: notificationIcon,
+    focused: notificationIconColor,
   },
   Профиль: {
-    default: require(profileIcon),
-    focused: require(profileIcon_color),
+    default: profileIcon,
+    focused: profileIconColor,
   },
   default: {
     default: teamIcon,
-    focused: require(teamIcon_color),
+    focused: teamIconColor,
   }
 }
 
 const tabBarIcon = (focused, color, size, route) => {
   let currentIcons
+  // eslint-disable-next-line no-prototype-builtins
   if (icons.hasOwnProperty(route.name)) {
     currentIcons = icons[route.name]
   } else {
