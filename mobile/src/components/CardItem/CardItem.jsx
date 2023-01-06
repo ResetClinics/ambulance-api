@@ -3,24 +3,11 @@ import {
   Button, Card, Paragraph, Title
 } from 'react-native-paper'
 import {
-  Image, StyleSheet, Text, View
+  StyleSheet, Text, View
 } from 'react-native'
 import { COLORS, FONTS } from '../../../constants'
-import closeImg from '../../../assets/images/close.webp'
-import markerImg from '../../../assets/images/map_marker.webp'
-
-export const CloseIcon = () => (
-  <Image
-    source={closeImg}
-    style={styles.img}
-  />
-)
-export const MapMarkerIcon = () => (
-  <Image
-    source={markerImg}
-    style={styles.img}
-  />
-)
+import { CloseIcon } from '../CloseIcon'
+import { MapMarkerIcon } from '../MapMarkerIcon'
 
 export const CardItem = ({
   address, subject, date, time, comment, goToMapPage, status, children, text
@@ -30,7 +17,6 @@ export const CardItem = ({
   const onDetailedClick = () => {
     setActive(!active)
   }
-
   // eslint-disable-next-line react/no-unstable-nested-components
   const BtnChange = () => {
     if (active) {
@@ -145,9 +131,5 @@ const styles = StyleSheet.create({
   },
   active: {
     display: 'flex'
-  },
-  img: {
-    width: 25,
-    height: 24,
   },
 })

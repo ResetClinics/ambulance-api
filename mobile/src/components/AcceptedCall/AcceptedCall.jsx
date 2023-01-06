@@ -8,7 +8,7 @@ import { CardLayout } from '../CardLayout'
 import { ModalWindow } from '../modal'
 import { COLORS, FONTS } from '../../../constants'
 import { Layout } from '../Layout'
-import { CloseIcon } from '../CardItem/CardItem'
+import { CloseIcon } from '../CloseIcon'
 
 const comment = 'Мужчина ,  43 года нужна детоксикация организма , возмоно психотерапевтическая помощь'
 const address = 'Пресненская наб., 2 (этаж 1)'
