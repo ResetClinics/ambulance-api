@@ -8,6 +8,7 @@ import { CardLayout } from '../CardLayout'
 import { ModalWindow } from '../modal'
 import { COLORS, FONTS } from '../../../constants'
 import { Layout } from '../Layout'
+import closeImg from '../../../assets/images/close.webp'
 
 const comment = 'Мужчина ,  43 года нужна детоксикация организма , возмоно психотерапевтическая помощь'
 const address = 'Пресненская наб., 2 (этаж 1)'
@@ -17,9 +18,11 @@ const time = '12:45'
 
 export const AcceptedCall = ({ onAccepting }) => {
   const [text, setText] = useState('')
+  const [name, setName] = useState('')
+  const [birthday, setBirthday] = useState('')
 
   return (
-    <ScrollView style={{ backgroundColor: COLORS.white, flex: 1 }}>
+    <ScrollView style={styles.root}>
       <Layout>
         <MagicModalPortal />
         <CardLayout address={address} subject={subject} date={date} time={time}>
@@ -31,40 +34,41 @@ export const AcceptedCall = ({ onAccepting }) => {
             <Text style={styles.info}>Данные заказчика:</Text>
             <View>
               <TextInput
-                style={styles.input}
+                style={styles.mt}
                 mode="outlined"
                 focused
                 label="Фамилия Имя Отчество"
-                value={text}
-                onChangeText={(textName) => setText(textName)}
+                value={name}
+                onChangeText={(value) => setName(value)}
               />
               <TextInput
-                style={styles.input}
+                style={styles.mt}
                 mode="outlined"
                 focused
                 label="Дата рождения"
-                value={text}
-                onChangeText={(textDate) => setText(textDate)}
+                value={birthday}
+                onChangeText={(value) => setBirthday(value)}
               />
               <TextInput
-                style={styles.input}
+                style={styles.mt}
                 mode="outlined"
                 focused
                 label="Данные документа"
                 value={text}
-                onChangeText={(textInfo) => setText(textInfo)}
+                onChangeText={(value) => setText(value)}
               />
             </View>
             <View style={styles.wrapper}>
               <TouchableOpacity
-                onPress={() => magicModal.show(() => <ModalWindow label="Поиск услуги" />)}
+                onPress={() => magicModal.show(<ModalWindow label="Поиск услуги" />)}
               >
                 <Button
-                  style={{ marginTop: 16 }}
+                  style={styles.mt}
+                  /* eslint-disable-next-line react/no-unstable-nested-components */
                   icon={() => (
                     <Image
-                      source={require('../../../assets/images/close.webp')}
-                      style={{ width: 25, height: 24 }}
+                      source={closeImg}
+                      style={styles.img}
                     />
                   )}
                 >
@@ -72,13 +76,14 @@ export const AcceptedCall = ({ onAccepting }) => {
                 </Button>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => magicModal.show(() => <ModalWindow label="Поиск медикаментов" />)}
+                onPress={() => magicModal.show(<ModalWindow label="Поиск медикаментов" />)}
               >
                 <Button
+                  /* eslint-disable-next-line react/no-unstable-nested-components */
                   icon={() => (
                     <Image
-                      source={require('../../../assets/images/close.webp')}
-                      style={{ width: 25, height: 24 }}
+                      source={closeImg}
+                      style={styles.img}
                     />
                   )}
                 >
@@ -86,17 +91,14 @@ export const AcceptedCall = ({ onAccepting }) => {
                 </Button>
               </TouchableOpacity>
             </View>
-            <Button mode="contained" raised style={styles.costBtn} textColor={COLORS.gray}>
-              Стоимость оказаных
-              услуг
-            </Button>
+            <Button mode="contained" raised style={styles.cost} textColor={COLORS.gray}>Стоимость оказаных услуг</Button>
           </View>
         </CardLayout>
         <View>
           <Button mode="contained" onPress={() => onAccepting()}>Вызов завершен</Button>
-          <Button mode="contained" style={{ marginTop: 16 }}>Повтор процедуры</Button>
-          <Button mode="contained" style={{ marginTop: 16 }}>Кодирование</Button>
-          <Button mode="contained" style={{ marginTop: 16 }} onPress={() => onAccepting()}>Госпитализация</Button>
+          <Button mode="contained" style={styles.mt}>Повтор процедуры</Button>
+          <Button mode="contained" style={styles.mt}>Кодирование</Button>
+          <Button mode="contained" style={styles.mt} onPress={() => onAccepting()}>Госпитализация</Button>
         </View>
       </Layout>
     </ScrollView>
@@ -104,6 +106,9 @@ export const AcceptedCall = ({ onAccepting }) => {
 }
 
 const styles = StyleSheet.create({
+  root: {
+    backgroundColor: COLORS.white, flex: 1
+  },
   info: {
     marginTop: 16,
     ...FONTS.text,
@@ -120,11 +125,17 @@ const styles = StyleSheet.create({
     marginTop: -10,
     marginBottom: 16,
   },
-  costBtn: {
-    backgroundColor: '#f1f1f199',
+  cost: {
+    backgroundColor: COLORS.light,
     borderWidth: 1,
-    borderColor: '#0000001f',
+    borderColor: COLORS.lightGray,
     borderRadius: 4,
     alignItems: 'flex-start',
   },
+  mt: {
+    marginTop: 16
+  },
+  img: {
+    width: 25, height: 24
+  }
 })

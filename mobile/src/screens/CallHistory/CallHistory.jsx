@@ -16,6 +16,7 @@ export const CallHistory = ({ navigation }) => {
     <Layout>
       <FlatList
         data={data}
+        /* eslint-disable-next-line react/jsx-props-no-spreading */
         renderItem={({ item }) => <CardItem {...item} goToMapPage={goToMapPage} text="Свернуть" />}
       />
     </Layout>

@@ -6,6 +6,8 @@ import {
   Image, StyleSheet, Text, View
 } from 'react-native'
 import { COLORS, FONTS } from '../../../constants'
+import closeImg from '../../../assets/images/close.webp'
+import markerImg from '../../../assets/images/map_marker.webp'
 
 export const CardItem = ({
   address, subject, date, time, comment, goToMapPage, status, children, text
@@ -18,14 +20,21 @@ export const CardItem = ({
 
   const BtnChange = () => {
     if (active) {
-      return <Button style={styles.btn} onPress={onDetailedClick} buttonColor={COLORS.white}>{text}</Button>
+      return (
+        <Button
+          style={styles.btn}
+          onPress={onDetailedClick}
+          buttonColor={COLORS.white}
+        >
+          {text}
+        </Button>
+      )
     }
     return <Button onPress={onDetailedClick} buttonColor={COLORS.white}>Подробнее</Button>
-
   }
 
   return (
-    <Card style={styles.root} children>
+    <Card style={styles.root}>
       <Card.Content>
         {
           status && (<Text style={styles.status}>{status}</Text>)
@@ -53,19 +62,21 @@ export const CardItem = ({
             <Button
               onPress={() => goToMapPage()}
               style={styles.btn}
+              /* eslint-disable-next-line react/no-unstable-nested-components */
               icon={() => (
                 <Image
-                  source={require('../../../assets/images/map_marker.webp')}
-                  style={{ width: 17, height: 23 }}
+                  source={markerImg}
+                  style={styles.imgSmall}
                 />
               )}
             >
               Посмотреть карту
             </Button>
+            {/* eslint-disable-next-line react/no-unstable-nested-components */}
             <Button icon={() => (
               <Image
-                source={require('../../../assets/images/close.webp')}
-                style={{ width: 25, height: 24 }}
+                source={closeImg}
+                style={styles.img}
               />
             )}
             >
@@ -133,5 +144,11 @@ const styles = StyleSheet.create({
   },
   active: {
     display: 'flex'
+  },
+  img: {
+    width: 25, height: 24
+  },
+  imgSmall: {
+    width: 17, height: 23
   }
 })

@@ -10,7 +10,7 @@ export const ModalInput = ({ label }) => {
       style={styles.input}
       label={label}
       value={text}
-      onChangeText={(text) => setText(text)}
+      onChangeText={(value) => setText(value)}
     />
   )
 }

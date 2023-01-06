@@ -21,6 +21,7 @@ export const Notifications = ({ navigation }) => {
     <Layout>
       <FlatList
         data={data}
+        /* eslint-disable-next-line react/jsx-props-no-spreading */
         renderItem={({ item }) => <CardItem {...item} status="" onAccepting={onAccepting} goToMapPage={goToMapPage} text="Позвонить заказчику"><Button onPress={() => onAccepting()}>Принять</Button></CardItem>}
       />
     </Layout>

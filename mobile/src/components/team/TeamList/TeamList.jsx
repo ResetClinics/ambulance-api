@@ -29,22 +29,26 @@ const data = [
   },
 ]
 
-const CardItem = (item) => (
-  <View style={styles.wrapper}>
-    <Card style={styles.root}>
-      <Card.Content>
-        <Title style={styles.title}>{item.name}</Title>
-        <Paragraph style={styles.subtitle}>{item.speciality}</Paragraph>
-      </Card.Content>
-    </Card>
-    <SVGImg style={styles.label} width={46} height={46} />
-  </View>
-)
+const CardItem = (item) => {
+  const { name, speciality } = item
+  return (
+    <View style={styles.wrapper}>
+      <Card style={styles.root}>
+        <Card.Content>
+          <Title style={styles.title}>{name}</Title>
+          <Paragraph style={styles.subtitle}>{speciality}</Paragraph>
+        </Card.Content>
+      </Card>
+      <SVGImg style={styles.label} width={46} height={46} />
+    </View>
+  )
+}
 
 export const TeamList = () => (
   <View style={styles.layout}>
     <FlatList
       data={data}
+      /* eslint-disable-next-line react/jsx-props-no-spreading */
       renderItem={({ item }) => <CardItem {...item} />}
     />
   </View>

@@ -6,6 +6,8 @@ import React from 'react'
 import { Layout } from '../Layout'
 import { CardLayout } from '../CardLayout'
 import { COLORS, FONTS } from '../../../constants'
+import closeImg from '../../../assets/images/close.webp'
+import markerImg from '../../../assets/images/map_marker.webp'
 
 const comment = 'Мужчина ,  43 года нужна детоксикация организма , возмоно психотерапевтическая помощь'
 const address = 'Пресненская наб., 2 (этаж 1)'
@@ -22,23 +24,26 @@ export const Call = ({ navigation, onArrival }) => (
           <Text style={styles.info}>{comment}</Text>
           <View style={styles.wrap}>
             <Button
-              style={{ marginTop: 16 }}
+              style={styles.mt}
               onPress={() => navigation()}
+              /* eslint-disable-next-line react/no-unstable-nested-components */
               icon={() => (
                 <Image
-                  source={require('../../../assets/images/map_marker.webp')}
-                  style={{ width: 17, height: 23 }}
+                  source={markerImg}
+                  style={styles.smallImg}
                 />
               )}
             >
               Посмотреть карту
             </Button>
-            <Button icon={() => (
-              <Image
-                source={require('../../../assets/images/close.webp')}
-                style={{ width: 25, height: 24 }}
-              />
-            )}
+            <Button
+              /* eslint-disable-next-line react/no-unstable-nested-components */
+              icon={() => (
+                <Image
+                  source={closeImg}
+                  style={styles.img}
+                />
+              )}
             >
               Отменить вызов
             </Button>
@@ -47,9 +52,8 @@ export const Call = ({ navigation, onArrival }) => (
       </CardLayout>
       <View>
         <Button mode="outlined" raised>Позвонить заказчику</Button>
-        <Button mode="contained" style={{ marginTop: 16 }} onPress={() => onArrival()}>
-          Бригада прибыла на
-          вызов
+        <Button mode="contained" style={styles.mt} onPress={() => onArrival()}>
+          Бригада прибыла на вызов
         </Button>
       </View>
     </Layout>
@@ -67,4 +71,13 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     display: 'flex'
   },
+  img: {
+    width: 25, height: 24
+  },
+  smallImg: {
+    width: 17, height: 23
+  },
+  mt: {
+    marginTop: 16
+  }
 })

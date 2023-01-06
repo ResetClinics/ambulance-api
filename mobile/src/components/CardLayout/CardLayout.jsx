@@ -6,7 +6,7 @@ import { COLORS, FONTS } from '../../../constants'
 export const CardLayout = ({
   address, subject, date, time, children
 }) => (
-  <Card style={styles.root} children>
+  <Card style={styles.root}>
     <Card.Content>
       <Title style={styles.title}>{address}</Title>
       <Paragraph style={styles.subtitle}>{subject}</Paragraph>

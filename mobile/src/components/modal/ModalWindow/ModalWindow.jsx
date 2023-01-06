@@ -4,6 +4,8 @@ import { magicModal } from 'react-native-magic-modal'
 import { Button } from 'react-native-paper'
 import { ModalInput } from '../ModalInput'
 import { ModalList } from '../ModalList'
+import closeImg from '../../../../assets/images/close.webp'
+import { COLORS } from '../../../../constants'
 
 const data = [
   {
@@ -63,8 +65,8 @@ export const ModalWindow = ({ label }) => (
       style={styles.btn}
       icon={() => (
         <Image
-          source={require('../../../../assets/images/close.webp')}
-          style={{ width: 30, height: 29 }}
+          source={closeImg}
+          style={styles.img}
         />
       )}
     />
@@ -75,7 +77,7 @@ export const ModalWindow = ({ label }) => (
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'transparent',
+    backgroundColor: COLORS.transparent,
     margin: 16,
     position: 'relative'
   },
@@ -84,4 +86,7 @@ const styles = StyleSheet.create({
     top: -50,
     right: -20
   },
+  img: {
+    width: 30, height: 29
+  }
 })

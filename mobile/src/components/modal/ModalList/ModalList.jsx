@@ -4,6 +4,7 @@ import {
 } from 'react-native'
 import { Button } from 'react-native-paper'
 import { COLORS, FONTS } from '../../../../constants'
+import plusImg from '../../../../assets/images/plusColor.webp'
 
 export const ModalList = ({ data }) => (
   <View style={styles.root}>
@@ -12,8 +13,8 @@ export const ModalList = ({ data }) => (
           <View style={styles.item} key={key}>
             <Text style={styles.itemText}>{item.name}</Text>
             <Image
-              source={require('../../../../assets/images/plusColor.webp')}
-              style={{ width: 14, height: 14 }}
+              source={plusImg}
+              style={styles.img}
             />
           </View>
         ))
@@ -49,5 +50,8 @@ const styles = StyleSheet.create({
   },
   btn: {
     width: '47%'
+  },
+  img: {
+    width: 14, height: 14
   }
 })
