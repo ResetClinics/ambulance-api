@@ -22,7 +22,7 @@ export const AcceptedCall = ({ onAccepting }) => {
   const [birthday, setBirthday] = useState('')
 
   return (
-    <ScrollView style={styles.root}>
+    <ScrollView style={styles.root} showsVerticalScrollIndicator={false}>
       <Layout>
         <MagicModalPortal />
         <CardLayout address={address} subject={subject} date={date} time={time}>

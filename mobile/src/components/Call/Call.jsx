@@ -16,7 +16,7 @@ const date = '12.12.2022'
 const time = '12:45'
 
 export const Call = ({ navigation, onArrival }) => (
-  <ScrollView style={{ backgroundColor: COLORS.white }}>
+  <ScrollView style={{ backgroundColor: COLORS.white }} showsVerticalScrollIndicator={false}>
     <Layout>
       <CardLayout address={address} subject={subject} date={date} time={time}>
         <View>

@@ -1,5 +1,6 @@
 export { CurrentCall } from './CurrentCall'
 export { CallHistory } from './CallHistory'
+export { Login } from './Login'
 export { Notifications } from './Notifications'
 export { Profile } from './Profile'
 export { Team } from './Team'

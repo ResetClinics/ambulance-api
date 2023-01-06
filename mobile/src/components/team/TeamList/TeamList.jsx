@@ -47,6 +47,7 @@ const CardItem = (item) => {
 export const TeamList = () => (
   <View style={styles.layout}>
     <FlatList
+      showsVerticalScrollIndicator={false}
       data={data}
       /* eslint-disable-next-line react/jsx-props-no-spreading */
       renderItem={({ item }) => <CardItem {...item} />}

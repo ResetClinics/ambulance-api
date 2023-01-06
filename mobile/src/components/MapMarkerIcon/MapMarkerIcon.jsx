@@ -4,6 +4,7 @@ import markerImg from '../../../assets/images/map_marker.webp'
 
 export const MapMarkerIcon = () => (
   <Image
+    resizeMode="contain"
     source={markerImg}
     style={styles.img}
   />
@@ -11,7 +12,7 @@ export const MapMarkerIcon = () => (
 
 const styles = StyleSheet.create({
   img: {
-    width: 25,
+    width: 24,
     height: 24,
   },
 })

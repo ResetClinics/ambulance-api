@@ -4,6 +4,7 @@ import closeImg from '../../../assets/images/close.webp'
 
 export const CloseIcon = () => (
   <Image
+    resizeMode="contain"
     source={closeImg}
     style={styles.img}
   />
@@ -11,7 +12,7 @@ export const CloseIcon = () => (
 
 const styles = StyleSheet.create({
   img: {
-    width: 25,
+    width: 24,
     height: 24,
   },
 })
