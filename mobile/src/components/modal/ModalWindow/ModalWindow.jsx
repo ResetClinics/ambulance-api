@@ -58,18 +58,19 @@ const data = [
   },
 ]
 
+const CloseImg = () => (
+  <Image
+    source={closeImg}
+    style={styles.img}
+  />
+)
+
 export const ModalWindow = ({ label }) => (
   <View style={styles.container}>
     <Button
       onPress={() => magicModal.hide('close button pressed')}
       style={styles.btn}
-      /* eslint-disable-next-line react/no-unstable-nested-components */
-      icon={() => (
-        <Image
-          source={closeImg}
-          style={styles.img}
-        />
-      )}
+      icon={CloseImg}
     />
     <ModalInput label={label} />
     <ModalList data={data} />
@@ -85,7 +86,9 @@ const styles = StyleSheet.create({
   btn: {
     position: 'absolute',
     top: -50,
-    right: -20
+    right: -20,
+    width: 30,
+    height: 29
   },
   img: {
     width: 30, height: 29
