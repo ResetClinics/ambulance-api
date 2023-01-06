@@ -6,8 +6,8 @@ import {
   StyleSheet, Text, View
 } from 'react-native'
 import { COLORS, FONTS } from '../../../constants'
-import { CloseIcon } from '../CloseIcon'
 import { MapMarkerIcon } from '../MapMarkerIcon'
+import { CloseIcon } from '../CloseIcon'
 
 export const CardItem = ({
   address, subject, date, time, comment, goToMapPage, status, children, text
@@ -17,6 +17,7 @@ export const CardItem = ({
   const onDetailedClick = () => {
     setActive(!active)
   }
+
   // eslint-disable-next-line react/no-unstable-nested-components
   const BtnChange = () => {
     if (active) {
