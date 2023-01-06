@@ -1,4 +1,4 @@
-import { AppRegistry, View } from 'react-native'
+import { AppRegistry, StyleSheet, View } from 'react-native'
 import { Provider as PaperProvider, MD3LightTheme } from 'react-native-paper'
 import React, { useCallback, useEffect, useState } from 'react'
 import { MagicModalPortal } from 'react-native-magic-modal'
@@ -6,21 +6,24 @@ import * as Font from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
 import { Main } from './src/Main/Main'
 import { expo } from './app.json'
+import regularFont from './assets/fonts/Roboto-Regular.ttf'
+import mediumFont from './assets/fonts/Roboto-Medium.ttf'
+import boldFont from './assets/fonts/Roboto-Bold.ttf'
+import italicFont from './assets/fonts/Roboto-Italic.ttf'
 
-export default function App() {
+export const App = () => {
   const [appIsReady, setAppIsReady] = useState(false)
 
   useEffect(() => {
     async function prepare() {
       try {
         await SplashScreen.preventAutoHideAsync()
-        await new Promise((resolve) => setTimeout(resolve, 2000))
         await Font.loadAsync(
           {
-            'Roboto-Regular': require('./assets/fonts/Roboto-Regular.ttf'),
-            'Roboto-Medium': require('./assets/fonts/Roboto-Medium.ttf'),
-            'Roboto-Bold': require('./assets/fonts/Roboto-Bold.ttf'),
-            'Roboto-Italic': require('./assets/fonts/Roboto-Italic.ttf'),
+            'Roboto-Regular': { regularFont },
+            'Roboto-Medium': { mediumFont },
+            'Roboto-Bold': { boldFont },
+            'Roboto-Italic': { italicFont },
           }
         )
       } catch (e) {
@@ -43,7 +46,7 @@ export default function App() {
   }
 
   return (
-    <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
+    <View onLayout={onLayoutRootView} style={styles.root}>
       <PaperProvider theme={theme}>
         <MagicModalPortal />
         <Main />
@@ -53,6 +56,12 @@ export default function App() {
 }
 
 AppRegistry.registerComponent(expo.name, () => App)
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1
+  }
+})
 
 const theme = {
   ...MD3LightTheme, // or MD3DarkTheme

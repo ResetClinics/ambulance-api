@@ -63,6 +63,7 @@ export const ModalWindow = ({ label }) => (
     <Button
       onPress={() => magicModal.hide('close button pressed')}
       style={styles.btn}
+      /* eslint-disable-next-line react/no-unstable-nested-components */
       icon={() => (
         <Image
           source={closeImg}

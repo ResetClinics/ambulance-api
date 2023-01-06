@@ -36,6 +36,6 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
     marginBottom: 16,
-    backgroundColor: 'transparent'
+    backgroundColor: COLORS.transparent
   }
 })

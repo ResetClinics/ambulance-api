@@ -18,6 +18,7 @@ export const CardItem = ({
     setActive(!active)
   }
 
+  // eslint-disable-next-line react/no-unstable-nested-components
   const BtnChange = () => {
     if (active) {
       return (
