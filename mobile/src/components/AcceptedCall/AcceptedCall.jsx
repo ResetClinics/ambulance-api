@@ -1,5 +1,5 @@
 import {
-  Image, ScrollView, StyleSheet, Text, TouchableOpacity, View
+  ScrollView, StyleSheet, Text, TouchableOpacity, View
 } from 'react-native'
 import React, { useState } from 'react'
 import { magicModal, MagicModalPortal } from 'react-native-magic-modal'
@@ -8,7 +8,7 @@ import { CardLayout } from '../CardLayout'
 import { ModalWindow } from '../modal'
 import { COLORS, FONTS } from '../../../constants'
 import { Layout } from '../Layout'
-import closeImg from '../../../assets/images/close.webp'
+import { CloseIcon } from '../CardItem/CardItem'
 
 const comment = 'Мужчина ,  43 года нужна детоксикация организма , возмоно психотерапевтическая помощь'
 const address = 'Пресненская наб., 2 (этаж 1)'
@@ -64,13 +64,7 @@ export const AcceptedCall = ({ onAccepting }) => {
               >
                 <Button
                   style={styles.mt}
-                  /* eslint-disable-next-line react/no-unstable-nested-components */
-                  icon={() => (
-                    <Image
-                      source={closeImg}
-                      style={styles.img}
-                    />
-                  )}
+                  icon={CloseIcon}
                 >
                   Добавить услуги
                 </Button>
@@ -79,13 +73,7 @@ export const AcceptedCall = ({ onAccepting }) => {
                 onPress={() => magicModal.show(<ModalWindow label="Поиск медикаментов" />)}
               >
                 <Button
-                  /* eslint-disable-next-line react/no-unstable-nested-components */
-                  icon={() => (
-                    <Image
-                      source={closeImg}
-                      style={styles.img}
-                    />
-                  )}
+                  icon={CloseIcon}
                 >
                   Добавить список медикаментов
                 </Button>
@@ -135,7 +123,4 @@ const styles = StyleSheet.create({
   mt: {
     marginTop: 16
   },
-  img: {
-    width: 25, height: 24
-  }
 })

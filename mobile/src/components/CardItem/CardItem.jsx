@@ -9,6 +9,19 @@ import { COLORS, FONTS } from '../../../constants'
 import closeImg from '../../../assets/images/close.webp'
 import markerImg from '../../../assets/images/map_marker.webp'
 
+export const CloseIcon = () => (
+  <Image
+    source={closeImg}
+    style={styles.img}
+  />
+)
+export const MapMarkerIcon = () => (
+  <Image
+    source={markerImg}
+    style={styles.img}
+  />
+)
+
 export const CardItem = ({
   address, subject, date, time, comment, goToMapPage, status, children, text
 }) => {
@@ -63,24 +76,11 @@ export const CardItem = ({
             <Button
               onPress={() => goToMapPage()}
               style={styles.btn}
-              /* eslint-disable-next-line react/no-unstable-nested-components */
-              icon={() => (
-                <Image
-                  source={markerImg}
-                  style={styles.imgSmall}
-                />
-              )}
+              icon={MapMarkerIcon}
             >
               Посмотреть карту
             </Button>
-            {/* eslint-disable-next-line react/no-unstable-nested-components */}
-            <Button icon={() => (
-              <Image
-                source={closeImg}
-                style={styles.img}
-              />
-            )}
-            >
+            <Button icon={CloseIcon}>
               Отменить вызов
             </Button>
           </View>
@@ -147,9 +147,7 @@ const styles = StyleSheet.create({
     display: 'flex'
   },
   img: {
-    width: 25, height: 24
+    width: 25,
+    height: 24,
   },
-  imgSmall: {
-    width: 17, height: 23
-  }
 })

@@ -9,9 +9,9 @@ import plusImg from '../../../../assets/images/plusColor.webp'
 export const ModalList = ({ data }) => (
   <View style={styles.root}>
     {
-        data.slice(0, 7).map((item) => (
-          <View style={styles.item}>
-            <Text style={styles.itemText}>{item.name}</Text>
+        data.slice(0, 7).map(({ id, name }) => (
+          <View style={styles.item} key={id}>
+            <Text style={styles.itemText}>{name}</Text>
             <Image
               source={plusImg}
               style={styles.img}

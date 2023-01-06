@@ -6,24 +6,26 @@ import * as Font from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
 import { Main } from './src/Main/Main'
 import { expo } from './app.json'
+import italicFont from './assets/fonts/Roboto-Italic.ttf'
+import boldFont from './assets/fonts/Roboto-Bold.ttf'
 import regularFont from './assets/fonts/Roboto-Regular.ttf'
 import mediumFont from './assets/fonts/Roboto-Medium.ttf'
-import boldFont from './assets/fonts/Roboto-Bold.ttf'
-import italicFont from './assets/fonts/Roboto-Italic.ttf'
 
-export const App = () => {
+const App = () => {
   const [appIsReady, setAppIsReady] = useState(false)
 
   useEffect(() => {
     async function prepare() {
       try {
         await SplashScreen.preventAutoHideAsync()
+        // eslint-disable-next-line no-promise-executor-return
+        await new Promise((resolve) => setTimeout(resolve, 2000))
         await Font.loadAsync(
           {
-            'Roboto-Regular': { regularFont },
-            'Roboto-Medium': { mediumFont },
-            'Roboto-Bold': { boldFont },
-            'Roboto-Italic': { italicFont },
+            'Roboto-Regular': regularFont,
+            'Roboto-Medium': mediumFont,
+            'Roboto-Bold': boldFont,
+            'Roboto-Italic': italicFont,
           }
         )
       } catch (e) {
@@ -54,6 +56,8 @@ export const App = () => {
     </View>
   )
 }
+
+export default App
 
 AppRegistry.registerComponent(expo.name, () => App)
 

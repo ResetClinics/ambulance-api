@@ -1,13 +1,12 @@
 import {
-  Image, ScrollView, StyleSheet, Text, View
+  ScrollView, StyleSheet, Text, View
 } from 'react-native'
 import { Button } from 'react-native-paper'
 import React from 'react'
 import { Layout } from '../Layout'
 import { CardLayout } from '../CardLayout'
 import { COLORS, FONTS } from '../../../constants'
-import closeImg from '../../../assets/images/close.webp'
-import markerImg from '../../../assets/images/map_marker.webp'
+import { CloseIcon, MapMarkerIcon } from '../CardItem/CardItem'
 
 const comment = 'Мужчина ,  43 года нужна детоксикация организма , возмоно психотерапевтическая помощь'
 const address = 'Пресненская наб., 2 (этаж 1)'
@@ -26,24 +25,12 @@ export const Call = ({ navigation, onArrival }) => (
             <Button
               style={styles.mt}
               onPress={() => navigation()}
-              /* eslint-disable-next-line react/no-unstable-nested-components */
-              icon={() => (
-                <Image
-                  source={markerImg}
-                  style={styles.smallImg}
-                />
-              )}
+              icon={MapMarkerIcon}
             >
               Посмотреть карту
             </Button>
             <Button
-              /* eslint-disable-next-line react/no-unstable-nested-components */
-              icon={() => (
-                <Image
-                  source={closeImg}
-                  style={styles.img}
-                />
-              )}
+              icon={CloseIcon}
             >
               Отменить вызов
             </Button>
@@ -70,12 +57,6 @@ const styles = StyleSheet.create({
     marginLeft: -10,
     marginVertical: 10,
     display: 'flex'
-  },
-  img: {
-    width: 25, height: 24
-  },
-  smallImg: {
-    width: 17, height: 23
   },
   mt: {
     marginTop: 16
