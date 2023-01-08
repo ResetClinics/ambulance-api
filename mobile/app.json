@@ -4,7 +4,7 @@
     "slug": "rn_app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logo.webp",
+    "icon": "./assets/icon.webp",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.webp",
@@ -18,11 +18,16 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "splash": {
+        "image": "./assets/splash.webp",
+        "resizeMode": "contain",
+        "backgroundColor": "#ffffff"
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logo.webp",
+        "foregroundImage": "./assets/adaptive-icon.webp",
         "backgroundColor": "#FFFFFF"
       }
     },
