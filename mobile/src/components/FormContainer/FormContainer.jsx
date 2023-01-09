@@ -1,6 +1,6 @@
 import React from 'react'
 import { Form, Field } from 'react-final-form'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import { Button, TextInput } from 'react-native-paper'
 import { COLORS } from '../../../constants'
 
@@ -19,23 +19,25 @@ export const FormContainer = ({ navigation, onSignIn }) => {
       validate={validate}
       render={() => (
         <View style={styles.container}>
-          <Field
-            name="FieldName"
-            placeholder="your placeholder"
-          >
-            {({ input, meta }) => (
+          <Field>
+            {() => (
               <View>
                 <TextInput
                   mode="outlined"
                   focused
                   placeholder="Ваше имя пользователя"
-                  /* eslint-disable-next-line react/jsx-props-no-spreading */
-                  {...input}
                   label="Логин"
                   value={text}
                   onChangeText={(value) => setText(value)}
                 />
-                <Text size={8}>{meta.error}</Text>
+                <TextInput
+                  style={styles.mt}
+                  secureTextEntry
+                  mode="outlined"
+                  focused
+                  label="Пароль"
+                  placeholder="Ваш пароль"
+                />
               </View>
             )}
           </Field>
@@ -73,4 +75,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     marginLeft: -12
   },
+  mt: {
+    marginTop: 16,
+  }
 })
