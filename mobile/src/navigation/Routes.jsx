@@ -102,7 +102,7 @@ export const Routes = () => {
               )}
             </RootStack.Screen>
             <RootStack.Screen
-              name="Password Forget"
+              name="Восстановление пароля"
               component={PasswordForgetScreen}
             />
           </>

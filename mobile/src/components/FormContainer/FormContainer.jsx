@@ -25,7 +25,7 @@ export const FormContainer = ({ navigation, onSignIn }) => {
           <View style={styles.wrap}>
             <Button
               style={styles.btn}
-              onPress={() => navigation.navigate('Password Forget')}
+              onPress={() => navigation.navigate('Восстановление пароля')}
               buttonColor={COLORS.white}
             >
               Забыли пароль?
