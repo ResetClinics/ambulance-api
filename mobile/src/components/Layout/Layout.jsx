@@ -10,7 +10,8 @@ export const Layout = ({ children }) => (
 
 const styles = StyleSheet.create({
   root: {
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 24,
     flex: 1,
     backgroundColor: COLORS.white
   }
