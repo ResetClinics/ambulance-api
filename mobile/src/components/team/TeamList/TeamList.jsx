@@ -12,14 +12,16 @@ const data = [
   {
     name: 'Иван Иванович Иванов',
     speciality: 'Администратор'
-  }, {
+  },
+  {
     name: 'Агибалова Татьяна Васильевна',
     speciality: 'Психиатор- нарколог'
   },
   {
     name: 'Иван Иванович Иванов',
     speciality: 'Администратор'
-  }, {
+  },
+  {
     name: 'Агибалова Татьяна Васильевна',
     speciality: 'Психиатор- нарколог'
   },
@@ -71,10 +73,10 @@ const styles = StyleSheet.create({
   },
   title: {
     ...FONTS.title,
-    marginBottom: 16
   },
   subtitle: {
     ...FONTS.text,
+    marginTop: 16
   },
   label: {
     position: 'absolute',
