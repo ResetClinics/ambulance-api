@@ -11,7 +11,7 @@ export const CurrentCallPage = ({ navigation }) => {
   }
 
   const onAccepting = () => {
-    navigation.navigate('Уведомления')
+    navigation.navigate('История вызовов')
   }
 
   if (arrival) {

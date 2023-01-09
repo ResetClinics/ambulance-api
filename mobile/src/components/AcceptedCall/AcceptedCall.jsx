@@ -4,11 +4,13 @@ import {
 import React, { useState } from 'react'
 import { magicModal, MagicModalPortal } from 'react-native-magic-modal'
 import { Button, TextInput } from 'react-native-paper'
+import { Form } from 'react-final-form'
 import { CardLayout } from '../CardLayout'
 import { ModalWindow } from '../modal'
 import { COLORS, FONTS } from '../../../constants'
 import { Layout } from '../Layout'
 import { CloseIcon } from '../CloseIcon'
+import { InputField } from '../InputField'
 
 const comment = 'Мужчина ,  43 года нужна детоксикация организма , возмоно психотерапевтическая помощь'
 const address = 'Пресненская наб., 2 (этаж 1)'
@@ -32,32 +34,16 @@ export const AcceptedCall = ({ onAccepting }) => {
           </View>
           <View>
             <Text style={styles.info}>Данные заказчика:</Text>
-            <View>
-              <TextInput
-                style={styles.mt}
-                mode="outlined"
-                focused
-                label="Фамилия Имя Отчество"
-                value={name}
-                onChangeText={(value) => setName(value)}
-              />
-              <TextInput
-                style={styles.mt}
-                mode="outlined"
-                focused
-                label="Дата рождения"
-                value={birthday}
-                onChangeText={(value) => setBirthday(value)}
-              />
-              <TextInput
-                style={styles.mt}
-                mode="outlined"
-                focused
-                label="Данные документа"
-                value={text}
-                onChangeText={(value) => setText(value)}
-              />
-            </View>
+            <Form
+              onSubmit="onSubmit"
+              render={() => (
+                <View>
+                  <InputField name="fio" label="Фамилия Имя Отчество" value={name} onChangeText={(value) => setName(value)} />
+                  <InputField name="birthday" label="Дата рождения" value={birthday} onChangeText={(value) => setBirthday(value)} />
+                  <InputField name="document" label="Данные документа" value={text} onChangeText={(value) => setText(value)} />
+                </View>
+              )}
+            />
             <View style={styles.wrapper}>
               <TouchableOpacity
                 onPress={() => magicModal.show(<ModalWindow label="Поиск услуги" />)}
