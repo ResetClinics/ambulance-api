@@ -12,9 +12,10 @@ export const Logo = () => (
 
 const styles = StyleSheet.create({
   img: {
+    width: 'auto',
     minWidth: 116,
     maxHeight: 116,
     marginBottom: '20%',
-    marginTop: '30%'
+    marginTop: '30%',
   }
 })

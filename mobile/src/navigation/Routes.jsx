@@ -2,7 +2,7 @@ import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Image, StyleSheet } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
-import { getFocusedRouteNameFromRoute, NavigationContainer } from '@react-navigation/native'
+import { NavigationContainer } from '@react-navigation/native'
 import { COLORS } from '../../constants'
 import {
   CallHistory, CurrentCall, PasswordForgetScreen, Profile, SignInScreen, Team
