@@ -92,7 +92,10 @@ export const Routes = () => {
           />
         ) : (
           <>
-            <RootStack.Screen name="Sign In">
+            <RootStack.Screen
+              name="Sign In"
+              options={{ headerShown: false }}
+            >
               {(props) => (
                 // eslint-disable-next-line react/jsx-props-no-spreading
                 <SignInScreen {...props} onSignIn={handleSignIn} />
