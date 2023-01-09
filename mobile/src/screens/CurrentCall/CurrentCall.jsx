@@ -6,7 +6,7 @@ import { Map } from './Map'
 const Stack = createNativeStackNavigator()
 export const CurrentCall = () => (
   <Stack.Navigator>
-    <Stack.Screen name="Home" component={CurrentCallPage} options={{ title: '' }} />
-    <Stack.Screen name="Маршрут" component={Map} options={{ title: 'Маршрут' }} />
+    <Stack.Screen name="Home" component={CurrentCallPage} options={{ title: 'Текущий вызов' }} />
+    <Stack.Screen name="Маршрут" component={Map} options={{ title: 'Маршрут до места вызова' }} />
   </Stack.Navigator>
 )

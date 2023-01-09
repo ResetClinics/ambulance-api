@@ -64,7 +64,11 @@ const AppNavigator = () => (
     })}
   >
     <Tab.Screen name="Бригада" component={Team} />
-    <Tab.Screen name="Текущий вызов" component={CurrentCall} />
+    <Tab.Screen
+      name="Текущий вызов"
+      component={CurrentCall}
+      options={{ headerShown: false }}
+    />
     <Tab.Screen name="История вызовов" component={CallHistory} />
     <Tab.Screen name="Профиль" component={Profile} />
   </Tab.Navigator>
@@ -84,10 +88,7 @@ export const Routes = () => {
           <RootStack.Screen
             name="App"
             component={AppNavigator}
-            options={({ route }) => ({
-              headerTitle: getFocusedRouteNameFromRoute(route),
-              headerMode: 'none',
-            })}
+            options={{ headerShown: false }}
           />
         ) : (
           <>
@@ -111,5 +112,5 @@ export const Routes = () => {
 const styles = StyleSheet.create({
   img: {
     width: 24, height: 24
-  }
+  },
 })
