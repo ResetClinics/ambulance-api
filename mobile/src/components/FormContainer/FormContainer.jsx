@@ -23,13 +23,15 @@ export const FormContainer = ({ navigation, onSignIn }) => {
             name="FieldName"
             placeholder="your placeholder"
           >
-            {({ input, meta, placeholder }) => (
+            {({ input, meta }) => (
               <View>
                 <TextInput
-                  placeholder={placeholder}
+                  mode="outlined"
+                  focused
+                  placeholder="Ваше имя пользователя"
                   /* eslint-disable-next-line react/jsx-props-no-spreading */
                   {...input}
-                  label="Email"
+                  label="Логин"
                   value={text}
                   onChangeText={(value) => setText(value)}
                 />
