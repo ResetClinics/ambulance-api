@@ -1,17 +1,16 @@
 import React from 'react'
-import { Form, Field } from 'react-final-form'
+import { Form } from 'react-final-form'
 import { View, StyleSheet } from 'react-native'
-import { Button, TextInput } from 'react-native-paper'
+import { Button } from 'react-native-paper'
 import { COLORS } from '../../../constants'
+import { InputField } from '../InputField'
 
 export const FormContainer = ({ navigation, onSignIn }) => {
-  const [text, setText] = React.useState('')
-
-  const onSubmit = () => {
-    console.log('ok')
+  const onSubmit = (values) => {
+    console.log(values)
   }
-  const validate = () => {
-    console.log('ok')
+  const validate = (values) => {
+    console.log(values)
   }
   return (
     <Form
@@ -19,28 +18,10 @@ export const FormContainer = ({ navigation, onSignIn }) => {
       validate={validate}
       render={() => (
         <View style={styles.container}>
-          <Field>
-            {() => (
-              <View>
-                <TextInput
-                  mode="outlined"
-                  focused
-                  placeholder="Ваше имя пользователя"
-                  label="Логин"
-                  value={text}
-                  onChangeText={(value) => setText(value)}
-                />
-                <TextInput
-                  style={styles.mt}
-                  secureTextEntry
-                  mode="outlined"
-                  focused
-                  label="Пароль"
-                  placeholder="Ваш пароль"
-                />
-              </View>
-            )}
-          </Field>
+          <View>
+            <InputField name="login" label="Логин" placeholder="Ваше имя пользователя" />
+            <InputField name="password" secureTextEntry label="Пароль" placeholder="Ваш пароль" />
+          </View>
           <View style={styles.wrap}>
             <Button
               style={styles.btn}
@@ -50,8 +31,8 @@ export const FormContainer = ({ navigation, onSignIn }) => {
               Забыли пароль?
             </Button>
             <Button
-              onPress={onSignIn}
               mode="contained"
+              onPress={onSignIn}
             >
               Войти
             </Button>
@@ -75,7 +56,4 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     marginLeft: -12
   },
-  mt: {
-    marginTop: 16,
-  }
 })
