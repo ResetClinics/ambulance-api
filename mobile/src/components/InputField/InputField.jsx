@@ -30,5 +30,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     marginVertical: 8,
     color: COLORS.primary,
+    width: '100%'
   }
 })

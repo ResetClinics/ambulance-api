@@ -14,6 +14,7 @@ export const FormContainer = ({ navigation, onSignIn }) => {
   }
   return (
     <Form
+      style={styles.root}
       onSubmit={onSubmit}
       validate={validate}
       render={() => (
@@ -47,6 +48,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     width: '100%',
+    marginTop: 78
   },
   wrap: {
     width: '100%',

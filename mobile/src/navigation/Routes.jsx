@@ -5,7 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer } from '@react-navigation/native'
 import { COLORS } from '../../constants'
 import {
-  CallHistory, CurrentCall, PasswordForgetScreen, Profile, SignInScreen, Team
+  CallHistory, CurrentCall, PasswordForgetScreen, Profile, Sent, SignInScreen, Team
 } from '../screens'
 import teamIcon from '../../assets/images/menu/team.webp'
 import teamIconColor from '../../assets/images/menu/team_color.webp'
@@ -104,6 +104,11 @@ export const Routes = () => {
             <RootStack.Screen
               name="Восстановление пароля"
               component={PasswordForgetScreen}
+            />
+            <RootStack.Screen
+              name="isSent"
+              component={Sent}
+              options={{ headerShown: false }}
             />
           </>
         )}

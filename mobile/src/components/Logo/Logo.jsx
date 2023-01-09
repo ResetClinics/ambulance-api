@@ -15,7 +15,5 @@ const styles = StyleSheet.create({
     width: 'auto',
     minWidth: 116,
     maxHeight: 116,
-    marginBottom: '20%',
-    marginTop: '30%',
   }
 })
