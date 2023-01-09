@@ -4,12 +4,12 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { MagicModalPortal } from 'react-native-magic-modal'
 import * as Font from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
-import { Main } from './src/Main/Main'
 import { expo } from './app.json'
 import italicFont from './assets/fonts/Roboto-Italic.ttf'
 import boldFont from './assets/fonts/Roboto-Bold.ttf'
 import regularFont from './assets/fonts/Roboto-Regular.ttf'
 import mediumFont from './assets/fonts/Roboto-Medium.ttf'
+import { Routes } from './src/navigation/Routes'
 
 const App = () => {
   const [appIsReady, setAppIsReady] = useState(false)
@@ -51,7 +51,7 @@ const App = () => {
     <View onLayout={onLayoutRootView} style={styles.root}>
       <PaperProvider theme={theme}>
         <MagicModalPortal />
-        <Main />
+        <Routes />
       </PaperProvider>
     </View>
   )

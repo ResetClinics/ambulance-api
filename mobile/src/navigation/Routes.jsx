@@ -1,9 +1,11 @@
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Image, StyleSheet } from 'react-native'
+import { createStackNavigator } from '@react-navigation/stack'
+import { getFocusedRouteNameFromRoute, NavigationContainer } from '@react-navigation/native'
 import { COLORS } from '../../constants'
 import {
-  CallHistory, CurrentCall, Notifications, Profile, Team
+  CallHistory, CurrentCall, PasswordForgetScreen, Profile, SignInScreen, Team
 } from '../screens'
 import teamIcon from '../../assets/images/menu/team.webp'
 import teamIconColor from '../../assets/images/menu/team_color.webp'
@@ -11,12 +13,11 @@ import currentCallIcon from '../../assets/images/menu/currentCall.webp'
 import currentCallIconColor from '../../assets/images/menu/currentCall_color.webp'
 import callHistoryIcon from '../../assets/images/menu/callHistory.webp'
 import callHistoryIconColor from '../../assets/images/menu/callHistory_color.webp'
-import notificationIcon from '../../assets/images/menu/notification.webp'
-import notificationIconColor from '../../assets/images/menu/notification_color.webp'
 import profileIcon from '../../assets/images/menu/profile.webp'
 import profileIconColor from '../../assets/images/menu/profile_color.webp'
 
 const Tab = createBottomTabNavigator()
+const RootStack = createStackNavigator()
 
 const icons = {
   Бригада: {
@@ -30,10 +31,6 @@ const icons = {
   'История вызовов': {
     default: callHistoryIcon,
     focused: callHistoryIconColor,
-  },
-  Уведомления: {
-    default: notificationIcon,
-    focused: notificationIconColor,
   },
   Профиль: {
     default: profileIcon,
@@ -57,7 +54,7 @@ const tabBarIcon = (focused, color, size, route) => {
   return <Image source={iconName} size={size} color={color} style={styles.img} />
 }
 
-export const Routes = () => (
+const AppNavigator = () => (
   <Tab.Navigator
     screenOptions={({ route }) => ({
       tabBarStyle: { paddingTop: 4, height: 60, paddingBottom: 10 },
@@ -69,10 +66,47 @@ export const Routes = () => (
     <Tab.Screen name="Бригада" component={Team} />
     <Tab.Screen name="Текущий вызов" component={CurrentCall} />
     <Tab.Screen name="История вызовов" component={CallHistory} />
-    <Tab.Screen name="Уведомления" component={Notifications} options={{ tabBarBadge: 3 }} />
     <Tab.Screen name="Профиль" component={Profile} />
   </Tab.Navigator>
 )
+
+export const Routes = () => {
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false)
+
+  const handleSignIn = () => {
+    setIsAuthenticated(true)
+  }
+
+  return (
+    <NavigationContainer>
+      <RootStack.Navigator>
+        {isAuthenticated ? (
+          <RootStack.Screen
+            name="App"
+            component={AppNavigator}
+            options={({ route }) => ({
+              headerTitle: getFocusedRouteNameFromRoute(route),
+              headerMode: 'none',
+            })}
+          />
+        ) : (
+          <>
+            <RootStack.Screen name="Sign In">
+              {(props) => (
+                // eslint-disable-next-line react/jsx-props-no-spreading
+                <SignInScreen {...props} onSignIn={handleSignIn} />
+              )}
+            </RootStack.Screen>
+            <RootStack.Screen
+              name="Password Forget"
+              component={PasswordForgetScreen}
+            />
+          </>
+        )}
+      </RootStack.Navigator>
+    </NavigationContainer>
+  )
+}
 
 const styles = StyleSheet.create({
   img: {
