@@ -3,7 +3,7 @@ import {
 } from 'react-native'
 import React, { useState } from 'react'
 import { magicModal, MagicModalPortal } from 'react-native-magic-modal'
-import { Button, TextInput } from 'react-native-paper'
+import { Button } from 'react-native-paper'
 import { Form } from 'react-final-form'
 import { CardLayout } from '../CardLayout'
 import { ModalWindow } from '../modal'
