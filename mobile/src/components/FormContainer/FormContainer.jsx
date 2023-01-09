@@ -1,24 +1,28 @@
 import React from 'react'
 import { Form } from 'react-final-form'
+import * as Yup from 'yup'
 import { View, StyleSheet } from 'react-native'
 import { Button } from 'react-native-paper'
 import { COLORS } from '../../../constants'
 import { InputField } from '../InputField'
+import useValidationSchema from '../helper/use-validation-schema'
 
-export const FormContainer = ({ navigation, onSignIn }) => {
+export const FormContainer = ({ navigation, onSignIn, submitting = false }) => {
   const onSubmit = (values) => {
     console.log(values)
   }
-  const validate = (values) => {
-    console.log(values)
-  }
+  const schema = Yup.object().shape({
+    login: Yup.string().required('Неверный логин'),
+    password: Yup.string().required('Неверный пароль'),
+  })
+  const validate = useValidationSchema(schema)
   return (
     <Form
       style={styles.root}
       onSubmit={onSubmit}
       validate={validate}
-      render={() => (
-        <View style={styles.container}>
+      render={({ handleSubmit }) => (
+        <View onSubmit={handleSubmit} style={styles.container}>
           <View>
             <InputField name="login" label="Логин" placeholder="Ваше имя пользователя" />
             <InputField name="password" secureTextEntry label="Пароль" placeholder="Ваш пароль" />
@@ -34,6 +38,7 @@ export const FormContainer = ({ navigation, onSignIn }) => {
             <Button
               mode="contained"
               onPress={onSignIn}
+              disabled={submitting}
             >
               Войти
             </Button>
