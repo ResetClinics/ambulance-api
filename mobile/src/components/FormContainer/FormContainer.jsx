@@ -7,7 +7,7 @@ import { COLORS } from '../../../constants'
 import { InputField } from '../InputField'
 import useValidationSchema from '../helper/use-validation-schema'
 
-export const FormContainer = ({ navigation, onSignIn, submitting = false }) => {
+export const FormContainer = ({ navigation, onSignIn }) => {
   const onSubmit = (values) => {
     console.log(values)
   }
@@ -15,6 +15,10 @@ export const FormContainer = ({ navigation, onSignIn, submitting = false }) => {
     login: Yup.string().required('Неверный логин'),
     password: Yup.string().required('Неверный пароль'),
   })
+
+  const submit = () => {
+    onSignIn()
+  }
   const validate = useValidationSchema(schema)
   return (
     <Form
@@ -37,8 +41,9 @@ export const FormContainer = ({ navigation, onSignIn, submitting = false }) => {
             </Button>
             <Button
               mode="contained"
-              onPress={onSignIn}
-              disabled={submitting}
+              onPress={(event) => {
+                submit(event)
+              }}
             >
               Войти
             </Button>
