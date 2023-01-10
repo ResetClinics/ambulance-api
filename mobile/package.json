@@ -1,8 +1,9 @@
 {
-  "name": "rn_app",
+  "name": "ambulance",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "build": "./node_modules/.bin/expo build:android -t apk",
     "start": "./node_modules/.bin/expo start",
     "android": "./node_modules/.bin/expo start --android",
     "ios": "./node_modules/.bin/expo start --ios",
