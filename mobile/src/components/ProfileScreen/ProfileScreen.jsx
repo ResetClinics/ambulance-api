@@ -3,8 +3,8 @@ import { Avatar } from 'react-native-paper'
 import React from 'react'
 import { COLORS, FONTS, SIZES } from '../../../constants'
 
-const defaultImg = require('../../../assets/images/default.webp')
-const img = require('../../../assets/images/image.webp')
+const defaultImg = require('../../../assets/images/image.png')
+const img = require('../../../assets/images/image.png')
 
 export const ProfileScreen = (/* {img} */) => (
   <>

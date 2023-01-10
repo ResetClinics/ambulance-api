@@ -1,6 +1,6 @@
 import React from 'react'
 import { Image, StyleSheet } from 'react-native'
-import markerImg from '../../../assets/images/map_marker.webp'
+import markerImg from '../../../assets/images/map_marker.png'
 
 export const MapMarkerIcon = () => (
   <Image

@@ -4,7 +4,7 @@ import { magicModal } from 'react-native-magic-modal'
 import { Button } from 'react-native-paper'
 import { ModalInput } from '../ModalInput'
 import { ModalList } from '../ModalList'
-import closeImg from '../../../../assets/images/close.webp'
+import closeImg from '../../../../assets/images/close.png'
 import { COLORS } from '../../../../constants'
 
 const data = [
