@@ -1,6 +1,6 @@
 import React from 'react'
 import { Image, StyleSheet } from 'react-native'
-import closeImg from '../../../assets/images/close.webp'
+import closeImg from '../../../assets/images/close.png'
 
 export const CloseIcon = () => (
   <Image

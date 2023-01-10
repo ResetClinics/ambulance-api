@@ -7,14 +7,14 @@ import { COLORS } from '../../constants'
 import {
   CallHistory, CurrentCall, PasswordForgetScreen, Profile, Sent, SignInScreen, Team
 } from '../screens'
-import teamIcon from '../../assets/images/menu/team.webp'
-import teamIconColor from '../../assets/images/menu/team_color.webp'
-import currentCallIcon from '../../assets/images/menu/currentCall.webp'
-import currentCallIconColor from '../../assets/images/menu/currentCall_color.webp'
-import callHistoryIcon from '../../assets/images/menu/callHistory.webp'
-import callHistoryIconColor from '../../assets/images/menu/callHistory_color.webp'
-import profileIcon from '../../assets/images/menu/profile.webp'
-import profileIconColor from '../../assets/images/menu/profile_color.webp'
+import teamIcon from '../../assets/images/menu/team.png'
+import teamIconColor from '../../assets/images/menu/team_color.png'
+import currentCallIcon from '../../assets/images/menu/currentCall.png'
+import currentCallIconColor from '../../assets/images/menu/currentCall_color.png'
+import callHistoryIcon from '../../assets/images/menu/callHistory.png'
+import callHistoryIconColor from '../../assets/images/menu/callHistory_color.png'
+import profileIcon from '../../assets/images/menu/profile.png'
+import profileIconColor from '../../assets/images/menu/profile_color.png'
 
 const Tab = createBottomTabNavigator()
 const RootStack = createStackNavigator()
