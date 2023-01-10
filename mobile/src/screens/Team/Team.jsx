@@ -1,47 +1,49 @@
-import {StyleSheet, View} from "react-native";
-import React, { useState } from "react";
-import { Layout } from "../../shared";
-import { Button } from "react-native-paper";
-import { TeamList, TeamNotAssigned } from "../../components";
-import { COLORS } from "../../../constants";
+import { StyleSheet, View } from 'react-native'
+import React, { useState } from 'react'
+import { Button } from 'react-native-paper'
+import { Layout, TeamList, TeamNotAssigned } from '../../components'
 
 export const Team = () => {
   const STATUSES = {
-    NOT_ASSIGNED: <TeamNotAssigned onPress={() => setStatus(STATUSES.ASSIGNED)} />,
+    NOT_ASSIGNED: 'not_assigned',
     ASSIGNED: 'assigned',
     ACCEPTED: 'accepted'
   }
-  const [status, setStatus] = useState(STATUSES.NOT_ASSIGNED);
+  const [status, setStatus] = useState(STATUSES.NOT_ASSIGNED)
   switch (status) {
     case STATUSES.ASSIGNED:
-      return <Layout>
-        <TeamList />
-        <View style={styles.btnHolder}>
-          <Button mode="outlined" raised onPress={() => setStatus(STATUSES.NOT_ASSIGNED)}>Бригада не готова к дежурству</Button>
-          <Button mode="contained" style={styles.btn} onPress={() => setStatus(STATUSES.ACCEPTED)}>Бригада вышла на дежурство</Button>
-        </View>
-      </Layout>
-    case STATUSES.ACCEPTED:
-      return <Layout>
-        <TeamList />
-        <View style={styles.btnHolder}>
-          <Button mode="outlined" style={styles.btn} onPress={() => setStatus(STATUSES.NOT_ASSIGNED)}>Завершить смену</Button>
-        </View>
-      </Layout>
-    default:
       return (
-        STATUSES.NOT_ASSIGNED
+        <Layout>
+          <TeamList />
+          <View style={styles.btnHolder}>
+            <Button mode="outlined" raised onPress={() => setStatus(STATUSES.NOT_ASSIGNED)}>
+              Бригада не готова к дежурству
+            </Button>
+            <Button mode="contained" style={styles.btn} onPress={() => setStatus(STATUSES.ACCEPTED)}>
+              Бригада вышла на дежурство
+            </Button>
+          </View>
+        </Layout>
       )
+    case STATUSES.ACCEPTED:
+      return (
+        <Layout>
+          <TeamList />
+          <View style={styles.btnHolder}>
+            <Button mode="outlined" onPress={() => setStatus(STATUSES.NOT_ASSIGNED)}>Завершить смену</Button>
+          </View>
+        </Layout>
+      )
+    default:
+      return <TeamNotAssigned onPress={() => setStatus(STATUSES.ASSIGNED)} />
   }
 }
 
 const styles = StyleSheet.create({
   btnHolder: {
-    marginTop: 'auto',
-    backgroundColor: COLORS.white,
-    paddingTop: 16
+    marginTop: 'auto', paddingTop: 16
   },
   btn: {
     marginTop: 16
   }
-});
+})

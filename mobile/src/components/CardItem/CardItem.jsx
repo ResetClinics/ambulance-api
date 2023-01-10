@@ -1,25 +1,41 @@
-import React, { useState } from "react";
-import { Button, Card, Paragraph, Title } from "react-native-paper";
-import { Image, StyleSheet, Text, View } from "react-native";
-import { COLORS, FONTS } from "../../../constants";
+import React, { useState } from 'react'
+import {
+  Button, Card, Paragraph, Title
+} from 'react-native-paper'
+import {
+  StyleSheet, Text, View
+} from 'react-native'
+import { COLORS, FONTS } from '../../../constants'
+import { MapMarkerIcon } from '../MapMarkerIcon'
+import { CloseIcon } from '../CloseIcon'
 
-export  const CardItem = ({ address, subject, date, time, comment, goToMapPage, status, children, text } ) => {
+export const CardItem = ({
+  address, subject, date, time, comment, goToMapPage, status, children, text
+}) => {
   const [active, setActive] = useState(false)
 
   const onDetailedClick = () => {
     setActive(!active)
   }
 
+  // eslint-disable-next-line react/no-unstable-nested-components
   const BtnChange = () => {
-    if(active) {
-      return <Button style={styles.btn} onPress={onDetailedClick} buttonColor={COLORS.white}>{text}</Button>
-    } else {
-      return <Button onPress={onDetailedClick} buttonColor={COLORS.white}>Подробнее</Button>
+    if (active) {
+      return (
+        <Button
+          style={styles.btn}
+          onPress={onDetailedClick}
+          buttonColor={COLORS.white}
+        >
+          {text}
+        </Button>
+      )
     }
+    return <Button onPress={onDetailedClick} buttonColor={COLORS.white}>Подробнее</Button>
   }
 
   return (
-    <Card style={styles.root} children>
+    <Card style={styles.root}>
       <Card.Content>
         {
           status && (<Text style={styles.status}>{status}</Text>)
@@ -46,18 +62,14 @@ export  const CardItem = ({ address, subject, date, time, comment, goToMapPage, 
           <View style={styles.wrap}>
             <Button
               onPress={() => goToMapPage()}
-              style={styles.btn} icon={() => (
-              <Image
-                source={require('../../../assets/images/map_marker.webp')}
-                style={{ width: 17, height: 23 }}
-              />
-            )}>Посмотреть карту</Button>
-            <Button icon={() => (
-              <Image
-                source={require('../../../assets/images/close.webp')}
-                style={{ width: 25, height: 24 }}
-              />
-            )}>Отменить вызов</Button>
+              style={styles.btn}
+              icon={MapMarkerIcon}
+            >
+              Посмотреть карту
+            </Button>
+            <Button icon={CloseIcon}>
+              Отменить вызов
+            </Button>
           </View>
         </View>
       </Card.Content>
@@ -120,5 +132,5 @@ const styles = StyleSheet.create({
   },
   active: {
     display: 'flex'
-  }
-});
+  },
+})

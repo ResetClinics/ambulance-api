@@ -1,23 +1,24 @@
-import React from "react";
-import { Layout } from "../../shared";
-import { FlatList } from "react-native";
-import { CardItem } from "../../components";
-import { data } from "../data/data";
+import React from 'react'
+import { FlatList } from 'react-native'
+import { CardItem, Layout } from '../../components'
+import { data } from '../../data/data'
 
-export const CallHistory = ({navigation}) => {
+export const CallHistory = ({ navigation }) => {
   const goToMapPage = () => {
     navigation.navigate('Маршрут', {
       screen: 'Home',
       params: {
         screen: 'Маршрут',
       },
-    });
+    })
   }
   return (
     <Layout>
       <FlatList
+        showsVerticalScrollIndicator={false}
         data={data}
-        renderItem={({item}) => <CardItem {...item} goToMapPage={goToMapPage} text='Свернуть'/>}
+        /* eslint-disable-next-line react/jsx-props-no-spreading */
+        renderItem={({ item }) => <CardItem {...item} goToMapPage={goToMapPage} text="Свернуть" />}
       />
     </Layout>
   )

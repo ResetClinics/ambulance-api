@@ -1,8 +1,8 @@
-import { FlatList, StyleSheet, View } from "react-native";
-import React from "react";
-import { Card, Title, Paragraph } from 'react-native-paper';
-import { COLORS, FONTS } from "../../../../constants";
-import SVGImg from '../../../../assets/images/label.svg';
+import { FlatList, StyleSheet, View } from 'react-native'
+import React from 'react'
+import { Card, Title, Paragraph } from 'react-native-paper'
+import { COLORS, FONTS } from '../../../../constants'
+import SVGImg from '../../../../assets/images/label.svg'
 
 const data = [
   {
@@ -12,14 +12,16 @@ const data = [
   {
     name: 'Иван Иванович Иванов',
     speciality: 'Администратор'
-  },{
+  },
+  {
     name: 'Агибалова Татьяна Васильевна',
     speciality: 'Психиатор- нарколог'
   },
   {
     name: 'Иван Иванович Иванов',
     speciality: 'Администратор'
-  },{
+  },
+  {
     name: 'Агибалова Татьяна Васильевна',
     speciality: 'Психиатор- нарколог'
   },
@@ -30,12 +32,13 @@ const data = [
 ]
 
 const CardItem = (item) => {
+  const { name, speciality } = item
   return (
     <View style={styles.wrapper}>
       <Card style={styles.root}>
         <Card.Content>
-          <Title style={styles.title}>{item.name}</Title>
-          <Paragraph style={styles.subtitle}>{item.speciality}</Paragraph>
+          <Title style={styles.title}>{name}</Title>
+          <Paragraph style={styles.subtitle}>{speciality}</Paragraph>
         </Card.Content>
       </Card>
       <SVGImg style={styles.label} width={46} height={46} />
@@ -43,16 +46,16 @@ const CardItem = (item) => {
   )
 }
 
-export const TeamList = () => {
-  return (
-    <View style={styles.layout}>
-      <FlatList
-        data={data}
-        renderItem={({item}) => <CardItem {...item} />}
-      />
-    </View>
-  )
-}
+export const TeamList = () => (
+  <View style={styles.layout}>
+    <FlatList
+      showsVerticalScrollIndicator={false}
+      data={data}
+      /* eslint-disable-next-line react/jsx-props-no-spreading */
+      renderItem={({ item }) => <CardItem {...item} />}
+    />
+  </View>
+)
 
 const styles = StyleSheet.create({
   layout: {
@@ -70,10 +73,10 @@ const styles = StyleSheet.create({
   },
   title: {
     ...FONTS.title,
-    marginBottom: 16
   },
   subtitle: {
     ...FONTS.text,
+    marginTop: 16
   },
   label: {
     position: 'absolute',
@@ -82,4 +85,4 @@ const styles = StyleSheet.create({
     right: 10,
     bottom: 10
   }
-});
+})
