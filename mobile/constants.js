@@ -11,7 +11,8 @@ export const COLORS = {
   gray: '#5C5C5C',
   light: '#f1f1f199',
   lightGray: '#0000001f',
-  transparent: 'transparent'
+  transparent: 'transparent',
+  error: '#F04438'
 }
 export const SIZES = {
   // global sizes
