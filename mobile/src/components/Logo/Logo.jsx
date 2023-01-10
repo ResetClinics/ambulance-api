@@ -1,6 +1,6 @@
 import React from 'react'
 import { Image, StyleSheet } from 'react-native'
-import logoImg from '../../../assets/logo.webp'
+import logoImg from '../../../assets/icon.png'
 
 export const Logo = () => (
   <Image

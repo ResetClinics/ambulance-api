@@ -8,17 +8,13 @@ import { InputField } from '../InputField'
 import useValidationSchema from '../helper/use-validation-schema'
 
 export const FormContainer = ({ navigation, onSignIn }) => {
-  const onSubmit = (values) => {
-    console.log(values)
+  const onSubmit = () => {
+    onSignIn()
   }
   const schema = Yup.object().shape({
     login: Yup.string().required('Неверный логин'),
     password: Yup.string().required('Неверный пароль'),
   })
-
-  const submit = () => {
-    onSignIn()
-  }
   const validate = useValidationSchema(schema)
   return (
     <Form
@@ -26,7 +22,7 @@ export const FormContainer = ({ navigation, onSignIn }) => {
       onSubmit={onSubmit}
       validate={validate}
       render={({ handleSubmit }) => (
-        <View onSubmit={handleSubmit} style={styles.container}>
+        <View style={styles.container}>
           <View>
             <InputField name="login" label="Логин" placeholder="Ваше имя пользователя" />
             <InputField name="password" secureTextEntry label="Пароль" placeholder="Ваш пароль" />
@@ -41,9 +37,7 @@ export const FormContainer = ({ navigation, onSignIn }) => {
             </Button>
             <Button
               mode="contained"
-              onPress={(event) => {
-                submit(event)
-              }}
+              onPress={handleSubmit}
             >
               Войти
             </Button>

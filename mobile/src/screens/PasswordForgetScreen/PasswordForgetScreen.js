@@ -1,29 +1,34 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Button } from 'react-native-paper'
 import { Form } from 'react-final-form'
+import * as Yup from 'yup'
 import {
   InputField, Layout, Logo
 } from '../../components'
 import { COLORS } from '../../../constants'
+import useValidationSchema from '../../components/helper/use-validation-schema'
 
 export const PasswordForgetScreen = ({ navigation }) => {
-  const [name, setName] = useState('')
+  const onSubmit = (values) => {
+    console.log(values)
+    navigation.navigate('isSent')
+  }
+  const schema = Yup.object().shape({
+    login: Yup.string().required('Неверный логин'),
+    password: Yup.string().required('Неверный пароль'),
+  })
+  const validate = useValidationSchema(schema)
   return (
     <Layout>
       <View style={styles.root}>
         <Logo />
         <Form
-          onSubmit="onSubmit"
-          render={() => (
+          onSubmit={onSubmit}
+          validate={validate}
+          render={({ handleSubmit }) => (
             <View style={styles.container}>
-              <InputField
-                name="accLogin"
-                label="Логин"
-                placeholder="Ваше имя пользователя"
-                value={name}
-                onChangeText={(value) => setName(value)}
-              />
+              <InputField name="login" label="Логин" placeholder="Ваше имя пользователя" />
               <View style={styles.wrap}>
                 <Button
                   style={styles.btn}
@@ -34,7 +39,10 @@ export const PasswordForgetScreen = ({ navigation }) => {
                 </Button>
                 <Button
                   mode="contained"
-                  onPress={() => navigation.navigate('isSent')}
+                  onPress={() => {
+                    console.log('onpres')
+                    handleSubmit()
+                  }}
                 >
                   Восстановить пароль
                 </Button>
