@@ -27,9 +27,7 @@ export const PasswordForgetScreen = ({ navigation }) => {
           validate={validate}
           render={({ handleSubmit }) => (
             <View style={styles.container}>
-              <View>
-                <InputField name="login" label="Логин" placeholder="Ваше имя пользователя" />
-              </View>
+              <InputField name="login" label="Логин" placeholder="Ваше имя пользователя" />
               <View style={styles.wrap}>
                 <Button
                   style={styles.btn}
