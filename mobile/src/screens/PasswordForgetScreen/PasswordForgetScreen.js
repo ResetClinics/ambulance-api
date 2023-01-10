@@ -10,13 +10,11 @@ import { COLORS } from '../../../constants'
 import useValidationSchema from '../../components/helper/use-validation-schema'
 
 export const PasswordForgetScreen = ({ navigation }) => {
-  const onSubmit = (values) => {
-    console.log(values)
+  const onSubmit = () => {
     navigation.navigate('isSent')
   }
   const schema = Yup.object().shape({
     login: Yup.string().required('Неверный логин'),
-    password: Yup.string().required('Неверный пароль'),
   })
   const validate = useValidationSchema(schema)
   return (
@@ -24,6 +22,7 @@ export const PasswordForgetScreen = ({ navigation }) => {
       <View style={styles.root}>
         <Logo />
         <Form
+          style={styles.root}
           onSubmit={onSubmit}
           validate={validate}
           render={({ handleSubmit }) => (
@@ -39,10 +38,7 @@ export const PasswordForgetScreen = ({ navigation }) => {
                 </Button>
                 <Button
                   mode="contained"
-                  onPress={() => {
-                    console.log('onpres')
-                    handleSubmit()
-                  }}
+                  onPress={handleSubmit}
                 >
                   Восстановить пароль
                 </Button>

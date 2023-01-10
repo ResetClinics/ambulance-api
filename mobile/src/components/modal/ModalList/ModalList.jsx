@@ -4,7 +4,7 @@ import {
 } from 'react-native'
 import { Button } from 'react-native-paper'
 import { COLORS, FONTS } from '../../../../constants'
-import plusImg from '../../../../assets/images/plusColor.webp'
+import plusImg from '../../../../assets/images/plusColor.png'
 
 export const ModalList = ({ data }) => (
   <View style={styles.root}>
