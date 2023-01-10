@@ -32,7 +32,7 @@
       }
     },
     "web": {
-      "favicon": "./assets/icon.png",
+      "favicon": "./assets/favicon.png",
       "backgroundColor": "#FFFFFF"
     }
   }
