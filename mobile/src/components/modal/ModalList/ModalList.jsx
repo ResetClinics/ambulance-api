@@ -1,29 +1,30 @@
-import React from "react";
-import { COLORS, FONTS } from "../../../../constants";
-import { Image, StyleSheet, Text, View } from "react-native";
-import { Button } from "react-native-paper";
+import React from 'react'
+import {
+  Image, StyleSheet, Text, View
+} from 'react-native'
+import { Button } from 'react-native-paper'
+import { COLORS, FONTS } from '../../../../constants'
+import plusImg from '../../../../assets/images/plusColor.webp'
 
-export const ModalList = ({data}) => {
-  return (
-    <View style={styles.root}>
-      {
-        data.slice(0, 7).map((item, key) =>
-          <View style={styles.item} key={key}>
-            <Text style={styles.itemText}>{item.name}</Text>
+export const ModalList = ({ data }) => (
+  <View style={styles.root}>
+    {
+        data.slice(0, 7).map(({ id, name }) => (
+          <View style={styles.item} key={id}>
+            <Text style={styles.itemText}>{name}</Text>
             <Image
-              source={require('../../../../assets/images/plusColor.webp')}
-              style={{ width: 14, height: 14 }}
+              source={plusImg}
+              style={styles.img}
             />
           </View>
-        )
+        ))
       }
-      <View style={styles.holder}>
-        <Button  mode="outlined" style={styles.btn}>Сбросить</Button>
-        <Button mode="contained" style={styles.btn}>Сохранить</Button>
-      </View>
+    <View style={styles.holder}>
+      <Button mode="outlined" style={styles.btn}>Сбросить</Button>
+      <Button mode="contained" style={styles.btn}>Сохранить</Button>
     </View>
-  )
-}
+  </View>
+)
 const styles = StyleSheet.create({
   root: {
     borderRadius: 4,
@@ -49,5 +50,8 @@ const styles = StyleSheet.create({
   },
   btn: {
     width: '47%'
+  },
+  img: {
+    width: 14, height: 14
   }
-});
+})
