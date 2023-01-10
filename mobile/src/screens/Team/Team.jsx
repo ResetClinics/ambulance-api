@@ -1,49 +1,15 @@
-import { StyleSheet, View } from 'react-native'
-import React, { useState } from 'react'
-import { Button } from 'react-native-paper'
-import { Layout, TeamList, TeamNotAssigned } from '../../components'
+import React from 'react'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { TeamNotAssigned } from './TeamNotAssigned'
+import { TeamAssigned } from './TeamAssigned'
+import { TeamAccepted } from './TeamAccepted'
 
-export const Team = () => {
-  const STATUSES = {
-    NOT_ASSIGNED: 'not_assigned',
-    ASSIGNED: 'assigned',
-    ACCEPTED: 'accepted'
-  }
-  const [status, setStatus] = useState(STATUSES.NOT_ASSIGNED)
-  switch (status) {
-    case STATUSES.ASSIGNED:
-      return (
-        <Layout>
-          <TeamList />
-          <View style={styles.btnHolder}>
-            <Button mode="outlined" raised onPress={() => setStatus(STATUSES.NOT_ASSIGNED)}>
-              Бригада не готова к дежурству
-            </Button>
-            <Button mode="contained" style={styles.btn} onPress={() => setStatus(STATUSES.ACCEPTED)}>
-              Бригада вышла на дежурство
-            </Button>
-          </View>
-        </Layout>
-      )
-    case STATUSES.ACCEPTED:
-      return (
-        <Layout>
-          <TeamList />
-          <View style={styles.btnHolder}>
-            <Button mode="outlined" onPress={() => setStatus(STATUSES.NOT_ASSIGNED)}>Завершить смену</Button>
-          </View>
-        </Layout>
-      )
-    default:
-      return <TeamNotAssigned onPress={() => setStatus(STATUSES.ASSIGNED)} />
-  }
-}
+const Stack = createNativeStackNavigator()
 
-const styles = StyleSheet.create({
-  btnHolder: {
-    marginTop: 'auto', paddingTop: 16
-  },
-  btn: {
-    marginTop: 16
-  }
-})
+export const Team = () => (
+  <Stack.Navigator>
+    <Stack.Screen name="Главная Бригады" component={TeamNotAssigned} options={{ headerShown: false }} />
+    <Stack.Screen name="Состав Бригады" component={TeamAssigned} options={{ headerShown: false }} />
+    <Stack.Screen name="Подвержденная Бригада" component={TeamAccepted} options={{ headerShown: false }} />
+  </Stack.Navigator>
+)
