@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import { Field } from 'react-final-form'
 import { TextInput } from 'react-native-paper'
 import { COLORS } from '../../../constants'
@@ -10,17 +10,22 @@ export const InputField = ({
   <Field
     name={name}
   >
-    {({ input }) => (
-      <TextInput
-        style={styles.input}
-        mode="outlined"
-        focused
-        placeholder={placeholder}
-        label={label}
-        value={input.value}
-        onChangeText={input.onChange}
-        secureTextEntry={secureTextEntry}
-      />
+    {({ input, meta }) => (
+      <View>
+        <TextInput
+          style={styles.input}
+          mode="outlined"
+          focused
+          placeholder={placeholder}
+          label={label}
+          value={input.value}
+          onChangeText={input.onChange}
+          secureTextEntry={secureTextEntry}
+          error={meta.touched && meta.error}
+        />
+
+        {meta.touched && meta.error && <Text>{meta.error}</Text>}
+      </View>
     )}
   </Field>
 )
