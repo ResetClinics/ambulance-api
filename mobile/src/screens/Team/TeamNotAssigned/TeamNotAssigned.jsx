@@ -2,9 +2,9 @@ import { StyleSheet, Text } from 'react-native'
 import { IconButton } from 'react-native-paper'
 import React from 'react'
 import { COLORS } from '../../../../constants'
-import { Layout } from '../../Layout'
+import { Layout } from '../../../components'
 
-export const TeamNotAssigned = ({ onPress }) => (
+export const TeamNotAssigned = ({ navigation }) => (
   <Layout>
     <Text style={styles.text}>Бригада еще не сформирована</Text>
     <IconButton
@@ -15,7 +15,7 @@ export const TeamNotAssigned = ({ onPress }) => (
       iconColor={COLORS.white}
       containerColor={COLORS.blue}
       size={35}
-      onPress={onPress}
+      onPress={() => navigation.navigate('Состав Бригады')}
     />
   </Layout>
 )

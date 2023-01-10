@@ -1,8 +1,8 @@
 import { FlatList, StyleSheet, View } from 'react-native'
 import React from 'react'
 import { Card, Title, Paragraph } from 'react-native-paper'
-import { COLORS, FONTS } from '../../../../constants'
-import SVGImg from '../../../../assets/images/label.svg'
+import { COLORS, FONTS } from '../../../constants'
+import SVGImg from '../../../assets/images/label.svg'
 
 const data = [
   {
