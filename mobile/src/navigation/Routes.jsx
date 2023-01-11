@@ -1,8 +1,11 @@
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { Image, StyleSheet } from 'react-native'
+import {
+  Button, Image, StyleSheet,
+} from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
-import { NavigationContainer } from '@react-navigation/native'
+import { DrawerActions, NavigationContainer } from '@react-navigation/native'
+import { createDrawerNavigator } from '@react-navigation/drawer'
 import { COLORS } from '../../constants'
 import {
   CallHistory, CurrentCall, PasswordForgetScreen, Profile, Sent, SignInScreen, Team
@@ -18,6 +21,7 @@ import profileIconColor from '../../assets/images/menu/profile_color.png'
 
 const Tab = createBottomTabNavigator()
 const RootStack = createStackNavigator()
+const Drawer = createDrawerNavigator()
 
 const icons = {
   Бригада: {
@@ -81,6 +85,10 @@ export const Routes = () => {
     setIsAuthenticated(true)
   }
 
+  const handleSignOut = () => {
+    setIsAuthenticated(false)
+  }
+
   return (
     <NavigationContainer>
       <RootStack.Navigator>
@@ -88,7 +96,16 @@ export const Routes = () => {
           <RootStack.Screen
             name="App"
             component={AppNavigator}
-            options={{ headerShown: false }}
+            options={({ navigation }) => ({
+              headerShown: false,
+              // eslint-disable-next-line react/no-unstable-nested-components
+              headerRight: () => (
+                <Button
+                  onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+                  title="Menu"
+                />
+              ),
+            })}
           />
         ) : (
           <>
