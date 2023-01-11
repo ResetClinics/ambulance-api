@@ -60,6 +60,5 @@ const styles = StyleSheet.create({
   btn: {
     marginBottom: 10,
     alignItems: 'flex-start',
-    marginLeft: -12
   },
 })

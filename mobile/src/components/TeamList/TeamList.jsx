@@ -2,7 +2,7 @@ import {
   FlatList, Image, StyleSheet, View
 } from 'react-native'
 import React from 'react'
-import { Card, Title, Paragraph } from 'react-native-paper'
+import { Card, Title, Paragraph, InternalTheme } from 'react-native-paper'
 import { COLORS, FONTS } from '../../../constants'
 import labelImg from '../../../assets/images/label.png'
 
@@ -36,16 +36,19 @@ const data = [
 const CardItem = (item) => {
   const { name, speciality } = item
   return (
-    <Card style={styles.root}>
-      <Card.Content style={styles.wrap}>
-        <Title style={styles.title}>{name}</Title>
-        <Paragraph style={styles.subtitle}>{speciality}</Paragraph>
-      </Card.Content>
+    <View style={styles.root}>
+      <Card mode="outlined" theme={theme} style={styles.card}>
+        <Card.Content style={styles.wrap}>
+          <Title style={styles.title}>{name}</Title>
+          <Paragraph style={styles.subtitle}>{speciality}</Paragraph>
+        </Card.Content>
+
+      </Card>
       <Image
         source={labelImg}
         style={styles.label}
       />
-    </Card>
+    </View>
   )
 }
 
@@ -65,20 +68,18 @@ const styles = StyleSheet.create({
     flex: 1
   },
   root: {
-    backgroundColor: COLORS.white,
-    borderRadius: 4,
-    borderColor: COLORS.primary,
-    borderWidth: 1,
     marginBottom: 32,
     position: 'relative',
-
+  },
+  card: {
+    backgroundColor: COLORS.white,
   },
   label: {
     position: 'absolute',
     width: 46,
     height: 46,
     right: 10,
-    bottom: -23
+    bottom: -22
   },
   title: {
     ...FONTS.title,
@@ -91,3 +92,8 @@ const styles = StyleSheet.create({
     padding: 16,
   }
 })
+
+const theme = {
+  ...InternalTheme,
+  roundness: 2,
+}
