@@ -94,9 +94,9 @@ const HomeDrawer = ({ handleSignOut }) => (
     <Drawer.Screen
       name="out"
     >
-      {(handleSignIn) => (
+      {() => (
         // eslint-disable-next-line react/jsx-props-no-spreading
-        <Button onPress={handleSignIn} title="out" />
+        <Button onPress={handleSignOut} title="out" />
       )}
     </Drawer.Screen>
   </Drawer.Navigator>
