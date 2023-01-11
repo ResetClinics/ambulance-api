@@ -2,7 +2,6 @@ import { FlatList, StyleSheet, View } from 'react-native'
 import React from 'react'
 import { Card, Title, Paragraph } from 'react-native-paper'
 import { COLORS, FONTS } from '../../../constants'
-import SVGImg from '../../../assets/images/label.svg'
 
 const data = [
   {
@@ -41,7 +40,6 @@ const CardItem = (item) => {
           <Paragraph style={styles.subtitle}>{speciality}</Paragraph>
         </Card.Content>
       </Card>
-      <SVGImg style={styles.label} width={46} height={46} />
     </View>
   )
 }
@@ -78,11 +76,4 @@ const styles = StyleSheet.create({
     ...FONTS.text,
     marginTop: 16
   },
-  label: {
-    position: 'absolute',
-    borderRadius: 100,
-    backgroundColor: COLORS.white,
-    right: 10,
-    bottom: 10
-  }
 })
