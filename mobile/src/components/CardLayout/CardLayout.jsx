@@ -34,7 +34,7 @@ export const CardLayout = ({
 const styles = StyleSheet.create({
   root: {
     backgroundColor: COLORS.white,
-    borderRadius: 4,
+    borderRadius: 6,
     borderColor: COLORS.primary,
     borderWidth: 1,
     marginBottom: 16

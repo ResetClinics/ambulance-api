@@ -84,9 +84,9 @@ export const CardItem = ({
 const styles = StyleSheet.create({
   root: {
     backgroundColor: COLORS.white,
-    borderRadius: 4,
     borderColor: COLORS.primary,
     borderWidth: 1,
+    borderRadius: 6,
     marginBottom: 32
   },
   title: {

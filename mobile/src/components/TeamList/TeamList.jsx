@@ -1,8 +1,10 @@
-import { FlatList, StyleSheet, View } from 'react-native'
+import {
+  FlatList, Image, StyleSheet, View
+} from 'react-native'
 import React from 'react'
-import { Card, Title, Paragraph } from 'react-native-paper'
+import { Card, Title, Paragraph, InternalTheme } from 'react-native-paper'
 import { COLORS, FONTS } from '../../../constants'
-import SVGImg from '../../../assets/images/label.svg'
+import labelImg from '../../../assets/images/label.png'
 
 const data = [
   {
@@ -34,14 +36,18 @@ const data = [
 const CardItem = (item) => {
   const { name, speciality } = item
   return (
-    <View style={styles.wrapper}>
-      <Card style={styles.root}>
-        <Card.Content>
+    <View style={styles.root}>
+      <Card mode="outlined" theme={theme} style={styles.card}>
+        <Card.Content style={styles.wrap}>
           <Title style={styles.title}>{name}</Title>
           <Paragraph style={styles.subtitle}>{speciality}</Paragraph>
         </Card.Content>
+
       </Card>
-      <SVGImg style={styles.label} width={46} height={46} />
+      <Image
+        source={labelImg}
+        style={styles.label}
+      />
     </View>
   )
 }
@@ -62,27 +68,32 @@ const styles = StyleSheet.create({
     flex: 1
   },
   root: {
-    backgroundColor: COLORS.white,
-    borderRadius: 4,
-    borderColor: COLORS.primary,
-    borderWidth: 1,
-    marginBottom: 32
-  },
-  wrapper: {
+    marginBottom: 32,
     position: 'relative',
+  },
+  card: {
+    backgroundColor: COLORS.white,
+  },
+  label: {
+    position: 'absolute',
+    width: 46,
+    height: 46,
+    right: 10,
+    bottom: -22
   },
   title: {
     ...FONTS.title,
   },
   subtitle: {
     ...FONTS.text,
-    marginTop: 16
+    marginTop: 16,
   },
-  label: {
-    position: 'absolute',
-    borderRadius: 100,
-    backgroundColor: COLORS.white,
-    right: 10,
-    bottom: 10
+  wrap: {
+    padding: 16,
   }
 })
+
+const theme = {
+  ...InternalTheme,
+  roundness: 2,
+}

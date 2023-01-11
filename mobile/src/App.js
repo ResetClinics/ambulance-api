@@ -10,6 +10,7 @@ import boldFont from '../assets/fonts/Roboto-Bold.ttf'
 import regularFont from '../assets/fonts/Roboto-Regular.ttf'
 import mediumFont from '../assets/fonts/Roboto-Medium.ttf'
 import { Routes } from './navigation/Routes'
+import {COLORS} from "../constants";
 
 const App = () => {
   const [appIsReady, setAppIsReady] = useState(false)
@@ -68,12 +69,13 @@ const styles = StyleSheet.create({
 })
 
 const theme = {
-  ...MD3LightTheme, // or MD3DarkTheme
+  ...MD3LightTheme,
   roundness: 1,
   colors: {
     ...MD3LightTheme.colors,
-    primary: '#04607A',
+    primary: COLORS.primary,
     secondary: 'rad',
     tertiary: 'red',
+    outline: COLORS.primary,
   },
 }
