@@ -4,7 +4,7 @@ import {
   Button, Image, StyleSheet,
 } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
-import { DrawerActions, NavigationContainer } from '@react-navigation/native'
+import { DrawerActions, getFocusedRouteNameFromRoute, NavigationContainer } from '@react-navigation/native'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { COLORS } from '../../constants'
 import {
@@ -67,7 +67,11 @@ const AppNavigator = () => (
       tabBarInactiveTintColor: COLORS.gray,
     })}
   >
-    <Tab.Screen name="Бригада" component={Team} />
+    <Tab.Screen
+      name="Бригада"
+      component={Team}
+      options={{ headerShown: false }}
+    />
     <Tab.Screen
       name="Текущий вызов"
       component={CurrentCall}
@@ -78,6 +82,25 @@ const AppNavigator = () => (
   </Tab.Navigator>
 )
 
+const HomeDrawer = ({ handleSignOut }) => (
+  <Drawer.Navigator>
+    <Drawer.Screen
+      name="HomeTabs"
+      component={AppNavigator}
+      options={({ route }) => ({
+        headerTitle: getFocusedRouteNameFromRoute(route),
+      })}
+    />
+    <Drawer.Screen
+      name="out"
+    >
+      {(handleSignIn) => (
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        <Button onPress={handleSignIn} title="out" />
+      )}
+    </Drawer.Screen>
+  </Drawer.Navigator>
+)
 export const Routes = () => {
   const [isAuthenticated, setIsAuthenticated] = React.useState(false)
 
@@ -95,17 +118,9 @@ export const Routes = () => {
         {isAuthenticated ? (
           <RootStack.Screen
             name="App"
-            component={AppNavigator}
-            options={({ navigation }) => ({
-              headerShown: false,
-              // eslint-disable-next-line react/no-unstable-nested-components
-              headerRight: () => (
-                <Button
-                  onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
-                  title="Menu"
-                />
-              ),
-            })}
+            component={HomeDrawer}
+            options={{ headerShown: false }}
+            handleSignOut={handleSignOut}
           />
         ) : (
           <>
