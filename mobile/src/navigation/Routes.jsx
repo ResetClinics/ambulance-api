@@ -122,6 +122,7 @@ const HomeDrawer = ({ handleSignOut }) => (
       component={AppNavigator}
       options={({ route }) => ({
         headerTitle: getFocusedRouteNameFromRoute(route),
+        // eslint-disable-next-line react/no-unstable-nested-components
         drawerIcon: ({ color }) => (
           <Ionicons name="home-outline" size={18} color={color} />
         )
@@ -131,6 +132,7 @@ const HomeDrawer = ({ handleSignOut }) => (
       name="Профиль"
       component={Profile}
       options={{
+        // eslint-disable-next-line react/no-unstable-nested-components
         drawerIcon: ({ color }) => (
           <Ionicons name="person-outline" size={18} color={color} />
         )
