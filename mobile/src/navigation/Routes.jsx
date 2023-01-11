@@ -1,11 +1,15 @@
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import {
-  Button, Image, StyleSheet,
+  Image, StyleSheet, View, Text
 } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
-import { DrawerActions, getFocusedRouteNameFromRoute, NavigationContainer } from '@react-navigation/native'
-import { createDrawerNavigator } from '@react-navigation/drawer'
+import { getFocusedRouteNameFromRoute, NavigationContainer } from '@react-navigation/native'
+import {
+  createDrawerNavigator, DrawerContentScrollView, DrawerItemList
+} from '@react-navigation/drawer'
+
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import { COLORS } from '../../constants'
 import {
   CallHistory, CurrentCall, PasswordForgetScreen, Profile, Sent, SignInScreen, Team
@@ -65,40 +69,73 @@ const AppNavigator = () => (
       tabBarIcon: ({ focused, color, size }) => tabBarIcon(focused, color, size, route),
       tabBarActiveTintColor: COLORS.primary,
       tabBarInactiveTintColor: COLORS.gray,
+      headerShown: false
     })}
   >
     <Tab.Screen
       name="Бригада"
       component={Team}
-      options={{ headerShown: false }}
     />
     <Tab.Screen
       name="Текущий вызов"
       component={CurrentCall}
-      options={{ headerShown: false }}
     />
-    <Tab.Screen name="История вызовов" component={CallHistory} />
-    <Tab.Screen name="Профиль" component={Profile} />
+    <Tab.Screen
+      name="История вызовов"
+      component={CallHistory}
+    />
+    <Tab.Screen
+      name="Профиль"
+      component={Profile}
+    />
   </Tab.Navigator>
 )
 
+const CustomDrawerContent = (props) => (
+  <View style={{ flex: 1 }}>
+    <DrawerContentScrollView {...props}>
+      <DrawerItemList {...props} />
+      <View style={{ flexDirection: 'row', alignItems: 'center'}}>
+        <Ionicons name="exit-outline" size={18} />
+        <Text>Выйти</Text>
+      </View>
+    </DrawerContentScrollView>
+    <Text>2014-2023 Клиника Респект</Text>
+  </View>
+)
+
 const HomeDrawer = ({ handleSignOut }) => (
-  <Drawer.Navigator>
+  // eslint-disable-next-line react/no-unstable-nested-components,react/jsx-props-no-spreading
+  <Drawer.Navigator
+    screenOptions={{
+      drawerActiveBackgroundColor: COLORS.primary,
+      drawerActiveTintColor: COLORS.white,
+      drawerLabelStyle: {
+        fontSize: 16,
+        marginLeft: -20,
+      }
+    }}
+    drawerContent={(props) => <CustomDrawerContent {...props} handleSignOut={handleSignOut} />}
+  >
     <Drawer.Screen
-      name="HomeTabs"
+      name="Home"
       component={AppNavigator}
       options={({ route }) => ({
         headerTitle: getFocusedRouteNameFromRoute(route),
+        drawerIcon: ({ color }) => (
+          <Ionicons name="home-outline" size={18} color={color} />
+        )
       })}
     />
     <Drawer.Screen
-      name="out"
-    >
-      {() => (
-        // eslint-disable-next-line react/jsx-props-no-spreading
-        <Button onPress={handleSignOut} title="out" />
-      )}
-    </Drawer.Screen>
+      name="Профиль"
+      component={Profile}
+      options={{
+        drawerIcon: ({ color }) => (
+          <Ionicons name="person-outline" size={18} color={color} />
+        )
+      }}
+    />
   </Drawer.Navigator>
 )
 export const Routes = () => {
