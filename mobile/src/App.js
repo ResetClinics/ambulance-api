@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
 })
 
 const theme = {
-  ...MD3LightTheme, // or MD3DarkTheme
+  ...MD3LightTheme,
   roundness: 1,
   colors: {
     ...MD3LightTheme.colors,
@@ -77,6 +77,5 @@ const theme = {
     secondary: 'rad',
     tertiary: 'red',
     outline: COLORS.primary,
-    shadow: 'none',
   },
 }

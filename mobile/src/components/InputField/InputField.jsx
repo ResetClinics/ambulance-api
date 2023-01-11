@@ -24,7 +24,6 @@ export const InputField = ({
           secureTextEntry={secureTextEntry}
           error={meta.touched && meta.error}
         />
-
         {meta.touched && meta.error && <Text style={styles.error}>{meta.error}</Text>}
       </View>
     )}
@@ -48,7 +47,7 @@ const styles = StyleSheet.create({
 })
 
 const theme = {
-  ...MD3LightTheme, // or MD3DarkTheme
+  ...MD3LightTheme,
   roundness: 5,
   colors: {
     ...MD3LightTheme.colors,
@@ -58,7 +57,4 @@ const theme = {
     error: COLORS.primary,
     onSurfaceVariant: COLORS.primary,
   },
-  fonts: {
-    fontSize: 50
-  }
 }
