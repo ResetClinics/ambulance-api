@@ -4,8 +4,6 @@ import currentCallIcon from '../../assets/images/menu/currentCall.png'
 import currentCallIconColor from '../../assets/images/menu/currentCall_color.png'
 import callHistoryIcon from '../../assets/images/menu/callHistory.png'
 import callHistoryIconColor from '../../assets/images/menu/callHistory_color.png'
-import profileIcon from '../../assets/images/menu/profile.png'
-import profileIconColor from '../../assets/images/menu/profile_color.png'
 
 export const icons = {
   Бригада: {
@@ -19,10 +17,6 @@ export const icons = {
   'История вызовов': {
     default: callHistoryIcon,
     focused: callHistoryIconColor,
-  },
-  Профиль: {
-    default: profileIcon,
-    focused: profileIconColor,
   },
   default: {
     default: teamIcon,

@@ -14,11 +14,41 @@ import { COLORS } from '../../constants'
 import {
   CallHistory, CurrentCall, PasswordForgetScreen, Profile, Sent, SignInScreen, Team
 } from '../screens'
-import { icons } from '../data/navIcons'
+import teamIcon from '../../assets/images/menu/team.png'
+import teamIconColor from '../../assets/images/menu/team_color.png'
+import currentCallIcon from '../../assets/images/menu/currentCall.png'
+import currentCallIconColor from '../../assets/images/menu/currentCall_color.png'
+import callHistoryIcon from '../../assets/images/menu/callHistory.png'
+import callHistoryIconColor from '../../assets/images/menu/callHistory_color.png'
+import profileIcon from '../../assets/images/menu/profile.png'
+import profileIconColor from '../../assets/images/menu/profile_color.png'
 
 const Tab = createBottomTabNavigator()
 const RootStack = createStackNavigator()
 const Drawer = createDrawerNavigator()
+
+const icons = {
+  Бригада: {
+    default: teamIcon,
+    focused: teamIconColor,
+  },
+  'Текущий вызов': {
+    default: currentCallIcon,
+    focused: currentCallIconColor,
+  },
+  'История вызовов': {
+    default: callHistoryIcon,
+    focused: callHistoryIconColor,
+  },
+  Профиль: {
+    default: profileIcon,
+    focused: profileIconColor,
+  },
+  default: {
+    default: teamIcon,
+    focused: teamIconColor,
+  }
+}
 
 const tabBarIcon = (focused, color, size, route) => {
   let currentIcons
@@ -65,7 +95,7 @@ const CustomDrawerContent = (props) => (
   <View style={{ flex: 1 }}>
     <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center'}}>
         <Ionicons name="exit-outline" size={18} />
         <Text>Выйти</Text>
       </View>
@@ -87,7 +117,7 @@ const HomeDrawer = ({ handleSignOut }) => (
     }}
     drawerContent={(props) => <CustomDrawerContent {...props} handleSignOut={handleSignOut} />}
   >
-    <Drawer.Screen
+    {/*<Drawer.Screen
       name="Home"
       component={AppNavigator}
       options={({ route }) => ({
@@ -97,6 +127,36 @@ const HomeDrawer = ({ handleSignOut }) => (
           <Ionicons name="home-outline" size={18} color={color} />
         )
       })}
+    />*/}
+    <Drawer.Screen
+      name="Бригада"
+      component={Team}
+      options={{
+        // eslint-disable-next-line react/no-unstable-nested-components
+        drawerIcon: ({ color }) => (
+          <Ionicons name="person-outline" size={18} color={color} />
+        )
+      }}
+    />
+    <Drawer.Screen
+      name="Текущий вызов"
+      component={CurrentCall}
+      options={{
+        // eslint-disable-next-line react/no-unstable-nested-components
+        drawerIcon: ({ color }) => (
+          <Ionicons name="person-outline" size={18} color={color} />
+        )
+      }}
+    />
+    <Drawer.Screen
+      name="История вызовов"
+      component={CallHistory}
+      options={{
+        // eslint-disable-next-line react/no-unstable-nested-components
+        drawerIcon: ({ color }) => (
+          <Ionicons name="person-outline" size={18} color={color} />
+        )
+      }}
     />
     <Drawer.Screen
       name="Профиль"
