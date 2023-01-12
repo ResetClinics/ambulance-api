@@ -1,9 +1,13 @@
 import React from 'react'
-import { BottomNavigation, Layout, ProfileScreen } from '../../components'
+import {
+  BottomNavigation, Layout, ProfileScreen, ScreenLayout
+} from '../../components'
 
 export const Profile = ({ navigation }) => (
-  <Layout>
-    <ProfileScreen />
+  <ScreenLayout>
+    <Layout>
+      <ProfileScreen />
+    </Layout>
     <BottomNavigation navigation={navigation} />
-  </Layout>
+  </ScreenLayout>
 )

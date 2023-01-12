@@ -95,7 +95,7 @@ const CustomDrawerContent = (props) => (
   <View style={{ flex: 1 }}>
     <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
-      <View style={{ flexDirection: 'row', alignItems: 'center'}}>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Ionicons name="exit-outline" size={18} />
         <Text>Выйти</Text>
       </View>
