@@ -1,48 +1,108 @@
 import {
   Image,
-  StyleSheet, View
+  StyleSheet, View,
 } from 'react-native'
 import { Button } from 'react-native-paper'
-import React from 'react'
-import plusImg from '../../../assets/images/plusColor.png'
+import React, { useState } from 'react'
 import { COLORS } from '../../../constants'
+import teamIconColor from '../../../assets/images/menu/team_color.png'
+import teamIcon from '../../../assets/images/menu/team.png'
+import currentCallIcon from '../../../assets/images/menu/currentCall.png'
+import currentCallIconColor from '../../../assets/images/menu/currentCall_color.png'
+import callHistoryIcon from '../../../assets/images/menu/callHistory.png'
+import callHistoryIconColor from '../../../assets/images/menu/callHistory_color.png'
 
-export const BottomNavigation = ({ navigation }) => {
-  const items = [
+const items = [
+  {
+    name: 'team',
+    title: 'Бригада',
+    id: 1,
+    icon: teamIcon,
+    iconColor: teamIconColor
+  },
+  {
+    name: 'сurrentCall',
+    title: 'Текущий вызов',
+    id: 2,
+    icon: currentCallIcon,
+    iconColor: currentCallIconColor,
+  },
+  {
+    name: 'сallHistory',
+    title: 'Вызовы',
+    id: 3,
+    icon: callHistoryIcon,
+    iconColor: callHistoryIconColor,
+  },
+]
+
+const TabChange = ({
+  name, icon, title, iconColor, id, navigation, active, onClick
+}) => (
+  <View onClick={onClick}>
     {
-      name: 'История вызовов',
-      title: 'История вызовов',
-      icon: '',
-      id: 1
-    },
-    {
-      name: 'История вызовов',
-      title: 'История вызовов',
-      icon: '',
-      id: 2
-    },
-  ]
-  return (
-    <View style={styles.root}>
-      {
-        items.map(({ name, title, id }) => (
+        active
+        && (
           <Button
+            style={styles.btn}
             onPress={() => navigation.navigate(name)}
             key={id}
             /* eslint-disable-next-line react/no-unstable-nested-components */
             icon={() => (
               <Image
-                source={plusImg}
+                source={iconColor}
                 style={styles.img}
               />
             )}
           >
             {title}
           </Button>
+        )
+      }
+    <Button
+      style={styles.btn}
+      onPress={() => navigation.navigate(name)}
+      key={id}
+      /* eslint-disable-next-line react/no-unstable-nested-components */
+      icon={() => (
+        <Image
+          source={icon}
+          style={styles.img}
+        />
+      )}
+    >
+      {title}
+    </Button>
+  </View>
+)
+
+export const BottomNavigation = ({ navigation }) => {
+  const [activeIndex, setActiveIndex] = useState(null)
+  const setActive = (index) => {
+    if (activeIndex === index) {
+      setActiveIndex(null)
+    } else {
+      setActiveIndex(index)
+    }
+  }
+
+  return (
+    <View style={styles.root}>
+      {
+        items.map((item, key) => (
+          <TabChange
+          /* eslint-disable-next-line react/jsx-props-no-spreading */
+            {...item}
+            key={item.id}
+            active={key === activeIndex}
+            onClick={() => setActive(key)}
+            navigation={navigation}
+          />
         ))
       }
     </View>
   )
+
 }
 
 const styles = StyleSheet.create({
@@ -50,7 +110,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    backgroundColor: COLORS.gray,
+    backgroundColor: COLORS.white,
     paddingHorizontal: 16,
     paddingVertical: 8,
     maxHeight: 60,
@@ -61,6 +121,10 @@ const styles = StyleSheet.create({
     right: 0
   },
   img: {
-    width: 24, height: 24
+    width: 24,
+    height: 24,
   },
+  btn: {
+    flexDirection: 'column'
+  }
 })

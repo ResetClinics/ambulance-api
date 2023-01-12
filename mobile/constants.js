@@ -11,6 +11,7 @@ export const COLORS = {
   gray: '#5C5C5C',
   light: '#f1f1f199',
   lightGray: '#0000001f',
+  darkGrey: '#CAC4D0',
   transparent: 'transparent',
   error: '#F04438'
 }
@@ -51,6 +52,9 @@ export const FONTS = {
   },
   smallText: {
     fontFamily: 'Roboto-Regular', fontSize: SIZES.fs12, lineHeight: 16, color: COLORS.gray, letterSpacing: 0.4
+  },
+  span: {
+    fontFamily: 'Roboto-Medium', fontSize: SIZES.fs14, lineHeight: 20, color: COLORS.primary, letterSpacing: 0.1
   },
   h1: { fontFamily: 'Roboto-Black', fontSize: SIZES.h1, lineHeight: 36 },
   h2: { fontFamily: 'Roboto-Bold', fontSize: SIZES.h2, lineHeight: 30 },

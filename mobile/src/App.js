@@ -9,8 +9,8 @@ import italicFont from '../assets/fonts/Roboto-Italic.ttf'
 import boldFont from '../assets/fonts/Roboto-Bold.ttf'
 import regularFont from '../assets/fonts/Roboto-Regular.ttf'
 import mediumFont from '../assets/fonts/Roboto-Medium.ttf'
-import { Routes } from './navigation/Routes'
 import { COLORS } from '../constants'
+import { Routes } from './navigation'
 
 const App = () => {
   const [appIsReady, setAppIsReady] = useState(false)
