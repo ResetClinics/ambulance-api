@@ -1,6 +1,6 @@
 import React from 'react'
 import { FlatList } from 'react-native'
-import { CardItem, Layout } from '../../components'
+import { BottomNavigation, CardItem, Layout } from '../../components'
 import { data } from '../../data/data'
 
 export const CallHistory = ({ navigation }) => {
@@ -20,6 +20,7 @@ export const CallHistory = ({ navigation }) => {
         /* eslint-disable-next-line react/jsx-props-no-spreading */
         renderItem={({ item }) => <CardItem {...item} goToMapPage={goToMapPage} text="Свернуть" />}
       />
+      <BottomNavigation navigation={navigation} />
     </Layout>
   )
 }

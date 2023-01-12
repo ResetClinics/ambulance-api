@@ -1,8 +1,9 @@
 import React from 'react'
-import { Layout, ProfileScreen } from '../../components'
+import { BottomNavigation, Layout, ProfileScreen } from '../../components'
 
-export const Profile = () => (
+export const Profile = ({ navigation }) => (
   <Layout>
     <ProfileScreen />
+    <BottomNavigation navigation={navigation} />
   </Layout>
 )

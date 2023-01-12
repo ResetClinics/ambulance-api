@@ -2,7 +2,7 @@ import { StyleSheet, Text } from 'react-native'
 import { IconButton } from 'react-native-paper'
 import React from 'react'
 import { COLORS } from '../../../../constants'
-import { Layout } from '../../../components'
+import { BottomNavigation, Layout } from '../../../components'
 
 export const TeamNotAssigned = ({ navigation }) => (
   <Layout>

@@ -2,7 +2,6 @@ import { StyleSheet, Text } from 'react-native'
 import { Avatar } from 'react-native-paper'
 import React from 'react'
 import { COLORS, FONTS, SIZES } from '../../../constants'
-import { BtnNav } from '../BtnNav'
 
 const defaultImg = require('../../../assets/images/default.png')
 
@@ -13,7 +12,6 @@ export const ProfileScreen = () => (
     <Avatar.Image size={140} source={img || defaultImg} style={styles.root} />
     <Text style={styles.title}>Иванов Иван Иванович</Text>
     <Text style={styles.text}>Невролог-терапевт</Text>
-    <BtnNav />
   </>
 )
 

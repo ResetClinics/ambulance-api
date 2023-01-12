@@ -117,25 +117,15 @@ const HomeDrawer = ({ handleSignOut }) => (
     }}
     drawerContent={(props) => <CustomDrawerContent {...props} handleSignOut={handleSignOut} />}
   >
-    {/*<Drawer.Screen
-      name="Home"
-      component={AppNavigator}
-      options={({ route }) => ({
-        headerTitle: getFocusedRouteNameFromRoute(route),
-        // eslint-disable-next-line react/no-unstable-nested-components
-        drawerIcon: ({ color }) => (
-          <Ionicons name="home-outline" size={18} color={color} />
-        )
-      })}
-    />*/}
     <Drawer.Screen
-      name="Бригада"
+      name="team"
       component={Team}
       options={{
         // eslint-disable-next-line react/no-unstable-nested-components
         drawerIcon: ({ color }) => (
           <Ionicons name="person-outline" size={18} color={color} />
-        )
+        ),
+        title: 'Бригада'
       }}
     />
     <Drawer.Screen

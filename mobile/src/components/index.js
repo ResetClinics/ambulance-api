@@ -1,5 +1,5 @@
 export { AcceptedCall } from './AcceptedCall'
-export { BtnNav } from './BtnNav'
+export { BottomNavigation } from './BottomNavigation'
 export { Call } from './Call'
 export { CardLayout } from './CardLayout'
 export { CardItem } from './CardItem'

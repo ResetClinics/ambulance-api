@@ -1,7 +1,7 @@
 import React from 'react'
-import { Layout, MapSection } from '../../../components'
+import { BottomNavigation, Layout, MapSection } from '../../../components'
 
-export const Map = () => (
+export const Map = ({ navigation }) => (
   <Layout>
     <MapSection />
   </Layout>

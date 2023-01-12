@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Button } from 'react-native-paper'
-import { Layout, TeamList } from '../../../components'
+import { BottomNavigation, Layout, TeamList } from '../../../components'
 
 export const TeamAssigned = ({ navigation }) => (
   <Layout>
