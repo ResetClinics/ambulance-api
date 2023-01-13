@@ -1,10 +1,9 @@
 import {
   Image,
-  StyleSheet, View,
+  StyleSheet, Text, TouchableOpacity, View,
 } from 'react-native'
-import { Button } from 'react-native-paper'
 import React, { useState } from 'react'
-import { COLORS } from '../../../constants'
+import { COLORS, FONTS } from '../../../constants'
 import teamIconColor from '../../../assets/images/menu/team_color.png'
 import teamIcon from '../../../assets/images/menu/team.png'
 import currentCallIcon from '../../../assets/images/menu/currentCall.png'
@@ -37,44 +36,29 @@ const items = [
 ]
 
 const TabChange = ({
-  name, icon, title, iconColor, id, navigation, active, onClick
-}) => (
-  <View onClick={onClick}>
-    {
-        active
-        && (
-          <Button
-            style={styles.btn}
-            onPress={() => navigation.navigate(name)}
-            key={id}
-            /* eslint-disable-next-line react/no-unstable-nested-components */
-            icon={() => (
-              <Image
-                source={iconColor}
-                style={styles.img}
-              />
-            )}
-          >
-            {title}
-          </Button>
-        )
-      }
-    <Button
-      style={styles.btn}
-      onPress={() => navigation.navigate(name)}
-      key={id}
-      /* eslint-disable-next-line react/no-unstable-nested-components */
-      icon={() => (
+  name, icon, title, iconColor, id, navigation, active
+}) => {
+  if (active) {
+    return (
+      <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate(name)} key={id}>
         <Image
-          source={icon}
+          source={iconColor}
           style={styles.img}
         />
-      )}
-    >
-      {title}
-    </Button>
-  </View>
-)
+        <Text style={styles.text}>{title}</Text>
+      </TouchableOpacity>
+    )
+  }
+  return (
+    <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate(name)} key={id}>
+      <Image
+        source={icon}
+        style={styles.img}
+      />
+      <Text style={styles.text}>{title}</Text>
+    </TouchableOpacity>
+  )
+}
 
 export const BottomNavigation = ({ navigation }) => {
   const [activeIndex, setActiveIndex] = useState(null)
@@ -115,7 +99,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     maxHeight: 60,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     flexDirection: 'row',
     left: 0,
     right: 0
@@ -123,8 +107,14 @@ const styles = StyleSheet.create({
   img: {
     width: 24,
     height: 24,
+    marginBottom: 4
   },
   btn: {
-    flexDirection: 'column'
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  text: {
+    ...FONTS.small
+
   }
 })

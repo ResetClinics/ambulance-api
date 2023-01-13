@@ -1,6 +1,6 @@
 import {
   StyleSheet,
-  Text, Touchable, TouchableOpacity, View
+  Text, TouchableOpacity, View
 } from 'react-native'
 import React from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons'

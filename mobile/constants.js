@@ -56,6 +56,9 @@ export const FONTS = {
   span: {
     fontFamily: 'Roboto-Medium', fontSize: SIZES.fs14, lineHeight: 20, color: COLORS.primary, letterSpacing: 0.1
   },
+  small: {
+    fontFamily: 'Roboto-Regular', fontSize: SIZES.base, lineHeight: 12, color: COLORS.gray, letterSpacing: 0.4
+  },
   h1: { fontFamily: 'Roboto-Black', fontSize: SIZES.h1, lineHeight: 36 },
   h2: { fontFamily: 'Roboto-Bold', fontSize: SIZES.h2, lineHeight: 30 },
   h3: { fontFamily: 'Roboto-Bold', fontSize: SIZES.h3, lineHeight: 22 },
