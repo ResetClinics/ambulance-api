@@ -2,6 +2,7 @@ import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Button } from 'react-native-paper'
 import { Layout, TeamList } from '../../../components'
+import { COLORS } from '../../../../constants'
 
 export const TeamAccepted = ({ navigation }) => (
   <Layout>
@@ -14,6 +15,12 @@ export const TeamAccepted = ({ navigation }) => (
 
 const styles = StyleSheet.create({
   btnHolder: {
-    marginTop: 'auto', paddingTop: 16
+    marginTop: 'auto',
+    paddingTop: 16,
+    paddingHorizontal: 16,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.light,
+    marginLeft: -16,
+    marginRight: -16
   },
 })
