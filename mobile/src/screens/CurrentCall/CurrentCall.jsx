@@ -8,8 +8,8 @@ const Stack = createNativeStackNavigator()
 export const CurrentCall = ({ navigation }) => (
   <ScreenLayout>
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={CurrentCallPage} options={{ title: 'Текущий вызов' }} />
-      <Stack.Screen name="Маршрут" component={Map} options={{ title: 'Маршрут до места вызова' }} />
+      <Stack.Screen name="Home" component={CurrentCallPage} options={{ headerShown: false }} />
+      <Stack.Screen name="itinerary" component={Map} options={{ title: 'Маршрут до места вызова' }} />
     </Stack.Navigator>
     <BottomNavigation navigation={navigation} />
   </ScreenLayout>

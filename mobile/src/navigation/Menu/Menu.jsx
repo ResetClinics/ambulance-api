@@ -25,6 +25,7 @@ const CustomDrawerContent = (props) => (
       />
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <DrawerItemList {...props} />
+      {/* eslint-disable-next-line react/destructuring-assignment */}
       <TouchableOpacity style={styles.out} onPress={() => props.handleSignOut()}>
         <Ionicons name="exit-outline" size={18} color={COLORS.gray} />
         <Text style={styles.text}>Выйти</Text>

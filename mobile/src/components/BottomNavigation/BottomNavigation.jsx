@@ -36,21 +36,29 @@ const itemsNav = [
 ]
 
 const TabChange = ({
-  name, icon, title, iconColor, id, navigation, active,
+  name, title, icon, iconColor, navigation, active,
 }) => {
   if (active) {
     return (
-      <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate(name)} key={id}>
+      <TouchableOpacity
+        activeOpacity={1}
+        style={styles.btn}
+        onPress={() => navigation.navigate(name)}
+      >
         <Image
           source={iconColor}
           style={styles.img}
         />
-        <Text style={styles.text}>{title}</Text>
+        <Text style={[styles.text, styles.textColor]}>{title}</Text>
       </TouchableOpacity>
     )
   }
   return (
-    <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate(name)} key={id}>
+    <TouchableOpacity
+      activeOpacity={1}
+      style={styles.btn}
+      onPress={() => navigation.navigate(name)}
+    >
       <Image
         source={icon}
         style={styles.img}
@@ -88,14 +96,11 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: '100%',
     backgroundColor: COLORS.white,
-    paddingHorizontal: 16,
     paddingVertical: 8,
-    maxHeight: 60,
-    alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
     borderTopWidth: 1,
-    borderTopColor: COLORS.light
+    borderTopColor: COLORS.light,
   },
   img: {
     width: 24,
@@ -105,8 +110,13 @@ const styles = StyleSheet.create({
   btn: {
     flexDirection: 'column',
     alignItems: 'center',
+    flex: 1,
   },
   text: {
-    ...FONTS.small
+    ...FONTS.small,
+    textAlign: 'center'
+  },
+  textColor: {
+    color: COLORS.primary
   }
 })

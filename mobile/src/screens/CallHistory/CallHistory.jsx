@@ -7,10 +7,10 @@ import { data } from '../../data/data'
 
 export const CallHistory = ({ navigation }) => {
   const goToMapPage = () => {
-    navigation.navigate('Маршрут', {
+    navigation.navigate('itinerary', {
       screen: 'Home',
       params: {
-        screen: 'Маршрут',
+        screen: 'itinerary',
       },
     })
   }
