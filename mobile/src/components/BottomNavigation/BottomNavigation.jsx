@@ -4,45 +4,7 @@ import {
 } from 'react-native'
 import React, { useState } from 'react'
 import { COLORS, FONTS } from '../../../constants'
-import teamIconColor from '../../../assets/images/menu/team_color.png'
-import teamIcon from '../../../assets/images/menu/team.png'
-import currentCallIcon from '../../../assets/images/menu/currentCall.png'
-import currentCallIconColor from '../../../assets/images/menu/currentCall_color.png'
-import callHistoryIcon from '../../../assets/images/menu/callHistory.png'
-import callHistoryIconColor from '../../../assets/images/menu/callHistory_color.png'
-import profileIcon from '../../../assets/images/menu/profile.png'
-import profileIconColor from '../../../assets/images/menu/profile_color.png'
-
-const items = [
-  {
-    name: 'team',
-    title: 'Бригада',
-    id: 1,
-    icon: teamIcon,
-    iconColor: teamIconColor
-  },
-  {
-    name: 'сurrentCall',
-    title: 'Текущий вызов',
-    id: 2,
-    icon: currentCallIcon,
-    iconColor: currentCallIconColor,
-  },
-  {
-    name: 'сallHistory',
-    title: 'Вызовы',
-    id: 3,
-    icon: callHistoryIcon,
-    iconColor: callHistoryIconColor,
-  },
-  {
-    name: 'profile',
-    title: 'Профиль',
-    id: 4,
-    icon: profileIcon,
-    iconColor: profileIconColor,
-  },
-]
+import { itemsNav } from '../../data/itemsNav'
 
 const TabChange = ({
   name, icon, title, iconColor, id, navigation, active
@@ -69,7 +31,7 @@ const TabChange = ({
   )
 }
 
-export const BottomNavigation = ({ navigation }) => {
+export const BottomNavigation = ({ navigation, items = itemsNav }) => {
   const [activeIndex, setActiveIndex] = useState(null)
   const setActive = (index) => {
     if (activeIndex === index) {
@@ -124,6 +86,5 @@ const styles = StyleSheet.create({
   },
   text: {
     ...FONTS.small
-
   }
 })
