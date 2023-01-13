@@ -25,10 +25,13 @@ export const Routes = () => {
         {isAuthenticated ? (
           <RootStack.Screen
             name="App"
-            component={Menu}
             options={{ headerShown: false }}
-            handleSignOut={handleSignOut}
-          />
+          >
+            {(props) => (
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              <Menu {...props} handleSignOut={handleSignOut} />
+            )}
+          </RootStack.Screen>
         ) : (
           <>
             <RootStack.Screen

@@ -4,7 +4,9 @@ import {
 } from 'react-native'
 import React from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer'
+import {
+  createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList
+} from '@react-navigation/drawer'
 import { COLORS, FONTS } from '../../../constants'
 import {
   CallHistory, CurrentCall, Profile, Team
@@ -12,7 +14,7 @@ import {
 
 const Drawer = createDrawerNavigator()
 
-const CustomDrawerContent = (props, handleSignOut) => (
+const CustomDrawerContent = (props) => (
   <View style={styles.root}>
     {/* eslint-disable-next-line react/jsx-props-no-spreading */}
     <DrawerContentScrollView {...props}>
@@ -23,7 +25,7 @@ const CustomDrawerContent = (props, handleSignOut) => (
       />
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <DrawerItemList {...props} />
-      <TouchableOpacity style={styles.out} onPress={() => handleSignOut()}>
+      <TouchableOpacity style={styles.out} onPress={() => props.handleSignOut()}>
         <Ionicons name="exit-outline" size={18} color={COLORS.gray} />
         <Text style={styles.text}>Выйти</Text>
       </TouchableOpacity>
@@ -32,7 +34,6 @@ const CustomDrawerContent = (props, handleSignOut) => (
   </View>
 )
 export const Menu = ({ handleSignOut }) => (
-  // eslint-disable-next-line react/no-unstable-nested-components,react/jsx-props-no-spreading
   <Drawer.Navigator
     screenOptions={{
       drawerActiveBackgroundColor: COLORS.primary,
@@ -73,7 +74,7 @@ export const Menu = ({ handleSignOut }) => (
       options={{
         // eslint-disable-next-line react/no-unstable-nested-components
         drawerIcon: ({ color }) => (
-          <Ionicons name="person-outline" size={18} color={color} />
+          <Ionicons name="ios-time-outline" size={18} color={color} />
         ),
         title: 'Вызовы'
       }}

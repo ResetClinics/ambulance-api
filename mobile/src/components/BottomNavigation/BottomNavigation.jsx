@@ -2,12 +2,41 @@ import {
   Image,
   StyleSheet, Text, TouchableOpacity, View,
 } from 'react-native'
-import React, { useState } from 'react'
+import React from 'react'
 import { COLORS, FONTS } from '../../../constants'
-import { itemsNav } from '../../data/itemsNav'
+import teamIcon from '../../../assets/images/menu/team.png'
+import teamIconColor from '../../../assets/images/menu/team_color.png'
+import currentCallIcon from '../../../assets/images/menu/currentCall.png'
+import currentCallIconColor from '../../../assets/images/menu/currentCall_color.png'
+import callHistoryIcon from '../../../assets/images/menu/callHistory.png'
+import callHistoryIconColor from '../../../assets/images/menu/callHistory_color.png'
+
+const itemsNav = [
+  {
+    name: 'team',
+    title: 'Бригада',
+    id: 1,
+    icon: teamIcon,
+    iconColor: teamIconColor
+  },
+  {
+    name: 'сurrentCall',
+    title: 'Текущий вызов',
+    id: 2,
+    icon: currentCallIcon,
+    iconColor: currentCallIconColor,
+  },
+  {
+    name: 'сallHistory',
+    title: 'Вызовы',
+    id: 3,
+    icon: callHistoryIcon,
+    iconColor: callHistoryIconColor,
+  },
+]
 
 const TabChange = ({
-  name, icon, title, iconColor, id, navigation, active
+  name, icon, title, iconColor, id, navigation, active,
 }) => {
   if (active) {
     return (
@@ -32,32 +61,25 @@ const TabChange = ({
 }
 
 export const BottomNavigation = ({ navigation, items = itemsNav }) => {
-  const [activeIndex, setActiveIndex] = useState(null)
-  const setActive = (index) => {
-    if (activeIndex === index) {
-      setActiveIndex(null)
-    } else {
-      setActiveIndex(index)
-    }
-  }
+  const { index, routeNames } = navigation.getState()
+  const currentRouteName = routeNames[index]
 
   return (
     <View style={styles.root}>
       {
-        items.map((item, key) => (
+        items.map((item) => (
           <TabChange
           /* eslint-disable-next-line react/jsx-props-no-spreading */
             {...item}
             key={item.id}
-            active={key === activeIndex}
-            onClick={() => setActive(key)}
             navigation={navigation}
+            currentRouteName={currentRouteName}
+            active={currentRouteName === item.name}
           />
         ))
       }
     </View>
   )
-
 }
 
 const styles = StyleSheet.create({
