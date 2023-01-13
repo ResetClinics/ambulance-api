@@ -47,7 +47,8 @@ export const Menu = ({ handleSignOut }) => (
       drawerLabelStyle: {
         fontSize: 14,
         marginLeft: -20,
-      }
+      },
+      overlayColor: COLORS.overlay
     }}
     drawerContent={(props) => <CustomDrawerContent {...props} handleSignOut={handleSignOut} />}
   >

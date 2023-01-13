@@ -6,6 +6,7 @@ export const COLORS = {
   primary: '#04607A',
   secondary: '#9ED4E4', // light blue
   blue: '#4794AA',
+  overlay: '#4794aa80',
   white: '#fff',
   black: '#000000',
   gray: '#5C5C5C',

@@ -65,7 +65,7 @@ AppRegistry.registerComponent(expo.name, () => App)
 const styles = StyleSheet.create({
   root: {
     flex: 1
-  }
+  },
 })
 
 const theme = {
