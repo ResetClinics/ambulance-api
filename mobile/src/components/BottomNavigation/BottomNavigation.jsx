@@ -10,6 +10,8 @@ import currentCallIcon from '../../../assets/images/menu/currentCall.png'
 import currentCallIconColor from '../../../assets/images/menu/currentCall_color.png'
 import callHistoryIcon from '../../../assets/images/menu/callHistory.png'
 import callHistoryIconColor from '../../../assets/images/menu/callHistory_color.png'
+import profileIcon from '../../../assets/images/menu/profile.png'
+import profileIconColor from '../../../assets/images/menu/profile_color.png'
 
 const items = [
   {
@@ -32,6 +34,13 @@ const items = [
     id: 3,
     icon: callHistoryIcon,
     iconColor: callHistoryIconColor,
+  },
+  {
+    name: 'profile',
+    title: 'Профиль',
+    id: 4,
+    icon: profileIcon,
+    iconColor: profileIconColor,
   },
 ]
 
@@ -107,7 +116,7 @@ const styles = StyleSheet.create({
   img: {
     width: 24,
     height: 24,
-    marginBottom: 4
+    marginBottom: 8
   },
   btn: {
     flexDirection: 'column',

@@ -5,7 +5,7 @@ import { MagicModalPortal } from 'react-native-magic-modal'
 import * as Font from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
 import { expo } from '../app.json'
-import italicFont from '../assets/fonts/Roboto-Italic.ttf'
+import redRegularFont from '../assets/fonts/RedRing-Regular.ttf'
 import boldFont from '../assets/fonts/Roboto-Bold.ttf'
 import regularFont from '../assets/fonts/Roboto-Regular.ttf'
 import mediumFont from '../assets/fonts/Roboto-Medium.ttf'
@@ -26,7 +26,7 @@ const App = () => {
             'Roboto-Regular': regularFont,
             'Roboto-Medium': mediumFont,
             'Roboto-Bold': boldFont,
-            'Roboto-Italic': italicFont,
+            'RedRing-Regular': redRegularFont
           }
         )
       } catch (e) {
