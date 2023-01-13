@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {
   StyleSheet,
   Text, TouchableOpacity, View
@@ -5,7 +6,7 @@ import {
 import React from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import {
-  createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList
+  createDrawerNavigator, DrawerContentScrollView, DrawerItemList
 } from '@react-navigation/drawer'
 import { COLORS, FONTS } from '../../../constants'
 import {
@@ -16,17 +17,21 @@ const Drawer = createDrawerNavigator()
 
 const CustomDrawerContent = (props) => (
   <View style={styles.root}>
-    {/* eslint-disable-next-line react/jsx-props-no-spreading */}
     <DrawerContentScrollView {...props}>
-      <DrawerItem
-        label="Иванов Иван Иванович"
-        /* eslint-disable-next-line react/destructuring-assignment */
+      <TouchableOpacity
+        style={styles.outUser}
         onPress={() => props.navigation.closeDrawer()}
-      />
-      {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+        activeOpacity={1}
+      >
+        <Ionicons name="arrow-back" size={20} color={COLORS.black} />
+        <Text style={[styles.text, styles.black]}>Иванов Иван</Text>
+      </TouchableOpacity>
       <DrawerItemList {...props} />
-      {/* eslint-disable-next-line react/destructuring-assignment */}
-      <TouchableOpacity style={styles.out} onPress={() => props.handleSignOut()}>
+      <TouchableOpacity
+        style={styles.out}
+        onPress={() => props.handleSignOut()}
+        activeOpacity={1}
+      >
         <Ionicons name="exit-outline" size={18} color={COLORS.gray} />
         <Text style={styles.text}>Выйти</Text>
       </TouchableOpacity>
@@ -44,14 +49,12 @@ export const Menu = ({ handleSignOut }) => (
         marginLeft: -20,
       }
     }}
-    /* eslint-disable-next-line react/no-unstable-nested-components,react/jsx-props-no-spreading */
     drawerContent={(props) => <CustomDrawerContent {...props} handleSignOut={handleSignOut} />}
   >
     <Drawer.Screen
       name="team"
       component={Team}
       options={{
-        // eslint-disable-next-line react/no-unstable-nested-components
         drawerIcon: ({ color }) => (
           <Ionicons name="person-outline" size={18} color={color} />
         ),
@@ -62,7 +65,6 @@ export const Menu = ({ handleSignOut }) => (
       name="сurrentCall"
       component={CurrentCall}
       options={{
-        // eslint-disable-next-line react/no-unstable-nested-components
         drawerIcon: ({ color }) => (
           <Ionicons name="person-outline" size={18} color={color} />
         ),
@@ -73,7 +75,6 @@ export const Menu = ({ handleSignOut }) => (
       name="сallHistory"
       component={CallHistory}
       options={{
-        // eslint-disable-next-line react/no-unstable-nested-components
         drawerIcon: ({ color }) => (
           <Ionicons name="ios-time-outline" size={18} color={color} />
         ),
@@ -84,7 +85,6 @@ export const Menu = ({ handleSignOut }) => (
       name="profile"
       component={Profile}
       options={{
-        // eslint-disable-next-line react/no-unstable-nested-components
         drawerIcon: ({ color }) => (
           <Ionicons name="person-outline" size={18} color={color} />
         ),
@@ -108,6 +108,13 @@ const styles = StyleSheet.create({
     borderTopColor: COLORS.darkGrey,
     borderTopWidth: 1
   },
+  outUser: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    marginLeft: 5,
+    paddingVertical: 18,
+  },
   copyright: {
     textAlign: 'center',
     marginBottom: 12,
@@ -117,5 +124,8 @@ const styles = StyleSheet.create({
     ...FONTS.span,
     color: COLORS.gray,
     marginLeft: 12
+  },
+  black: {
+    color: COLORS.black,
   }
 })
