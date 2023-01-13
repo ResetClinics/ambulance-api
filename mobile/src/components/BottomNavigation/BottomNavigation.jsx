@@ -72,8 +72,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
-    left: 0,
-    right: 0
+    borderTopWidth: 1,
+    borderTopColor: COLORS.light
   },
   img: {
     width: 24,
