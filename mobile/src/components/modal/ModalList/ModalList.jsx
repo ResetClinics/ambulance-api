@@ -1,24 +1,35 @@
 import React from 'react'
 import {
-  Image, StyleSheet, Text, View
+  FlatList,
+  StyleSheet, Text, View
 } from 'react-native'
-import { Button } from 'react-native-paper'
+import { Button, IconButton } from 'react-native-paper'
 import { COLORS, FONTS } from '../../../../constants'
-import plusImg from '../../../../assets/images/plusColor.png'
+
+const ListItem = (item) => {
+  const { name } = item
+  return (
+    <View style={styles.item}>
+      <Text style={styles.itemText}>{name}</Text>
+      <IconButton
+        icon="plus"
+        iconColor={COLORS.primary}
+        containerColor={COLORS.white}
+        size={20}
+        onPress={() => console.log('Pressed')}
+      />
+    </View>
+  )
+}
 
 export const ModalList = ({ data }) => (
   <View style={styles.root}>
-    {
-        data.slice(0, 7).map(({ id, name }) => (
-          <View style={styles.item} key={id}>
-            <Text style={styles.itemText}>{name}</Text>
-            <Image
-              source={plusImg}
-              style={styles.img}
-            />
-          </View>
-        ))
-      }
+    <FlatList
+      style={styles.wrap}
+      data={data}
+      /* eslint-disable-next-line react/jsx-props-no-spreading */
+      renderItem={({ item }) => <ListItem {...item} />}
+    />
     <View style={styles.holder}>
       <Button mode="outlined" style={styles.btn}>Сбросить</Button>
       <Button mode="contained" style={styles.btn}>Сохранить</Button>
@@ -30,13 +41,14 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: COLORS.white,
     marginTop: 16,
-    padding: 10
+    padding: 10,
   },
   item: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 18,
+    paddingLeft: 18,
+    paddingRight: 5,
   },
   itemText: {
     ...FONTS.text,
@@ -46,12 +58,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 18
+    paddingHorizontal: 25,
+    paddingBottom: 10,
+    paddingTop: 18,
+    marginTop: 'auto',
+    backgroundColor: COLORS.white,
+    borderTopColor: COLORS.light,
+    borderTopWidth: 1,
+    marginHorizontal: -10
   },
   btn: {
     width: '47%'
   },
-  img: {
-    width: 14, height: 14
+  wrap: {
+    maxHeight: 350,
   }
 })

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Image, StyleSheet, View } from 'react-native'
 import { magicModal } from 'react-native-magic-modal'
 import { Button } from 'react-native-paper'
@@ -6,57 +6,9 @@ import { ModalInput } from '../ModalInput'
 import { ModalList } from '../ModalList'
 import closeImg from '../../../../assets/images/close.png'
 import { COLORS } from '../../../../constants'
+import { setList } from '../ModalList/data/data'
 
-const data = [
-  {
-    name: 'Услуга',
-    id: 1
-  },
-  {
-    name: 'Услуга-2',
-    id: 2
-  },
-  {
-    name: 'Услуга-3',
-    id: 3
-  },
-  {
-    name: 'Услуга',
-    id: 4
-  },
-  {
-    name: 'Услуга-2',
-    id: 5
-  },
-  {
-    name: 'Услуга-3',
-    id: 6
-  },
-  {
-    name: 'Услуга',
-    id: 7
-  },
-  {
-    name: 'Услуга-2',
-    id: 8
-  },
-  {
-    name: 'Услуга-3',
-    id: 9
-  },
-  {
-    name: 'Услуга',
-    id: 10
-  },
-  {
-    name: 'Услуга-2',
-    id: 11
-  },
-  {
-    name: 'Услуга-3',
-    id: 12
-  },
-]
+const data = setList()
 
 const CloseImg = () => (
   <Image
@@ -65,17 +17,28 @@ const CloseImg = () => (
   />
 )
 
-export const ModalWindow = ({ label }) => (
-  <View style={styles.container}>
-    <Button
-      onPress={() => magicModal.hide('close button pressed')}
-      style={styles.btn}
-      icon={CloseImg}
-    />
-    <ModalInput label={label} />
-    <ModalList data={data} />
-  </View>
-)
+export const ModalWindow = ({ label }) => {
+  const [items, setItems] = useState(data)
+  const [searchValue, setSearchValue] = React.useState('')
+
+  const onChangeSearchValue = (value) => {
+    setSearchValue(value)
+    const result = items.filter((item) => item.name.toLowerCase().includes(value.toLowerCase()))
+    setItems(result)
+  }
+
+  return (
+    <View style={styles.container}>
+      <Button
+        onPress={() => magicModal.hide('close button pressed')}
+        style={styles.btn}
+        icon={CloseImg}
+      />
+      <ModalInput value={searchValue} label={label} onChangeText={onChangeSearchValue} />
+      <ModalList data={items} />
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   container: {

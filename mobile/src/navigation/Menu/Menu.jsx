@@ -6,7 +6,7 @@ import {
 import React from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import {
-  createDrawerNavigator, DrawerContentScrollView, DrawerItemList
+  createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList
 } from '@react-navigation/drawer'
 import { COLORS, FONTS } from '../../../constants'
 import {

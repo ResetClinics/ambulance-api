@@ -55,15 +55,6 @@ export const AcceptedCall = ({ onAccepting }) => {
                   Добавить услуги
                 </Button>
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => magicModal.show(<ModalWindow label="Поиск медикаментов" />)}
-              >
-                <Button
-                  icon={CloseIcon}
-                >
-                  Добавить список медикаментов
-                </Button>
-              </TouchableOpacity>
             </View>
             <Button mode="contained" raised style={styles.cost} textColor={COLORS.gray}>Стоимость оказаных услуг</Button>
           </View>
