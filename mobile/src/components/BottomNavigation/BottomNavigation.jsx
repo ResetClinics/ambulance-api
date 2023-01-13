@@ -77,7 +77,7 @@ export const BottomNavigation = ({ navigation, items = itemsNav }) => {
       {
         items.map((item) => (
           <TabChange
-          /* eslint-disable-next-line react/jsx-props-no-spreading */
+            /* eslint-disable-next-line react/jsx-props-no-spreading */
             {...item}
             key={item.id}
             navigation={navigation}
@@ -99,8 +99,14 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     justifyContent: 'space-between',
     flexDirection: 'row',
-    borderTopWidth: 1,
-    borderTopColor: COLORS.light,
+    shadowColor: COLORS.black,
+    shadowOffset: {
+      width: 0,
+      height: 12,
+    },
+    shadowOpacity: 0.58,
+    shadowRadius: 16.00,
+    elevation: 24,
   },
   img: {
     width: 24,
