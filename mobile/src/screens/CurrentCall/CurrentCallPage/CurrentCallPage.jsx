@@ -4,14 +4,14 @@ import { AcceptedCall, Call } from '../../../components'
 export const CurrentCallPage = ({ navigation }) => {
   const [arrival, setArrival] = useState(false)
   const goToMapPage = () => {
-    navigation.navigate('Маршрут')
+    navigation.navigate('itinerary')
   }
   const onArrival = () => {
     setArrival(true)
   }
 
   const onAccepting = () => {
-    navigation.navigate('История вызовов')
+    navigation.navigate('сallHistory')
   }
 
   if (arrival) {

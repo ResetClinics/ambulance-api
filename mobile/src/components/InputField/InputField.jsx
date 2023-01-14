@@ -5,28 +5,49 @@ import { MD3LightTheme, TextInput } from 'react-native-paper'
 import { COLORS, FONTS } from '../../../constants'
 
 export const InputField = ({
-  name, label, placeholder, secureTextEntry = null
+  name, label, placeholder, mask = false, secureTextEntry = null
 }) => (
   <Field
     name={name}
   >
-    {({ input, meta }) => (
-      <View>
-        <TextInput
-          theme={theme}
-          style={styles.input}
-          mode="outlined"
-          focused
-          placeholder={placeholder}
-          label={label}
-          value={input.value}
-          onChangeText={input.onChange}
-          secureTextEntry={secureTextEntry}
-          error={meta.touched && meta.error}
-        />
-        {meta.touched && meta.error && <Text style={styles.error}>{meta.error}</Text>}
-      </View>
-    )}
+    {({ input, meta }) => {
+      if (mask) {
+        return (
+          <View>
+            <TextInput
+              theme={theme}
+              style={styles.input}
+              mode="outlined"
+              focused
+              placeholder={placeholder}
+              label={label}
+              value={input.value}
+              onChangeText={input.onChange}
+              secureTextEntry={secureTextEntry}
+              error={meta.touched && meta.error}
+            />
+            {meta.touched && meta.error && <Text style={styles.error}>{meta.error}</Text>}
+          </View>
+        )
+      }
+      return (
+        <View>
+          <TextInput
+            theme={theme}
+            style={styles.input}
+            mode="outlined"
+            focused
+            placeholder={placeholder}
+            label={label}
+            value={input.value}
+            onChangeText={input.onChange}
+            secureTextEntry={secureTextEntry}
+            error={meta.touched && meta.error}
+          />
+          {meta.touched && meta.error && <Text style={styles.error}>{meta.error}</Text>}
+        </View>
+      )
+    }}
   </Field>
 )
 

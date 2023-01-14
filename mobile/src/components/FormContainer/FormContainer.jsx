@@ -24,7 +24,12 @@ export const FormContainer = ({ navigation, onSignIn }) => {
       render={({ handleSubmit }) => (
         <View style={styles.container}>
           <View>
-            <InputField name="login" label="Логин" placeholder="Ваше имя пользователя" />
+            <InputField
+              name="login"
+              label="Логин"
+              placeholder="Ваше имя пользователя"
+              mask="+[00] [000] [000] [000]"
+            />
             <InputField name="password" secureTextEntry label="Пароль" placeholder="Ваш пароль" />
           </View>
           <View style={styles.wrap}>

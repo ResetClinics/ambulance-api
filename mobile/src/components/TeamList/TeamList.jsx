@@ -2,7 +2,9 @@ import {
   FlatList, Image, StyleSheet, View
 } from 'react-native'
 import React from 'react'
-import { Card, Title, Paragraph, InternalTheme } from 'react-native-paper'
+import {
+  Card, Title, Paragraph, InternalTheme
+} from 'react-native-paper'
 import { COLORS, FONTS } from '../../../constants'
 import labelImg from '../../../assets/images/label.png'
 
@@ -12,24 +14,8 @@ const data = [
     speciality: 'Психиатор- нарколог'
   },
   {
-    name: 'Иван Иванович Иванов',
-    speciality: 'Администратор'
-  },
-  {
     name: 'Агибалова Татьяна Васильевна',
     speciality: 'Психиатор- нарколог'
-  },
-  {
-    name: 'Иван Иванович Иванов',
-    speciality: 'Администратор'
-  },
-  {
-    name: 'Агибалова Татьяна Васильевна',
-    speciality: 'Психиатор- нарколог'
-  },
-  {
-    name: 'Иван Иванович Иванов',
-    speciality: 'Администратор'
   },
 ]
 

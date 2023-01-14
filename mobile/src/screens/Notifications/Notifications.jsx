@@ -1,19 +1,19 @@
 import React from 'react'
 import { Button } from 'react-native-paper'
 import { FlatList } from 'react-native'
-import { CardItem, Layout } from '../../components'
+import { BottomNavigation, CardItem, Layout } from '../../components'
 import { data } from '../../data/data'
 
 export const Notifications = ({ navigation }) => {
   const onAccepting = () => {
-    navigation.navigate('Текущий вызов')
+    navigation.navigate('сurrentCall')
   }
 
   const goToMapPage = () => {
-    navigation.navigate('Маршрут', {
+    navigation.navigate('itinerary', {
       screen: 'Home',
       params: {
-        screen: 'Маршрут',
+        screen: 'itinerary',
       },
     })
   }
@@ -25,6 +25,7 @@ export const Notifications = ({ navigation }) => {
         /* eslint-disable-next-line react/jsx-props-no-spreading */
         renderItem={({ item }) => <CardItem {...item} status="" onAccepting={onAccepting} goToMapPage={goToMapPage} text="Позвонить заказчику"><Button onPress={() => onAccepting()}>Принять</Button></CardItem>}
       />
+      <BottomNavigation navigation={navigation} />
     </Layout>
   )
 }

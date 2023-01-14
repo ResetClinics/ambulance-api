@@ -7,7 +7,7 @@ const defaultImg = require('../../../assets/images/default.png')
 
 const img = ''
 
-export const ProfileScreen = (/* {img} */) => (
+export const ProfileScreen = () => (
   <>
     <Avatar.Image size={140} source={img || defaultImg} style={styles.root} />
     <Text style={styles.title}>Иванов Иван Иванович</Text>
@@ -31,7 +31,6 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     letterSpacing: 0.4,
     color: COLORS.black,
-    fontFamily: 'Roboto-Italic'
   },
   root: {
     marginLeft: 'auto',
