@@ -8,27 +8,33 @@ import { InputField } from '../InputField'
 import useValidationSchema from '../helper/use-validation-schema'
 
 export const FormContainer = ({ navigation, onSignIn }) => {
+  const [phone, setPhone] = React.useState('')
+  const phoneMask = ['(', /\d/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/]
+
   const onSubmit = () => {
     onSignIn()
   }
   const schema = Yup.object().shape({
-    login: Yup.string().required('Неверный логин'),
+    phone: Yup.string().required('Неверный номер телефона'),
     password: Yup.string().required('Неверный пароль'),
   })
   const validate = useValidationSchema(schema)
   return (
     <Form
-      style={styles.root}
       onSubmit={onSubmit}
       validate={validate}
       render={({ handleSubmit }) => (
         <View style={styles.container}>
           <View>
             <InputField
-              name="login"
-              label="Логин"
-              placeholder="Ваше имя пользователя"
-              mask="+[00] [000] [000] [000]"
+              value={phone}
+              name="phone"
+              selectTextOnFocus="Номер телефона"
+              placeholder="Ваш номер телефона"
+              onChangeText={(masked) => {
+                setPhone(masked)
+              }}
+              mask={phoneMask}
             />
             <InputField name="password" secureTextEntry label="Пароль" placeholder="Ваш пароль" />
           </View>
@@ -57,7 +63,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     width: '100%',
-    marginTop: 78
+    maxHeight: '68%',
   },
   wrap: {
     width: '100%',

@@ -1,7 +1,7 @@
 import {
-  FlatList, Image, StyleSheet, View
+  FlatList, Image, RefreshControl, StyleSheet, View
 } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Card, Title, Paragraph, InternalTheme
 } from 'react-native-paper'
@@ -38,16 +38,33 @@ const CardItem = (item) => {
   )
 }
 
-export const TeamList = () => (
-  <View style={styles.layout}>
-    <FlatList
-      showsVerticalScrollIndicator={false}
-      data={data}
-      /* eslint-disable-next-line react/jsx-props-no-spreading */
-      renderItem={({ item }) => <CardItem {...item} />}
-    />
-  </View>
-)
+export const TeamList = () => {
+  const [refreshing, setRefreshing] = useState(false)
+
+  const onRefresh = () => {
+    setRefreshing(true)
+    setTimeout(() => {
+      setRefreshing(false)
+    }, 1500)
+  }
+  return (
+    <View style={styles.layout}>
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        data={data}
+        refreshControl={(
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={COLORS.primary}
+          />
+        )}
+        /* eslint-disable-next-line react/jsx-props-no-spreading */
+        renderItem={({ item }) => <CardItem {...item} />}
+      />
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   layout: {

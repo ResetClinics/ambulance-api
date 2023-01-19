@@ -22,11 +22,11 @@ const ListItem = (item) => {
   )
 }
 
-export const ModalList = ({ data }) => (
+export const ItemsList = ({ items }) => (
   <View style={styles.root}>
     <FlatList
       style={styles.wrap}
-      data={data}
+      data={items}
       /* eslint-disable-next-line react/jsx-props-no-spreading */
       renderItem={({ item }) => <ListItem {...item} />}
     />
@@ -71,6 +71,6 @@ const styles = StyleSheet.create({
     width: '47%'
   },
   wrap: {
-    maxHeight: 350,
+    maxHeight: 300,
   }
 })

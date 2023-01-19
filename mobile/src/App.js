@@ -1,7 +1,8 @@
-import { AppRegistry, StyleSheet, View } from 'react-native'
+import {
+  AppRegistry, SafeAreaView, StyleSheet,
+} from 'react-native'
 import { Provider as PaperProvider, MD3LightTheme } from 'react-native-paper'
 import React, { useCallback, useEffect, useState } from 'react'
-import { MagicModalPortal } from 'react-native-magic-modal'
 import * as Font from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
 import { expo } from '../app.json'
@@ -49,12 +50,11 @@ const App = () => {
   }
 
   return (
-    <View onLayout={onLayoutRootView} style={styles.root}>
+    <SafeAreaView onLayout={onLayoutRootView} style={styles.root}>
       <PaperProvider theme={theme}>
-        <MagicModalPortal />
         <Routes />
       </PaperProvider>
-    </View>
+    </SafeAreaView>
   )
 }
 

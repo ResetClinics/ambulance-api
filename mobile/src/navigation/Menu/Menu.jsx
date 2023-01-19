@@ -6,7 +6,7 @@ import {
 import React from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import {
-  createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList
+  createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerToggleButton
 } from '@react-navigation/drawer'
 import { COLORS, FONTS } from '../../../constants'
 import {
@@ -39,6 +39,7 @@ const CustomDrawerContent = (props) => (
     <Text style={styles.copyright}>© 2014-2023 Клиника Респект</Text>
   </View>
 )
+
 export const Menu = ({ handleSignOut }) => (
   <Drawer.Navigator
     screenOptions={{
@@ -48,7 +49,10 @@ export const Menu = ({ handleSignOut }) => (
         fontSize: 14,
         marginLeft: -20,
       },
-      overlayColor: COLORS.overlay
+      overlayColor: COLORS.overlay,
+      drawerPosition: "right",
+      headerLeft: () => null,
+      headerRight: () => <DrawerToggleButton tintColor="#04607A" />,
     }}
     drawerContent={(props) => <CustomDrawerContent {...props} handleSignOut={handleSignOut} />}
   >
@@ -59,7 +63,7 @@ export const Menu = ({ handleSignOut }) => (
         drawerIcon: ({ color }) => (
           <Ionicons name="person-outline" size={18} color={color} />
         ),
-        title: 'Бригада'
+        title: 'Бригада',
       }}
     />
     <Drawer.Screen
