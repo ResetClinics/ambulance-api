@@ -1,24 +1,14 @@
 import React, { useState } from 'react'
-import { Image, StyleSheet, View } from 'react-native'
-import { magicModal } from 'react-native-magic-modal'
-import { Button } from 'react-native-paper'
-import { ModalInput } from '../ModalInput'
-import { ModalList } from '../ModalList'
+import {
+  Image, StyleSheet, TextInput, TouchableOpacity, View
+} from 'react-native'
+import { ItemsList } from '../ItemsList'
 import closeImg from '../../../../assets/images/close.png'
-import { COLORS } from '../../../../constants'
-import { setList } from '../ModalList/data/data'
+import { COLORS, FONTS } from '../../../../constants'
+import { getItems } from '../ItemsList/data/data'
 
-const data = setList()
-
-const CloseImg = () => (
-  <Image
-    source={closeImg}
-    style={styles.img}
-  />
-)
-
-export const ModalWindow = ({ label }) => {
-  const [items, setItems] = useState(data)
+export const ModalWindow = ({ label, toggleModal }) => {
+  const [items, setItems] = useState(getItems())
   const [searchValue, setSearchValue] = React.useState('')
 
   const onChangeSearchValue = (value) => {
@@ -29,13 +19,24 @@ export const ModalWindow = ({ label }) => {
 
   return (
     <View style={styles.container}>
-      <Button
-        onPress={() => magicModal.hide('close button pressed')}
-        style={styles.btn}
-        icon={CloseImg}
+      <TouchableOpacity
+        onPress={toggleModal}
+        activeOpacity={1}
+      >
+        <Image
+          source={closeImg}
+          style={styles.img}
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
+      <TextInput
+        style={styles.input}
+        placeholder={label}
+        label={label}
+        value={searchValue}
+        onChangeText={onChangeSearchValue}
       />
-      <ModalInput value={searchValue} label={label} onChangeText={onChangeSearchValue} />
-      <ModalList data={items} />
+      <ItemsList items={items} />
     </View>
   )
 }
@@ -44,16 +45,21 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: COLORS.transparent,
     margin: 16,
-    position: 'relative'
-  },
-  btn: {
-    position: 'absolute',
-    top: -50,
-    right: -20,
-    width: 30,
-    height: 29
+    position: 'relative',
+    paddingVertical: 15
   },
   img: {
-    width: 30, height: 29
+    width: 30,
+    height: 30,
+    marginLeft: 'auto',
+    marginBottom: 15,
+  },
+  input: {
+    ...FONTS.text,
+    padding: 15,
+    borderRadius: 4,
+    backgroundColor: COLORS.white,
+    width: '100%',
+    maxHeight: 48
   }
 })

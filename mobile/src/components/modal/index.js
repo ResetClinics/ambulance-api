@@ -1,3 +1,2 @@
-export { ModalInput } from './ModalInput'
 export { ModalWindow } from './ModalWindow'
-export { ModalList } from './ModalList'
+export { ItemslList } from './ItemsList'

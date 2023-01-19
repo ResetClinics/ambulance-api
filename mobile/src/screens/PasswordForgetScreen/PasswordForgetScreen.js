@@ -56,13 +56,13 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: 27
+    paddingTop: 25
   },
   container: {
     flex: 1,
     justifyContent: 'space-between',
     width: '100%',
-    marginTop: 78
+    marginTop: 82
   },
   wrap: {
     width: '100%',
