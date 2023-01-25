@@ -1,5 +1,7 @@
 export { CurrentCall } from './CurrentCall'
-export { CallHistory } from './CallHistory'
+export { Calls } from './Calls'
+export { History } from './History'
+export { Chat } from './Chat'
 export { Notifications } from './Notifications'
 export { Profile } from './Profile'
 export { PasswordForgetScreen } from './PasswordForgetScreen'

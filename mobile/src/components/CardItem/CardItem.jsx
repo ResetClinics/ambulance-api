@@ -10,7 +10,7 @@ import { MapMarkerIcon } from '../MapMarkerIcon'
 import { CloseIcon } from '../CloseIcon'
 
 export const CardItem = ({
-  address, subject, date, time, comment, goToMapPage, status, children, text
+  address, subject, date, time, comment, goToMapPage, status, children, text, style
 }) => {
   const [active, setActive] = useState(false)
 
@@ -35,7 +35,7 @@ export const CardItem = ({
   }
 
   return (
-    <Card style={styles.root}>
+    <Card style={[style, styles.root]}>
       <Card.Content>
         {
           status && (<Text style={styles.status}>{status}</Text>)
@@ -84,7 +84,6 @@ export const CardItem = ({
 const styles = StyleSheet.create({
   root: {
     backgroundColor: COLORS.white,
-    borderColor: COLORS.primary,
     borderWidth: 1,
     borderRadius: 6,
     marginBottom: 32
@@ -125,7 +124,7 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   btn: {
-    marginBottom: 5
+    marginBottom: 5,
   },
   content: {
     display: 'none'
