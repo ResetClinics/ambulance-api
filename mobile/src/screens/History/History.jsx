@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import { FlatList, RefreshControl } from 'react-native'
+import { FlatList, RefreshControl, StyleSheet } from 'react-native'
 import {
   BottomNavigation, CardItem, Layout, ScreenLayout
 } from '../../components'
 import { data } from '../../data/data'
 import { COLORS } from '../../../constants'
 
-export const CallHistory = ({ navigation }) => {
+export const History = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false)
   const goToMapPage = () => {
     navigation.navigate('itinerary', {
@@ -36,10 +36,16 @@ export const CallHistory = ({ navigation }) => {
             />
           )}
           /* eslint-disable-next-line react/jsx-props-no-spreading */
-          renderItem={({ item }) => <CardItem {...item} goToMapPage={goToMapPage} text="Свернуть" />}
+          renderItem={({ item }) => <CardItem {...item} style={styles.default} status="Вызов завершен" goToMapPage={goToMapPage} text="Свернуть" />}
         />
       </Layout>
       <BottomNavigation navigation={navigation} />
     </ScreenLayout>
   )
 }
+
+const styles = StyleSheet.create({
+  default: {
+    borderColor: COLORS.border
+  }
+})

@@ -10,6 +10,8 @@ import currentCallIcon from '../../../assets/images/menu/currentCall.png'
 import currentCallIconColor from '../../../assets/images/menu/currentCall_color.png'
 import callHistoryIcon from '../../../assets/images/menu/callHistory.png'
 import callHistoryIconColor from '../../../assets/images/menu/callHistory_color.png'
+import chatIcon from '../../../assets/images/menu/chat.png'
+import chatIconColor from '../../../assets/images/menu/chat_color.png'
 
 const itemsNav = [
   {
@@ -27,11 +29,18 @@ const itemsNav = [
     iconColor: currentCallIconColor,
   },
   {
-    name: 'сallHistory',
+    name: 'сalls',
     title: 'Вызовы',
     id: 3,
     icon: callHistoryIcon,
     iconColor: callHistoryIconColor,
+  },
+  {
+    name: 'chat',
+    title: 'Чат',
+    id: 4,
+    icon: chatIcon,
+    iconColor: chatIconColor,
   },
 ]
 
