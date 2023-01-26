@@ -20,15 +20,34 @@ const subject = 'Вызов врача-нарколога'
 const date = '12.12.2022'
 const time = '12:45'
 
+const MedicineItem = ({ name, count, openMedicineWindow }) => (
+  <TouchableOpacity
+    style={styles.item}
+    onPress={openMedicineWindow}
+    activeOpacity={1}
+  >
+    <Text style={styles.title}>{name}</Text>
+    <Text style={styles.count}>{count}</Text>
+  </TouchableOpacity>
+)
+
 export const AcceptedCall = ({ onAccepting }) => {
   const [text, setText] = useState('')
   const [name, setName] = useState('')
   const [birthday, setBirthday] = useState('')
   const [refreshing, setRefreshing] = useState(false)
   const [isModalVisible, setModalVisible] = useState(false)
+  const [medicine, setMedicine] = useState(false)
 
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible)
+  const onSaveMedicine = (medicines) => {
+    setMedicine(medicines)
+  }
+
+  const openMedicineWindow = () => {
+    setModalVisible(true)
+  }
+  const closeMedicineWindow = () => {
+    setModalVisible(false)
   }
 
   const onRefresh = () => {
@@ -69,9 +88,25 @@ export const AcceptedCall = ({ onAccepting }) => {
                   </View>
                 )}
               />
+              {
+                medicine
+                && (
+                  <View style={styles.holder}>
+                    {
+                      medicine.map((item) => (
+                        <MedicineItem
+                          {...item}
+                          key={item.id}
+                          openMedicineWindow={openMedicineWindow}
+                        />
+                      ))
+                    }
+                  </View>
+                )
+              }
               <View style={styles.wrapper}>
                 <TouchableOpacity
-                  onPress={toggleModal}
+                  onPress={openMedicineWindow}
                 >
                   <Button
                     style={styles.mt}
@@ -99,10 +134,10 @@ export const AcceptedCall = ({ onAccepting }) => {
           avoidKeyboard
           backdropColor={COLORS.primary}
           backdropOpacity={0.4}
-          onBackdropPress={toggleModal}
-          onSwipeComplete={toggleModal}
+          onBackdropPress={closeMedicineWindow}
+          onSwipeComplete={closeMedicineWindow}
         >
-          <ModalWindow toggleModal={toggleModal} />
+          <ModalWindow closeMedicineWindow={closeMedicineWindow} onSaveMedicine={onSaveMedicine} />
         </Modal>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -139,4 +174,33 @@ const styles = StyleSheet.create({
   mt: {
     marginTop: 16
   },
+  holder: {
+    width: '100%',
+    borderTopColor: COLORS.lightGray,
+    borderBottomColor: COLORS.lightGray,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    backgroundColor: COLORS.thin,
+    paddingVertical: 5,
+    marginTop: 16,
+    marginBottom: 8
+  },
+  item: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    width: '100%',
+    alignItems: 'center'
+  },
+  title: {
+    ...FONTS.chatText,
+    letterSpacing: 0.5
+  },
+  count: {
+    ...FONTS.count,
+    marginLeft: 16,
+    width: 36,
+    textAlign: 'right'
+  }
 })

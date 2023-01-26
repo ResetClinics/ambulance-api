@@ -5,37 +5,69 @@ import {
 } from 'react-native'
 import { Button, IconButton } from 'react-native-paper'
 import { COLORS, FONTS } from '../../../../constants'
+import { useMedicineList } from './useMedicineList'
 
-const ListItem = (item) => {
-  const { name } = item
-  return (
-    <View style={styles.item}>
-      <Text style={styles.itemText}>{name}</Text>
+const ListItem = ({
+  name, id, addMedicine, count, removeMedicine
+}) => (
+  <View style={styles.item}>
+    <Text style={styles.itemText}>{name}</Text>
+    <View style={styles.wrapper}>
+      {
+        count > 0 && (
+          <View style={styles.wrapper}>
+            <IconButton
+              icon="minus"
+              iconColor={COLORS.primary}
+              containerColor={COLORS.white}
+              size={20}
+              onPress={() => removeMedicine(id)}
+            />
+            <Text>{count}</Text>
+          </View>
+        )
+      }
       <IconButton
         icon="plus"
         iconColor={COLORS.primary}
         containerColor={COLORS.white}
         size={20}
-        onPress={() => console.log('Pressed')}
+        onPress={() => addMedicine(id)}
       />
+    </View>
+  </View>
+)
+
+export const ItemsList = ({ items, onSave, closeMedicineWindow }) => {
+  const {
+    medicine, addMedicine, removeMedicine, clearMedicine
+  } = useMedicineList(items)
+
+  const saveMedicine = () => {
+    const listMedicine = medicine.filter((el) => el.count > 0)
+    onSave(listMedicine)
+    closeMedicineWindow()
+  }
+
+  return (
+    <View style={styles.root}>
+      <FlatList
+        style={styles.wrap}
+        data={medicine}
+        /* eslint-disable-next-line react/jsx-props-no-spreading */
+        renderItem={({ item }) => (
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          <ListItem {...item} addMedicine={addMedicine} removeMedicine={removeMedicine} />
+        )}
+      />
+      <View style={styles.holder}>
+        <Button mode="outlined" style={styles.btn} onPress={clearMedicine}>Сбросить</Button>
+        <Button mode="contained" style={styles.btn} onPress={saveMedicine}>Сохранить</Button>
+      </View>
     </View>
   )
 }
 
-export const ItemsList = ({ items }) => (
-  <View style={styles.root}>
-    <FlatList
-      style={styles.wrap}
-      data={items}
-      /* eslint-disable-next-line react/jsx-props-no-spreading */
-      renderItem={({ item }) => <ListItem {...item} />}
-    />
-    <View style={styles.holder}>
-      <Button mode="outlined" style={styles.btn}>Сбросить</Button>
-      <Button mode="contained" style={styles.btn}>Сохранить</Button>
-    </View>
-  </View>
-)
 const styles = StyleSheet.create({
   root: {
     borderRadius: 4,
@@ -72,5 +104,9 @@ const styles = StyleSheet.create({
   },
   wrap: {
     maxHeight: 300,
+  },
+  wrapper: {
+    flexDirection: 'row',
+    alignItems: 'center'
   }
 })

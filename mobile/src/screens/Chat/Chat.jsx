@@ -120,9 +120,9 @@ export const Chat = ({ navigation }) => {
             renderUsernameOnMessage
             renderInputToolbar={renderInputToolbar}
             renderAvatarOnTop
-             /*messagesContainerStyle={{
+             /* messagesContainerStyle={{
               backgroundColor: 'red',
-            }}*/
+            }} */
           />
         </View>
       </Layout>
