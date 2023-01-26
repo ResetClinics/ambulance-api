@@ -15,7 +15,8 @@ export const COLORS = {
   darkGrey: '#CAC4D0',
   border: '#949494',
   transparent: 'transparent',
-  error: '#F04438'
+  error: '#F04438',
+  thin: '#FFFBFE'
 }
 export const SIZES = {
   // global sizes
@@ -24,6 +25,7 @@ export const SIZES = {
   fs14: 14,
   fs16: 16,
   fs18: 18,
+  fs20: 20,
   radius: 12,
   padding: 24,
   head: 22,
@@ -47,6 +49,9 @@ export const FONTS = {
   heading: {
     fontFamily: 'Roboto-Regular', fontSize: SIZES.head, lineHeight: 28, color: '#1C1B1F',
   },
+  count: {
+    fontFamily: 'Roboto-Medium', fontSize: SIZES.fs20, lineHeight: 20, color: COLORS.primary, letterSpacing: 0.5
+  },
   title: {
     fontFamily: 'Roboto-Medium', fontSize: SIZES.fs16, lineHeight: 20, color: COLORS.black, letterSpacing: 0.4
   },
@@ -66,7 +71,7 @@ export const FONTS = {
     fontFamily: 'RedRing-Regular', fontSize: SIZES.base, lineHeight: 12, color: COLORS.gray,
   },
   chatText: {
-    fontFamily: 'RedRing-Regular', fontSize: SIZES.fs14, lineHeight: 16, color: COLORS.black, letterSpacing: 0.4
+    fontFamily: 'Roboto-Regular', fontSize: SIZES.fs14, lineHeight: 16, color: COLORS.black, letterSpacing: 0.4
   },
   h1: { fontFamily: 'Roboto-Black', fontSize: SIZES.h1, lineHeight: 36 },
   h2: { fontFamily: 'Roboto-Bold', fontSize: SIZES.h2, lineHeight: 30 },

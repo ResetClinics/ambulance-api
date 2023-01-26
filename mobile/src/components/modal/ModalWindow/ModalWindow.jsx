@@ -7,7 +7,7 @@ import closeImg from '../../../../assets/images/close.png'
 import { COLORS, FONTS } from '../../../../constants'
 import { getItems } from '../ItemsList/data/data'
 
-export const ModalWindow = ({ label, toggleModal }) => {
+export const ModalWindow = ({ label, closeMedicineWindow, onSaveMedicine }) => {
   const [items, setItems] = useState(getItems())
   const [searchValue, setSearchValue] = React.useState('')
 
@@ -20,7 +20,7 @@ export const ModalWindow = ({ label, toggleModal }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={toggleModal}
+        onPress={closeMedicineWindow}
         activeOpacity={1}
       >
         <Image
@@ -36,7 +36,7 @@ export const ModalWindow = ({ label, toggleModal }) => {
         value={searchValue}
         onChangeText={onChangeSearchValue}
       />
-      <ItemsList items={items} />
+      <ItemsList items={items} onSave={onSaveMedicine} closeMedicineWindow={closeMedicineWindow} />
     </View>
   )
 }
