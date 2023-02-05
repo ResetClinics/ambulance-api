@@ -50,16 +50,13 @@ api-composer-update:
 	docker-compose run --rm api-php-cli composer update
 
 api-wait-db:
-	docker-compose run --rm api-php-cli wait-for-it api-postgres:5432 -t 30
+	docker-compose run --rm api-php-cli wait-for-it ambulance-mysql:3306 -t 30
 
 api-migrations:
 	docker-compose run --rm api-php-cli composer app doctrine:migrations:migrate -- --no-interaction
 
 api-fixtures:
 	docker-compose run --rm api-php-cli composer app doctrine:fixtures:load -- --no-interaction
-
-api-backup:
-	docker-compose run --rm api-postgres-backup
 
 api-check: api-validate-schema api-lint api-analyze api-test
 
@@ -121,7 +118,7 @@ testing-build-testing-api-php-cli:
 
 testing-init:
 	COMPOSE_PROJECT_NAME=testing docker-compose -f docker-compose-testing.yml up -d
-	COMPOSE_PROJECT_NAME=testing docker-compose -f docker-compose-testing.yml run --rm api-php-cli wait-for-it api-postgres:5432 -t 60
+	COMPOSE_PROJECT_NAME=testing docker-compose -f docker-compose-testing.yml run --rm api-php-cli wait-for-it ambulance-mysql:3306 -t 60
 	COMPOSE_PROJECT_NAME=testing docker-compose -f docker-compose-testing.yml run --rm api-php-cli php bin/console doctrine:migrations:migrate --no-interaction
 	COMPOSE_PROJECT_NAME=testing docker-compose -f docker-compose-testing.yml run --rm testing-api-php-cli php bin/console doctrine:fixtures:load --no-interaction
 	sleep 15
