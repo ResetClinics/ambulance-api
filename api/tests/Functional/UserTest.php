@@ -1,22 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Functional;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-class UserTest extends ApiTestCase
+/**
+ * @internal
+ */
+final class UserTest extends ApiTestCase
 {
-
     /**
      * @throws TransportExceptionInterface
      */
     public function testSuccess(): void
     {
-        $response = static::createClient()->request('GET', '/api/users');
+        self::createClient()->request('GET', '/api/users');
 
         self::assertResponseIsSuccessful();
 
-        $this->assertEquals(42, 42);
+        self::assertEquals(42, 42);
     }
 }

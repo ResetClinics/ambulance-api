@@ -56,7 +56,7 @@ api-migrations:
 	docker-compose run --rm api-php-cli composer app doctrine:migrations:migrate -- --no-interaction
 
 api-fixtures:
-	docker-compose run --rm api-php-cli composer app doctrine:fixtures:load -- --no-interaction
+	docker-compose run --rm api-php-cli composer app hautelook:fixtures:load -- --no-interaction --env=test
 
 api-check: api-validate-schema api-lint api-analyze api-test
 

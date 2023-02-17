@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -42,9 +44,10 @@ class Team
     #[Groups(['team:read', 'team:write'])]
     private Collection $doctors;
 
-    public function __construct()
+    public function __construct(User $administrator)
     {
         $this->doctors = new ArrayCollection();
+        $this->administrator = $administrator;
     }
 
     public function getId(): ?int
@@ -64,19 +67,14 @@ class Team
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getDoctors(): Collection
+    public function getDoctors(): array
     {
-        return $this->doctors;
+        return $this->doctors->toArray();
     }
 
     public function addDoctor(User $doctor): self
     {
-        if (!$this->doctors->contains($doctor)) {
-            $this->doctors->add($doctor);
-        }
+        $this->doctors->add($doctor);
 
         return $this;
     }

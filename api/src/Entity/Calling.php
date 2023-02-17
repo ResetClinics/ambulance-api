@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -16,7 +18,7 @@ class Calling
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private string $address;
+    private string $address = '';
 
     public function getId(): ?int
     {

@@ -1,0 +1,5 @@
+api_platform:
+  title: Ambulance API
+  version: 1.0.0
+  description: 'API выездной службы'
+  show_webby: false
