@@ -70,8 +70,8 @@ services:
       APP_ENV: dev
       APP_DEBUG: 1
       DB_HOST: ambulance-mysql
-      DB_USER: ambulance
-      DB_PASSWORD: secret
+      DB_USER: root
+      DB_PASSWORD: verysecret
       DB_NAME: ambulance
       MAILER_HOST: mailer
       MAILER_PORT: 1025
