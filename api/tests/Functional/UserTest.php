@@ -4,23 +4,48 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional;
 
-use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+use App\Tests\AbstractTest;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 /**
  * @internal
  */
-final class UserTest extends ApiTestCase
+final class UserTest extends AbstractTest
 {
     /**
      * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
      */
-    public function testSuccess(): void
+    public function testUsersListAdminAccess(): void
     {
-        self::createClient()->request('GET', '/api/users');
+        $this->createClientWithCredentials()->request('GET', '/api/users');
 
         self::assertResponseIsSuccessful();
+    }
 
-        self::assertEquals(42, 42);
+    /**
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     */
+    public function testUsersListUserAccessDenied(): void
+    {
+        $token = $this->getToken([
+            'phone' => '79000000001',
+            'password' => 'secret',
+        ]);
+
+        $this->createClientWithCredentials($token)->request('GET', '/api/users');
+        self::assertJsonContains(['hydra:description' => 'Access Denied.']);
+        self::assertResponseStatusCodeSame(403);
     }
 }
