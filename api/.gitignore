@@ -1,3 +1,4 @@
+.idea
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -8,5 +9,14 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
-.idea
 
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
+
+
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###

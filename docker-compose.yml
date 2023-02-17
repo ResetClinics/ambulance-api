@@ -31,7 +31,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik-public
-      - traefik.http.routers.api.rule=(Host(`localhost`) || Host(`www.localhost`)) && (PathPrefix(`/api`) || PathPrefix(`/bundles`))
+      - traefik.http.routers.api.rule=Host(`localhost`) || Host(`www.localhost`)
       - traefik.http.routers.api.entryPoints=http
       - traefik.http.services.api.loadBalancer.server.port=80
       - traefik.http.middlewares.api-redirect.redirectRegex.regex=^(https?://)www.localhost/(.*)$$
