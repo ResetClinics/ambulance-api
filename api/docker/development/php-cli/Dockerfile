@@ -1,10 +1,12 @@
 FROM php:8.1-cli-alpine
 
-RUN apk add --no-cache postgresql-dev bash coreutils \
-    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
-    && docker-php-ext-install pdo_pgsql pdo_mysql intl
+ENV XDEBUG_VERSION 3.1.0
 
-RUN apk add --no-cache unzip
+RUN apk add --no-cache $PHPIZE_DEPS postgresql-dev bash coreutils unzip \
+    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install pdo_pgsql pdo_mysql intl \
+    && pecl install xdebug-$XDEBUG_VERSION \
+    && docker-php-ext-enable xdebug
 
 RUN mv $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
 

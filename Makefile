@@ -38,7 +38,13 @@ docker-build:
 api-clear:
 	docker run --rm -v ${PWD}/api:/app -w /app alpine sh -c 'rm -rf var/cache/* var/log/* var/test/* public/uploads/* || true'
 
-api-init: api-permissions api-wait-db api-composer-install api-migrations
+api-init: api-permissions api-wait-db api-composer-install api-test-bd-create api-test-migrations api-migrations
+
+api-test-bd-create:
+	docker-compose run --rm api-php-cli php bin/console doctrine:database:create --env=test
+
+api-test-migrations:
+	docker-compose run --rm api-php-cli composer app doctrine:migrations:migrate -- --no-interaction --env=test
 
 api-permissions:
 	docker run --rm -v ${PWD}/api:/app -w /app alpine chmod 777 var/cache var/log public || true
