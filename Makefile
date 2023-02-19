@@ -13,11 +13,11 @@ check: lint analyze validate-schema test test-e2e
 lint: api-lint
 analyze: api-analyze
 validate-schema: api-validate-schema
-test: api-test api-fixtures
+test: api-test api-test-fixtures
 test-unit: api-test-unit
-test-functional: api-test-functional api-fixtures
-test-smoke: api-fixtures
-test-e2e: api-fixtures
+test-functional: api-test-functional api-test-fixtures
+test-smoke: api-test-fixtures
+test-e2e: api-test-fixtures
 
 update-deps: api-composer-update restart
 
@@ -69,6 +69,9 @@ jwt-generate-keypair:
 	docker-compose run --rm api-php-cli  php bin/console lexik:jwt:generate-keypair --skip-if-exists
 
 api-fixtures:
+	docker-compose run --rm api-php-cli composer app hautelook:fixtures:load -- --no-interaction
+
+api-test-fixtures:
 	docker-compose run --rm api-php-cli composer app hautelook:fixtures:load -- --no-interaction --env=test
 
 api-check: api-validate-schema api-lint api-analyze api-test

@@ -27,12 +27,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user:read', 'team:item:get'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180, unique: true)]
+    #[ORM\Column(length: 11, unique: true)]
     #[Groups(['user:read', 'user:write', 'team:item:get'])]
     #[Assert\NotBlank]
     private ?string $phone = null;
+
+    #[ORM\Column]
+    #[Groups(['user:read', 'user:write', 'team:item:get'])]
+    #[Assert\NotBlank]
+    private ?string $name = null;
+
+    #[ORM\Column]
+    #[Groups(['user:read', 'user:write', 'team:item:get'])]
+    #[Assert\NotBlank]
+    private ?string $position = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['user:read', 'user:write', 'team:item:get'])]
+    private ?string $avatar = null;
 
     #[ORM\Column]
     private array $roles = [];
@@ -135,5 +150,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->teams->removeElement($team);
         return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function getPosition(): ?string
+    {
+        return $this->position;
+    }
+
+    public function setPosition(?string $position): void
+    {
+        $this->position = $position;
+    }
+
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?string $avatar): void
+    {
+        $this->avatar = $avatar;
     }
 }
