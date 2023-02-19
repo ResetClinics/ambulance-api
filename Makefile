@@ -1,8 +1,9 @@
 init: init-ci
-init-ci: docker-down-clear \
-	api-clear \
+init-ci: clear \
 	docker-pull docker-build docker-up \
 	api-init
+
+clear: docker-down-clear api-clear
 
 up: docker-up
 down: docker-down
@@ -38,7 +39,10 @@ docker-build:
 api-clear:
 	docker run --rm -v ${PWD}/api:/app -w /app alpine sh -c 'rm -rf var/cache/* var/log/* var/test/* public/uploads/* || true'
 
-api-init: api-permissions api-wait-db api-composer-install api-test-bd-create api-test-migrations api-migrations
+api-init: api-permissions api-wait-db \
+	api-composer-install \
+	api-test-bd-create api-test-migrations api-migrations \
+	jwt-generate-keypair
 
 api-test-bd-create:
 	docker-compose run --rm api-php-cli php bin/console doctrine:database:create --env=test
@@ -60,6 +64,9 @@ api-wait-db:
 
 api-migrations:
 	docker-compose run --rm api-php-cli composer app doctrine:migrations:migrate -- --no-interaction
+
+jwt-generate-keypair:
+	docker-compose run --rm api-php-cli  php bin/console lexik:jwt:generate-keypair --skip-if-exists
 
 api-fixtures:
 	docker-compose run --rm api-php-cli composer app hautelook:fixtures:load -- --no-interaction --env=test
