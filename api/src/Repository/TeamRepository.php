@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Team;
+use App\Entity\Team\Status;
+use App\Entity\Team\Team;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @extends ServiceEntityRepository<Team>
@@ -30,6 +34,30 @@ class TeamRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function getActiveByAdministrator(User $user): Team
+    {
+        $statuses = [
+            Status::ACCEPTED,
+            Status::ASSIGNED,
+        ];
+
+        $qb = $this->createQueryBuilder('c');
+
+        if (!$checkWordstat = $qb
+            ->andWhere('c.administrator = :administrator')
+            ->setParameter(':administrator', $user->getId())
+            ->andWhere($qb->expr()->in('c.status', $statuses))
+            ->getQuery()
+            ->getOneOrNullResult()
+        ) {
+            throw new NotFoundHttpException('Бригада не назначена');
+        }
+        return $checkWordstat;
     }
 
     public function remove(Team $entity, bool $flush = false): void
