@@ -11,6 +11,8 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\Team\AcceptAction;
 use App\Controller\Team\AdministratorAction;
+use App\Controller\Team\CompleteAction;
+use App\Controller\Team\RejectAction;
 use App\Entity\User;
 use App\Repository\TeamRepository;
 use DateTimeImmutable;
@@ -35,8 +37,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 #[Get(uriTemplate: '/teams/my', controller: AdministratorAction::class)]
 #[Post(uriTemplate: '/teams/accept', controller: AcceptAction::class)]
-#[Post(uriTemplate: '/teams/reject', controller: AcceptAction::class)]
-#[Post(uriTemplate: '/teams/complete', controller: AcceptAction::class)]
+#[Post(uriTemplate: '/teams/reject', controller: RejectAction::class)]
+#[Post(uriTemplate: '/teams/complete', controller: CompleteAction::class)]
 class Team
 {
     #[ORM\Id]
