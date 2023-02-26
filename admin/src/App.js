@@ -1,7 +1,7 @@
-import { HydraAdmin } from "@api-platform/admin";
+import {Admin} from "./components";
 
 const App = () => (
-    <HydraAdmin entrypoint="https://ambulance.rc-respect.ru/api" />
+    <Admin />
 );
 
 export default App
