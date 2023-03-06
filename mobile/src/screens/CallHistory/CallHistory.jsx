@@ -33,6 +33,7 @@ export const CallHistory = ({ navigation }) => {
               refreshing={refreshing}
               onRefresh={onRefresh}
               tintColor={COLORS.primary}
+              colors={['#04607A']}
             />
           )}
           /* eslint-disable-next-line react/jsx-props-no-spreading */

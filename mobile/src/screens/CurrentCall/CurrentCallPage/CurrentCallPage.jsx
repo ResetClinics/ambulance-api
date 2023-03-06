@@ -11,7 +11,7 @@ export const CurrentCallPage = ({ navigation }) => {
   }
 
   const onAccepting = () => {
-    navigation.navigate('сallHistory')
+    navigation.navigate('history')
   }
 
   if (arrival) {

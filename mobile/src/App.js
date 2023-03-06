@@ -12,6 +12,7 @@ import regularFont from '../assets/fonts/Roboto-Regular.ttf'
 import mediumFont from '../assets/fonts/Roboto-Medium.ttf'
 import { COLORS } from '../constants'
 import { Routes } from './navigation'
+import { AuthProvider } from './context/AuthContext'
 
 const App = () => {
   const [appIsReady, setAppIsReady] = useState(false)
@@ -52,7 +53,9 @@ const App = () => {
   return (
     <SafeAreaView onLayout={onLayoutRootView} style={styles.root}>
       <PaperProvider theme={theme}>
-        <Routes />
+        <AuthProvider>
+          <Routes />
+        </AuthProvider>
       </PaperProvider>
     </SafeAreaView>
   )

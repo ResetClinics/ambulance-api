@@ -52,6 +52,7 @@ export const Calls = ({ navigation }) => {
               refreshing={refreshing}
               onRefresh={onRefresh}
               tintColor={COLORS.primary}
+              colors={['#04607A']}
             />
           )}
           renderItem={({ item }) => <ViewCard item={item} active={item.active} />}

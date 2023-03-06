@@ -26,6 +26,7 @@ export const SIZES = {
   fs16: 16,
   fs18: 18,
   fs20: 20,
+  fs24: 24,
   radius: 12,
   padding: 24,
   head: 22,
@@ -46,6 +47,9 @@ export const SIZES = {
   height
 }
 export const FONTS = {
+  head: {
+    fontFamily: 'Roboto-Regular', fontSize: SIZES.fs24, lineHeight: 52, color: COLORS.black,
+  },
   heading: {
     fontFamily: 'Roboto-Regular', fontSize: SIZES.head, lineHeight: 28, color: '#1C1B1F',
   },

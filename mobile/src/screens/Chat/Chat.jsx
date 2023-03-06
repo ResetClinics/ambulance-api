@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import {
-  StyleSheet, View, Image
+  StyleSheet, View, Image, Text,
 } from 'react-native'
 import {
-  Bubble, GiftedChat, InputToolbar, Send
+  Bubble, GiftedChat, InputToolbar, Send, Day,
 } from 'react-native-gifted-chat'
 import {
   BottomNavigation, Layout, ScreenLayout
@@ -11,6 +11,7 @@ import {
 import { COLORS, FONTS } from '../../../constants'
 import enterImg from '../../../assets/images/enter.png'
 import 'dayjs/locale/ru'
+import logoImg from '../../../assets/icon.png'
 
 export const Chat = ({ navigation }) => {
   const [messages, setMessages] = useState([])
@@ -35,48 +36,57 @@ export const Chat = ({ navigation }) => {
   }, [])
 
   const renderBubble = (props) => (
-    <Bubble
-      {...props}
-      wrapperStyle={{
-        left: {
-          backgroundColor: COLORS.white,
-          borderRadius: 4,
-          paddingVertical: 8,
-          paddingHorizontal: 4,
-        },
-        right: {
-          backgroundColor: COLORS.white,
-          borderRadius: 4,
-          paddingVertical: 8,
-          paddingHorizontal: 4,
-        }
-      }}
-      textStyle={{
-        right: {
-          ...FONTS.chatText
-        },
-        left: {
-          ...FONTS.chatText
-        }
-      }}
-      usernameStyle={{
-        ...FONTS.smallText,
-        color: COLORS.primary
-      }}
-      timeTextStyle={{
-        left: { color: COLORS.gray },
-        right: { color: COLORS.gray },
-      }}
-      bottomContainerStyle={{
-        left: {
-          justifyContent: 'space-between', marginTop: 5
-        },
-        right: {
-          justifyContent: 'space-between', marginTop: 5
-        },
-      }}
-
-    />
+    <View>
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          left: {
+            backgroundColor: COLORS.white,
+            borderRadius: 4,
+            paddingVertical: 8,
+            paddingHorizontal: 4,
+            borderTopLeftRadius: 0,
+            minWidth: '70%',
+            maxWidth: '70%',
+            marginBottom: 10
+          },
+          right: {
+            backgroundColor: COLORS.white,
+            borderRadius: 4,
+            paddingVertical: 8,
+            paddingHorizontal: 4,
+            borderTopRightRadius: 0,
+            minWidth: '70%',
+            maxWidth: '70%',
+            marginBottom: 10
+          },
+        }}
+        textStyle={{
+          right: {
+            ...FONTS.chatText
+          },
+          left: {
+            ...FONTS.chatText
+          }
+        }}
+        usernameStyle={{
+          ...FONTS.smallText,
+          color: COLORS.primary
+        }}
+        timeTextStyle={{
+          left: { color: COLORS.gray },
+          right: { color: COLORS.gray },
+        }}
+        bottomContainerStyle={{
+          left: {
+            justifyContent: 'space-between', marginTop: 5
+          },
+          right: {
+            justifyContent: 'flex-end', marginTop: 1
+          },
+        }}
+      />
+    </View>
   )
 
   const renderSend = (props) => (
@@ -98,6 +108,27 @@ export const Chat = ({ navigation }) => {
       placeholderTextColor={COLORS.gray}
     />
   )
+  const renderAvatar = (props) => {
+    const userName = props.user.name.substr(0, 1).toUpperCase()
+    if (props.user.avatar) {
+      return (
+        <Image
+          resizeMode="contain"
+          source={props.user.avatar}
+          style={styles.avatarImg}
+        />
+      )
+    }
+    return (
+      <View style={styles.avatar}>
+        <Text style={styles.name}>{userName}</Text>
+      </View>
+    )
+  }
+
+  const renderDay = (props) => (
+    <Day {...props} textStyle={{ ...FONTS.chatText, color: COLORS.primary }} />
+  )
 
   return (
     <ScreenLayout>
@@ -109,7 +140,7 @@ export const Chat = ({ navigation }) => {
             user={{
               _id: 3,
               name: 'Петр Николаев',
-              avatar: 'https://placeimg.com/140/140/any',
+              /* avatar: logoImg, */
             }}
             renderBubble={renderBubble}
             alwaysShowSend
@@ -120,9 +151,9 @@ export const Chat = ({ navigation }) => {
             renderUsernameOnMessage
             renderInputToolbar={renderInputToolbar}
             renderAvatarOnTop
-             /* messagesContainerStyle={{
-              backgroundColor: 'red',
-            }} */
+            showAvatarForEveryMessage
+            renderAvatar={renderAvatar}
+            renderDay={renderDay}
           />
         </View>
       </Layout>
@@ -152,4 +183,21 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     ...FONTS.text,
   },
+  avatar: {
+    width: 24,
+    height: 24,
+    borderRadius: 24,
+    backgroundColor: COLORS.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  name: {
+    ...FONTS.smallText,
+    color: COLORS.white,
+  },
+  avatarImg: {
+    width: 24,
+    height: 24,
+    borderRadius: 24,
+  }
 })

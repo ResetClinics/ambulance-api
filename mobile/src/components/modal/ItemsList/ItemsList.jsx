@@ -70,10 +70,14 @@ export const ItemsList = ({ items, onSave, closeMedicineWindow }) => {
 
 const styles = StyleSheet.create({
   root: {
-    borderRadius: 4,
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4,
     backgroundColor: COLORS.white,
     marginTop: 16,
     padding: 10,
+    position: 'relative',
+    overflow: 'hidden',
+    paddingBottom: 80
   },
   item: {
     flexDirection: 'row',
@@ -87,13 +91,16 @@ const styles = StyleSheet.create({
     color: COLORS.primary
   },
   holder: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 25,
-    paddingBottom: 10,
+    paddingBottom: 18,
     paddingTop: 18,
-    marginTop: 'auto',
     backgroundColor: COLORS.white,
     borderTopColor: COLORS.light,
     borderTopWidth: 1,
@@ -103,7 +110,7 @@ const styles = StyleSheet.create({
     width: '47%'
   },
   wrap: {
-    maxHeight: 300,
+    height: '70%',
   },
   wrapper: {
     flexDirection: 'row',
