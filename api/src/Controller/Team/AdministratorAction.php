@@ -20,10 +20,8 @@ class AdministratorAction extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        $team = $teams->findActiveByAdministrator($user);
-        if (!$team){
-            return null;
-        }
+        $team = $teams->getActiveByAdministrator($user);
+
         return [
             'administrator' => [
                 'id' => $team->getAdministrator()->getId(),

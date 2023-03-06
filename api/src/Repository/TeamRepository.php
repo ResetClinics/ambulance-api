@@ -39,7 +39,7 @@ class TeamRepository extends ServiceEntityRepository
     /**
      * @throws NonUniqueResultException
      */
-    public function findActiveByAdministrator(User $user): ?Team
+    public function getActiveByAdministrator(User $user): Team
     {
         $statuses = [
             Status::ACCEPTED,
@@ -48,13 +48,18 @@ class TeamRepository extends ServiceEntityRepository
 
         $qb = $this->createQueryBuilder('c');
 
-        return $qb
+        if (!$checkWordstat = $qb
             ->andWhere('c.administrator = :administrator')
             ->setParameter(':administrator', $user->getId())
             ->andWhere($qb->expr()->in('c.status', $statuses))
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getOneOrNullResult()
+        ) {
+            throw new NotFoundHttpException('Бригада не назначена');
+        }
+        return $checkWordstat;
     }
+
 
     public function remove(Team $entity, bool $flush = false): void
     {
