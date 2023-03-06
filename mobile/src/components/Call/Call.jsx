@@ -34,6 +34,7 @@ export const Call = ({ navigation, onArrival }) => {
           refreshing={refreshing}
           onRefresh={onRefresh}
           tintColor={COLORS.primary}
+          colors={['#04607A']}
         />
       )}
     >

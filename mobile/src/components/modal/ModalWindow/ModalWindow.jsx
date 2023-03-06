@@ -1,15 +1,30 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Image, StyleSheet, TextInput, TouchableOpacity, View
 } from 'react-native'
 import { ItemsList } from '../ItemsList'
 import closeImg from '../../../../assets/images/close.png'
 import { COLORS, FONTS } from '../../../../constants'
-import { getItems } from '../ItemsList/data/data'
 
 export const ModalWindow = ({ label, closeMedicineWindow, onSaveMedicine }) => {
-  const [items, setItems] = useState(getItems())
+  const [items, setItems] = useState([])
   const [searchValue, setSearchValue] = React.useState('')
+
+  const getMedicines = async () => {
+    const response = await fetch('https://ambulance.rc-respect.ru/api/medicines?page=1', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+    const json = await response.json()
+    setItems(json)
+  }
+
+  useEffect(() => {
+    getMedicines()
+  }, [])
 
   const onChangeSearchValue = (value) => {
     setSearchValue(value)
@@ -31,7 +46,7 @@ export const ModalWindow = ({ label, closeMedicineWindow, onSaveMedicine }) => {
       </TouchableOpacity>
       <TextInput
         style={styles.input}
-        placeholder={label}
+        placeholder="Поиск медикаментов"
         label={label}
         value={searchValue}
         onChangeText={onChangeSearchValue}
@@ -44,9 +59,12 @@ export const ModalWindow = ({ label, closeMedicineWindow, onSaveMedicine }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: COLORS.transparent,
-    margin: 16,
+    marginTop: 'auto',
+    marginBottom: -21,
     position: 'relative',
-    paddingVertical: 15
+    paddingTop: 15,
+    marginHorizontal: -5,
+    justifyContent: 'flex-end'
   },
   img: {
     width: 30,

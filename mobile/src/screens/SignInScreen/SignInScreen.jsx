@@ -6,7 +6,7 @@ import { FormContainer, Layout } from '../../components'
 import { COLORS } from '../../../constants'
 import logoImg from '../../../assets/icon.png'
 
-export const SignInScreen = ({ onSignIn, navigation }) => {
+export const SignInScreen = ({ navigation }) => {
   const imageHeight = useRef(new Animated.Value(116)).current
 
   const heightUp = () => {
@@ -43,7 +43,7 @@ export const SignInScreen = ({ onSignIn, navigation }) => {
       <Layout>
         <View style={styles.inner}>
           <Animated.Image source={logoImg} resizeMode="contain" style={[styles.img, { height: imageHeight }]} />
-          <FormContainer onSignIn={onSignIn} navigation={navigation} />
+          <FormContainer navigation={navigation} />
         </View>
       </Layout>
     </KeyboardAvoidingView>

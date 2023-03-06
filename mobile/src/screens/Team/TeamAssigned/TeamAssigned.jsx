@@ -4,14 +4,26 @@ import { Button } from 'react-native-paper'
 import { Layout, TeamList } from '../../../components'
 import { COLORS } from '../../../../constants'
 
-export const TeamAssigned = ({ navigation }) => (
+export const TeamAssigned = ({
+  administrator,
+  doctors,
+  rejectTeam,
+  acceptTeam,
+  refreshing,
+  onRefresh
+}) => (
   <Layout>
-    <TeamList />
+    <TeamList
+      administrator={administrator}
+      doctors={doctors}
+      refreshing={refreshing}
+      onRefresh={onRefresh}
+    />
     <View style={styles.btnHolder}>
-      <Button mode="outlined" raised onPress={() => navigation.navigate('Главная Бригады')}>
+      <Button mode="outlined" raised onPress={rejectTeam}>
         Бригада не готова к дежурству
       </Button>
-      <Button mode="contained" style={styles.btn} onPress={() => navigation.navigate('Подвержденная Бригада')}>
+      <Button mode="contained" style={styles.btn} onPress={acceptTeam}>
         Бригада вышла на дежурство
       </Button>
     </View>

@@ -7,6 +7,7 @@ import React, { useState } from 'react'
 import { Button } from 'react-native-paper'
 import { Form } from 'react-final-form'
 import Modal from 'react-native-modal'
+import { Masks } from 'react-native-mask-input'
 import { CardLayout } from '../CardLayout'
 import { COLORS, FONTS } from '../../../constants'
 import { Layout } from '../Layout'
@@ -67,6 +68,7 @@ export const AcceptedCall = ({ onAccepting }) => {
             refreshing={refreshing}
             onRefresh={onRefresh}
             tintColor={COLORS.primary}
+            colors={['#04607A']}
           />
                 )}
       >
@@ -83,7 +85,13 @@ export const AcceptedCall = ({ onAccepting }) => {
                 render={() => (
                   <View>
                     <InputField name="fio" label="Фамилия Имя Отчество" value={name} onChangeText={(value) => setName(value)} />
-                    <InputField name="birthday" label="Дата рождения" value={birthday} onChangeText={(value) => setBirthday(value)} />
+                    <InputField
+                      name="birthday"
+                      label="Дата рождения"
+                      value={birthday}
+                      mask={Masks.DATE_DDMMYYYY}
+                      onChangeText={(masked) => setBirthday(masked)}
+                    />
                     <InputField name="document" label="Данные документа" value={text} onChangeText={(value) => setText(value)} />
                   </View>
                 )}
