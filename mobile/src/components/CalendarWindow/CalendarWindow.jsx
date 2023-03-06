@@ -5,7 +5,7 @@ import {
 import { LocaleConfig } from 'react-native-calendars'
 import { Button } from 'react-native-paper'
 import closeImg from '../../../assets/images/close.png'
-import {COLORS, FONTS} from '../../../constants'
+import { COLORS, FONTS } from '../../../constants'
 import { DateRangePicker } from '../DateRangePicker'
 
 LocaleConfig.locales.ru = {

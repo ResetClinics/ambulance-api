@@ -1,5 +1,5 @@
 import {
-  FlatList, Image, RefreshControl, StyleSheet, View
+  FlatList, Image, RefreshControl, StyleSheet, View,
 } from 'react-native'
 import React, { useState } from 'react'
 import {
@@ -8,27 +8,15 @@ import {
 import { COLORS, FONTS } from '../../../constants'
 import labelImg from '../../../assets/images/label.png'
 
-const data = [
-  {
-    name: 'Агибалова Татьяна Васильевна',
-    speciality: 'Психиатор- нарколог'
-  },
-  {
-    name: 'Агибалова Татьяна Васильевна',
-    speciality: 'Психиатор- нарколог'
-  },
-]
-
 const CardItem = (item) => {
-  const { name, speciality } = item
+  const { name, position } = item
   return (
     <View style={styles.root}>
       <Card mode="outlined" theme={theme} style={styles.card}>
         <Card.Content style={styles.wrap}>
           <Title style={styles.title}>{name}</Title>
-          <Paragraph style={styles.subtitle}>{speciality}</Paragraph>
+          <Paragraph style={styles.subtitle}>{position}</Paragraph>
         </Card.Content>
-
       </Card>
       <Image
         source={labelImg}
@@ -38,15 +26,9 @@ const CardItem = (item) => {
   )
 }
 
-export const TeamList = () => {
-  const [refreshing, setRefreshing] = useState(false)
+export const TeamList = ({ administrator, doctors, refreshing, onRefresh }) => {
 
-  const onRefresh = () => {
-    setRefreshing(true)
-    setTimeout(() => {
-      setRefreshing(false)
-    }, 1500)
-  }
+  const data = [administrator, ...doctors]
   return (
     <View style={styles.layout}>
       <FlatList
@@ -57,6 +39,7 @@ export const TeamList = () => {
             refreshing={refreshing}
             onRefresh={onRefresh}
             tintColor={COLORS.primary}
+            colors={['#04607A']}
           />
         )}
         /* eslint-disable-next-line react/jsx-props-no-spreading */

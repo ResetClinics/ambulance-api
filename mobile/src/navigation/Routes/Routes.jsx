@@ -1,35 +1,36 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer } from '@react-navigation/native'
 import {
   PasswordForgetScreen, Sent, SignInScreen,
 } from '../../screens'
 import { Menu } from '../Menu'
+import { AuthContext } from '../../context/AuthContext'
+import { Loading } from '../../components'
 
 const RootStack = createStackNavigator()
 
 export const Routes = () => {
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false)
+  const { isLoading, userToken } = useContext(AuthContext)
+  const { logout } = useContext(AuthContext)
 
-  const handleSignIn = () => {
-    setIsAuthenticated(true)
-  }
-
-  const handleSignOut = () => {
-    setIsAuthenticated(false)
+  if (isLoading) {
+    return (
+      <Loading />
+    )
   }
 
   return (
     <NavigationContainer>
       <RootStack.Navigator>
-        {isAuthenticated ? (
+        {userToken !== null ? (
           <RootStack.Screen
             name="App"
             options={{ headerShown: false }}
           >
             {(props) => (
               // eslint-disable-next-line react/jsx-props-no-spreading
-              <Menu {...props} handleSignOut={handleSignOut} />
+              <Menu {...props} handleSignOut={logout} />
             )}
           </RootStack.Screen>
         ) : (
@@ -40,7 +41,7 @@ export const Routes = () => {
             >
               {(props) => (
                 // eslint-disable-next-line react/jsx-props-no-spreading
-                <SignInScreen {...props} onSignIn={handleSignIn} />
+                <SignInScreen {...props} />
               )}
             </RootStack.Screen>
             <RootStack.Screen
