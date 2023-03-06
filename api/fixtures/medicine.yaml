@@ -1,0 +1,163 @@
+App\Entity\Medicine:
+  medicine_1:
+    name: Наименование
+  medicine_2:
+    name: Анаприлин 10 мг таб. № 50
+  medicine_3:
+    name: Адреналин, амп
+  medicine_4:
+    name: Аскорбиновая кислота амп. № 10
+  medicine_5:
+    name: Аспаркам таб. № 20
+  medicine_6:
+    name: Аспаркам  10мл №10 р-р
+  medicine_7:
+    name: Акинетон 1мл, р-р
+  medicine_8:
+    name: Акинетон 12мг, таб
+  medicine_9:
+    name: Аминазин 2мл
+  medicine_10:
+    name: Амитриптилин, 25мг, таб, № 50
+  medicine_11:
+    name: Амитриптилин 2мл
+  medicine_12:
+    name: Ацесоль 200 мл р-р.
+  medicine_13:
+    name: Галоперидол 5 мг/мл амп. № 10
+  medicine_14:
+    name: Гептрал р-р 400 мг/мл - 5 мл. амп. № 5
+  medicine_15:
+    name: Глюкоза 5%-250,0 р-р.
+  medicine_16:
+    name: Глюкоза 5%, р-р., 10мл
+  medicine_17:
+    name: Дексаметазон 4 мг № 10
+  medicine_18:
+    name: Дисоль 200,0 раствор
+  medicine_19:
+    name: Дицион, амп 2мг
+  medicine_20:
+    name: Дроперидол 2,5мг/мл амп. № 5
+  medicine_21:
+    name: Дроперидол 5 мг/мл амп. № 5
+  medicine_22:
+    name: Дротаверин амп. № 25
+  medicine_23:
+    name: Калия хлорид 40 мг/мл амп. № 10
+  medicine_24:
+    name: Капотен 25 мг таб. № 50
+  medicine_25:
+    name: Карбамазипин 200 мг таб. № 50
+  medicine_26:
+    name: Кеторолак амп. № 10
+  medicine_27:
+    name: Кордиамин 250 мг/мл амп. № 10
+  medicine_28:
+    name: Ксантинола никотинат, амн, 1мг
+  medicine_29:
+    name: Мафусол 400мл
+  medicine_30:
+    name: Магния сульфат 250 мг/мл амп. № 10
+  medicine_31:
+    name: Мексидол 50 мг/мл амп. № 5
+  medicine_32:
+    name: Метадоксил 500 мг таб. № 10
+  medicine_33:
+    name: Метоклопромид 5 мг/мл амп. № 10
+  medicine_34:
+    name: Метопролол 50 мг.таб. 3 30
+  medicine_35:
+    name: Милдронат 100 мг/мл амп. № 10
+  medicine_36:
+    name: Мельдоний,  5мл, амп, №10
+  medicine_37:
+    name: Натрия тиосульфат 300мг/мл амп. № 10
+  medicine_38:
+    name: Налоксон, 1мл, амп, №10
+  medicine_39:
+    name: Натрия хлорид 0,9% - 250,0 р-р.
+  medicine_40:
+    name: Натрия хлорид 0,9% - 100,0 р-р.
+  medicine_41:
+    name: Никотиновая кислота, амп, 1мг
+  medicine_42:
+    name: Паглюферал таб. № 20
+  medicine_43:
+    name: Пирацетам амп. №10
+  medicine_44:
+    name: Пиридоксин амп.№10
+  medicine_45:
+    name: Проинин 5мл
+  medicine_46:
+    name: Проинин 2 мл
+  medicine_47:
+    name: Реамберин р-р
+  medicine_48:
+    name: Рибоксин амп. №10
+  medicine_49:
+    name: Ремаксол 400,0 № 5
+  medicine_50:
+    name: Самеликс, р-р 400 мг/мл - 5 мл. амп. № 5
+  medicine_51:
+    name: Сульфокамфокаин амп. №10
+  medicine_52:
+    name: Супрастин амп. №5
+  medicine_53:
+    name: Транквезипам, 1мл ,№10
+  medicine_54:
+    name: Тиамина хлорид амп. №10
+  medicine_55:
+    name: Трисоль, 200 мл, р-р
+  medicine_56:
+    name: Феназепам, 1мл №10
+  medicine_57:
+    name: Фенибут,250мг,  таб,  №20
+  medicine_58:
+    name: Финлепсин, таб, 200мг
+  medicine_59:
+    name: Фуросемид 2 мл амп. № 10
+  medicine_60:
+    name: Хлоропирамин 20 мг/мл амп. № 5
+  medicine_61:
+    name: Хлорпротиксен 15 таб. №30
+  medicine_62:
+    name: Хлорпротиксен 50 таб. №30
+  medicine_63:
+    name: Цианоколабамин амп. №10
+  medicine_64:
+    name: Цитофлавин амп.№10
+  medicine_65:
+    name: Экспресс тест для наркотиков
+  medicine_66:
+    name: Экспресс тест на алкоголь
+  medicine_67:
+    name: Эуфилин, амп 5мл
+  medicine_68:
+    name: Этамзилат, амп 2мл
+  medicine_69:
+    name: Системы для инфузий № 25
+  medicine_70:
+    name: Шприцы 2, 0 № 120
+  medicine_71:
+    name: Шприцы 5, 0 № 100
+  medicine_72:
+    name: Шприцы 10, 0 № 60
+  medicine_73:
+    name: Лейкопластырь мед., катушка
+  medicine_74:
+    name: Круопед, для фиксации катетеров
+  medicine_75:
+    name: Катетр внутривенный G 19 № 100, жёл
+  medicine_76:
+    name: Катетр внутривенный G 20 № 100, гол
+  medicine_77:
+    name: Катетр внутривенный G 22 № 100, роз
+  medicine_78:
+    name: Катетр внутривенный G 24 № 100, зел
+  medicine_79:
+    name: Игла- бабочка 21G № 100
+  medicine_80:
+    name: Игла- бабочка 19 G № 100
+  medicine_81:
+    name: Спиртовые салфетки 135х185 № 120
