@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }) => {
   }, [])
   return (
     <AuthContext.Provider value={{
-      login, logout, isLoading, userToken
+      login, logout, isLoading, userToken, userInfo
     }}
     >
       <Container position="top" />

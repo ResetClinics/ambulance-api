@@ -11,21 +11,21 @@ const teams = {
     const axios = await axiosInstance()
     return await axios.post(
       'teams/reject',
-      {administrator: '/api/users/1'}
+      {}
     )
   },
   async accept() {
     const axios = await axiosInstance()
     return await axios.post(
       'teams/accept',
-      {administrator: '/api/users/1'}
+      {}
     )
   },
   async complete() {
     const axios = await axiosInstance()
     return await axios.post(
       'teams/complete',
-      {administrator: '/api/users/1'}
+      {}
     )
   }
 }

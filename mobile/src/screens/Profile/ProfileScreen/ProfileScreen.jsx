@@ -29,7 +29,7 @@ const useUserQuery = (id) => {
 
   const getUser = async () => {
     try {
-      const response = await fetch(`${apiUrl}users/${id}`, {
+      const response = await fetch(`${apiUrl}users/me`, {
         headers
       })
       const json = await response.json()
@@ -54,7 +54,7 @@ export const ProfileScreen = ({ navigation }) => {
   const { loading, user } = useUserQuery(1)
   const pattern = /(\+7|7|8)[\s(]?(\d{3})[\s)]?(\d{3})[\s-]?(\d{2})[\s-]?(\d{2})/g
   const { phone, name, position } = user
-  const modifyPhone = () => phone.toString().replace(pattern, '+7 ($2) $3-$4-$5')
+  const modifyPhone = () => phone?.toString().replace(pattern, '+7 ($2) $3-$4-$5')
   return (
     <ScreenLayout>
       <Container position="top" />
