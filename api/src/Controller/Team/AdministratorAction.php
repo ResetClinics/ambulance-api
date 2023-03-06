@@ -16,11 +16,14 @@ class AdministratorAction extends AbstractController
     /**
      * @throws NonUniqueResultException
      */
-    public function __invoke(TeamRepository $teams): array
+    public function __invoke(TeamRepository $teams): ?array
     {
         /** @var User $user */
         $user = $this->getUser();
-        $team = $teams->getActiveByAdministrator($user);
+        $team = $teams->findActiveByAdministrator($user);
+        if (!$team){
+            return null;
+        }
         return [
             'administrator' => [
                 'id' => $team->getAdministrator()->getId(),

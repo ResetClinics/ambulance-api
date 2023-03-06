@@ -1,2 +1,2 @@
 //export const ENTRYPOINT = typeof window === "undefined" ? process.env.NEXT_PUBLIC_ENTRYPOINT : window.origin;
-export const ENTRYPOINT = "https://ambulance.rc-respect.ru/api";
+export const ENTRYPOINT = process.env.NODE_ENV === 'development' ? 'http://localhost/api': "https://ambulance.rc-respect.ru/api";
