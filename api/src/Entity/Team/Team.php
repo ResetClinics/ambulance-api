@@ -36,9 +36,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
     denormalizationContext: ['groups' => ['team:write']]
 )]
 #[Get(uriTemplate: '/teams/my', controller: AdministratorAction::class, read: false)]
-#[Post(uriTemplate: '/teams/accept', controller: AcceptAction::class, read: false)]
-#[Post(uriTemplate: '/teams/reject', controller: RejectAction::class, read: false)]
-#[Post(uriTemplate: '/teams/complete', controller: CompleteAction::class, read: false)]
+#[Post(uriTemplate: '/teams/accept', controller: AcceptAction::class, input: TeamDto::class, read: false)]
+#[Post(uriTemplate: '/teams/reject', controller: RejectAction::class, input: TeamDto::class, read: false)]
+#[Post(uriTemplate: '/teams/complete', controller: CompleteAction::class, input: TeamDto::class, read: false)]
 class Team
 {
     #[ORM\Id]
