@@ -3,9 +3,12 @@ import axiosInstance from '../config'
 const teams = {
   async my() {
     const axios = await axiosInstance()
-    return await axios.get(
+    const ress = await axios.post(
       'teams/my',
+      {}
     )
+
+    return ress
   },
   async reject() {
     const axios = await axiosInstance()

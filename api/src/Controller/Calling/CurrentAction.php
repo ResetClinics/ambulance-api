@@ -10,6 +10,8 @@ use App\Repository\CallingRepository;
 use App\Repository\TeamRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
@@ -18,11 +20,11 @@ class CurrentAction extends AbstractController
     /**
      * @throws NonUniqueResultException
      */
-    public function __invoke(TeamRepository $teams, CallingRepository $callings): Calling
+    public function __invoke(TeamRepository $teams, CallingRepository $callings): JsonResponse
     {
         /** @var User $user */
         $user = $this->getUser();
         $team = $teams->getActiveByAdministrator($user);
-        return $callings->getCurrentByTeam($team);
+        return $this->json($callings->getCurrentByTeam($team), Response::HTTP_OK);
     }
 }
