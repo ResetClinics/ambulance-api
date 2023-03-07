@@ -1,14 +1,15 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FlatList, RefreshControl, StyleSheet } from 'react-native'
 import { Button } from 'react-native-paper'
 import {
   BottomNavigation, CardItem, Layout, ScreenLayout
 } from '../../components'
-import { data } from '../../data/data'
 import { COLORS } from '../../../constants'
+import { API } from '../../api'
 
 export const Calls = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false)
+  const [callings, setCallings] = useState([])
   const goToMapPage = () => {
     navigation.navigate('itinerary', {
       screen: 'Home',
@@ -17,22 +18,34 @@ export const Calls = ({ navigation }) => {
       },
     })
   }
-  const onRefresh = () => {
+
+  useEffect(() => {
+    fetchCallings()
+  }, [])
+
+  const fetchCallings = async () => {
     setRefreshing(true)
-    setTimeout(() => {
-      setRefreshing(false)
-    }, 1500)
+    try {
+      const response = await API.callings.index()
+      setCallings(response)
+    } catch (error) { /* empty */ }
+    setRefreshing(false)
   }
+
   const onAccepting = () => {
     navigation.navigate('сurrentCall')
   }
 
   // eslint-disable-next-line react/no-unstable-nested-components
-  const ViewCard = ({ item, active }) => {
-    if (active === true) {
+  const ViewCard = ({ item }) => {
+    const { status } = item
+
+    if (status === 'assigned') {
       return (
         // eslint-disable-next-line react/jsx-props-no-spreading
-        <CardItem {...item} style={styles.color} status="" onAccepting={onAccepting} goToMapPage={goToMapPage} text="Свернуть"><Button onPress={() => onAccepting()}>Принять</Button></CardItem>
+        <CardItem {...item} style={styles.color} status="" onAccepting={onAccepting} goToMapPage={goToMapPage} text="Свернуть">
+          <Button onPress={() => onAccepting()}>Принять</Button>
+        </CardItem>
       )
     }
     return (
@@ -46,16 +59,16 @@ export const Calls = ({ navigation }) => {
       <Layout>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={data}
+          data={callings}
           refreshControl={(
             <RefreshControl
               refreshing={refreshing}
-              onRefresh={onRefresh}
+              onRefresh={fetchCallings}
               tintColor={COLORS.primary}
               colors={['#04607A']}
             />
           )}
-          renderItem={({ item }) => <ViewCard item={item} active={item.active} />}
+          renderItem={({ item }) => <ViewCard item={item} />}
         />
       </Layout>
       <BottomNavigation navigation={navigation} />

@@ -12,7 +12,7 @@ const teams = {
   },
   async reject() {
     const axios = await axiosInstance()
-    return await axios.post(
+    return axios.post(
       'teams/reject',
       {}
     )

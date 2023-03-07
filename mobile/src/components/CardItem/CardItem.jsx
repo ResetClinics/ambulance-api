@@ -10,8 +10,14 @@ import { MapMarkerIcon } from '../MapMarkerIcon'
 import { CloseIcon } from '../CloseIcon'
 
 export const CardItem = ({
-  address, subject, date, time, comment, goToMapPage, status, children, text, style
+  address, subject, date, time, comment, goToMapPage, status, children, text, style, createdAt
 }) => {
+
+  const tittttt = new Date(createdAt)
+
+  console.log(createdAt)
+  console.log(tittttt.toLocaleString())
+
   const [active, setActive] = useState(false)
 
   const onDetailedClick = () => {

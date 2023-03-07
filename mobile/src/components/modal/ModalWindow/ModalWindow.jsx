@@ -5,21 +5,15 @@ import {
 import { ItemsList } from '../ItemsList'
 import closeImg from '../../../../assets/images/close.png'
 import { COLORS, FONTS } from '../../../../constants'
+import { API } from '../../../api'
 
 export const ModalWindow = ({ label, closeMedicineWindow, onSaveMedicine }) => {
   const [items, setItems] = useState([])
   const [searchValue, setSearchValue] = React.useState('')
 
   const getMedicines = async () => {
-    const response = await fetch('https://ambulance.rc-respect.ru/api/medicines?page=1', {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    })
-    const json = await response.json()
-    setItems(json)
+    const data = await API.medicines.index()
+    setItems(data)
   }
 
   useEffect(() => {

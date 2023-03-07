@@ -21,6 +21,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use DomainException;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
 #[ORM\Entity(repositoryClass: CallingRepository::class)]
 #[ApiResource(
@@ -79,11 +80,16 @@ class Calling
 
     #[ORM\Column]
     #[Groups(['calling:read'])]
+    #[Context(normalizationContext: [DateTimeNormalizer::FORMAT_KEY => 'd.m.Y HH:mm'])]
     private DateTimeImmutable $createdAt;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['calling:read'])]
     private ?DateTimeImmutable $acceptedAt = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read'])]
+    private ?DateTimeImmutable $arrivedAt = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['calling:read'])]
@@ -152,7 +158,7 @@ class Calling
             throw new DomainException('Вызов имеет статус отличный от принят');
         }
         $this->status = Status::arrived();
-        $this->acceptedAt = $arrivedAt;
+        $this->arrivedAt = $arrivedAt;
     }
 
     public function setComplete(DateTimeImmutable $completedAt): void
@@ -237,5 +243,10 @@ class Calling
     public function inProgress(): bool
     {
        return !$this->status->isRejected() && !$this->status->isCompleted();
+    }
+
+    public function getArrivedAt(): ?DateTimeImmutable
+    {
+        return $this->arrivedAt;
     }
 }
