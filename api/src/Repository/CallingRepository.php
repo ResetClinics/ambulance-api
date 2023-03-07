@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Calling;
+use App\Entity\Calling\Calling;
+use App\Entity\Calling\Status;
+use App\Entity\Team\Team;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @extends ServiceEntityRepository<Calling>
@@ -40,4 +44,30 @@ class CallingRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function getCurrentByTeam(Team $team): Calling
+    {
+        $statuses = [
+            Status::ACCEPTED,
+            Status::ASSIGNED,
+            Status::ARRIVED,
+        ];
+
+        $qb = $this->createQueryBuilder('c');
+
+        if (!$checkWordstat = $qb
+            ->andWhere('c.team = :team')
+            ->setParameter(':team', $team->getId())
+            ->andWhere($qb->expr()->in('c.status', $statuses))
+            ->getQuery()
+            ->getOneOrNullResult()
+        ) {
+            throw new NotFoundHttpException('Нет текущего заказа');
+        }
+        return $checkWordstat;
+    }
+
 }

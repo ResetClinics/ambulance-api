@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Entity\User;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
@@ -34,7 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[UniqueEntity(fields: ['username'])]
 #[UniqueEntity(fields: ['phone'])]
-#[Get(uriTemplate: '/users/my', controller: MyAction::class, read: false)]
+#[Post(uriTemplate: '/users/my', controller: MyAction::class, input: UserDto::class, read: false)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]

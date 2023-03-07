@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Team;
 
-use App\Entity\User;
+use App\Entity\User\User;
 use App\Repository\TeamRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

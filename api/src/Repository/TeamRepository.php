@@ -6,7 +6,7 @@ namespace App\Repository;
 
 use App\Entity\Team\Status;
 use App\Entity\Team\Team;
-use App\Entity\User;
+use App\Entity\User\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;

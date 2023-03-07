@@ -12,6 +12,7 @@ doctrine:
         #server_version: '15'
 
         types:
+            calling_status: 'App\Entity\Calling\StatusType'
             team_status: 'App\Entity\Team\StatusType'
 
     orm:

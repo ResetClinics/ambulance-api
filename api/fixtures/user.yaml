@@ -1,7 +1,7 @@
 parameters:
   hash: $2y$13$JlPNBmX5LMm.2SRisCsJ1u3QmwHOmQhRSesxSgcEVMlh/OfOcOX0G
 
-App\Entity\User:
+App\Entity\User\User:
   user_1:
     phone: "79000000000"
     name: 'Иванов Иван Иванович'

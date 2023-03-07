@@ -13,7 +13,8 @@ use App\Controller\Team\AcceptAction;
 use App\Controller\Team\AdministratorAction;
 use App\Controller\Team\CompleteAction;
 use App\Controller\Team\RejectAction;
-use App\Entity\User;
+use App\Entity\Calling\Calling;
+use App\Entity\User\User;
 use App\Repository\TeamRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -35,7 +36,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     normalizationContext: ['groups' => ['team:read']],
     denormalizationContext: ['groups' => ['team:write']]
 )]
-#[Get(uriTemplate: '/teams/my', controller: AdministratorAction::class, read: false)]
+#[Post(uriTemplate: '/teams/my', controller: AdministratorAction::class, input: TeamDto::class, read: false)]
 #[Post(uriTemplate: '/teams/accept', controller: AcceptAction::class, input: TeamDto::class, read: false)]
 #[Post(uriTemplate: '/teams/reject', controller: RejectAction::class, input: TeamDto::class, read: false)]
 #[Post(uriTemplate: '/teams/complete', controller: CompleteAction::class, input: TeamDto::class, read: false)]
@@ -69,11 +70,18 @@ class Team
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     #[Groups(['team:read'])]
+    private ?DateTimeImmutable $arrivedAt = null;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(['team:read'])]
     private ?DateTimeImmutable $completedAt = null;
 
     #[ORM\Column(type: 'string', nullable: true)]
     #[Groups(['team:read'])]
     private ?string $rejectedComment = null;
+
+    #[ORM\OneToMany(mappedBy: 'team', targetEntity: Calling::class)]
+    private Collection $callings;
 
     public function __construct(User $administrator)
     {
@@ -81,6 +89,7 @@ class Team
         $this->administrator = $administrator;
         $this->status = Status::assigned();
         $this->createdAt = new DateTimeImmutable();
+        $this->callings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -138,6 +147,14 @@ class Team
         if (!$this->status->isAccepted()) {
             throw new DomainException('Бригада имеет статус отличный от принята');
         }
+
+        /** @var Calling $calling */
+        foreach ($this->callings as $calling){
+            if ($calling->inProgress()){
+                throw new DomainException('У бригады есть не закрытые вызовы');
+            }
+        }
+
         $this->status = Status::completed();
         $this->completedAt = $completedAt;
     }
@@ -170,5 +187,40 @@ class Team
     public function getRejectedComment(): ?string
     {
         return $this->rejectedComment;
+    }
+
+    /**
+     * @return Collection<int, Calling>
+     */
+    public function getCallings(): Collection
+    {
+        return $this->callings;
+    }
+
+    public function addCalling(Calling $calling): self
+    {
+        if (!$this->callings->contains($calling)) {
+            $this->callings->add($calling);
+            $calling->setTeam($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCalling(Calling $calling): self
+    {
+        if ($this->callings->removeElement($calling)) {
+            // set the owning side to null (unless already changed)
+            if ($calling->getTeam() === $this) {
+                $calling->setTeam(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getArrivedAt(): ?DateTimeImmutable
+    {
+        return $this->arrivedAt;
     }
 }
