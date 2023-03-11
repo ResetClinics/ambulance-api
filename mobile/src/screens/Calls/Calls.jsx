@@ -39,12 +39,13 @@ export const Calls = ({ navigation }) => {
 
   // eslint-disable-next-line react/no-unstable-nested-components
   const ViewCard = ({ item }) => {
+    console.log(item)
     const { status } = item
 
     if (status === 'assigned') {
       return (
         // eslint-disable-next-line react/jsx-props-no-spreading
-        <CardItem {...item} style={styles.color} status="" onAccepting={onAccepting} goToMapPage={goToMapPage} text="Свернуть">
+        <CardItem {...item} style={styles.color} status="" goToMapPage={goToMapPage} text="Свернуть">
           <Button onPress={() => onAccepting()}>Принять</Button>
         </CardItem>
       )

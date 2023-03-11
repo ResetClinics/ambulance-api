@@ -46,6 +46,7 @@ class Calling
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['calling:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 128)]
