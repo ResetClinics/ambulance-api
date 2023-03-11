@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Entity\Calling;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
@@ -36,6 +38,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
     normalizationContext: ['groups' => ['calling:read']],
     denormalizationContext: ['groups' => ['calling:write']]
 )]
+#[ApiFilter(SearchFilter::class, properties: ['team' => 'exact'])]
 #[Post(uriTemplate: '/callings/current', controller: CurrentAction::class, input: CallingDto::class, read: false)]
 #[Post(uriTemplate: '/callings/{id}/accept', controller: AcceptAction::class, input: CallingDto::class, read: false)]
 #[Post(uriTemplate: '/callings/{id}/reject', controller: RejectAction::class, input: CallingDto::class, read: false)]
