@@ -13,6 +13,7 @@ import mediumFont from '../assets/fonts/Roboto-Medium.ttf'
 import { COLORS } from '../constants'
 import { Routes } from './navigation'
 import { AuthProvider } from './context/AuthContext'
+import { CurrentCallingProvider } from './context/CurrentCallingContext'
 
 const App = () => {
   const [appIsReady, setAppIsReady] = useState(false)
@@ -37,6 +38,7 @@ const App = () => {
         setAppIsReady(true)
       }
     }
+
     prepare()
   }, [])
 
@@ -54,7 +56,9 @@ const App = () => {
     <SafeAreaView onLayout={onLayoutRootView} style={styles.root}>
       <PaperProvider theme={theme}>
         <AuthProvider>
-          <Routes />
+          <CurrentCallingProvider>
+            <Routes />
+          </CurrentCallingProvider>
         </AuthProvider>
       </PaperProvider>
     </SafeAreaView>

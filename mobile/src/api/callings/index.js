@@ -1,10 +1,10 @@
 import axiosInstance from '../config'
 
 const callings = {
-  async index() {
+  async index(team = null) {
     const axios = await axiosInstance()
     return axios.get(
-      'callings'
+      `callings?team=${team}`
     )
   },
 
@@ -15,17 +15,17 @@ const callings = {
       {}
     )
   },
-  async accept() {
+  async accept(id) {
     const axios = await axiosInstance()
     return axios.post(
-      'callings/accept',
+      `callings/${id}/accept`,
       {}
     )
   },
   async arrive() {
     const axios = await axiosInstance()
     return axios.post(
-      'callings/accept',
+      'callings/arrive',
       {}
     )
   },
@@ -36,10 +36,10 @@ const callings = {
       {}
     )
   },
-  async reject() {
+  async reject(id) {
     const axios = await axiosInstance()
     return axios.post(
-      'callings/reject',
+      `callings/${id}/reject`,
       {}
     )
   },

@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export const useMedicineList = (items) => {
-  const [medicine, setMedicine] = useState(items)
-
+  const [medicine, setMedicine] = useState()
+  useEffect(() => { setMedicine(items) }, [items])
   const addMedicine = (id) => {
     const newMedicine = medicine.map((el) => ({
       id: el.id,

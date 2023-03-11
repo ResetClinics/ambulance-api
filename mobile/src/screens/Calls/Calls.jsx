@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import { FlatList, RefreshControl, StyleSheet } from 'react-native'
 import { Button } from 'react-native-paper'
 import {
@@ -6,10 +6,14 @@ import {
 } from '../../components'
 import { COLORS } from '../../../constants'
 import { API } from '../../api'
+import {CurrentCallingContext} from "../../context/CurrentCallingContext";
 
 export const Calls = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false)
   const [callings, setCallings] = useState([])
+
+  const { accept } = useContext(CurrentCallingContext)
+
   const goToMapPage = () => {
     navigation.navigate('itinerary', {
       screen: 'Home',
@@ -26,27 +30,35 @@ export const Calls = ({ navigation }) => {
   const fetchCallings = async () => {
     setRefreshing(true)
     try {
-      const response = await API.callings.index()
-      setCallings(response)
-    } catch (error) { /* empty */ }
+      const team = await API.teams.my()
+      if (team) {
+        const response = await API.callings.index(team.id)
+        setCallings(response)
+      } else {
+        setCallings([])
+      }
+
+    } catch (error) { /* empty */
+    }
     setRefreshing(false)
   }
 
-  const onAccepting = () => {
-
-   // navigation.navigate('сurrentCall')
+  const onAccepting = async (id) => {
+    // todo добавить лоадинг
+    await accept(id)
+    fetchCallings()
+    navigation.navigate('сurrentCall')
   }
 
   // eslint-disable-next-line react/no-unstable-nested-components
   const ViewCard = ({ item }) => {
-    console.log(item)
-    const { status } = item
+    const { status, id } = item
 
     if (status === 'assigned') {
       return (
         // eslint-disable-next-line react/jsx-props-no-spreading
         <CardItem {...item} style={styles.color} status="" goToMapPage={goToMapPage} text="Свернуть">
-          <Button onPress={() => onAccepting()}>Принять</Button>
+          <Button onPress={() => onAccepting(id)}>Принять</Button>
         </CardItem>
       )
     }

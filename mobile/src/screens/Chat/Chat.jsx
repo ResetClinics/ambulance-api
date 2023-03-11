@@ -17,18 +17,7 @@ export const Chat = ({ navigation }) => {
   const [messages, setMessages] = useState([])
 
   useEffect(() => {
-    setMessages([
-      {
-        _id: 1,
-        text: 'Завтра совещание в 19:00, всем присутствовать',
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: 'Натали',
-          avatar: 'https://placeimg.com/140/140/any',
-        },
-      }
-    ])
+    setMessages([])
   }, [])
 
   const onSend = useCallback((messages = []) => {

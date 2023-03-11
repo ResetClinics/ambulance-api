@@ -3,7 +3,7 @@ import {
   RefreshControl,
   ScrollView, StyleSheet, Text, TouchableOpacity, View
 } from 'react-native'
-import React, { useState } from 'react'
+import React, {useContext, useState} from 'react'
 import { Button } from 'react-native-paper'
 import { Form } from 'react-final-form'
 import Modal from 'react-native-modal'
@@ -14,12 +14,8 @@ import { Layout } from '../Layout'
 import { CloseIcon } from '../CloseIcon'
 import { InputField } from '../InputField'
 import { ModalWindow } from '../modal'
-
-const comment = 'Мужчина ,  43 года нужна детоксикация организма , возмоно психотерапевтическая помощь'
-const address = 'Пресненская наб., 2 (этаж 1)'
-const subject = 'Вызов врача-нарколога'
-const date = '12.12.2022'
-const time = '12:45'
+import {CurrentCallingContext} from "../../context/CurrentCallingContext";
+import {formatDate, formatTime} from "../../helpers";
 
 const MedicineItem = ({ name, count, openMedicineWindow }) => (
   <TouchableOpacity
@@ -33,8 +29,21 @@ const MedicineItem = ({ name, count, openMedicineWindow }) => (
 )
 
 export const AcceptedCall = ({ onAccepting }) => {
+
+  const { currentCalling } = useContext(CurrentCallingContext)
+
+  const {
+    address, createdAt, description, name
+  } = currentCalling
+
+  const dateTime = new Date(createdAt)
+
+  const createdDate = formatDate(dateTime)
+  const createdTime = formatTime(dateTime)
+
+
   const [text, setText] = useState('')
-  const [name, setName] = useState('')
+  const [newNname, setName] = useState('')
   const [birthday, setBirthday] = useState('')
   const [refreshing, setRefreshing] = useState(false)
   const [isModalVisible, setModalVisible] = useState(false)
@@ -73,10 +82,10 @@ export const AcceptedCall = ({ onAccepting }) => {
                 )}
       >
         <Layout>
-          <CardLayout address={address} subject={subject} date={date} time={time}>
+          <CardLayout address={address} subject="" date={createdDate} time={createdTime}>
             <View>
               <Text style={styles.activeColor}>Коментарий к вызову:</Text>
-              <Text style={styles.activeColor}>{comment}</Text>
+              <Text style={styles.activeColor}>{description}</Text>
             </View>
             <View>
               <Text style={styles.info}>Данные заказчика:</Text>

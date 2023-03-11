@@ -9,11 +9,13 @@ import { API } from '../../../api'
 
 export const ModalWindow = ({ label, closeMedicineWindow, onSaveMedicine }) => {
   const [items, setItems] = useState([])
+  const [filterItems, setFilterItems] = useState([])
   const [searchValue, setSearchValue] = React.useState('')
 
   const getMedicines = async () => {
     const data = await API.medicines.index()
     setItems(data)
+    setFilterItems(data)
   }
 
   useEffect(() => {
@@ -23,7 +25,7 @@ export const ModalWindow = ({ label, closeMedicineWindow, onSaveMedicine }) => {
   const onChangeSearchValue = (value) => {
     setSearchValue(value)
     const result = items.filter((item) => item.name.toLowerCase().includes(value.toLowerCase()))
-    setItems(result)
+    setFilterItems(result)
   }
 
   return (
@@ -45,7 +47,7 @@ export const ModalWindow = ({ label, closeMedicineWindow, onSaveMedicine }) => {
         value={searchValue}
         onChangeText={onChangeSearchValue}
       />
-      <ItemsList items={items} onSave={onSaveMedicine} closeMedicineWindow={closeMedicineWindow} />
+      <ItemsList items={filterItems} onSave={onSaveMedicine} closeMedicineWindow={closeMedicineWindow} />
     </View>
   )
 }

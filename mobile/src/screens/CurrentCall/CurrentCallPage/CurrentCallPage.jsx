@@ -1,21 +1,19 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
 import { AcceptedCall, Call } from '../../../components'
+import { CurrentCallingContext } from '../../../context/CurrentCallingContext'
 
 export const CurrentCallPage = ({ navigation }) => {
-  const [arrival, setArrival] = useState(false)
+  const { currentCalling, arrive, complete } = useContext(CurrentCallingContext)
+  const { status } = currentCalling
+
   const goToMapPage = () => {
     navigation.navigate('itinerary')
   }
-  const onArrival = () => {
-    setArrival(true)
-  }
 
-  const onAccepting = () => {
-    navigation.navigate('history')
-  }
 
-  if (arrival) {
-    return <AcceptedCall onAccepting={onAccepting} />
+  if (status === 'accepted') {
+    return <Call navigation={goToMapPage} onArrival={arrive} />
   }
-  return <Call navigation={goToMapPage} onArrival={onArrival} />
+  return <AcceptedCall onAccepting={complete} />
+
 }
