@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controller\Calling;
 
-use App\Entity\Team\Status;
+use App\Entity\Calling\Calling;
 use App\Entity\User\User;
 use App\Flusher;
 use App\Repository\CallingRepository;
 use App\Repository\TeamRepository;
 use DateTimeImmutable;
-use Doctrine\ORM\NonUniqueResultException;
+use DomainException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,18 +19,15 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 #[AsController]
 class AcceptAction extends AbstractController
 {
-    /**
-     * @throws NonUniqueResultException
-     */
-    public function __invoke(TeamRepository $teams, CallingRepository $callings, Flusher $flusher): JsonResponse
+    public function __invoke(Calling $calling, TeamRepository $teams, CallingRepository $callings, Flusher $flusher): JsonResponse
     {
         /** @var User $user */
         $user = $this->getUser();
-        $team = $teams->getActiveByAdministrator($user);
-        if ($team->getStatus() !== Status::ACCEPTED){
-            throw new \DomainException('Неверный статус команды');
+
+        if ($calling->getTeam()?->getAdministrator()->getId() !== $user->getId())
+        {
+            throw new DomainException('Принять вызов может только администратор');
         }
-        $calling = $callings->getCurrentByTeam($team);
 
         $calling->setAccepted(new DateTimeImmutable());
 

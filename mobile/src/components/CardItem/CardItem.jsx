@@ -10,13 +10,13 @@ import { MapMarkerIcon } from '../MapMarkerIcon'
 import { CloseIcon } from '../CloseIcon'
 
 export const CardItem = ({
-  address, subject, date, time, comment, goToMapPage, status, children, text, style, createdAt
+  address, subject, description, goToMapPage, status, children, text, style, createdAt
 }) => {
 
-  const tittttt = new Date(createdAt)
+  const dateTime = new Date(createdAt)
 
-  console.log(createdAt)
-  console.log(tittttt.toLocaleString())
+  const date = formatDate(dateTime)
+  const time = formatTime(dateTime)
 
   const [active, setActive] = useState(false)
 
@@ -64,7 +64,7 @@ export const CardItem = ({
         </View>
         <View style={active ? styles.active : styles.content}>
           <Text style={styles.info}>Коментарий к вызову:</Text>
-          <Text style={styles.info}>{comment}</Text>
+          <Text style={styles.info}>{description}</Text>
           <View style={styles.wrap}>
             <Button
               onPress={() => goToMapPage()}
@@ -85,6 +85,25 @@ export const CardItem = ({
       </Card.Actions>
     </Card>
   )
+}
+
+function formatTime(date) {
+  return [
+    padTo2Digits(date.getHours()),
+    padTo2Digits(date.getMinutes())
+  ].join(':');
+}
+
+function formatDate(date) {
+  return [
+    padTo2Digits(date.getDate()),
+    padTo2Digits(date.getMonth() + 1),
+    date.getFullYear(),
+  ].join('.');
+}
+
+function padTo2Digits(num) {
+  return num.toString().padStart(2, '0');
 }
 
 const styles = StyleSheet.create({

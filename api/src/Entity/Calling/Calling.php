@@ -37,8 +37,8 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
     denormalizationContext: ['groups' => ['calling:write']]
 )]
 #[Post(uriTemplate: '/callings/current', controller: CurrentAction::class, input: CallingDto::class, read: false)]
-#[Post(uriTemplate: '/callings/accept', controller: AcceptAction::class, input: CallingDto::class, read: false)]
-#[Post(uriTemplate: '/callings/reject', controller: RejectAction::class, input: CallingDto::class, read: false)]
+#[Post(uriTemplate: '/callings/{id}/accept', controller: AcceptAction::class, input: CallingDto::class, read: false)]
+#[Post(uriTemplate: '/callings/{id}/reject', controller: RejectAction::class, input: CallingDto::class, read: false)]
 #[Post(uriTemplate: '/callings/arrive', controller: ArriveAction::class, input: CallingDto::class, read: false)]
 #[Post(uriTemplate: '/callings/complete', controller: CompleteAction::class, input: CallingDto::class, read: false)]
 class Calling

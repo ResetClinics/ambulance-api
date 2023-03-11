@@ -33,7 +33,8 @@ export const Calls = ({ navigation }) => {
   }
 
   const onAccepting = () => {
-    navigation.navigate('сurrentCall')
+
+   // navigation.navigate('сurrentCall')
   }
 
   // eslint-disable-next-line react/no-unstable-nested-components
