@@ -24,6 +24,7 @@ class AdministratorAction extends AbstractController
         $user = $this->getUser();
         $team = $teams->getActiveByAdministrator($user);
         return $this->json([
+            'id' => $team->getId(),
             'administrator' => [
                 'id' => $team->getAdministrator()->getId(),
                 'name' => $team->getAdministrator()->getName(),
