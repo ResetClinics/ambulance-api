@@ -15,7 +15,7 @@ class LeadAction extends AbstractController
 {
     public function __invoke(Request $request): JsonResponse
     {
-        $data = $request->getContent();
+        $data = $request->request->all();
         file_put_contents(dirname(__DIR__) .'/../../var/test.txt', print_r($data, true), FILE_APPEND);
         return $this->json($data, Response::HTTP_OK);
     }
