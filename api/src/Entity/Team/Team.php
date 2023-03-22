@@ -81,16 +81,12 @@ class Team
     #[Groups(['team:read'])]
     private ?string $rejectedComment = null;
 
-    #[ORM\OneToMany(mappedBy: 'team', targetEntity: Calling::class)]
-    private Collection $callings;
-
     public function __construct(User $administrator)
     {
         $this->doctors = new ArrayCollection();
         $this->administrator = $administrator;
         $this->status = Status::assigned();
         $this->createdAt = new DateTimeImmutable();
-        $this->callings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -188,36 +184,6 @@ class Team
     public function getRejectedComment(): ?string
     {
         return $this->rejectedComment;
-    }
-
-    /**
-     * @return Collection<int, Calling>
-     */
-    public function getCallings(): Collection
-    {
-        return $this->callings;
-    }
-
-    public function addCalling(Calling $calling): self
-    {
-        if (!$this->callings->contains($calling)) {
-            $this->callings->add($calling);
-            $calling->setTeam($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCalling(Calling $calling): self
-    {
-        if ($this->callings->removeElement($calling)) {
-            // set the owning side to null (unless already changed)
-            if ($calling->getTeam() === $this) {
-                $calling->setTeam(null);
-            }
-        }
-
-        return $this;
     }
 
     public function getArrivedAt(): ?DateTimeImmutable

@@ -22,6 +22,7 @@ use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use DomainException;
+use Symfony\Component\Serializer\Annotation\Context;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
@@ -65,11 +66,6 @@ class Calling
     #[Groups(['calling:read', 'calling:write'])]
     private string $address;
 
-    #[ORM\ManyToOne(inversedBy: 'callings')]
-    #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['calling:read', 'calling:write'])]
-    private Team $team;
-
     #[ORM\Column(type: 'calling_status', length: 16, nullable: false)]
     #[Groups(['calling:read'])]
     private Status $status;
@@ -103,15 +99,13 @@ class Calling
      * @param string $name
      * @param string $phone
      * @param string $address
-     * @param Team $team
      * @param string $description
      */
-    public function __construct(string $name, string $phone, string $address, Team $team, string $description)
+    public function __construct(string $name, string $phone, string $address, string $description)
     {
         $this->name = $name;
         $this->phone = $phone;
         $this->address = $address;
-        $this->team = $team;
         $this->description = $description;
         $this->status = Status::assigned();
         $this->createdAt = new DateTimeImmutable();
