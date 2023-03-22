@@ -48,7 +48,11 @@ class TesttAction extends AbstractController
     {
         $lead = $this->client->leads()->getOne(20481239, [LeadModel::CONTACTS, LeadModel::CATALOG_ELEMENTS]);
 
-        dd($lead);
+        dump($lead);
+
+        $contact = $this->client->contacts()->getOne(26095592);
+        dd($contact);
+
 
         return $this->json([], Response::HTTP_OK);
     }
