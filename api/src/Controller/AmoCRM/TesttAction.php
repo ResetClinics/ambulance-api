@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api/amo-crm/testt', name: 'amo-crm_test', methods: ["GET"])]
+#[Route('/api/amo-crm/testt', name: 'amo-crm_testt', methods: ["GET"])]
 class TesttAction extends AbstractController
 {
 
