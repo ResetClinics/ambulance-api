@@ -5,7 +5,7 @@ namespace App\Entity;
 use App\Repository\AmoCrmTokenRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: AmoCrmTokenRepository::class)]
+#[ORM\Entity]
 class AmoCrmToken
 {
     #[ORM\Id]
