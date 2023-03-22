@@ -34,7 +34,7 @@ class TesttAction extends AbstractController
         $token = $tokens->getToken();
 
         $apiClient->setAccessToken($token)
-            ->setAccountBaseDomain($apiClient->getAccountBaseDomain())
+            ->setAccountBaseDomain('af4040148.amocrm.ru')
             ->onAccessTokenRefresh(
                 function (AccessTokenInterface $accessToken, string $baseDomain) use ($tokens) {
                     $tokens->update($accessToken, $baseDomain);
