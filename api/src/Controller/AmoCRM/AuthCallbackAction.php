@@ -33,6 +33,10 @@ class AuthCallbackAction extends AbstractController
             'https://ambulance.rc-respect.ru/api/amo-crm/auth/callback'
         );
 
+        if (isset($_GET['referer'])) {
+            $client->setAccountBaseDomain($_GET['referer']);
+        }
+
         $accessToken = $client->getOAuthClient()->getAccessTokenByCode($request->get('code'));
 
         $this->tokens->update($accessToken, $client->getAccountBaseDomain() );
