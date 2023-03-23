@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\User\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -34,6 +35,21 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             $this->getEntityManager()->flush();
         }
     }
+
+    /**
+     * @throws EntityNotFoundException
+     */
+    public function get(int $id): User
+    {
+        /** @var User $user */
+        if (!$user = $this->find($id)) {
+            throw new EntityNotFoundException(
+                sprintf('User id: %s is not found.', $id)
+            );
+        }
+        return $user;
+    }
+
 
     public function remove(User $entity, bool $flush = false): void
     {

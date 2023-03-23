@@ -45,6 +45,7 @@ security:
         - { path: ^/api/medicines, roles: ROLE_ADMIN }
         - { path: ^/api/teams, roles: ROLE_ADMIN }
         - { path: ^/api/users, roles: ROLE_ADMIN }
+        - { path: ^/api/amo-crm/get-team, roles: ROLE_ADMIN }
 
 when@test:
     security:
