@@ -70,4 +70,14 @@ class CallingRepository extends ServiceEntityRepository
         return $checkWordstat;
     }
 
+
+    public function findOneByNumber(string $numberCalling): ?Calling
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.numberCalling = :numberCalling')
+            ->setParameter(':numberCalling', $numberCalling)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 }

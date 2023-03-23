@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Calling;
 
+use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
@@ -16,7 +17,7 @@ use App\Controller\Calling\ArriveAction;
 use App\Controller\Calling\CompleteAction;
 use App\Controller\Calling\CurrentAction;
 use App\Controller\Calling\RejectAction;
-use App\Entity\Team\Team;
+use App\Entity\User\User;
 use App\Repository\CallingRepository;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
@@ -45,6 +46,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 #[Post(uriTemplate: '/callings/{id}/reject', controller: RejectAction::class, input: CallingDto::class, read: false)]
 #[Post(uriTemplate: '/callings/arrive', controller: ArriveAction::class, input: CallingDto::class, read: false)]
 #[Post(uriTemplate: '/callings/complete', controller: CompleteAction::class, input: CallingDto::class, read: false)]
+
 class Calling
 {
     #[ORM\Id]
@@ -52,6 +54,10 @@ class Calling
     #[ORM\Column]
     #[Groups(['calling:read'])]
     private ?int $id = null;
+
+    #[ORM\Column(length: 256)]
+    #[Groups(['calling:read', 'calling:write'])]
+    private string $title;
 
     #[ORM\Column(length: 128)]
     #[Groups(['calling:read', 'calling:write'])]
@@ -61,6 +67,9 @@ class Calling
     #[Groups(['calling:read', 'calling:write'])]
     private string $phone;
 
+    #[ORM\Column(length: 32)]
+    #[Groups(['calling:read', 'calling:write'])]
+    private string $numberCalling;
 
     #[ORM\Column(length: 255)]
     #[Groups(['calling:read', 'calling:write'])]
@@ -68,11 +77,36 @@ class Calling
 
     #[ORM\Column(type: 'calling_status', length: 16, nullable: false)]
     #[Groups(['calling:read'])]
+    #[ApiFilter(SearchFilter::class, strategy: 'exact')]
     private Status $status;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Groups(['calling:read', 'calling:write'])]
     private string $description;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
+    private ?string $chronicDiseases = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
+    private ?string $nosology = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
+    private ?string $age = null;
+    #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
+    private ?string $leadType = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
+    private ?string $partnerName = null;
+
+    #[ORM\Column(type: Types::BOOLEAN)]
+    #[Groups(['calling:read', 'calling:write'])]
+    #[ApiFilter(BooleanFilter::class)]
+    private bool $sendPhone = false;
 
     #[ORM\Column(type: 'string', nullable: true)]
     #[Groups(['calling:read', 'calling:write'])]
@@ -95,13 +129,30 @@ class Calling
     #[Groups(['calling:read'])]
     private ?DateTimeImmutable $completedAt = null;
 
-    /**
-     * @param string $name
-     * @param string $phone
-     * @param string $address
-     * @param string $description
-     */
-    public function __construct(string $name, string $phone, string $address, string $description)
+    #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read'])]
+    private ?DateTimeImmutable $dateTime = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    #[ApiFilter(SearchFilter::class, properties: ['admin.id' => 'exact'])]
+    private User $admin;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    #[ApiFilter(SearchFilter::class, properties: ['doctor.id' => 'exact'])]
+    private User $doctor;
+
+    public function __construct(
+        string $numberCalling,
+        string $title,
+        string $name,
+        string $phone,
+        string $address,
+        string $description,
+        User $admin,
+        User $doctor
+    )
     {
         $this->name = $name;
         $this->phone = $phone;
@@ -109,6 +160,10 @@ class Calling
         $this->description = $description;
         $this->status = Status::assigned();
         $this->createdAt = new DateTimeImmutable();
+        $this->numberCalling = $numberCalling;
+        $this->title = $title;
+        $this->admin = $admin;
+        $this->doctor = $doctor;
     }
 
 
@@ -125,18 +180,6 @@ class Calling
     public function setAddress(string $address): self
     {
         $this->address = $address;
-
-        return $this;
-    }
-
-    public function getTeam(): ?Team
-    {
-        return $this->team;
-    }
-
-    public function setTeam(?Team $team): self
-    {
-        $this->team = $team;
 
         return $this;
     }
@@ -247,4 +290,207 @@ class Calling
     {
         return $this->arrivedAt;
     }
+
+    public function getAdmin(): ?User
+    {
+        return $this->admin;
+    }
+
+    public function setAdmin(?User $admin): self
+    {
+        $this->admin = $admin;
+
+        return $this;
+    }
+
+    public function getDoctor(): ?User
+    {
+        return $this->doctor;
+    }
+
+    public function setDoctor(?User $doctor): self
+    {
+        $this->doctor = $doctor;
+
+        return $this;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function getNumberCalling(): string
+    {
+        return $this->numberCalling;
+    }
+
+    public function getChronicDiseases(): ?string
+    {
+        return $this->chronicDiseases;
+    }
+
+    public function getLeadType(): ?string
+    {
+        return $this->leadType;
+    }
+
+    public function getPartnerName(): ?string
+    {
+        return $this->partnerName;
+    }
+
+    public function isSendPhone(): bool
+    {
+        return $this->sendPhone;
+    }
+
+    public function getCompletedAt(): ?DateTimeImmutable
+    {
+        return $this->completedAt;
+    }
+
+    public function getDateTime(): ?DateTimeImmutable
+    {
+        return $this->dateTime;
+    }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @param string $numberCalling
+     */
+    public function setNumberCalling(string $numberCalling): void
+    {
+        $this->numberCalling = $numberCalling;
+    }
+
+    /**
+     * @param Status $status
+     */
+    public function setStatus(Status $status): void
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @param string|null $chronicDiseases
+     */
+    public function setChronicDiseases(?string $chronicDiseases): void
+    {
+        $this->chronicDiseases = $chronicDiseases;
+    }
+
+    /**
+     * @param string|null $leadType
+     */
+    public function setLeadType(?string $leadType): void
+    {
+        $this->leadType = $leadType;
+    }
+
+    /**
+     * @param string|null $partnerName
+     */
+    public function setPartnerName(?string $partnerName): void
+    {
+        $this->partnerName = $partnerName;
+    }
+
+    /**
+     * @param bool $sendPhone
+     */
+    public function setSendPhone(bool $sendPhone): void
+    {
+        $this->sendPhone = $sendPhone;
+    }
+
+    /**
+     * @param string|null $rejectedComment
+     */
+    public function setRejectedComment(?string $rejectedComment): void
+    {
+        $this->rejectedComment = $rejectedComment;
+    }
+
+    /**
+     * @param DateTimeImmutable $createdAt
+     */
+    public function setCreatedAt(DateTimeImmutable $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @param DateTimeImmutable|null $acceptedAt
+     */
+    public function setAcceptedAt(?DateTimeImmutable $acceptedAt): void
+    {
+        $this->acceptedAt = $acceptedAt;
+    }
+
+    /**
+     * @param DateTimeImmutable|null $arrivedAt
+     */
+    public function setArrivedAt(?DateTimeImmutable $arrivedAt): void
+    {
+        $this->arrivedAt = $arrivedAt;
+    }
+
+    /**
+     * @param DateTimeImmutable|null $completedAt
+     */
+    public function setCompletedAt(?DateTimeImmutable $completedAt): void
+    {
+        $this->completedAt = $completedAt;
+    }
+
+    /**
+     * @param DateTimeImmutable|null $dateTime
+     */
+    public function setDateTime(?DateTimeImmutable $dateTime): void
+    {
+        $this->dateTime = $dateTime;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getNosology(): ?string
+    {
+        return $this->nosology;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAge(): ?string
+    {
+        return $this->age;
+    }
+
+    /**
+     * @param string|null $nosology
+     */
+    public function setNosology(?string $nosology): void
+    {
+        $this->nosology = $nosology;
+    }
+
+    /**
+     * @param string|null $age
+     */
+    public function setAge(?string $age): void
+    {
+        $this->age = $age;
+    }
+
+
+
 }

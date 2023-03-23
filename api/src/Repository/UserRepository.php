@@ -68,6 +68,18 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getOneOrNullResult();
     }
 
+    public function getByExternalId(int $externalId): User
+    {
+        if ($user =  $this->createQueryBuilder('u')
+            ->andWhere('u.externalId = :externalId')
+            ->setParameter(':externalId', $externalId)
+            ->getQuery()
+            ->getOneOrNullResult()){
+            return  $user;
+        }
+        throw new \DomainException(sprintf('User externalId "%s" notfound.', $externalId));
+    }
+
     public function getCountUsers(): int
     {
         return $this->createQueryBuilder('u')

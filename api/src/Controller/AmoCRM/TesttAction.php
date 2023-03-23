@@ -13,7 +13,11 @@ use AmoCRM\Models\Leads\Pipelines\Statuses\StatusModel;
 use AmoCRM\Models\TagModel;
 use App\Dto\Amo\Employee;
 use App\Dto\Amo\Lead;
+use App\Entity\Calling\Calling;
+use App\Flusher;
 use App\Repository\AmoCrmTokenRepository;
+use App\Repository\CallingRepository;
+use App\Repository\UserRepository;
 use Carbon\Carbon;
 use League\OAuth2\Client\Token\AccessTokenInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,9 +31,15 @@ class TesttAction extends AbstractController
 {
 
     private AmoCRMApiClient $client;
+    private CallingRepository $callings;
+    private UserRepository $users;
+    private Flusher $flusher;
 
     public function __construct(
-        AmoCrmTokenRepository $tokens
+        AmoCrmTokenRepository $tokens,
+        CallingRepository $callings,
+        UserRepository $users,
+        Flusher $flusher
 
     )
     {
@@ -50,28 +60,16 @@ class TesttAction extends AbstractController
             );
 
         $this->client = $apiClient;
+        $this->callings = $callings;
+        $this->users = $users;
+        $this->flusher = $flusher;
     }
 
     public function __invoke(Request $request): JsonResponse
     {
-        //$lead = $this->client->leads()->getOne(20481239, [LeadModel::CONTACTS, LeadModel::CATALOG_ELEMENTS]);
+        $lead = $this->getLeadInfo(20481239);
 
-        //dd($lead);
-
-        // $contact = $this->client->contacts()->getOne(26095592);
-        // dd($contact);
-
-        //530185
-
-        $this->onSetTeam(20481239);
-
-        //$this->getTeamUser(38792956);
-        //$this->getTeams();
-        //$this->getUsers();
-
-        dd(11);
-
-
+        $this->onSetTeam($lead);
 
         return $this->json([], Response::HTTP_OK);
     }
@@ -91,7 +89,6 @@ class TesttAction extends AbstractController
                 $this->getAmoUser($lead);
             }
         }
-        dd(11);
     }
 
     private function getAmoUser(LeadModel $lead): void
@@ -141,18 +138,15 @@ class TesttAction extends AbstractController
            'status_id' => $teamId
        ]]);
 
-       // dd($filter);
-
         $leads = $this->client->leads()->get($filter);
 
-        dd($leads);
         /** @var LeadModel $lead */
         foreach ($leads as $lead) {
             dump($lead->getId());
         }
     }
 
-    private function onSetTeam(int $leadId): void
+    private function getLeadInfo(int $leadId): Lead
     {
         $lead = $this->client->leads()->getOne($leadId, [LeadModel::CONTACTS, LeadModel::CATALOG_ELEMENTS]);
         if (!$lead){
@@ -265,8 +259,11 @@ class TesttAction extends AbstractController
             throw new \DomainException('Ошибка получения персонала, Не сформирована бригада');
         }
 
-        dump($leadDto);
-        dd(11);
+        if (!$leadDto->doctor || !$leadDto->admin){
+            throw new \DomainException('Не установлен персонал');
+        }
+
+        return  $leadDto;
     }
 
 
@@ -292,5 +289,56 @@ class TesttAction extends AbstractController
             return (int)$teams[$number][1];
         }
         throw new \DomainException('Нет бригады с таким номером');
+    }
+
+    private function onSetTeam(Lead $lead)
+    {
+
+        $calling = $this->callings->findOneByNumber($lead->numberCalling);
+
+        $admin = $this->users->getByExternalId($lead->admin->getId());
+        $doctor = $this->users->getByExternalId($lead->doctor->getId());
+
+
+        if ($calling){
+
+            if ($lead->dateTime) {
+                $calling->setDateTime(new \DateTimeImmutable($lead->dateTime));
+            }
+
+            $calling->setNosology($lead->nosology);
+            $calling->setAge($lead->age);
+            $calling->setChronicDiseases($lead->hz);
+            $calling->setLeadType($lead->leadType);
+            $calling->setPartnerName($lead->partnerName);
+            $calling->setSendPhone($lead->sendPhone);
+
+            $this->flusher->flush();
+
+        }else{
+            $calling = new Calling(
+                $lead->numberCalling,
+                $lead->name,
+                $lead->clientName,
+                $lead->clientPhone,
+                $lead->address,
+                $lead->description,
+                $admin,
+                $doctor
+            );
+
+            if ($lead->dateTime) {
+                $calling->setDateTime(new \DateTimeImmutable($lead->dateTime));
+            }
+
+            $calling->setNosology($lead->nosology);
+            $calling->setAge($lead->age);
+            $calling->setChronicDiseases($lead->hz);
+            $calling->setLeadType($lead->leadType);
+            $calling->setPartnerName($lead->partnerName);
+            $calling->setSendPhone($lead->sendPhone);
+
+            $this->callings->save($calling, true);
+        }
     }
 }
