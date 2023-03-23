@@ -72,9 +72,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'administrator', targetEntity: Team::class)]
     private Collection $teams;
 
-    public function __construct()
+    #[ORM\Column(nullable: false)]
+    #[Assert\NotBlank]
+    private int $externalId;
+
+
+
+    public function __construct($externalId)
     {
         $this->teams = new ArrayCollection();
+        $this->externalId = $externalId;
     }
 
     public function getId(): ?int

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1023735502174",
+    "project_id": "ambulance-d71b9",
+    "storage_bucket": "ambulance-d71b9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1023735502174:android:63acbab008fa16c5e9ebcf",
+        "android_client_info": {
+          "package_name": "com.alergy.ambulance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1023735502174-j1q0kqds6df8vc34s8fm5olpdcbj0md4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alergy.ambulance",
+            "certificate_hash": "ef467316f362b001dfff11167ec5b37855e18019"
+          }
+        },
+        {
+          "client_id": "1023735502174-nkpsk9nkqsee5prrr749rvfqdoggumk9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alergy.ambulance",
+            "certificate_hash": "625111443c90e754bce12b48f1e719c9d8449190"
+          }
+        },
+        {
+          "client_id": "1023735502174-hspmiotef6qmsm8grvgsf6nlljievcoj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCw-H3wPUFVDEsbuSasBsl_r1xC0YfZ4s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1023735502174-hspmiotef6qmsm8grvgsf6nlljievcoj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
