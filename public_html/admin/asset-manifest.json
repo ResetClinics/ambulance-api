@@ -1,0 +1,10 @@
+{
+  "files": {
+    "main.js": "/admin/static/js/main.d49d6365.js",
+    "static/js/27.db19749b.chunk.js": "/admin/static/js/27.db19749b.chunk.js",
+    "index.html": "/admin/index.html"
+  },
+  "entrypoints": [
+    "static/js/main.d49d6365.js"
+  ]
+}
