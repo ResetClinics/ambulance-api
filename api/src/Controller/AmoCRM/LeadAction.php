@@ -59,6 +59,12 @@ class LeadAction extends AbstractController
         }
 
         file_put_contents(
+            dirname(__DIR__) . '/../../var/ids.txt',
+            print_r($leadData['id'], true),
+            FILE_APPEND)
+        ;
+
+        file_put_contents(
             dirname(__DIR__) . '/../../var/lead/' . $leadData['id']. '-'.date("Y-m-d H:i:s").'.txt',
             print_r(json_encode($data, JSON_THROW_ON_ERROR) . PHP_EOL, true),
             FILE_APPEND
