@@ -21,6 +21,44 @@ class CurrentAction extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        return $this->json($callings->findActiveByAdministrator($user), Response::HTTP_OK);
+        $call = $callings->findActiveByAdministrator($user);
+        if (!$call) {
+            return $this->json([
+                null
+            ], Response::HTTP_OK);
+        }
+
+        return $this->json([
+            'numberCalling' => $call->getNumberCalling(),
+            'id' => $call->getId(),
+            'title' => $call->getTitle(),
+            'name' => $call->getName(),
+            'phone' => $call->getPhone(),
+            'address' => $call->getAddress(),
+            'age' => $call->getAge(),
+            'chronicDiseases' => $call->getChronicDiseases(),
+            'nosology' => $call->getNosology(),
+
+            'description' => $call->getDescription(),
+
+            'dateTime' => $call->getDateTime(),
+            'createdAt' => $call->getCreatedAt(),
+            'acceptedAt' => $call->getCreatedAt(),
+            'arrivedAt' => $call->getArrivedAt(),
+            'completedAt' => $call->getCompletedAt(),
+
+            'leadType' => $call->getLeadType(),
+            'partnerName' => $call->getPartnerName(),
+            'status' => $call->getStatus(),
+            'admin' => [
+                'id' => $call->getAdmin()?->getId(),
+                'name' => $call->getAdmin()?->getName()
+            ],
+            'doctor' => [
+                'id' => $call->getDoctor()?->getId(),
+                'name' => $call->getDoctor()?->getName()
+            ],
+
+        ], Response::HTTP_OK);
     }
 }
