@@ -8,6 +8,7 @@ class Lead
     public string $clientName;
     public string $clientPhone;
     public ?string $name = null;
+    public ?int $statusId = null;
     public ?string $numberCalling = null;
     public ?string $dateTime = null;
     public ?string $address = null;

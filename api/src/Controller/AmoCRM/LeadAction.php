@@ -11,6 +11,7 @@ use AmoCRM\Models\LeadModel;
 use App\Dto\Amo\Employee;
 use App\Dto\Amo\Lead;
 use App\Entity\Calling\Calling;
+use App\Entity\Calling\Status;
 use App\Flusher;
 use App\Repository\CallingRepository;
 use App\Repository\UserRepository;
@@ -57,18 +58,6 @@ class LeadAction extends AbstractController
         if ((int)$leadData['pipeline_id'] !== 4018768){
             return $this->json(null, Response::HTTP_OK);
         }
-
-        file_put_contents(
-            dirname(__DIR__) . '/../../var/ids.txt',
-            print_r($leadData['id'], true),
-            FILE_APPEND)
-        ;
-
-        file_put_contents(
-            dirname(__DIR__) . '/../../var/lead/' . $leadData['id']. '-'.date("Y-m-d H:i:s").'.txt',
-            print_r(json_encode($data, JSON_THROW_ON_ERROR) . PHP_EOL, true),
-            FILE_APPEND
-        );
 
         $leadDto = $this->getLeadInfo((int) $leadData['id']);
 
@@ -117,6 +106,7 @@ class LeadAction extends AbstractController
         $leadDto = new Lead($leadId, $name, $phone);
 
         $leadDto->name = $lead->getName();
+        $leadDto->statusId = $lead->getStatusId();
 
         foreach ($lead->getCustomFieldsValues() as $field){
 
@@ -241,6 +231,15 @@ class LeadAction extends AbstractController
 
             $this->callings->save($calling, false);
         }
+
+        if ($lead->statusId === 38307946 || $lead->statusId === 38874646){
+            $calling->setStatus(Status::assigned());
+        }elseif ($lead->statusId === 38187418){
+            $calling->setStatus(Status::accepted());
+        }else{
+            $calling->setStatus(Status::completed());
+        }
+
         if ($lead->dateTime) {
             $calling->setDateTime(new DateTimeImmutable($lead->dateTime));
         }
