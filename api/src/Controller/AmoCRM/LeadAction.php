@@ -157,7 +157,7 @@ class LeadAction extends AbstractController
             }
 
             if ($field->getFieldId() === 870945) {
-                $leadDto->description = $field->getValues()?->first()->getValue();
+                $leadDto->description = $field->getValues()?->first()->getValue() ?: '';
             }
 
             if ($field->getFieldId() === 884333) {
