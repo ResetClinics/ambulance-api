@@ -46,7 +46,7 @@ class CallingRepository extends ServiceEntityRepository
         }
     }
 
-    public function findActiveByAdministrator(User $user): ?Team
+    public function findActiveByAdministrator(User $user): ?Calling
     {
         $statuses = [
             Status::ACCEPTED,
