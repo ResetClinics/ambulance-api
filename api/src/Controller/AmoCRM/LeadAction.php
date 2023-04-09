@@ -28,11 +28,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class LeadAction extends AbstractController
 {
     private AmoCRMApiClient $client;
+
     public function __construct(
-        AmoCRM         $amoCRM,
-        private readonly UserRepository $users,
-        private readonly   CallingRepository $callings,
-        private readonly Flusher $flusher
+        AmoCRM                             $amoCRM,
+        private readonly UserRepository    $users,
+        private readonly CallingRepository $callings,
+        private readonly Flusher           $flusher
     )
     {
         $this->client = $amoCRM->getClient();
@@ -45,29 +46,45 @@ class LeadAction extends AbstractController
         //$data = json_decode($test, true);
 
         $leadData = [];
-        if (isset($data['leads']['update'][0])){
+        if (isset($data['leads']['update'][0])) {
             $leadData = $data['leads']['update'][0];
         }
-        if (isset($data['leads']['add'][0])){
+        if (isset($data['leads']['add'][0])) {
             $leadData = $data['leads']['update'][0];
         }
-        if (!$leadData){
+        if (!$leadData) {
             return $this->json(null, Response::HTTP_OK);
         }
 
-        if ((int)$leadData['pipeline_id'] !== 4018768){
+        if ((int)$leadData['pipeline_id'] !== 4018768) {
             return $this->json(null, Response::HTTP_OK);
         }
 
         file_put_contents(
             dirname(__DIR__) . '/../../var/ids.txt',
-            print_r($leadData['id']. PHP_EOL, true),
-            FILE_APPEND)
-        ;
+            print_r($leadData['id'] . PHP_EOL, true),
+            FILE_APPEND);
 
-        $leadDto = $this->getLeadInfo((int) $leadData['id']);
+
+        file_put_contents(
+            dirname(__DIR__) . '/../../var/leadData/' . $leadData['id'] . '-' . date("Y-m-d H:i:s") . '.txt',
+            print_r($leadData, true),
+            FILE_APPEND);
+
+        $leadDto = $this->getLeadInfo((int)$leadData['id']);
+
+        file_put_contents(
+            dirname(__DIR__) . '/../../var/leadDto/' . $leadData['id'] . '-' . date("Y-m-d H:i:s") . '.txt',
+            print_r($leadDto, true),
+            FILE_APPEND);
+
 
         $this->onSetTeam($leadDto);
+
+        file_put_contents(
+            dirname(__DIR__) . '/../../var/leadSuccess/' . $leadData['id'] . '-' . date("Y-m-d H:i:s") . '.txt',
+            print_r($leadData['id'] . PHP_EOL, true),
+            FILE_APPEND);
 
         return $this->json(null, Response::HTTP_OK);
     }
@@ -75,22 +92,22 @@ class LeadAction extends AbstractController
     private function getLeadInfo(int $leadId): Lead
     {
         $lead = $this->client->leads()->getOne($leadId, [LeadModel::CONTACTS, LeadModel::CATALOG_ELEMENTS]);
-        if (!$lead){
+        if (!$lead) {
             throw new \DomainException('Не найден лид');
         }
 
-        if (!$lead->getCustomFieldsValues()){
+        if (!$lead->getCustomFieldsValues()) {
             throw new \DomainException('Не заполнены поля');
         }
 
 
-        if (!$lead->getMainContact()){
+        if (!$lead->getMainContact()) {
             throw new \DomainException('Не указан контакт');
         }
 
         $contact = $this->client->contacts()->getOne($lead->getMainContact()->getId());
 
-        if (!$contact){
+        if (!$contact) {
             throw new \DomainException('Не найден контакт');
         }
 
@@ -99,13 +116,13 @@ class LeadAction extends AbstractController
         $phone = null;
 
         /** @var MultitextCustomFieldValuesModel $field */
-        foreach ($contact->getCustomFieldsValues() as $field){
-            if ($field->getFieldId() === 604157){
+        foreach ($contact->getCustomFieldsValues() as $field) {
+            if ($field->getFieldId() === 604157) {
                 $phone = $field->getValues()?->first()->getValue();
             }
         }
 
-        if (!$phone){
+        if (!$phone) {
             throw new \DomainException('Не найден телефон');
         }
 
@@ -114,7 +131,7 @@ class LeadAction extends AbstractController
         $leadDto->name = $lead->getName();
         $leadDto->statusId = $lead->getStatusId();
 
-        foreach ($lead->getCustomFieldsValues() as $field){
+        foreach ($lead->getCustomFieldsValues() as $field) {
 
             if ($field->getFieldId() === 879807) {
                 $leadDto->numberCalling = $field->getValues()?->first()->getValue();
@@ -189,11 +206,11 @@ class LeadAction extends AbstractController
             }
         }
 
-        if (!$leadDto->doctor || !$leadDto->admin){
+        if (!$leadDto->doctor || !$leadDto->admin) {
             throw new \DomainException('Не установлен персонал');
         }
 
-        return  $leadDto;
+        return $leadDto;
     }
 
     /**
@@ -207,7 +224,7 @@ class LeadAction extends AbstractController
         $doctor = $this->users->getByExternalId($lead->doctor->getId());
 
 
-        if ($calling){
+        if ($calling) {
 
             $calling->setNosology($lead->nosology);
             $calling->setAge($lead->age);
@@ -216,9 +233,9 @@ class LeadAction extends AbstractController
             $calling->setPartnerName($lead->partnerName);
             $calling->setSendPhone($lead->sendPhone);
 
-        }else{
+        } else {
             $calling = new Calling(
-                (string) $lead->id,
+                (string)$lead->id,
                 $lead->name,
                 $lead->clientName,
                 $lead->clientPhone,
@@ -238,11 +255,11 @@ class LeadAction extends AbstractController
             $this->callings->save($calling, false);
         }
 
-        if ($lead->statusId === 38307946 || $lead->statusId === 38874646){
+        if ($lead->statusId === 38307946 || $lead->statusId === 38874646) {
             $calling->setStatus(Status::assigned());
-        }elseif ($lead->statusId === 38187418){
+        } elseif ($lead->statusId === 38187418) {
             $calling->setStatus(Status::accepted());
-        }else{
+        } else {
             $calling->setStatus(Status::completed());
         }
 
