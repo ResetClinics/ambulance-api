@@ -201,7 +201,7 @@ class LeadAction extends AbstractController
      */
     private function onSetTeam(Lead $lead): void
     {
-        $calling = $this->callings->findOneByNumber($lead->numberCalling);
+        $calling = $this->callings->findOneByNumber((string)$lead->id);
 
         $admin = $this->users->getByExternalId($lead->admin->getId());
         $doctor = $this->users->getByExternalId($lead->doctor->getId());
@@ -218,7 +218,7 @@ class LeadAction extends AbstractController
 
         }else{
             $calling = new Calling(
-                $lead->numberCalling,
+                (string) $lead->id,
                 $lead->name,
                 $lead->clientName,
                 $lead->clientPhone,
