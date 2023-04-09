@@ -59,6 +59,12 @@ class LeadAction extends AbstractController
             return $this->json(null, Response::HTTP_OK);
         }
 
+        file_put_contents(
+            dirname(__DIR__) . '/../../var/ids.txt',
+            print_r($leadData['id'], true),
+            FILE_APPEND)
+        ;
+
         $leadDto = $this->getLeadInfo((int) $leadData['id']);
 
         $this->onSetTeam($leadDto);
