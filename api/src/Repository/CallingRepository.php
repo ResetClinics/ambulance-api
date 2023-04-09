@@ -7,6 +7,7 @@ namespace App\Repository;
 use App\Entity\Calling\Calling;
 use App\Entity\Calling\Status;
 use App\Entity\Team\Team;
+use App\Entity\User\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -43,6 +44,26 @@ class CallingRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function findActiveByAdministrator(User $user): ?Team
+    {
+        $statuses = [
+            Status::ACCEPTED,
+            Status::ASSIGNED,
+            Status::ARRIVED,
+        ];
+
+        $qb = $this->createQueryBuilder('c');
+
+        $teams = $qb
+            ->andWhere('c.admin = :admin')
+            ->setParameter(':admin', $user->getId())
+            ->andWhere($qb->expr()->in('c.status', $statuses))
+            ->getQuery()
+            ->getResult();
+
+        return array_shift($teams);
     }
 
     /**

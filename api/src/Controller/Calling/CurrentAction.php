@@ -17,14 +17,10 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 #[AsController]
 class CurrentAction extends AbstractController
 {
-    /**
-     * @throws NonUniqueResultException
-     */
     public function __invoke(TeamRepository $teams, CallingRepository $callings): JsonResponse
     {
         /** @var User $user */
         $user = $this->getUser();
-        $team = $teams->getActiveByAdministrator($user);
-        return $this->json($callings->getCurrentByTeam($team), Response::HTTP_OK);
+        return $this->json($callings->findActiveByAdministrator($user), Response::HTTP_OK);
     }
 }
