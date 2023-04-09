@@ -228,17 +228,7 @@ class LeadAction extends AbstractController
         $admin = $this->users->getByExternalId($lead->admin->getId());
         $doctor = $this->users->getByExternalId($lead->doctor->getId());
 
-
-        if ($calling) {
-
-            $calling->setNosology($lead->nosology);
-            $calling->setAge($lead->age);
-            $calling->setChronicDiseases($lead->hz);
-            $calling->setLeadType($lead->leadType);
-            $calling->setPartnerName($lead->partnerName);
-            $calling->setSendPhone($lead->sendPhone);
-
-        } else {
+        if (!$calling) {
             $calling = new Calling(
                 (string)$lead->id,
                 $lead->name,
@@ -249,24 +239,23 @@ class LeadAction extends AbstractController
                 $admin,
                 $doctor
             );
-
-            $calling->setTitle($lead->name);
-            $calling->setName($lead->clientName);
-            $calling->setPhone($lead->clientPhone);
-            $calling->setAddress($lead->address);
-            $calling->setDescription($lead->description);
-            $calling->setNosology($lead->nosology);
-            $calling->setAge($lead->age);
-            $calling->setChronicDiseases($lead->hz);
-            $calling->setLeadType($lead->leadType);
-            $calling->setPartnerName($lead->partnerName);
-            $calling->setSendPhone($lead->sendPhone);
-
-            $calling->setAdmin($admin);
-            $calling->setDoctor($doctor);
-
             $this->callings->save($calling, false);
         }
+
+        $calling->setTitle($lead->name);
+        $calling->setName($lead->clientName);
+        $calling->setPhone($lead->clientPhone);
+        $calling->setAddress($lead->address);
+        $calling->setDescription($lead->description);
+        $calling->setNosology($lead->nosology);
+        $calling->setAge($lead->age);
+        $calling->setChronicDiseases($lead->hz);
+        $calling->setLeadType($lead->leadType);
+        $calling->setPartnerName($lead->partnerName);
+        $calling->setSendPhone($lead->sendPhone);
+
+        $calling->setAdmin($admin);
+        $calling->setDoctor($doctor);
 
         if ($lead->statusId === 38307946 || $lead->statusId === 38874646) {
             $calling->setStatus(Status::assigned());
