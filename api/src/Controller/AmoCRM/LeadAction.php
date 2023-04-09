@@ -61,7 +61,7 @@ class LeadAction extends AbstractController
 
         file_put_contents(
             dirname(__DIR__) . '/../../var/ids.txt',
-            print_r($leadData['id'], true),
+            print_r($leadData['id']. PHP_EOL, true),
             FILE_APPEND)
         ;
 
