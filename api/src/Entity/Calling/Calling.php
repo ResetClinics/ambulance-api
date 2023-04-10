@@ -150,33 +150,43 @@ class Calling
     private User $doctor;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
     private ?int $price = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
     private ?int $estimated = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
     private ?int $prepayment = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
     private ?string $note = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
     private ?string $passport = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
     private ?int $coastHospital = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
     private ?int $costDay = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
     private ?string $phoneRelatives = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
     private ?string $resultDate = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
     private ?string $resultTime = null;
 
 
