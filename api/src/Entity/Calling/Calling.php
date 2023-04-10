@@ -14,9 +14,12 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\Calling\AcceptAction;
 use App\Controller\Calling\ArriveAction;
+use App\Controller\Calling\CoddingAction;
 use App\Controller\Calling\CompleteAction;
 use App\Controller\Calling\CurrentAction;
+use App\Controller\Calling\HospitalizationAction;
 use App\Controller\Calling\RejectAction;
+use App\Controller\Calling\RepeatAction;
 use App\Entity\User\User;
 use App\Repository\CallingRepository;
 use DateTimeImmutable;
@@ -45,7 +48,10 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 #[Post(uriTemplate: '/callings/{id}/accept', controller: AcceptAction::class, input: CallingDto::class, read: false)]
 #[Post(uriTemplate: '/callings/{id}/reject', controller: RejectAction::class, input: CallingDto::class, read: false)]
 #[Post(uriTemplate: '/callings/arrive', controller: ArriveAction::class, input: CallingDto::class, read: false)]
-#[Post(uriTemplate: '/callings/complete', controller: CompleteAction::class, input: CallingDto::class, read: false)]
+#[Post(uriTemplate: '/callings/{id}/complete', controller: CompleteAction::class)]
+#[Post(uriTemplate: '/callings/{id}/codding', controller: CoddingAction::class)]
+#[Post(uriTemplate: '/callings/{id}/hospitalization', controller: HospitalizationAction::class)]
+#[Post(uriTemplate: '/callings/{id}/repeat', controller: RepeatAction::class)]
 
 class Calling
 {
@@ -142,6 +148,37 @@ class Calling
     #[ORM\JoinColumn(nullable: false)]
     #[ApiFilter(SearchFilter::class, properties: ['doctor.id' => 'exact'])]
     private User $doctor;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $price = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $estimated = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $prepayment = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $note = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $passport = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $coastHospital = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $costDay = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $phoneRelatives = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $resultDate = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $resultTime = null;
+
 
     public function __construct(
         string $numberCalling,
@@ -491,6 +528,124 @@ class Calling
         $this->age = $age;
     }
 
+    public function getPrice(): ?int
+    {
+        return $this->price;
+    }
 
+    public function setPrice(?int $price): self
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    public function getEstimated(): ?int
+    {
+        return $this->estimated;
+    }
+
+    public function setEstimated(?int $estimated): self
+    {
+        $this->estimated = $estimated;
+
+        return $this;
+    }
+
+    public function getPrepayment(): ?int
+    {
+        return $this->prepayment;
+    }
+
+    public function setPrepayment(?int $prepayment): self
+    {
+        $this->prepayment = $prepayment;
+
+        return $this;
+    }
+
+    public function getNote(): ?string
+    {
+        return $this->note;
+    }
+
+    public function setNote(?string $note): self
+    {
+        $this->note = $note;
+
+        return $this;
+    }
+
+    public function getPassport(): ?string
+    {
+        return $this->passport;
+    }
+
+    public function setPassport(?string $passport): self
+    {
+        $this->passport = $passport;
+
+        return $this;
+    }
+
+    public function getCoastHospital(): ?int
+    {
+        return $this->coastHospital;
+    }
+
+    public function setCoastHospital(?int $coastHospital): self
+    {
+        $this->coastHospital = $coastHospital;
+
+        return $this;
+    }
+
+    public function getCostDay(): ?int
+    {
+        return $this->costDay;
+    }
+
+    public function setCostDay(?int $costDay): self
+    {
+        $this->costDay = $costDay;
+
+        return $this;
+    }
+
+    public function getPhoneRelatives(): ?string
+    {
+        return $this->phoneRelatives;
+    }
+
+    public function setPhoneRelatives(?string $phoneRelatives): self
+    {
+        $this->phoneRelatives = $phoneRelatives;
+
+        return $this;
+    }
+
+    public function getResultDate(): ?string
+    {
+        return $this->resultDate;
+    }
+
+    public function setResultDate(?string $resultDate): self
+    {
+        $this->resultDate = $resultDate;
+
+        return $this;
+    }
+
+    public function getResultTime(): ?string
+    {
+        return $this->resultTime;
+    }
+
+    public function setResultTime(?string $resultTime): self
+    {
+        $this->resultTime = $resultTime;
+
+        return $this;
+    }
 
 }

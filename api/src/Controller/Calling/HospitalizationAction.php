@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-class CompleteAction extends AbstractController
+class HospitalizationAction extends AbstractController
 {
     /**
      * @throws NonUniqueResultException
