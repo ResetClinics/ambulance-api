@@ -23,7 +23,7 @@ class CompleteAction extends AbstractController
     public function __invoke(Calling $calling, CallingRepository $callings, Flusher $flusher): JsonResponse
     {
        // $calling->setComplete(new DateTimeImmutable());
-       // $flusher->flush();
+        $flusher->flush();
         return $this->json($calling, Response::HTTP_ACCEPTED);
     }
 }
