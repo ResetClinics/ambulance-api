@@ -23,7 +23,7 @@ class RepeatAction extends AbstractController
     public function __invoke(Calling $calling, CallingRepository $callings, Flusher $flusher): JsonResponse
     {
        // $calling->setComplete(new DateTimeImmutable());
-       // $flusher->flush();
-        return $this->json(null, Response::HTTP_ACCEPTED);
+        $flusher->flush();
+        return $this->json($calling, Response::HTTP_ACCEPTED);
     }
 }
