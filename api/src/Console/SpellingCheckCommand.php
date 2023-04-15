@@ -1,19 +1,22 @@
 <?php
 
-declare(strict_types=1);
+namespace App\Console;
 
-namespace App\Controller;
-
-use App\Console\Test;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class HomeController extends AbstractController
+#[AsCommand(
+    name: 'spelling:check',
+    description: 'Add a short description for your command',
+)]
+class SpellingCheckCommand extends Command
 {
+
     private HttpClientInterface $client;
     private SerializerInterface $serializer;
 
@@ -22,23 +25,19 @@ class HomeController extends AbstractController
         SerializerInterface $serializer
     )
     {
+        parent::__construct();
         $this->client = $client;
         $this->serializer = $serializer;
     }
 
-    #[Route('/', name: 'app_home')]
-    public function index(): Response
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        return $this->json(['app' => 'ambulance']);
-    }
+        $io = new SymfonyStyle($input, $output);
 
-    #[Route('/spelling', name: 'spelling')]
-    public function spelling(Request $request): Response
-    {
-        $url = $request->query->get('url');
+        $io->success('Spelling check finished.');
 
-        $resp = $this->client->request('GET', $url);
-
+        $resp = $this->client->request('GET', 'https://rc-respect.ru/psihiatriya/');
+//
         $content = $resp->getContent();
 
         $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
@@ -59,20 +58,12 @@ class HomeController extends AbstractController
             ]
         );
 
-        $spellingResponse = $this->serializer->deserialize($resp->getContent(), Test::class, 'xml');
+        $content = $resp->getContent();
 
-        $errors = array_reverse($spellingResponse->error);
-
-        foreach ($errors as $error){
-            dump($error);
-        }
-
-        dd(1);
         //dd($content);
 
-
-
-
-        return new Response($content);
+        dd($this->serializer->deserialize($content, Test::class, 'xml'));
+        return Command::SUCCESS;
     }
 }
+
