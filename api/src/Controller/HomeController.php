@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Console\Test;
+use App\Entity\SpellingPage;
+use App\Flusher;
+use App\Repository\SpellingPageRepository;
+use App\Repository\SpellingWordRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,42 +37,69 @@ class HomeController extends AbstractController
     }
 
     #[Route('/spelling', name: 'spelling')]
-    public function spelling(Request $request): Response
+    public function spelling(
+        Request $request,
+        SpellingPageRepository $pagesRepository,
+        SpellingWordRepository $wordsRepository,
+        Flusher $flusher
+    ): Response
     {
-        $url = $request->query->get('url');
+        $pages = $pagesRepository->findByIsChecked(false, 10);
 
-        $resp = $this->client->request('GET', $url);
+        /** @var SpellingPage $page */
+        foreach ($pages as $page){
+            dump($page->getUrl());
+            $resp = $this->client->request('GET', $page->getUrl());
 
-        $content = $resp->getContent();
+            $content = $resp->getContent();
 
-        $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
-        $content = preg_replace('#<style(.*?)>(.*?)</style>#is', '', $content);
-        $content = preg_replace('#<!--(.*?)>(.*?)-->#is', '', $content);
+            $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
+            $content = preg_replace('#<style(.*?)>(.*?)</style>#is', '', $content);
+            $content = preg_replace('#<!--(.*?)>(.*?)-->#is', '', $content);
 
 
-        $resp = $this->client->request(
-            'POST',
-            'https://speller.yandex.net/services/spellservice/checkText',
-            [
-                'body' => [
-                    'text' => $content,
-                    'lang' => 'ru',
-                    'options' => 0,
-                    'format' => 'html',
-                ],
-            ]
-        );
+            $resp = $this->client->request(
+                'POST',
+                'https://speller.yandex.net/services/spellservice/checkText',
+                [
+                    'body' => [
+                        'text' => $content,
+                        'lang' => 'ru',
+                        'options' => 0,
+                        'format' => 'html',
+                    ],
+                ]
+            );
 
-        $spellingResponse = $this->serializer->deserialize($resp->getContent(), Test::class, 'xml');
+            $spellingResponse = $this->serializer->deserialize($resp->getContent(), Test::class, 'xml');
 
-        $errors = array_reverse($spellingResponse->error);
+            $hasErrors = false;
 
-        foreach ($errors as $error){
-            dump($error);
+            if ($spellingResponse->error){
+                $errors = array_reverse($spellingResponse->error);
+                foreach ($errors as $error){
+                    $words = $wordsRepository->findByWord($error['word']);
+                    if (count($words) === 0){
+                        $hasErrors = true;
+                        dump($error);
+                    }
+                }
+            }
+
+            if (!$hasErrors){
+                $page->setIsChecked(true);
+                $flusher->flush();
+            }else{
+                dd('Есть ошибки');
+            }
         }
 
-        dd(1);
-        //dd($content);
+        dd(count($pages));
+
+
+
+
+
 
 
 
