@@ -77,8 +77,7 @@ class Team
     #[Groups(['team:read'])]
     private ?DateTimeImmutable $completedAt = null;
 
-    #[ORM\Column(type: 'string', nullable: true)]
-    #[Groups(['team:read'])]
+    #[ORM\Column(type: 'string', nullable: true), Groups(['team:read'])]
     private ?string $rejectedComment = null;
 
     public function __construct(User $administrator)
