@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api/expo/{token}', name: 'amo-crm_auth-callback', methods: ["GET"])]
+#[Route('/api/expo/{token}', name: 'api-expo-token-log', methods: ["GET"])]
 class TokenExpoAction extends AbstractController
 {
     public function __invoke(string $token, Request $request): JsonResponse
