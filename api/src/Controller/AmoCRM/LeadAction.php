@@ -18,6 +18,7 @@ use App\Repository\UserRepository;
 use App\Services\AmoCRM;
 use Carbon\Carbon;
 use DateTimeImmutable;
+use DomainException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -98,22 +99,22 @@ class LeadAction extends AbstractController
     {
         $lead = $this->client->leads()->getOne($leadId, [LeadModel::CONTACTS, LeadModel::CATALOG_ELEMENTS]);
         if (!$lead) {
-            throw new \DomainException('Не найден лид');
+            throw new DomainException('Не найден лид');
         }
 
         if (!$lead->getCustomFieldsValues()) {
-            throw new \DomainException('Не заполнены поля');
+            throw new DomainException('Не заполнены поля');
         }
 
 
         if (!$lead->getMainContact()) {
-            throw new \DomainException('Не указан контакт');
+            throw new DomainException('Не указан контакт');
         }
 
         $contact = $this->client->contacts()->getOne($lead->getMainContact()->getId());
 
         if (!$contact) {
-            throw new \DomainException('Не найден контакт');
+            throw new DomainException('Не найден контакт');
         }
 
         $name = $contact->getName();
@@ -128,7 +129,7 @@ class LeadAction extends AbstractController
         }
 
         if (!$phone) {
-            throw new \DomainException('Не найден телефон');
+            throw new DomainException('Не найден телефон');
         }
 
         $leadDto = new Lead($leadId, $name, $phone);
@@ -212,7 +213,7 @@ class LeadAction extends AbstractController
         }
 
         if (!$leadDto->doctor || !$leadDto->admin) {
-            throw new \DomainException('Не установлен персонал');
+            throw new DomainException('Не установлен персонал для лида id: ' . $leadId);
         }
 
         return $leadDto;
