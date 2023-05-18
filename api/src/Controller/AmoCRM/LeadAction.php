@@ -265,7 +265,11 @@ class LeadAction extends AbstractController
 
         $this->flusher->flush();
         if ($isNew && $calling->getStatus() === (Status::assigned())->getName()) {
-            $this->sender->sendToAdmin($calling);
+            $this->sender->sendToAdmin(
+                $calling,
+                'Внимание новый заказ',
+                $calling->getAddress()
+            );
         }
 
     }

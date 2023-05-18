@@ -20,7 +20,7 @@ class CallingSender
         $this->devices = $devices;
     }
 
-    public function sendToAdmin(Calling $calling): void
+    public function sendToAdmin(Calling $calling, string $title, string $body): void
     {
         $devices = $this->devices->findBy(['user' => $calling->getAdmin()]);
 
@@ -39,7 +39,6 @@ class CallingSender
                     'to' => $device->getId(),
                     'title' => 'Внимание новый заказ',
                     'body' =>  $calling->getAddress(),
-                    'subtitle' => 'asfasdfasdf',
                 ],
             ]);
         }
