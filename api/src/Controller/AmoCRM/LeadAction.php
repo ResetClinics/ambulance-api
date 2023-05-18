@@ -79,6 +79,12 @@ class LeadAction extends AbstractController
 
         $leadDto = $this->getLeadInfo((int)$leadData['id']);
 
+
+        if (!$leadDto->doctor || !$leadDto->admin) {
+            return $this->json(null, Response::HTTP_OK);
+        }
+
+
         file_put_contents(
             dirname(__DIR__) . '/../../var/leadDto/' . $leadData['id'] . '-' . date("Y-m-d H:i:s") . '.txt',
             print_r($leadDto, true),
@@ -210,10 +216,6 @@ class LeadAction extends AbstractController
                 $leadEmployee = $leadsEmployee->first();
                 $leadDto->doctor = new Employee($leadEmployee->getId(), $leadEmployee->getName(), 'ROLE_DOCTOR');
             }
-        }
-
-        if (!$leadDto->doctor || !$leadDto->admin) {
-            throw new DomainException('Не установлен персонал для лида id: ' . $leadId);
         }
 
         return $leadDto;
