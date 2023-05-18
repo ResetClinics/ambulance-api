@@ -7,7 +7,7 @@ namespace App\Controller\Calling;
 use App\Entity\Calling\Calling;
 use App\Flusher;
 use App\Repository\CallingRepository;
-use Doctrine\ORM\NonUniqueResultException;
+use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,9 +16,6 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 #[AsController]
 class CompleteAction extends AbstractController
 {
-    /**
-     * @throws NonUniqueResultException
-     */
     public function __invoke(Calling $calling, CallingRepository $callings, Flusher $flusher): JsonResponse
     {
         $calling->setComplete(new DateTimeImmutable());
