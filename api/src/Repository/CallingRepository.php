@@ -50,7 +50,6 @@ class CallingRepository extends ServiceEntityRepository
     {
         $statuses = [
             Status::ACCEPTED,
-            Status::ASSIGNED,
             Status::ARRIVED,
         ];
 
