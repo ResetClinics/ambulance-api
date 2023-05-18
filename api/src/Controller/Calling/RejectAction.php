@@ -29,7 +29,7 @@ class RejectAction extends AbstractController
             throw new DomainException('Отклонить вызов может только администратор');
         }
 
-        $calling->setReject(new DateTimeImmutable(), '');
+        $calling->setReject(new DateTimeImmutable(), $calling->getRejectedComment());
 
         $flusher->flush();
         return $this->json(null, Response::HTTP_ACCEPTED);
