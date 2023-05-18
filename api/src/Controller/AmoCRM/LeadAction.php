@@ -91,7 +91,11 @@ class LeadAction extends AbstractController
             FILE_APPEND);
 
 
-        $this->onSetTeam($leadDto);
+        try {
+            $this->onSetTeam($leadDto);
+        }catch (\Exception $e){
+            throw new DomainException($e->getMessage());
+        }
 
         file_put_contents(
             dirname(__DIR__) . '/../../var/leadSuccess/' . $leadData['id'] . '-' . date("Y-m-d H:i:s") . '.txt',
