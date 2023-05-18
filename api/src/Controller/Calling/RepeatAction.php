@@ -18,6 +18,8 @@ use App\Repository\CallingRepository;
 use App\Services\AmoCRM;
 use App\Services\CallingSender;
 use DateTimeImmutable;
+use DomainException;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -78,28 +80,31 @@ class RepeatAction extends AbstractController
             return $this->json($calling, Response::HTTP_ACCEPTED);
         }
 
+        try {
+            $newLead = new LeadModel();
+            $newLead->setName($lead->getName())
+                ->setCreatedBy(0)
+                ->setStatusId(38307805)
+                ->setPipelineId(4018768)
+                ->setResponsibleUserId($lead->getResponsibleUserId())
+                ->setCustomFieldsValues($lead->getCustomFieldsValues())
+                ->setContacts(
+                    (new ContactsCollection())->add($lead->getMainContact())
+                );
 
-        $newLead = new LeadModel();
-        $newLead->setName($lead->getName())
-            ->setCreatedBy(0)
-            ->setStatusId(38307805)
-            ->setPipelineId(4018768)
-            ->setResponsibleUserId($lead->getResponsibleUserId())
-            ->setCustomFieldsValues($lead->getCustomFieldsValues())
-            ->setContacts(
-                (new ContactsCollection())->add($lead->getMainContact())
+            $leadsCollection = new LeadsCollection();
+            $leadsCollection->add($newLead);
+
+            $this->client->leads()->add($leadsCollection);
+
+            $this->sender->sendToAdmin(
+                $calling,
+                'Вызов N ' . $calling->getNumberCalling() . ' оформлен повтор',
+                ''
             );
-
-        $this->sender->sendToAdmin(
-            $calling,
-            'Вызов N ' . $calling->getNumberCalling() . ' оформлен повтор',
-            ''
-        );
-
-        $leadsCollection = new LeadsCollection();
-        $leadsCollection->add($newLead);
-
-        $this->client->leads()->add($leadsCollection);
+        }catch (Exception $exception) {
+            throw new DomainException('Ошибка создания повтора в AmoCRM: ' . $exception->getMessage());
+        }
 
         return $this->json($calling, Response::HTTP_ACCEPTED);
     }

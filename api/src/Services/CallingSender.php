@@ -37,8 +37,8 @@ class CallingSender
                         "url" =>  'сalls',
                     ],
                     'to' => $device->getId(),
-                    'title' => 'Внимание новый заказ',
-                    'body' =>  $calling->getAddress(),
+                    'title' => $title,
+                    'body' =>  $body,
                 ],
             ]);
         }
