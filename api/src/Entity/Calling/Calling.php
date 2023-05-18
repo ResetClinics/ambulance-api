@@ -264,9 +264,6 @@ class Calling
 
     public function setReject(DateTimeImmutable $completedAt, string $comment): void
     {
-        if (!$this->status->isAssigned()) {
-            throw new DomainException('Вызов имеет статус отличный от назначен');
-        }
         $this->status = Status::rejected();
         $this->completedAt = $completedAt;
         $this->rejectedComment = $comment;
