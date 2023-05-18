@@ -47,7 +47,10 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 #[ApiFilter(SearchFilter::class, properties: ['team' => 'exact'])]
 #[Post(uriTemplate: '/callings/current', controller: CurrentAction::class, input: CallingDto::class, read: false)]
 #[Post(uriTemplate: '/callings/{id}/accept', controller: AcceptAction::class, input: CallingDto::class, read: false)]
-#[Post(uriTemplate: '/callings/{id}/reject', controller: RejectAction::class, input: CallingDto::class, read: false)]
+#[Post(
+    uriTemplate: '/callings/{id}/reject',
+    controller: RejectAction::class
+)]
 #[Post(uriTemplate: '/callings/arrive', controller: ArriveAction::class, input: CallingDto::class, read: false)]
 #[Post(uriTemplate: '/callings/{id}/complete', controller: CompleteAction::class)]
 #[Post(uriTemplate: '/callings/{id}/codding', controller: CoddingAction::class)]
@@ -192,14 +195,14 @@ class Calling
 
 
     public function __construct(
-        string $numberCalling,
-        string $title,
-        string $name,
-        string $phone,
-        string $address,
+        string  $numberCalling,
+        string  $title,
+        string  $name,
+        string  $phone,
+        string  $address,
         ?string $description,
-        User $admin,
-        User $doctor
+        User    $admin,
+        User    $doctor
     )
     {
         $this->name = $name;
@@ -331,7 +334,7 @@ class Calling
 
     public function inProgress(): bool
     {
-       return !$this->status->isRejected() && !$this->status->isCompleted();
+        return !$this->status->isRejected() && !$this->status->isCompleted();
     }
 
     public function getArrivedAt(): ?DateTimeImmutable
