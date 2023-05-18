@@ -78,7 +78,9 @@ class LeadAction extends AbstractController
             FILE_APPEND);
 
         $leadDto = $this->getLeadInfo((int)$leadData['id']);
-
+        if (!$leadDto) {
+            return $this->json(null, Response::HTTP_OK);
+        }
 
         if (!$leadDto->doctor || !$leadDto->admin) {
             return $this->json(null, Response::HTTP_OK);
@@ -93,7 +95,7 @@ class LeadAction extends AbstractController
 
         try {
             $this->onSetTeam($leadDto);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             throw new DomainException($e->getMessage());
         }
 
@@ -105,7 +107,7 @@ class LeadAction extends AbstractController
         return $this->json(null, Response::HTTP_OK);
     }
 
-    private function getLeadInfo(int $leadId): Lead
+    private function getLeadInfo(int $leadId): ?Lead
     {
         $lead = $this->client->leads()->getOne($leadId, [LeadModel::CONTACTS, LeadModel::CATALOG_ELEMENTS]);
         if (!$lead) {
@@ -128,6 +130,10 @@ class LeadAction extends AbstractController
         }
 
         $name = $contact->getName();
+
+        if (!$name) {
+            return null;
+        }
 
         $phone = null;
 
