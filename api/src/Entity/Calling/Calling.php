@@ -255,9 +255,6 @@ class Calling
 
     public function setComplete(DateTimeImmutable $completedAt): void
     {
-        if (!$this->status->isArrived()) {
-            throw new DomainException('Вызов имеет статус отличный от прибыли');
-        }
         $this->status = Status::completed();
         $this->completedAt = $completedAt;
     }
