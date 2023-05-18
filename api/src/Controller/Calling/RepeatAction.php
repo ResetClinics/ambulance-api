@@ -67,7 +67,6 @@ class RepeatAction extends AbstractController
         $calling->setComplete(new DateTimeImmutable());
         $flusher->flush();
 
-
         $this->sender->sendToAdmin(
             $calling,
             'Вызов N ' . $calling->getNumberCalling() . ' завершен',
@@ -102,6 +101,7 @@ class RepeatAction extends AbstractController
                 'Вызов N ' . $calling->getNumberCalling() . ' оформлен повтор',
                 ''
             );
+
         }catch (Exception $exception) {
             throw new DomainException('Ошибка создания повтора в AmoCRM: ' . $exception->getMessage());
         }
