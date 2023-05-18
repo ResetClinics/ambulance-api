@@ -42,4 +42,19 @@ class DeviceController extends AbstractController
         return $this->json([]);
     }
 
+
+    #[Route('/api/devices/{id}', name: 'device_delete')]
+    public function delete(string $id): Response
+    {
+
+        $device = $this->devices->find($id);
+         if (!$device){
+             throw new \DomainException('Not found device');
+         }
+        $this->devices->remove($device);
+
+        $this->flusher->flush();
+
+        return $this->json([]);
+    }
 }
