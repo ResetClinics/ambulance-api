@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity\Calling;
 
 use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
@@ -52,7 +53,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 #[Post(uriTemplate: '/callings/{id}/codding', controller: CoddingAction::class)]
 #[Post(uriTemplate: '/callings/{id}/hospitalization', controller: HospitalizationAction::class)]
 #[Post(uriTemplate: '/callings/{id}/repeat', controller: RepeatAction::class)]
-
+#[ApiFilter(OrderFilter::class, properties: ['createdAt'], arguments: ['orderParameterName' => 'order'])]
 class Calling
 {
     #[ORM\Id]
