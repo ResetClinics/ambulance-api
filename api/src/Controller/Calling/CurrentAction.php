@@ -21,6 +21,11 @@ class CurrentAction extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
+        if (!$user) {
+            return $this->json([
+                null
+            ], Response::HTTP_OK);
+        }
         $call = $callings->findActiveByAdministrator($user);
         if (!$call) {
             return $this->json([
