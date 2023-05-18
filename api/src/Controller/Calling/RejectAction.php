@@ -21,14 +21,6 @@ class RejectAction extends AbstractController
 {
     public function __invoke(Calling $calling,TeamRepository $teams, CallingRepository $callings, Flusher $flusher): JsonResponse
     {
-        /** @var User $user */
-        $user = $this->getUser();
-
-        if ($calling->getTeam()?->getAdministrator()->getId() !== $user->getId())
-        {
-            throw new DomainException('Отклонить вызов может только администратор');
-        }
-
         $calling->setReject(new DateTimeImmutable(), $calling->getRejectedComment());
 
         $flusher->flush();
