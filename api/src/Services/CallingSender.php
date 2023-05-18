@@ -34,6 +34,7 @@ class CallingSender
                     "data" =>  [
                         "callingId" =>  $calling->getId(),
                         "callingStatus" =>  $calling->getStatus(),
+                        "url" =>  'сalls',
                     ],
                     'to' => $device->getId(),
                     'title' => 'Внимание новый заказ',
