@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\User\MyAction;
+use App\Entity\Device;
 use App\Entity\Team\Team;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -77,12 +78,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     private int $externalId;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Device::class)]
+    private Collection $devices;
+
 
 
     public function __construct($externalId)
     {
         $this->teams = new ArrayCollection();
         $this->externalId = $externalId;
+        $this->devices = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -209,5 +214,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getExternalId(): int
     {
         return $this->externalId;
+    }
+
+    /**
+     * @return Collection<int, Device>
+     */
+    public function getDevices(): Collection
+    {
+        return $this->devices;
+    }
+
+    public function addDevice(Device $device): self
+    {
+        if (!$this->devices->contains($device)) {
+            $this->devices->add($device);
+            $device->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDevice(Device $device): self
+    {
+        $this->devices->removeElement($device);
+
+        return $this;
     }
 }
