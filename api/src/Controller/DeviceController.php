@@ -24,7 +24,7 @@ class DeviceController extends AbstractController
         $this->flusher = $flusher;
     }
 
-    #[Route('/api/devices/{id}', name: 'device_create_or_update')]
+    #[Route('/api/devices/{id}', name: 'device_create_or_update', methods: ['POST'])]
     public function createOrUpdate(string $id): Response
     {
 
@@ -43,7 +43,7 @@ class DeviceController extends AbstractController
     }
 
 
-    #[Route('/api/devices/{id}', name: 'device_delete')]
+    #[Route('/api/devices/{id}', name: 'device_delete', methods: ['DELETE'])]
     public function delete(string $id): Response
     {
 
