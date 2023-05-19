@@ -15,6 +15,7 @@ use AmoCRM\Models\LeadModel;
 use AmoCRM\Models\LinkModel;
 use App\Services\AmoCRM;
 use App\Services\CallingSender;
+use App\Services\RepeatedCallScheduler;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,19 +29,19 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 )]
 class TestNotCommand extends Command
 {
-    private AmoCRMApiClient $client;
+    private RepeatedCallScheduler $scheduler;
     private CallingSender $sender;
 
 
     public function __construct(
-        AmoCRM        $amoCRM,
+        RepeatedCallScheduler        $scheduler,
         CallingSender $sender
     )
     {
         parent::__construct();
 
-        $this->client = $amoCRM->getClient();
         $this->sender = $sender;
+        $this->scheduler = $scheduler;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -48,50 +49,7 @@ class TestNotCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
 
-        $lead = $this->client->leads()->getOne(20688911);
-
-        if (!$lead) {
-            throw new NotFoundHttpException('Не получен лид');
-        }
-
-        $linksService = $this->client->links(EntityTypesInterface::LEADS);
-
-        $filter = new EntitiesLinksFilter([20688911]);
-        $allLinks = $linksService->get($filter);
-
-
-        $contactId = null;
-        /** @var LinkModel $link */
-        foreach ($allLinks as $link) {
-            if ($link->getMetadata()['main_contact']) {
-                $contactId = $link->getToEntityId();
-            }
-        }
-
-        if (!$contactId) {
-            throw new NotFoundHttpException('Не найден контакт при создании повтора');
-        }
-
-        $newLead = new LeadModel();
-        $newLead->setName($lead->getName())
-            ->setCreatedBy(0)
-            ->setStatusId(38307805)
-            ->setPipelineId(4018768)
-            ->setResponsibleUserId($lead->getResponsibleUserId())
-            ->setCustomFieldsValues($lead->getCustomFieldsValues())
-            ->setContacts(
-                (new ContactsCollection())
-                    ->add(
-                        (new ContactModel())
-                            ->setId($contactId)
-                            ->setIsMain(true)
-                    )
-            );
-
-        $leadsCollection = new LeadsCollection();
-        $leadsCollection->add($newLead);
-
-        $this->client->leads()->add($leadsCollection);
+        $this->scheduler->schedule(20680455);
 
 
         $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
