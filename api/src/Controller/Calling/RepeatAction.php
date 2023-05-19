@@ -10,8 +10,12 @@ use AmoCRM\Collections\Leads\LeadsCollection;
 use AmoCRM\Exceptions\AmoCRMApiException;
 use AmoCRM\Exceptions\AmoCRMMissedTokenException;
 use AmoCRM\Exceptions\AmoCRMoAuthApiException;
+use AmoCRM\Filters\EntitiesLinksFilter;
 use AmoCRM\Filters\LeadsFilter;
+use AmoCRM\Helpers\EntityTypesInterface;
+use AmoCRM\Models\ContactModel;
 use AmoCRM\Models\LeadModel;
+use AmoCRM\Models\LinkModel;
 use App\Entity\Calling\Calling;
 use App\Flusher;
 use App\Repository\CallingRepository;
@@ -79,6 +83,23 @@ class RepeatAction extends AbstractController
             return $this->json($calling, Response::HTTP_ACCEPTED);
         }
 
+        $linksService = $this->client->links(EntityTypesInterface::LEADS);
+
+        $filter = new EntitiesLinksFilter([$lead->getId()]);
+        $allLinks = $linksService->get($filter);
+
+        $contactId = null;
+        /** @var LinkModel $link */
+        foreach ($allLinks as $link) {
+            if ($link->getMetadata()['main_contact']) {
+                $contactId = $link->getToEntityId();
+            }
+        }
+
+        if (!$contactId) {
+            throw new NotFoundHttpException('Не найден контакт при создании повтора');
+        }
+
         try {
             $newLead = new LeadModel();
             $newLead->setName($lead->getName())
@@ -88,7 +109,12 @@ class RepeatAction extends AbstractController
                 ->setResponsibleUserId($lead->getResponsibleUserId())
                 ->setCustomFieldsValues($lead->getCustomFieldsValues())
                 ->setContacts(
-                    (new ContactsCollection())->add($lead->getMainContact())
+                    (new ContactsCollection())
+                        ->add(
+                            (new ContactModel())
+                                ->setId($contactId)
+                                ->setIsMain(true)
+                        )
                 );
 
             $leadsCollection = new LeadsCollection();
@@ -98,8 +124,8 @@ class RepeatAction extends AbstractController
 
             $this->sender->sendToAdmin(
                 $calling,
-                'Вызов N ' . $calling->getNumberCalling() . ' оформлен повтор',
-                ''
+                'Вызов N ' . $calling->getNumberCalling(),
+                'Оформлен повтор'
             );
 
         }catch (Exception $exception) {
