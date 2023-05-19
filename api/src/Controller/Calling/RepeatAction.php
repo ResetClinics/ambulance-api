@@ -69,13 +69,14 @@ class RepeatAction extends AbstractController
         $calling->setComplete(new DateTimeImmutable());
         $flusher->flush();
 
+        $this->scheduler->schedule((int)$calling->getNumberCalling());
+
         $this->sender->sendToAdmin(
             $calling,
             'Вызов N ' . $calling->getNumberCalling() . ' завершен',
             'Спасибо за работу!'
         );
 
-        $this->scheduler->schedule((int)$calling->getNumberCalling());
 
         $this->sender->sendToAdmin(
             $calling,
