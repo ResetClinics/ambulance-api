@@ -80,10 +80,19 @@ class RepeatAction extends AbstractController
 
             $lead = $this->client->leads()->getOne($calling->getNumberCalling());
 
+            file_put_contents(
+                dirname(__DIR__) . '/../../var/calling ' . date("Y-m-d H:i:s") . '.txt',
+                print_r($calling->getNumberCalling(), true),
+                FILE_APPEND);
+
             if (!$lead) {
                 throw new NotFoundHttpException('Не найден лид при создании повтора');
             }
 
+            file_put_contents(
+                dirname(__DIR__) . '/../../var/lead ' . date("Y-m-d H:i:s") . '.txt',
+                print_r($lead->getId(), true),
+                FILE_APPEND);
             $linksService = $this->client->links(EntityTypesInterface::LEADS);
 
             $filter = new EntitiesLinksFilter([$lead->getId()]);
@@ -97,10 +106,15 @@ class RepeatAction extends AbstractController
                 }
             }
 
+            file_put_contents(
+                dirname(__DIR__) . '/../../var/main-contact ' . date("Y-m-d H:i:s") . '.txt',
+                print_r($contactId, true),
+                FILE_APPEND);
+
+
             if (!$contactId) {
                 throw new NotFoundHttpException('Не найден контакт при создании повтора');
             }
-
 
             $newLead = new LeadModel();
             $newLead->setName($lead->getName())
@@ -121,7 +135,13 @@ class RepeatAction extends AbstractController
             $leadsCollection = new LeadsCollection();
             $leadsCollection->add($newLead);
 
-            $this->client->leads()->add($leadsCollection);
+            $coll = $this->client->leads()->add($leadsCollection);
+
+            file_put_contents(
+                dirname(__DIR__) . '/../../var/lead-collection ' . date("Y-m-d H:i:s") . '.txt',
+                print_r($coll, true),
+                FILE_APPEND);
+
 
             $this->sender->sendToAdmin(
                 $calling,
