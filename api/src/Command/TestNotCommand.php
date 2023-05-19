@@ -12,6 +12,7 @@ use AmoCRM\Filters\LinksFilter;
 use AmoCRM\Helpers\EntityTypesInterface;
 use AmoCRM\Models\ContactModel;
 use AmoCRM\Models\LeadModel;
+use AmoCRM\Models\LinkModel;
 use App\Services\AmoCRM;
 use App\Services\CallingSender;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -45,12 +46,11 @@ class TestNotCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-//20680455
 
 
         $lead = $this->client->leads()->getOne(20688911);
 
-        if (!$lead){
+        if (!$lead) {
             throw new NotFoundHttpException('Не получен лид');
         }
 
@@ -59,11 +59,18 @@ class TestNotCommand extends Command
         $filter = new EntitiesLinksFilter([20688911]);
         $allLinks = $linksService->get($filter);
 
-        dd($allLinks);
 
-        //$contact = $this->client->contacts()->getOne($link->getContacts()[0]->getId());
+        $contactId = null;
+        /** @var LinkModel $link */
+        foreach ($allLinks as $link) {
+            if ($link->getMetadata()['main_contact']) {
+                $contactId = $link->getToEntityId();
+            }
+        }
 
-
+        if (!$contactId) {
+            throw new NotFoundHttpException('Не найден контакт при создании повтора');
+        }
 
         $newLead = new LeadModel();
         $newLead->setName($lead->getName())
@@ -76,18 +83,16 @@ class TestNotCommand extends Command
                 (new ContactsCollection())
                     ->add(
                         (new ContactModel())
-                            ->setId(26095592)
+                            ->setId($contactId)
                             ->setIsMain(true)
                     )
-            )
-        ;
+            );
 
         $leadsCollection = new LeadsCollection();
         $leadsCollection->add($newLead);
 
-        $ddd = $this->client->leads()->add($leadsCollection);
+        $this->client->leads()->add($leadsCollection);
 
-        dump($ddd);
 
         $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
 
