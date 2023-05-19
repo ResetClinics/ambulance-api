@@ -43,12 +43,18 @@ class TestNotCommand extends Command
 //20680455
 
 
-        $lead = $this->client->leads()->getOne(20688871);
+        $lead = $this->client->leads()->getOne(20680455);
 
         if (!$lead){
             throw new NotFoundHttpException('Не получен лид');
         }
 
+        $link = $lead->getLink();
+
+        dd($link->getContacts());
+
+
+        //$contact = $this->client->contacts()->getOne($link->getContacts()[0]->getId());
 
         dump($lead);
         dd($lead->getLink());
