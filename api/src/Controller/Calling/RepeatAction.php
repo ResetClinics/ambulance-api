@@ -57,7 +57,7 @@ class RepeatAction extends AbstractController
 
         $leads = $this->client->leads()->get($filter);
 
-        if (!$leads){
+        if (!$leads) {
             throw new NotFoundHttpException('Не найден лид №' . $calling->getNumberCalling() . ' в AmoCRM');
         }
 
@@ -76,31 +76,32 @@ class RepeatAction extends AbstractController
             'Вызов N ' . $calling->getNumberCalling() . ' завершен',
             'Спасибо за работу!'
         );
-
-        $lead = $leads->first();
-
-        if (!$lead){
-            return $this->json($calling, Response::HTTP_ACCEPTED);
-        }
-
-        $linksService = $this->client->links(EntityTypesInterface::LEADS);
-
-        $filter = new EntitiesLinksFilter([$lead->getId()]);
-        $allLinks = $linksService->get($filter);
-
-        $contactId = null;
-        /** @var LinkModel $link */
-        foreach ($allLinks as $link) {
-            if ($link->getMetadata()['main_contact']) {
-                $contactId = $link->getToEntityId();
-            }
-        }
-
-        if (!$contactId) {
-            throw new NotFoundHttpException('Не найден контакт при создании повтора');
-        }
-
         try {
+
+            $lead = $this->client->leads()->getOne($calling->getNumberCalling());
+
+            if (!$lead) {
+                throw new NotFoundHttpException('Не найден лид при создании повтора');
+            }
+
+            $linksService = $this->client->links(EntityTypesInterface::LEADS);
+
+            $filter = new EntitiesLinksFilter([$lead->getId()]);
+            $allLinks = $linksService->get($filter);
+
+            $contactId = null;
+            /** @var LinkModel $link */
+            foreach ($allLinks as $link) {
+                if ($link->getMetadata()['main_contact']) {
+                    $contactId = $link->getToEntityId();
+                }
+            }
+
+            if (!$contactId) {
+                throw new NotFoundHttpException('Не найден контакт при создании повтора');
+            }
+
+
             $newLead = new LeadModel();
             $newLead->setName($lead->getName())
                 ->setCreatedBy(0)
@@ -128,7 +129,7 @@ class RepeatAction extends AbstractController
                 'Оформлен повтор'
             );
 
-        }catch (Exception $exception) {
+        } catch (Exception $exception) {
             throw new DomainException('Ошибка создания повтора в AmoCRM: ' . $exception->getMessage());
         }
 
