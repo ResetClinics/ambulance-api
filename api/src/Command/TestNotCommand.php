@@ -49,9 +49,9 @@ class TestNotCommand extends Command
             throw new NotFoundHttpException('Не получен лид');
         }
 
-        $link = $lead->getLink();
+        $leadContacts = $lead->getContacts();
 
-        dd($link->getContacts());
+        dd($leadContacts);
 
 
         //$contact = $this->client->contacts()->getOne($link->getContacts()[0]->getId());
