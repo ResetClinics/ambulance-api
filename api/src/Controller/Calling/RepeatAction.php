@@ -74,19 +74,14 @@ class RepeatAction extends AbstractController
             'Вызов N ' . $calling->getNumberCalling() . ' завершен',
             'Спасибо за работу!'
         );
-        try {
 
-            $this->scheduler->schedule((int)$calling->getNumberCalling());
+        $this->scheduler->schedule((int)$calling->getNumberCalling());
 
-            $this->sender->sendToAdmin(
-                $calling,
-                'Вызов N ' . $calling->getNumberCalling(),
-                'Оформлен повтор'
-            );
-
-        } catch (Exception $exception) {
-            throw new DomainException('Ошибка создания повтора в AmoCRM: ' . $exception->getMessage());
-        }
+        $this->sender->sendToAdmin(
+            $calling,
+            'Вызов N ' . $calling->getNumberCalling(),
+            'Оформлен повтор'
+        );
 
         return $this->json($calling, Response::HTTP_ACCEPTED);
     }
