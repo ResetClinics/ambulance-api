@@ -43,7 +43,7 @@ class TestNotCommand extends Command
 //20680455
 
 
-        $lead = $this->client->leads()->getOne(20680455);
+        $lead = $this->client->leads()->getOne(20688871);
 
         if (!$lead){
             throw new NotFoundHttpException('Не получен лид');
