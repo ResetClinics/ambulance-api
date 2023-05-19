@@ -15,6 +15,7 @@ use AmoCRM\Models\LeadModel;
 use AmoCRM\Models\LinkModel;
 use App\Services\AmoCRM;
 use App\Services\CallingSender;
+use App\Services\HospitalizationScheduler;
 use App\Services\RepeatedCallScheduler;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -29,12 +30,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 )]
 class TestNotCommand extends Command
 {
-    private RepeatedCallScheduler $scheduler;
+    private HospitalizationScheduler $scheduler;
     private CallingSender $sender;
 
 
     public function __construct(
-        RepeatedCallScheduler        $scheduler,
+        HospitalizationScheduler        $scheduler,
         CallingSender $sender
     )
     {
