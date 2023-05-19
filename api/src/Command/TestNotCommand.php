@@ -41,16 +41,9 @@ class TestNotCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 //20680455
-        $filter = new LeadsFilter();
-        $filter->setIds([20680455]);
 
-        $leads = $this->client->leads()->get($filter);
 
-        if (!$leads){
-            throw new NotFoundHttpException('Не найден лид №' . 20680455 . ' в AmoCRM');
-        }
-
-        $lead = $leads->first();
+        $lead = $this->client->leads()->getOne(20680455);
 
         if (!$lead){
             throw new NotFoundHttpException('Не получен лид');
