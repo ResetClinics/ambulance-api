@@ -43,21 +43,15 @@ class TestNotCommand extends Command
 //20680455
 
 
-        $lead = $this->client->leads()->getOne(20688871);
+        $lead = $this->client->leads()->getOne(20680455);
 
         if (!$lead){
             throw new NotFoundHttpException('Не получен лид');
         }
 
-        $leadContacts = $lead->getContacts();
-
-        dd($leadContacts);
-
-
         //$contact = $this->client->contacts()->getOne($link->getContacts()[0]->getId());
 
-        dump($lead);
-        dd($lead->getLink());
+
 
         $newLead = new LeadModel();
         $newLead->setName($lead->getName())
@@ -66,9 +60,10 @@ class TestNotCommand extends Command
             ->setPipelineId(4018768)
             ->setResponsibleUserId($lead->getResponsibleUserId())
             ->setCustomFieldsValues($lead->getCustomFieldsValues())
-            ->setContacts(
-                (new ContactsCollection())->add($lead->getMainContact())
-            );
+           // ->setContacts(
+           //     (new ContactsCollection())->add($lead->getMainContact())
+           // )
+        ;
 
         $leadsCollection = new LeadsCollection();
         $leadsCollection->add($newLead);
