@@ -57,6 +57,7 @@ class TestNotCommand extends Command
         }
 
 
+        dump($lead);
         dd($lead->getLink());
 
         $newLead = new LeadModel();
