@@ -69,9 +69,6 @@ class HospitalizationScheduler
         $leadsCollection = new LeadsCollection();
         $leadsCollection->add($newLead);
 
-        $ddd = $this->client->leads()->add($leadsCollection);
-
-        dump($ddd);
-
+        $this->client->leads()->add($leadsCollection);
     }
 }

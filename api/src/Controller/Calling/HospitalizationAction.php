@@ -5,22 +5,17 @@ declare(strict_types=1);
 namespace App\Controller\Calling;
 
 use AmoCRM\Client\AmoCRMApiClient;
-use AmoCRM\Collections\ContactsCollection;
-use AmoCRM\Collections\Leads\LeadsCollection;
 use AmoCRM\Exceptions\AmoCRMApiException;
 use AmoCRM\Exceptions\AmoCRMMissedTokenException;
 use AmoCRM\Exceptions\AmoCRMoAuthApiException;
-use AmoCRM\Filters\EntitiesLinksFilter;
 use AmoCRM\Filters\LeadsFilter;
-use AmoCRM\Helpers\EntityTypesInterface;
-use AmoCRM\Models\ContactModel;
 use AmoCRM\Models\LeadModel;
-use AmoCRM\Models\LinkModel;
 use App\Entity\Calling\Calling;
 use App\Flusher;
 use App\Repository\CallingRepository;
 use App\Services\AmoCRM;
 use App\Services\CallingSender;
+use App\Services\HospitalizationScheduler;
 use DateTimeImmutable;
 use DomainException;
 use Exception;
@@ -35,14 +30,17 @@ class HospitalizationAction extends AbstractController
 {
     private AmoCRMApiClient $client;
     private CallingSender $sender;
+    private HospitalizationScheduler $scheduler;
 
     public function __construct(
         AmoCRM        $amoCRM,
-        CallingSender $sender
+        CallingSender $sender,
+        HospitalizationScheduler        $scheduler,
     )
     {
         $this->client = $amoCRM->getClient();
         $this->sender = $sender;
+        $this->scheduler = $scheduler;
     }
 
     /**
@@ -77,50 +75,8 @@ class HospitalizationAction extends AbstractController
             'Спасибо за работу!'
         );
         try {
-            $lead = $this->client->leads()->getOne($calling->getNumberCalling());
 
-            if (!$lead) {
-                throw new NotFoundHttpException('Не найден лид при создании госпитализации');
-            }
-
-            $linksService = $this->client->links(EntityTypesInterface::LEADS);
-
-            $filter = new EntitiesLinksFilter([$lead->getId()]);
-            $allLinks = $linksService->get($filter);
-
-            $contactId = null;
-            /** @var LinkModel $link */
-            foreach ($allLinks as $link) {
-                if ($link->getMetadata()['main_contact']) {
-                    $contactId = $link->getToEntityId();
-                }
-            }
-
-            if (!$contactId) {
-                throw new NotFoundHttpException('Не найден контакт при создании госпитализации');
-            }
-
-
-            $newLead = new LeadModel();
-            $newLead->setName($lead->getName())
-                ->setCreatedBy(0)
-                ->setStatusId(38709310)
-                ->setPipelineId(4093174)
-                ->setResponsibleUserId($lead->getResponsibleUserId())
-                ->setCustomFieldsValues($lead->getCustomFieldsValues())
-                ->setContacts(
-                    (new ContactsCollection())
-                        ->add(
-                            (new ContactModel())
-                                ->setId($contactId)
-                                ->setIsMain(true)
-                        )
-                );
-
-            $leadsCollection = new LeadsCollection();
-            $leadsCollection->add($newLead);
-
-            $this->client->leads()->add($leadsCollection);
+            $this->scheduler->schedule((int)$calling->getNumberCalling());
 
             $this->sender->sendToAdmin(
                 $calling,

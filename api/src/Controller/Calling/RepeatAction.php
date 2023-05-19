@@ -5,22 +5,17 @@ declare(strict_types=1);
 namespace App\Controller\Calling;
 
 use AmoCRM\Client\AmoCRMApiClient;
-use AmoCRM\Collections\ContactsCollection;
-use AmoCRM\Collections\Leads\LeadsCollection;
 use AmoCRM\Exceptions\AmoCRMApiException;
 use AmoCRM\Exceptions\AmoCRMMissedTokenException;
 use AmoCRM\Exceptions\AmoCRMoAuthApiException;
-use AmoCRM\Filters\EntitiesLinksFilter;
 use AmoCRM\Filters\LeadsFilter;
-use AmoCRM\Helpers\EntityTypesInterface;
-use AmoCRM\Models\ContactModel;
 use AmoCRM\Models\LeadModel;
-use AmoCRM\Models\LinkModel;
 use App\Entity\Calling\Calling;
 use App\Flusher;
 use App\Repository\CallingRepository;
 use App\Services\AmoCRM;
 use App\Services\CallingSender;
+use App\Services\RepeatedCallScheduler;
 use DateTimeImmutable;
 use DomainException;
 use Exception;
@@ -35,14 +30,17 @@ class RepeatAction extends AbstractController
 {
     private AmoCRMApiClient $client;
     private CallingSender $sender;
+    private RepeatedCallScheduler $scheduler;
 
     public function __construct(
         AmoCRM        $amoCRM,
-        CallingSender $sender
+        CallingSender $sender,
+        RepeatedCallScheduler $scheduler
     )
     {
         $this->client = $amoCRM->getClient();
         $this->sender = $sender;
+        $this->scheduler = $scheduler;
     }
 
     /**
@@ -78,70 +76,7 @@ class RepeatAction extends AbstractController
         );
         try {
 
-            $lead = $this->client->leads()->getOne($calling->getNumberCalling());
-
-            file_put_contents(
-                dirname(__DIR__) . '/../../var/calling ' . date("Y-m-d H:i:s") . '.txt',
-                print_r($calling->getNumberCalling(), true),
-                FILE_APPEND);
-
-            if (!$lead) {
-                throw new NotFoundHttpException('Не найден лид при создании повтора');
-            }
-
-            file_put_contents(
-                dirname(__DIR__) . '/../../var/lead ' . date("Y-m-d H:i:s") . '.txt',
-                print_r($lead->getId(), true),
-                FILE_APPEND);
-            $linksService = $this->client->links(EntityTypesInterface::LEADS);
-
-            $filter = new EntitiesLinksFilter([$lead->getId()]);
-            $allLinks = $linksService->get($filter);
-
-            $contactId = null;
-            /** @var LinkModel $link */
-            foreach ($allLinks as $link) {
-                if ($link->getMetadata()['main_contact']) {
-                    $contactId = $link->getToEntityId();
-                }
-            }
-
-            file_put_contents(
-                dirname(__DIR__) . '/../../var/main-contact ' . date("Y-m-d H:i:s") . '.txt',
-                print_r($contactId, true),
-                FILE_APPEND);
-
-
-            if (!$contactId) {
-                throw new NotFoundHttpException('Не найден контакт при создании повтора');
-            }
-
-            $newLead = new LeadModel();
-            $newLead->setName($lead->getName())
-                ->setCreatedBy(0)
-                ->setStatusId(38307805)
-                ->setPipelineId(4018768)
-                ->setResponsibleUserId($lead->getResponsibleUserId())
-                ->setCustomFieldsValues($lead->getCustomFieldsValues())
-                ->setContacts(
-                    (new ContactsCollection())
-                        ->add(
-                            (new ContactModel())
-                                ->setId($contactId)
-                                ->setIsMain(true)
-                        )
-                );
-
-            $leadsCollection = new LeadsCollection();
-            $leadsCollection->add($newLead);
-
-            $coll = $this->client->leads()->add($leadsCollection);
-
-            file_put_contents(
-                dirname(__DIR__) . '/../../var/lead-collection ' . date("Y-m-d H:i:s") . '.txt',
-                print_r($coll, true),
-                FILE_APPEND);
-
+            $this->scheduler->schedule((int)$calling->getNumberCalling());
 
             $this->sender->sendToAdmin(
                 $calling,
