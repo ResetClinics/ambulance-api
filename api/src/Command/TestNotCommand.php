@@ -5,7 +5,11 @@ namespace App\Command;
 use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Collections\ContactsCollection;
 use AmoCRM\Collections\Leads\LeadsCollection;
+use AmoCRM\EntitiesServices\Links;
+use AmoCRM\Filters\EntitiesLinksFilter;
 use AmoCRM\Filters\LeadsFilter;
+use AmoCRM\Filters\LinksFilter;
+use AmoCRM\Helpers\EntityTypesInterface;
 use AmoCRM\Models\ContactModel;
 use AmoCRM\Models\LeadModel;
 use App\Services\AmoCRM;
@@ -50,7 +54,12 @@ class TestNotCommand extends Command
             throw new NotFoundHttpException('Не получен лид');
         }
 
-        dd($lead);
+        $linksService = $this->client->links(EntityTypesInterface::LEADS);
+
+        $filter = new EntitiesLinksFilter([20688911]);
+        $allLinks = $linksService->get($filter);
+
+        dd($allLinks);
 
         //$contact = $this->client->contacts()->getOne($link->getContacts()[0]->getId());
 
