@@ -6,6 +6,7 @@ use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Collections\ContactsCollection;
 use AmoCRM\Collections\Leads\LeadsCollection;
 use AmoCRM\Filters\LeadsFilter;
+use AmoCRM\Models\ContactModel;
 use AmoCRM\Models\LeadModel;
 use App\Services\AmoCRM;
 use App\Services\CallingSender;
@@ -60,9 +61,14 @@ class TestNotCommand extends Command
             ->setPipelineId(4018768)
             ->setResponsibleUserId($lead->getResponsibleUserId())
             ->setCustomFieldsValues($lead->getCustomFieldsValues())
-           // ->setContacts(
-           //     (new ContactsCollection())->add($lead->getMainContact())
-           // )
+            ->setContacts(
+                (new ContactsCollection())
+                    ->add(
+                        (new ContactModel())
+                            ->setId(26095592)
+                            ->setIsMain(true)
+                    )
+            )
         ;
 
         $leadsCollection = new LeadsCollection();
