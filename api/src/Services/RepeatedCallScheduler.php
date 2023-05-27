@@ -10,6 +10,7 @@ use AmoCRM\Helpers\EntityTypesInterface;
 use AmoCRM\Models\ContactModel;
 use AmoCRM\Models\LeadModel;
 use AmoCRM\Models\LinkModel;
+use App\Entity\Calling\Calling;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class RepeatedCallScheduler
@@ -24,9 +25,9 @@ class RepeatedCallScheduler
         $this->client = $amoCRM->getClient();
     }
 
-    public function schedule(int $id): void
+    public function schedule(Calling $calling): void
     {
-        $lead = $this->client->leads()->getOne($id);
+        $lead = $this->client->leads()->getOne($calling->getNumberCalling());
 
         if (!$lead) {
             throw new NotFoundHttpException('Не получен лид');
@@ -34,7 +35,7 @@ class RepeatedCallScheduler
 
         $linksService = $this->client->links(EntityTypesInterface::LEADS);
 
-        $filter = new EntitiesLinksFilter([$id]);
+        $filter = new EntitiesLinksFilter([$calling->getNumberCalling()]);
         $allLinks = $linksService->get($filter);
 
 
@@ -50,9 +51,12 @@ class RepeatedCallScheduler
             throw new NotFoundHttpException('Не найден контакт при создании повтора');
         }
 
+        $name = $calling->getResultDate() . ' ' . $calling->getName() . ' ПОВТОР';
+
         $newLead = new LeadModel();
-        $newLead->setName($lead->getName())
+        $newLead->setName($name)
             ->setCreatedBy(0)
+            ->setPrice($calling->getEstimated())
             ->setStatusId(38307805)
             ->setPipelineId(4018768)
             ->setResponsibleUserId($lead->getResponsibleUserId())
