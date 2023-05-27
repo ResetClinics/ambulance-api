@@ -10,6 +10,7 @@ use AmoCRM\Helpers\EntityTypesInterface;
 use AmoCRM\Models\ContactModel;
 use AmoCRM\Models\LeadModel;
 use AmoCRM\Models\LinkModel;
+use App\Entity\Calling\Calling;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class HospitalizationScheduler
@@ -24,9 +25,9 @@ class HospitalizationScheduler
         $this->client = $amoCRM->getClient();
     }
 
-    public function schedule(int $id): void
+    public function schedule(Calling $calling): void
     {
-        $lead = $this->client->leads()->getOne($id);
+        $lead = $this->client->leads()->getOne((int)$calling->getNumberCalling());
 
         if (!$lead) {
             throw new NotFoundHttpException('Не получен лид');
@@ -34,7 +35,7 @@ class HospitalizationScheduler
 
         $linksService = $this->client->links(EntityTypesInterface::LEADS);
 
-        $filter = new EntitiesLinksFilter([$id]);
+        $filter = new EntitiesLinksFilter([(int)$calling->getNumberCalling()]);
         $allLinks = $linksService->get($filter);
 
 
@@ -53,6 +54,7 @@ class HospitalizationScheduler
         $newLead = new LeadModel();
         $newLead->setName($lead->getName())
             ->setCreatedBy(0)
+            ->setPrice($calling->getCoastHospital())
             ->setStatusId(38709310)
             ->setPipelineId(4093174)
             ->setResponsibleUserId($lead->getResponsibleUserId())
