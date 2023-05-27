@@ -30,6 +30,7 @@ use DomainException;
 use Symfony\Component\Serializer\Annotation\Context;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: CallingRepository::class)]
 #[ApiResource(
@@ -56,7 +57,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 #[Post(uriTemplate: '/callings/{id}/codding', controller: CoddingAction::class)]
 #[Post(uriTemplate: '/callings/{id}/hospitalization', controller: HospitalizationAction::class)]
 #[Post(uriTemplate: '/callings/{id}/repeat', controller: RepeatAction::class)]
-#[ApiFilter(OrderFilter::class, properties: ['createdAt'], arguments: ['orderParameterName' => 'order'])]
+#[ApiFilter(OrderFilter::class, properties: ['createdAt', 'updatedAt'], arguments: ['orderParameterName' => 'order'])]
 class Calling
 {
     #[ORM\Id]
@@ -125,7 +126,15 @@ class Calling
     #[ORM\Column]
     #[Groups(['calling:read'])]
     #[Context(normalizationContext: [DateTimeNormalizer::FORMAT_KEY => 'd.m.Y HH:mm'])]
+    #[Gedmo\Timestampable(on: 'create')]
     private DateTimeImmutable $createdAt;
+
+
+    #[ORM\Column]
+    #[Groups(['calling:read'])]
+    #[Context(normalizationContext: [DateTimeNormalizer::FORMAT_KEY => 'd.m.Y HH:mm'])]
+    #[Gedmo\Timestampable]
+    private DateTimeImmutable $updatedAt;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['calling:read'])]
@@ -211,6 +220,7 @@ class Calling
         $this->description = $description ?: '';
         $this->status = Status::assigned();
         $this->createdAt = new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable();
         $this->numberCalling = $numberCalling;
         $this->title = $title;
         $this->admin = $admin;
@@ -656,4 +666,13 @@ class Calling
         return $this;
     }
 
+    public function getUpdatedAt(): DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(DateTimeImmutable $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
 }
