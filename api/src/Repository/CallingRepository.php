@@ -59,6 +59,7 @@ class CallingRepository extends ServiceEntityRepository
             ->andWhere('c.admin = :admin')
             ->setParameter(':admin', $user->getId())
             ->andWhere($qb->expr()->in('c.status', $statuses))
+            ->orderBy('c.updatedAt', 'DESC')
             ->getQuery()
             ->getResult();
 
