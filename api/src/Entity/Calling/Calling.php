@@ -208,7 +208,7 @@ class Calling
         string  $title,
         string  $name,
         string  $phone,
-        string  $address,
+        ?string  $address,
         ?string $description,
         User    $admin,
         User    $doctor
@@ -216,7 +216,7 @@ class Calling
     {
         $this->name = $name;
         $this->phone = $phone;
-        $this->address = $address;
+        $this->address = $address ?: '';
         $this->description = $description ?: '';
         $this->status = Status::assigned();
         $this->createdAt = new DateTimeImmutable();
