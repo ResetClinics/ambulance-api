@@ -84,7 +84,7 @@ class RepeatAction extends AbstractController
         foreach ($leads as $lead) {
             $entityId = $lead->getId();
             $lead->setStatusId(45084664);
-            $lead->setName($currentDate->format('d:m:y') . ' ' . $calling->getName());
+            $lead->setName($currentDate->format('d.m.y') . ' ' . $calling->getName());
             $lead->setPrice($calling->getPrice());
         }
 
