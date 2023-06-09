@@ -38,7 +38,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
         new GetCollection(),
         new Post(),
         new Get(
-            normalizationContext: ['groups' => ['calling:read', 'calling:item:get']]
+            normalizationContext: ['groups' => ['calling:read', 'calling:item:read', 'calling:detail:read']]
         ),
         new Put(),
     ],
@@ -154,11 +154,13 @@ class Calling
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['calling:detail:read'])]
     #[ApiFilter(SearchFilter::class, properties: ['admin.id' => 'exact'])]
     private User $admin;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['calling:detail:read'])]
     #[ApiFilter(SearchFilter::class, properties: ['doctor.id' => 'exact'])]
     private User $doctor;
 

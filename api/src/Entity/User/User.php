@@ -41,16 +41,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:read', 'team:item:get', 'team:item:get:team_my'])]
+    #[Groups(['user:read', 'team:item:get', 'team:item:get:team_my', 'calling:detail:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 11, unique: true)]
-    #[Groups(['user:read', 'user:write', 'team:item:get'])]
+    #[Groups(['user:read', 'user:write', 'team:item:get', 'calling:detail:read'])]
     #[Assert\NotBlank]
     private ?string $phone = null;
 
     #[ORM\Column]
-    #[Groups(['user:read', 'user:write', 'team:item:get'])]
+    #[Groups(['user:read', 'user:write', 'team:item:get', 'calling:detail:read'])]
     #[Assert\NotBlank]
     private ?string $name = null;
 
@@ -80,7 +80,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Device::class)]
     private Collection $devices;
-
 
 
     public function __construct($externalId)
