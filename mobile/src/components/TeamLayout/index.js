@@ -1,1 +1,0 @@
-export { TeamLayout } from './TeamLayout'

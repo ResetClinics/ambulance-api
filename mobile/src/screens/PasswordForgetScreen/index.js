@@ -1,1 +1,0 @@
-export { PasswordForgetScreen } from './PasswordForgetScreen'

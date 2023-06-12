@@ -1,1 +1,0 @@
-export { TeamAssigned } from './TeamAssigned'

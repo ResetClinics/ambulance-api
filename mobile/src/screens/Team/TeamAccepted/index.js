@@ -1,1 +1,0 @@
-export { TeamAccepted } from './TeamAccepted'
