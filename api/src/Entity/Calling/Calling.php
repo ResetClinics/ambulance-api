@@ -210,7 +210,7 @@ class Calling
         string  $title,
         string  $name,
         string  $phone,
-        ?string  $address,
+        ?string $address,
         ?string $description,
         User    $admin,
         User    $doctor
@@ -647,6 +647,11 @@ class Calling
     public function getResultDate(): ?string
     {
         return $this->resultDate;
+    }
+
+    public function getResultDateFormat(): ?string
+    {
+        return $this->resultDate ? (new DateTimeImmutable($this->resultDate))->format('Y-m-d H:i:s') : null;
     }
 
     public function setResultDate(?string $resultDate): self

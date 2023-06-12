@@ -49,6 +49,7 @@ class RepeatAction extends AbstractController
      * @throws AmoCRMoAuthApiException
      * @throws AmoCRMApiException
      * @throws AmoCRMMissedTokenException
+     * @throws \Exception
      */
     public function __invoke(Calling $calling, CallingRepository $callings, Flusher $flusher): JsonResponse
     {
@@ -68,7 +69,7 @@ class RepeatAction extends AbstractController
         $message .= $calling->getAge() ? 'Возраст пациента ' . $calling->getAge() . PHP_EOL : '';
         $message .= $calling->getEstimated() ? 'Ориентировочная цена ' . $calling->getEstimated() . PHP_EOL : '';
         $message .= $calling->getPrepayment() ? 'Предоплата ' . $calling->getPrepayment() . PHP_EOL : '';
-        $message .= $calling->getResultDate() ? 'Дата ' . $calling->getResultDate() . PHP_EOL : '';
+        $message .= $calling->getResultDateFormat() ? 'Дата ' . $calling->getResultDateFormat() . PHP_EOL : '';
         $message .= $calling->getResultTime() ? 'Время ' . $calling->getResultTime() . PHP_EOL : '';
         $message .= $calling->getNote() ? 'Примечание ' . $calling->getNote() . PHP_EOL : '';
 
@@ -87,19 +88,18 @@ class RepeatAction extends AbstractController
         $this->client->leads()->update($leads);
 
         $notesCollection = new NotesCollection();
-        $serviceMessageNote = new CommonNote();
-        $serviceMessageNote->setEntityId($entityId)
+        $messageNote = new CommonNote();
+        $messageNote->setEntityId($entityId)
             ->setText($message)
             ->setCreatedBy(0);
 
-        $notesCollection->add($serviceMessageNote);
+        $notesCollection->add($messageNote);
 
         try {
             $leadNotesService = $this->client->notes(EntityTypesInterface::LEADS);
             $leadNotesService->add($notesCollection);
         } catch (AmoCRMApiException $e) {
         }
-
 
         $calling->setComplete(new DateTimeImmutable());
         $flusher->flush();

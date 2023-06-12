@@ -58,6 +58,6 @@ class AcceptAction extends AbstractController
         $calling->setAccepted(new DateTimeImmutable());
 
         $flusher->flush();
-        return $this->json(null, Response::HTTP_ACCEPTED);
+        return $this->json($calling, Response::HTTP_ACCEPTED);
     }
 }

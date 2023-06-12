@@ -12,7 +12,7 @@ use AmoCRM\Exceptions\AmoCRMoAuthApiException;
 use AmoCRM\Filters\LeadsFilter;
 use AmoCRM\Helpers\EntityTypesInterface;
 use AmoCRM\Models\LeadModel;
-use AmoCRM\Models\NoteType\ExtendedServiceMessageNote;
+use AmoCRM\Models\NoteType\CommonNote;
 use App\Entity\Calling\Calling;
 use App\Flusher;
 use App\Repository\CallingRepository;
@@ -89,21 +89,18 @@ class HospitalizationAction extends AbstractController
         $this->client->leads()->update($leads);
 
         $notesCollection = new NotesCollection();
-        $serviceMessageNote = new ExtendedServiceMessageNote();
-        $serviceMessageNote->setEntityId($entityId)
+        $messageNote = new CommonNote();
+        $messageNote->setEntityId($entityId)
             ->setText($message)
-            ->setService('Выездное приложение')
             ->setCreatedBy(0);
 
-        $notesCollection->add($serviceMessageNote);
+        $notesCollection->add($messageNote);
 
         try {
             $leadNotesService = $this->client->notes(EntityTypesInterface::LEADS);
             $leadNotesService->add($notesCollection);
         } catch (AmoCRMApiException $e) {
         }
-
-
 
         $calling->setComplete(new DateTimeImmutable());
         $flusher->flush();

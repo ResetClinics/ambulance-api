@@ -51,7 +51,7 @@ class RepeatedCallScheduler
             throw new NotFoundHttpException('Не найден контакт при создании повтора');
         }
 
-        $name = $calling->getResultDate() . ' ' . $calling->getName() . ' ПОВТОР';
+        $name = $calling->getResultDateFormat() . ' ПОВТОР ' . $calling->getName();
 
         $newLead = new LeadModel();
         $newLead->setName($name)
