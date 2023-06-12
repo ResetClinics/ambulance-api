@@ -12,9 +12,7 @@ use AmoCRM\Exceptions\AmoCRMoAuthApiException;
 use AmoCRM\Filters\LeadsFilter;
 use AmoCRM\Helpers\EntityTypesInterface;
 use AmoCRM\Models\LeadModel;
-use AmoCRM\Models\NoteType\ChatNote;
-use AmoCRM\Models\NoteType\ExtendedServiceMessageNote;
-use AmoCRM\Models\NoteType\ServiceMessageNote;
+use AmoCRM\Models\NoteType\CommonNote;
 use App\Entity\Calling\Calling;
 use App\Flusher;
 use App\Repository\CallingRepository;
@@ -23,8 +21,6 @@ use App\Services\CallingSender;
 use App\Services\RepeatedCallScheduler;
 use DateTimeImmutable;
 use DateTimeZone;
-use DomainException;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -91,10 +87,9 @@ class RepeatAction extends AbstractController
         $this->client->leads()->update($leads);
 
         $notesCollection = new NotesCollection();
-        $serviceMessageNote = new ExtendedServiceMessageNote();
+        $serviceMessageNote = new CommonNote();
         $serviceMessageNote->setEntityId($entityId)
             ->setText($message)
-            ->setService('Выездное приложение')
             ->setCreatedBy(0);
 
         $notesCollection->add($serviceMessageNote);
