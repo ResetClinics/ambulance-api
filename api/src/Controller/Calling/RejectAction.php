@@ -57,10 +57,9 @@ class RejectAction extends AbstractController
         }
 
 
-
         $message = 'Информация от бригады' . PHP_EOL;
         $message .= 'Отмена заявки №' . $calling->getNumberCalling() . PHP_EOL;
-        $message .= $calling->getNote() ? 'Причина отмены ' . $calling->getRejectedComment() . PHP_EOL : '';
+        $message .= $calling->getRejectedComment() ? 'Причина отмены ' . $calling->getRejectedComment() . PHP_EOL : '';
 
 
         $entityId = null;
