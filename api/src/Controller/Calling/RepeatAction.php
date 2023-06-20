@@ -69,7 +69,7 @@ class RepeatAction extends AbstractController
         $message .= $calling->getAge() ? 'Возраст пациента ' . $calling->getAge() . PHP_EOL : '';
         $message .= $calling->getEstimated() ? 'Ориентировочная цена ' . $calling->getEstimated() . PHP_EOL : '';
         $message .= $calling->getPrepayment() ? 'Предоплата ' . $calling->getPrepayment() . PHP_EOL : '';
-        $message .= $calling->getResultDateFormat() ? 'Дата ' . $calling->getResultDateFormat() . PHP_EOL : '';
+        $message .= $calling->getResultDateFormat() ? '!ПОВТОР! Дата ' . $calling->getResultDateFormat() . PHP_EOL : '';
         $message .= $calling->getResultTime() ? 'Время ' . $calling->getResultTime() . PHP_EOL : '';
         $message .= $calling->getNote() ? 'Примечание ' . $calling->getNote() . PHP_EOL : '';
 
