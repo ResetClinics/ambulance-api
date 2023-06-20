@@ -4,6 +4,7 @@ namespace App\Services;
 
 use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Collections\ContactsCollection;
+use AmoCRM\Collections\CustomFieldsValuesCollection;
 use AmoCRM\Collections\Leads\LeadsCollection;
 use AmoCRM\Filters\EntitiesLinksFilter;
 use AmoCRM\Helpers\EntityTypesInterface;
@@ -53,6 +54,19 @@ class RepeatedCallScheduler
 
         $name = $calling->getResultDateFormat() . ' ПОВТОР ' . $calling->getName();
 
+        $customFieldsValues = new CustomFieldsValuesCollection();
+        foreach ($lead->getCustomFieldsValues() as $customFieldsValue){
+            //бригаду, админа и врача не переносим в повотор
+            if (
+                $customFieldsValue->getFieldId() === 875863 ||
+                $customFieldsValue->getFieldId() === 873879 ||
+                $customFieldsValue->getFieldId() === 873881
+            ){
+                continue;
+            }
+            $customFieldsValues->add($customFieldsValue);
+        }
+
         $newLead = new LeadModel();
         $newLead->setName($name)
             ->setCreatedBy(0)
@@ -60,7 +74,7 @@ class RepeatedCallScheduler
             ->setStatusId(38307805)
             ->setPipelineId(4018768)
             ->setResponsibleUserId($lead->getResponsibleUserId())
-            ->setCustomFieldsValues($lead->getCustomFieldsValues())
+            ->setCustomFieldsValues($customFieldsValues)
             ->setContacts(
                 (new ContactsCollection())
                     ->add(
