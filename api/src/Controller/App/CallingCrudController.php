@@ -9,6 +9,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class CallingCrudController extends AbstractCrudController
@@ -38,7 +39,11 @@ class CallingCrudController extends AbstractCrudController
           //  DateTimeField::new('completedAt'),
             AssociationField::new('admin'),
             AssociationField::new('doctor'),
-            TextField::new('price'),
+            IntegerField::new('price'),
+            IntegerField::new('estimated'),
+            IntegerField::new('prepayment'),
+            IntegerField::new('coastHospital'),
+           // TextField::new('price'),
         ];
     }
 
