@@ -33,8 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: ['groups' => ['user:read']],
     denormalizationContext: ['groups' => ['user:write']],
 )]
-#[UniqueEntity(fields: ['username'])]
-#[UniqueEntity(fields: ['phone'])]
+#[UniqueEntity(fields: ['phone'], message: 'Этот номер телефона уже используется.')]
 #[Post(uriTemplate: '/users/my', controller: MyAction::class, input: UserDto::class, read: false)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -46,7 +45,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 11, unique: true)]
     #[Groups(['user:read', 'user:write', 'team:item:get', 'calling:detail:read'])]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: "Телефон обязателен для заполнения.")]
+    #[Assert\Regex(
+        pattern: '/\d{10}/',
+        message: 'Номер телефона должен состоять из 10 цифр.'
+    )]
     private ?string $phone = null;
 
     #[ORM\Column]
@@ -56,7 +59,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     #[Groups(['user:read', 'user:write', 'team:item:get'])]
-    #[Assert\NotBlank]
     private ?string $position = null;
 
     #[ORM\Column(nullable: true)]
@@ -71,18 +73,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:write'])]
     private ?string $password = null;
 
+    #[Assert\Length(min: 4)]
+    private ?string $plainPassword = null;
+
     #[ORM\OneToMany(mappedBy: 'administrator', targetEntity: Team::class)]
     private Collection $teams;
 
-    #[ORM\Column(nullable: false)]
-    #[Assert\NotBlank]
-    private int $externalId;
+    #[ORM\Column(nullable: true)]
+    private ?int $externalId;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Device::class)]
     private Collection $devices;
 
 
-    public function __construct($externalId)
+    public function __construct($externalId = null)
     {
         $this->teams = new ArrayCollection();
         $this->externalId = $externalId;
@@ -92,6 +96,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getPhone(): ?string
@@ -149,13 +160,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
     /**
      * @see UserInterface
      */
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        $this->plainPassword = null;
     }
 
     public function getTeams(): Collection
@@ -238,5 +260,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->devices->removeElement($device);
 
         return $this;
+    }
+
+    public static function createFromPayload($username, array $payload): self
+    {
+        return (new self())
+            ->setId($username)
+            ->setRoles($payload['roles'])
+            ->setPhone($payload['phone'])
+            ;
     }
 }
