@@ -52,10 +52,10 @@ security:
         - { path: ^/api, roles: PUBLIC_ACCESS }
         - { path: ^/app, roles: ROLE_SUPER_ADMIN }
 
-        #- { path: ^/api/callings, roles: ROLE_ADMIN }
-        #- { path: ^/api/medicines, roles: ROLE_ADMIN }
-        #- { path: ^/api/teams, roles: ROLE_ADMIN }
-        #- { path: ^/api/users, roles: ROLE_ADMIN }
+        - { path: ^/api/callings, roles: ROLE_ADMIN }
+        - { path: ^/api/medicines, roles: ROLE_ADMIN }
+        - { path: ^/api/teams, roles: ROLE_ADMIN }
+        - { path: ^/api/users, roles: ROLE_ADMIN }
         #- { path: ^/api/amo-crm/get-team, roles: ROLE_ADMIN }
 
 when@test:
