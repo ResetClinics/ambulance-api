@@ -46,9 +46,8 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
-        - { path: ^/app/sing-in, roles: PUBLIC_ACCESS }
+        - { path: ^/sing-in, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: PUBLIC_ACCESS }
         - { path: ^/app, roles: ROLE_SUPER_ADMIN }
 
@@ -56,6 +55,9 @@ security:
         - { path: ^/api/medicines, roles: ROLE_ADMIN }
         - { path: ^/api/teams, roles: ROLE_ADMIN }
         - { path: ^/api/users, roles: ROLE_ADMIN }
+        - { path: ^/api/amo-crm, roles: PUBLIC_ACCESS }
+
+        - { path: ^/, roles: ROLE_APP }
         #- { path: ^/api/amo-crm/get-team, roles: ROLE_ADMIN }
 
 when@test:
