@@ -30,7 +30,7 @@ class HomeController extends AbstractController
         $this->serializer = $serializer;
     }
 
-    #[Route('/', name: 'app_home')]
+    #[Route('/home', name: 'app_home')]
     public function index(): Response
     {
         return $this->json(['app' => 'ambulance']);
