@@ -3,4 +3,6 @@
 .idea
 
 /public_html/bundles
+/app/bundles
+/app/images
 
