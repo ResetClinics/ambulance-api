@@ -3,6 +3,7 @@
 namespace App\Controller\App;
 
 use App\Entity\Calling\Calling;
+use App\Entity\Partner;
 use App\Entity\User\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -44,6 +45,7 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToCrud('Вызовы', 'fas fa-home', Calling::class);
+        yield MenuItem::linkToCrud('Партнеры', 'fas fa-home', Partner::class);
         yield MenuItem::section('Администрирование');
         yield MenuItem::linkToCrud('Пользователи', 'fa fa-user', User::class);
     }

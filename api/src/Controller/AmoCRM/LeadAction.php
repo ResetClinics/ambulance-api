@@ -7,13 +7,16 @@ namespace App\Controller\AmoCRM;
 use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Filters\LeadsFilter;
 use AmoCRM\Models\CustomFieldsValues\MultitextCustomFieldValuesModel;
+use AmoCRM\Models\CustomFieldsValues\ValueModels\BaseEnumCodeCustomFieldValueModel;
 use AmoCRM\Models\LeadModel;
 use App\Dto\Amo\Employee;
 use App\Dto\Amo\Lead;
 use App\Entity\Calling\Calling;
 use App\Entity\Calling\Status;
+use App\Entity\Partner;
 use App\Flusher;
 use App\Repository\CallingRepository;
+use App\Repository\PartnerRepository;
 use App\Repository\UserRepository;
 use App\Services\AmoCRM;
 use App\Services\CallingSender;
@@ -36,6 +39,7 @@ class LeadAction extends AbstractController
         AmoCRM                             $amoCRM,
         private readonly UserRepository    $users,
         private readonly CallingRepository $callings,
+        private readonly PartnerRepository $partners,
         private readonly Flusher           $flusher,
         CallingSender                     $sender
     )
@@ -169,6 +173,10 @@ class LeadAction extends AbstractController
             }
 
             if ($field->getFieldId() === 882361) {
+                $first = $field->getValues()?->first();
+                if ($first instanceof BaseEnumCodeCustomFieldValueModel) {
+                    $leadDto->partnerExternalId = $first->getEnumCode();
+                }
                 $leadDto->partnerName = $field->getValues()?->first()->getValue();
             }
             if ($field->getFieldId() === 896921) {
@@ -234,6 +242,16 @@ class LeadAction extends AbstractController
                 $doctor
             );
             $this->callings->save($calling);
+        }
+
+        if ($lead->partnerExternalId){
+            $partner = $this->partners->findOneByExternalId($lead->partnerExternalId);
+            if (!$partner){
+                $partner = new Partner();
+                $partner->setExternalId($lead->partnerExternalId);
+                $this->partners->save($partner);
+            }
+            $partner->setName($lead->partnerName);
         }
 
         $calling->setTitle($lead->name);

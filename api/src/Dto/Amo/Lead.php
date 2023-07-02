@@ -18,6 +18,7 @@ class Lead
     public ?string $description = null;
     public ?string $hz = null;
     public ?string $leadType = null;
+    public ?string $partnerExternalId = null;
     public ?string $partnerName = null;
     public bool $sendPhone = false;
 
