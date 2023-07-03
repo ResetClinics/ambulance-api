@@ -197,7 +197,7 @@ class LeadAction extends AbstractController
                         FILE_APPEND);
 
 
-                    $leadDto->partnerExternalId = $first->getEnumCode();
+                    $leadDto->partnerExternalId = $first->getEnumId();
                 }
                 $leadDto->partnerName = $field->getValues()?->first()->getValue();
             }
