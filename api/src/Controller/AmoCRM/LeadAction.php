@@ -175,28 +175,7 @@ class LeadAction extends AbstractController
             if ($field->getFieldId() === 882361) {
                 $first = $field->getValues()?->first();
 
-                file_put_contents(
-                    dirname(__DIR__) . '/../../var/get_field_id.txt',
-                    print_r(($first instanceof BaseEnumCodeCustomFieldValueModel ). PHP_EOL, true),
-                    FILE_APPEND);
-
-                file_put_contents(
-                    dirname(__DIR__) . '/../../var/get_field_id.txt',
-                    print_r(gettype($first) . PHP_EOL, true),
-                    FILE_APPEND);
-
                 if ($first instanceof BaseEnumCodeCustomFieldValueModel) {
-                    file_put_contents(
-                        dirname(__DIR__) . '/../../var/get_field_id.txt',
-                        print_r($first->getEnumId() . PHP_EOL, true),
-                        FILE_APPEND);
-
-                    file_put_contents(
-                        dirname(__DIR__) . '/../../var/get_field_id.txt',
-                        print_r($first->getEnumCode() . PHP_EOL, true),
-                        FILE_APPEND);
-
-
                     $leadDto->partnerExternalId = $first->getEnumId() ? (string)$first->getEnumId() : null;
                 }
                 $leadDto->partnerName = $field->getValues()?->first()->getValue();
