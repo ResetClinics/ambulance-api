@@ -1,13 +1,37 @@
 FROM php:8.1-fpm-alpine
 
-ENV XDEBUG_VERSION 3.1.0
-
-RUN apk add --no-cache $PHPIZE_DEPS postgresql-dev bash coreutils unzip \
-    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
-    && docker-php-ext-install pdo_pgsql pdo_mysql intl \
-    && pecl install xdebug-$XDEBUG_VERSION \
-    && docker-php-ext-enable xdebug
-
+RUN apk add --no-cache \
+ zlib-dev  \
+    libxpm-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    bash  \
+    coreutils  \
+    freetype \
+    libjpeg-turbo \
+    libpng \
+    freetype-dev \
+    libjpeg-turbo-dev \
+    libpng-dev \
+    libwebp-dev \
+    acl \
+    fcgi \
+    file \
+    gettext \
+    icu-dev \
+    git \
+    && docker-php-ext-configure gd \
+      --with-freetype=/usr/include/ \
+      --with-jpeg=/usr/include/ \
+      --with-webp=/usr/include/ \
+    && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-enable gd \
+    && docker-php-ext-install \
+      intl \
+      pdo_mysql \
+      zip \
+      opcache
 
 RUN mv $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
 
