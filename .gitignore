@@ -6,3 +6,7 @@
 /app/bundles
 /app/images
 
+*.access.log
+*.access.log.*
+*.error.log
+*.error.log.*
