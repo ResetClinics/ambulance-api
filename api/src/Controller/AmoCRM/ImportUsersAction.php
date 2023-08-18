@@ -7,17 +7,13 @@ namespace App\Controller\AmoCRM;
 use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Exceptions\AmoCRMApiNoContentException;
 use AmoCRM\Filters\LeadsFilter;
-use AmoCRM\Models\CustomFieldsValues\MultitextCustomFieldValuesModel;
 use AmoCRM\Models\LeadModel;
-use AmoCRM\Models\Leads\Pipelines\Statuses\StatusModel;
 use AmoCRM\Models\TagModel;
 use App\Dto\Amo\Employee;
-use App\Dto\Amo\Lead;
 use App\Entity\User\User;
 use App\Flusher;
 use App\Repository\AmoCrmTokenRepository;
 use App\Repository\UserRepository;
-use Carbon\Carbon;
 use League\OAuth2\Client\Token\AccessTokenInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -34,9 +30,9 @@ class ImportUsersAction extends AbstractController
     private Flusher $flusher;
 
     public function __construct(
-        UserRepository $users,
+        UserRepository        $users,
         AmoCrmTokenRepository $tokens,
-        Flusher $flusher
+        Flusher               $flusher
 
     )
     {
@@ -66,16 +62,16 @@ class ImportUsersAction extends AbstractController
 
         /** @var Employee[] $employees */
         $employees = $this->getUsers();
-        foreach ($employees as $employee){
+        foreach ($employees as $employee) {
 
             $count = $this->users->getCountUsers();
 
             $user = $this->users->findOneByExternalId($employee->getId());
-            if ($user){
+            if ($user) {
                 $user->setRoles([$employee->getRole()]);
                 $user->setName($employee->getName());
                 $this->flusher->flush();
-            }else{
+            } else {
                 $user = new User($employee->getId());
                 $user->setRoles([$employee->getRole()]);
                 $user->setPosition('');
@@ -98,21 +94,26 @@ class ImportUsersAction extends AbstractController
         $employees = [];
         foreach ($leads as $lead) {
             $employee = $this->getAmoUser($lead);
-            if ($employee){
+            if ($employee) {
                 $employees[] = $employee;
             }
         }
         while ($leads->getNextPageLink()) {
-            $leads = $leadsService->nextPage($leads);
-            foreach ($leads as $lead) {
-               $employee = $this->getAmoUser($lead);
-                if ($employee){
-                    $employees[] = $employee;
+            try {
+                $leads = $leadsService->nextPage($leads);
+                foreach ($leads as $lead) {
+                    $employee = $this->getAmoUser($lead);
+                    if ($employee) {
+                        $employees[] = $employee;
+                    }
                 }
+            } catch (AmoCRMApiNoContentException $exception) {
+                return $employees;
             }
+
         }
 
-       return $employees;
+        return $employees;
     }
 
     private function getAmoUser(LeadModel $lead): ?Employee
@@ -128,10 +129,10 @@ class ImportUsersAction extends AbstractController
         $role = null;
         /** @var TagModel $tag */
         foreach ($lead->getTags() as $tag) {
-            if ($tag->getId() === 62145){
+            if ($tag->getId() === 62145) {
                 $role = 'ROLE_ADMIN';
             }
-            if ($tag->getId() === 62135){
+            if ($tag->getId() === 62135) {
                 $role = 'ROLE_DOCTOR';
             }
         }
