@@ -21,6 +21,7 @@ use App\Controller\Calling\CurrentAction;
 use App\Controller\Calling\HospitalizationAction;
 use App\Controller\Calling\RejectAction;
 use App\Controller\Calling\RepeatAction;
+use App\Entity\Partner;
 use App\Entity\User\User;
 use App\Repository\CallingRepository;
 use DateTimeImmutable;
@@ -203,6 +204,9 @@ class Calling
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['calling:read', 'calling:write'])]
     private ?string $resultTime = null;
+
+    #[ORM\ManyToOne(inversedBy: 'callings')]
+    private ?Partner $partner = null;
 
 
     public function __construct(
@@ -649,6 +653,9 @@ class Calling
         return $this->resultDate;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function getResultDateFormat(): ?string
     {
         return $this->resultDate ? (new DateTimeImmutable($this->resultDate))->format('d.m.y') : null;
@@ -681,5 +688,17 @@ class Calling
     public function setUpdatedAt(DateTimeImmutable $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
+    }
+
+    public function getPartner(): ?Partner
+    {
+        return $this->partner;
+    }
+
+    public function setPartner(?Partner $partner): self
+    {
+        $this->partner = $partner;
+
+        return $this;
     }
 }

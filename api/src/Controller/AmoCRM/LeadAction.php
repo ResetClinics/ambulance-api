@@ -253,6 +253,7 @@ class LeadAction extends AbstractController
                 $this->partners->save($partner);
             }
             $partner->setName($lead->partnerName);
+            $calling->setPartner($partner);
         }
 
         $calling->setTitle($lead->name);
