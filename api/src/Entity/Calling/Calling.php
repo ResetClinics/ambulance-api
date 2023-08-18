@@ -28,6 +28,7 @@ use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use DomainException;
+use Exception;
 use Symfony\Component\Serializer\Annotation\Context;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
@@ -208,6 +209,8 @@ class Calling
     #[ORM\ManyToOne(inversedBy: 'callings')]
     private ?Partner $partner = null;
 
+    #[ORM\Column(nullable: false, options: ['default' => false])]
+    private bool $deleted;
 
     public function __construct(
         string  $numberCalling,
@@ -231,6 +234,7 @@ class Calling
         $this->title = $title;
         $this->admin = $admin;
         $this->doctor = $doctor;
+        $this->deleted = false;
     }
 
 
@@ -654,7 +658,7 @@ class Calling
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function getResultDateFormat(): ?string
     {
@@ -698,6 +702,18 @@ class Calling
     public function setPartner(?Partner $partner): self
     {
         $this->partner = $partner;
+
+        return $this;
+    }
+
+    public function isDeleted(): bool
+    {
+        return $this->deleted;
+    }
+
+    public function setDeleted(bool $deleted): self
+    {
+        $this->deleted = $deleted;
 
         return $this;
     }
