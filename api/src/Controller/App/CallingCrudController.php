@@ -46,7 +46,9 @@ class CallingCrudController extends AbstractCrudController
             ->add('price')
             ->add('status')
             ->add('partner')
-            ->add(DateTimeFilter::new('createdAt'));
+            ->add('admin')
+            ->add('doctor')
+            ->add(DateTimeFilter::new('createdAt'))
             ;
     }
 
@@ -58,12 +60,12 @@ class CallingCrudController extends AbstractCrudController
             TextField::new('name'),
             TextField::new('address'),
             TextField::new('status'),
-            TextField::new('description'),
-            TextField::new('chronicDiseases'),
+           // TextField::new('description'),
+            //TextField::new('chronicDiseases'),
             TextField::new('nosology'),
             TextField::new('age'),
             TextField::new('leadType'),
-            TextField::new('partnerName'),
+          //  TextField::new('partnerName'),
             TextField::new('rejectedComment'),
             DateTimeField::new('createdAt'),
           //  DateTimeField::new('acceptedAt'),
