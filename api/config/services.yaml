@@ -27,3 +27,7 @@ services:
         arguments: [ '@request_stack' ]
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
+
+    App\Services\YaGeolocation\Api:
+        arguments:
+            $token : "%env(YA_GEOLOCATION_TOKEN)%"

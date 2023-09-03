@@ -212,6 +212,15 @@ class Calling
     #[ORM\Column(nullable: false, options: ['default' => false])]
     private bool $deleted;
 
+    #[ORM\Column(length: 16, nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
+    private ?string $lon;
+
+    #[ORM\Column(length: 16, nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
+    private ?string $lat;
+
+
     public function __construct(
         string  $numberCalling,
         string  $title,
@@ -235,6 +244,8 @@ class Calling
         $this->admin = $admin;
         $this->doctor = $doctor;
         $this->deleted = false;
+        $this->lat = null;
+        $this->lon = null;
     }
 
 
@@ -716,5 +727,25 @@ class Calling
         $this->deleted = $deleted;
 
         return $this;
+    }
+
+    public function getLon(): ?string
+    {
+        return $this->lon;
+    }
+
+    public function setLon(?string $lon): void
+    {
+        $this->lon = $lon;
+    }
+
+    public function getLat(): ?string
+    {
+        return $this->lat;
+    }
+
+    public function setLat(?string $lat): void
+    {
+        $this->lat = $lat;
     }
 }

@@ -20,14 +20,17 @@ use App\Repository\PartnerRepository;
 use App\Repository\UserRepository;
 use App\Services\AmoCRM;
 use App\Services\CallingSender;
+use App\Services\YaGeolocation\Api;
 use Carbon\Carbon;
 use DateTimeImmutable;
 use DomainException;
+use mysql_xdevapi\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\iterator;
 
 #[Route('/api/amo-crm/lead', name: 'amo-crm_lead', methods: ["POST"])]
 class LeadAction extends AbstractController
@@ -36,6 +39,7 @@ class LeadAction extends AbstractController
     private CallingSender $sender;
 
     public function __construct(
+        private readonly Api $geocodingApi,
         AmoCRM                             $amoCRM,
         private readonly UserRepository    $users,
         private readonly CallingRepository $callings,
@@ -281,6 +285,16 @@ class LeadAction extends AbstractController
 
         if ($lead->dateTime) {
             $calling->setDateTime(new DateTimeImmutable($lead->dateTime));
+        }
+
+        if((!$calling->getLat() || !$calling->getLon()) && !empty($calling->getAddress())){
+            try {
+                $geolocation = $this->geocodingApi->getPositionByAddress($calling->getAddress());
+                if ($geolocation){
+                    $calling->setLat($geolocation->getLat());
+                    $calling->setLon($geolocation->getLon());
+                }
+            }catch (DomainException){}
         }
 
         $this->flusher->flush();
