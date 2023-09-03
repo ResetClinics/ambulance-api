@@ -19,6 +19,8 @@ use App\Controller\Calling\CoddingAction;
 use App\Controller\Calling\CompleteAction;
 use App\Controller\Calling\CurrentAction;
 use App\Controller\Calling\HospitalizationAction;
+use App\Controller\Calling\HospitalizationWithoutTherapyAction;
+use App\Controller\Calling\HospitalizationWithTherapyAction;
 use App\Controller\Calling\RejectAction;
 use App\Controller\Calling\RepeatAction;
 use App\Entity\Partner;
@@ -58,6 +60,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[Post(uriTemplate: '/callings/{id}/complete', controller: CompleteAction::class)]
 #[Post(uriTemplate: '/callings/{id}/codding', controller: CoddingAction::class)]
 #[Post(uriTemplate: '/callings/{id}/hospitalization', controller: HospitalizationAction::class)]
+#[Post(uriTemplate: '/callings/{id}/hospitalization-with-therapy', controller: HospitalizationWithTherapyAction::class)]
+#[Post(uriTemplate: '/callings/{id}/hospitalization-without-therapy', controller: HospitalizationWithoutTherapyAction::class)]
 #[Post(uriTemplate: '/callings/{id}/repeat', controller: RepeatAction::class)]
 #[ApiFilter(OrderFilter::class, properties: ['createdAt', 'updatedAt'], arguments: ['orderParameterName' => 'order'])]
 class Calling
