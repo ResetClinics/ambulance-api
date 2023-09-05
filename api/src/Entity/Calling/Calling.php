@@ -192,6 +192,10 @@ class Calling
 
     #[ORM\Column(nullable: true)]
     #[Groups(['calling:read', 'calling:write'])]
+    private ?int $coastHospitalAdmission = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
     private ?int $coastHospital = null;
 
     #[ORM\Column(nullable: true)]
@@ -751,5 +755,15 @@ class Calling
     public function setLat(?string $lat): void
     {
         $this->lat = $lat;
+    }
+
+    public function getCoastHospitalAdmission(): ?int
+    {
+        return $this->coastHospitalAdmission;
+    }
+
+    public function setCoastHospitalAdmission(?int $coastHospitalAdmission): void
+    {
+        $this->coastHospitalAdmission = $coastHospitalAdmission;
     }
 }
