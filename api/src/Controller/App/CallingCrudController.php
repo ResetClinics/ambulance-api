@@ -49,6 +49,7 @@ class CallingCrudController extends AbstractCrudController
             ->add('admin')
             ->add('doctor')
             ->add(DateTimeFilter::new('createdAt'))
+            ->add(DateTimeFilter::new('completedAt'))
             ;
     }
 
