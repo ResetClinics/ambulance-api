@@ -53,9 +53,8 @@ class CheckGeoCommand extends Command
                 try {
                     dump($calling->getAddress());
                     $geolocation = $this->geocodingApi->getPositionByAddress($calling->getAddress());
-                    dd($geolocation);
+                    dump($geolocation);
                     if ($geolocation){
-                        dd($geolocation);
                         $calling->setLat($geolocation->getLat());
                         $calling->setLon($geolocation->getLon());
                     }
