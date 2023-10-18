@@ -71,7 +71,8 @@ services:
       - ./api:/app
 
   ambulance-mysql:
-    image: mysql:5.7.21
+    platform: linux/x86_64
+    image: mysql:5.7.43
     volumes:
       - ambulance-mysql:/var/lib/mysql
     environment:

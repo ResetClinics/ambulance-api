@@ -60,7 +60,7 @@ class CallingCrudController extends AbstractCrudController
             TextField::new('name'),
             TextField::new('address'),
             TextField::new('status'),
-           // TextField::new('description'),
+            TextField::new('title'),
             //TextField::new('chronicDiseases'),
             TextField::new('nosology'),
             TextField::new('age'),
@@ -126,9 +126,17 @@ class CallingCrudController extends AbstractCrudController
         $entities = [];
         /** @var Calling $calling */
         foreach ($callings as $calling){
+
+            $name = $calling->getTitle();
+            $name = preg_replace('/[.,\d]/', '', $name);
+            $name = str_replace('ПОВТОР', '' , $name);
+            $name = preg_replace('/\s+/', ' ', $name);
+            $name = preg_replace('/\s*\([^)]*\)/', '', $name);
+            $name = trim($name);
+
             $entities[] = [
               'number' => $calling->getNumberCalling(),
-              'name' => $calling->getName(),
+              'name' => $name,
               'address' => $calling->getAddress(),
               'partner' => $calling->getPartner()?->getName(),
               'created' => $calling->getCreatedAt()?->format('d.m.y'),

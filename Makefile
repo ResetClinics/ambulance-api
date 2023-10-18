@@ -1,6 +1,6 @@
 init: init-ci
 init-ci: clear \
-	docker-pull docker-build docker-up \
+	docker-pull docker-build create-volumes docker-up \
 	api-init
 
 clear: docker-down-clear api-clear
@@ -8,6 +8,9 @@ clear: docker-down-clear api-clear
 up: docker-up
 down: docker-down
 restart: down up
+
+create-volumes:
+	docker volume create ambulance-mysql
 
 check: lint analyze validate-schema test test-e2e
 lint: api-lint
