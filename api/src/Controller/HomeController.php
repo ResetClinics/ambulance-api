@@ -30,6 +30,15 @@ class HomeController extends AbstractController
         $this->serializer = $serializer;
     }
 
+    #[Route('/api/version', name: 'version')]
+    public function version(): Response
+    {
+        return $this->json([
+            'min' => '1.0.0',
+            'target' => '1.0.0',
+        ]);
+    }
+
     #[Route('/home', name: 'app_home')]
     public function index(): Response
     {
