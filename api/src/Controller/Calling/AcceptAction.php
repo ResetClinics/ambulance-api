@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Calling;
 
 use AmoCRM\Client\AmoCRMApiClient;
+use AmoCRM\Exceptions\AmoCRMApiException;
 use AmoCRM\Filters\LeadsFilter;
 use AmoCRM\Models\LeadModel;
 use App\Entity\Calling\Calling;
@@ -52,8 +53,12 @@ class AcceptAction extends AbstractController
             $lead->setStatusId(38187418);
         }
 
-        $this->client->leads()->update($leads);
 
+        try {
+            $this->client->leads()->update($leads);
+        } catch (AmoCRMApiException $e) {
+            throw new DomainException(json_encode($this->client->leads()->getLastRequestInfo()));
+        }
 
         $calling->setAccepted(new DateTimeImmutable());
 
