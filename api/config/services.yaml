@@ -32,6 +32,6 @@ services:
         arguments:
             $token : "%env(YA_GEOLOCATION_TOKEN)%"
 
-    App\Services\YaGeolocation\Api:
+    App\Services\CallingSender:
         arguments:
             $token : "%env(FIREBASE_SERVER_TOKEN)%
