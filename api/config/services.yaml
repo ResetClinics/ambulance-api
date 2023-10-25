@@ -34,4 +34,4 @@ services:
 
     App\Services\CallingSender:
         arguments:
-            $token : "%env(FIREBASE_SERVER_TOKEN)%
+            $token : "%env(FIREBASE_SERVER_TOKEN)%"
