@@ -44,7 +44,7 @@ api-clear:
 
 api-init: api-permissions api-wait-db \
 	api-composer-install \
-	api-test-migrations api-migrations \
+	api-migrations \
 	jwt-generate-keypair
 
 api-test-bd-create:

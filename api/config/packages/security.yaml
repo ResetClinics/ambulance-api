@@ -49,7 +49,7 @@ security:
         - { path: ^/sing-in, roles: PUBLIC_ACCESS }
         - { path: ^/app, roles: ROLE_SUPER_ADMIN }
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
-        - { path: ^/api/callings, roles: ROLE_ADMIN }
+        #- { path: ^/api/callings, roles: ROLE_ADMIN }
         - { path: ^/api/medicines, roles: ROLE_ADMIN }
         - { path: ^/api/teams, roles: ROLE_ADMIN }
         - { path: ^/api/users, roles: ROLE_ADMIN }

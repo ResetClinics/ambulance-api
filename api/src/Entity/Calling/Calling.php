@@ -42,11 +42,18 @@ use Gedmo\Mapping\Annotation as Gedmo;
         new GetCollection(),
         new Post(),
         new Get(
-            normalizationContext: ['groups' => ['calling:read', 'calling:item:read', 'calling:detail:read']]
+            normalizationContext: [
+                'groups' => [
+                    'calling:read',
+                    'calling:item:read',
+                    'calling:detail:read',
+                    'partner:item:read'
+                ]
+            ]
         ),
         new Put(),
     ],
-    normalizationContext: ['groups' => ['calling:read']],
+    normalizationContext: ['groups' => ['calling:read',  'partner:item:read']],
     denormalizationContext: ['groups' => ['calling:write']]
 )]
 #[ApiFilter(SearchFilter::class, properties: ['team' => 'exact'])]
@@ -215,6 +222,8 @@ class Calling
     private ?string $resultTime = null;
 
     #[ORM\ManyToOne(inversedBy: 'callings')]
+    #[Groups(['calling:read'])]
+    #[ApiFilter(SearchFilter::class, properties: ['partner.id' => 'exact'])]
     private ?Partner $partner = null;
 
     #[ORM\Column(nullable: false, options: ['default' => false])]
