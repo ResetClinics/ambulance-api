@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Entity\Calling\Calling;
+use App\Entity\Partner\Agreement\Agreement;
 use App\Repository\PartnerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -44,9 +45,13 @@ class Partner
     #[ORM\OneToMany(mappedBy: 'partner', targetEntity: Calling::class)]
     private Collection $callings;
 
+    #[ORM\OneToMany(mappedBy: 'partner', targetEntity: Agreement::class)]
+    private Collection $agreements;
+
     public function __construct()
     {
         $this->callings = new ArrayCollection();
+        $this->agreements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -111,5 +116,35 @@ class Partner
     public function __toString(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @return Collection<int, Agreement>
+     */
+    public function getAgreements(): Collection
+    {
+        return $this->agreements;
+    }
+
+    public function addAgreement(Agreement $agreement): self
+    {
+        if (!$this->agreements->contains($agreement)) {
+            $this->agreements->add($agreement);
+            $agreement->setPartner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAgreement(Agreement $agreement): self
+    {
+        if ($this->agreements->removeElement($agreement)) {
+            // set the owning side to null (unless already changed)
+            if ($agreement->getPartner() === $this) {
+                $agreement->setPartner(null);
+            }
+        }
+
+        return $this;
     }
 }
