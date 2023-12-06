@@ -2,12 +2,17 @@
 
 namespace App\Entity\Partner\Agreement;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Entity\Service\Service;
 use App\Repository\Partner\Agreement\RowRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RowRepository::class)]
+#[ApiResource(
+    openapi: false
+)]
 class Row
 {
     #[ORM\Id]
@@ -16,6 +21,7 @@ class Row
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'rows')]
+    #[Assert\NotBlank]
     private ?Agreement $agreement = null;
 
     #[ORM\Column(nullable: true)]
@@ -24,14 +30,18 @@ class Row
 
     #[ORM\ManyToOne(inversedBy: 'rows')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['agreement:read', 'agreement:write'])]
+    #[Assert\NotBlank]
     private ?Service $service = null;
 
     #[ORM\Column]
     #[Groups(['agreement:read', 'agreement:write'])]
+    #[Assert\NotBlank]
     private ?float $percent = null;
 
     #[ORM\Column]
     #[Groups(['agreement:read', 'agreement:write'])]
+    #[Assert\NotBlank]
     private ?int $repeatNumber = null;
 
 

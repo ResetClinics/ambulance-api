@@ -2,6 +2,8 @@
 
 namespace App\Entity\Partner\Agreement;
 
+use ApiPlatform\Doctrine\Common\Filter\DateFilterInterface;
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
@@ -11,10 +13,14 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Entity\Partner;
 use App\Repository\Partner\Agreement\AgreementRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Context;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AgreementRepository::class)]
 #[ApiResource(
@@ -25,10 +31,22 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Post(),
         new Get(),
     ],
-    normalizationContext: ['groups' => ['agreement:read', 'agreement:item:read', 'partner:item:read']],
+    normalizationContext: [
+        'groups' => [
+            'agreement:read',
+            'agreement:item:read',
+            'partner:item:read',
+            'service:item:read'
+        ]],
     denormalizationContext: ['groups' => ['agreement:write']],
 )]
 #[ApiFilter(OrderFilter::class, properties: ['startsAt'], arguments: ['orderParameterName' => 'order'])]
+#[ApiFilter(
+    DateFilter::class,
+    properties: [
+        'startsAt' => DateFilterInterface::EXCLUDE_NULL,
+    ]
+)]
 class Agreement
 {
     #[ORM\Id]
@@ -41,14 +59,18 @@ class Agreement
     #[ORM\JoinColumn(nullable: false)]
     #[ApiFilter(SearchFilter::class, properties: ['partner.id' => 'exact'])]
     #[Groups(['agreement:item:read', 'agreement:write'])]
+    #[Assert\NotBlank]
     private ?Partner $partner = null;
 
     #[ORM\Column]
     #[Groups(['agreement:item:read', 'agreement:write'])]
-    private ?\DateTimeImmutable $startsAt = null;
+    #[Assert\NotBlank]
+    #[Context(normalizationContext: [DateTimeNormalizer::FORMAT_KEY => 'd.m.Y'])]
+    private ?DateTimeImmutable $startsAt = null;
 
     #[ORM\OneToMany(mappedBy: 'agreement', targetEntity: Row::class, cascade: ['persist'])]
     #[Groups(['agreement:read', 'agreement:write'])]
+    #[Assert\Count(min: 1, minMessage: "В соглашении должна быть хоть одна строка.")]
     private Collection $rows;
 
     public function __construct()
@@ -73,12 +95,12 @@ class Agreement
         return $this;
     }
 
-    public function getStartsAt(): ?\DateTimeImmutable
+    public function getStartsAt(): ?DateTimeImmutable
     {
         return $this->startsAt;
     }
 
-    public function setStartsAt(\DateTimeImmutable $startsAt): self
+    public function setStartsAt(DateTimeImmutable $startsAt): self
     {
         $this->startsAt = $startsAt;
 
