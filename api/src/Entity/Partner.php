@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
@@ -36,6 +38,7 @@ class Partner
 
     #[ORM\Column(length: 255)]
     #[Groups(['partner:item:read', 'partner:write'])]
+    #[ApiFilter(SearchFilter::class, properties: ['name' => 'partial'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
