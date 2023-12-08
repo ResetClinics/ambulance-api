@@ -25,7 +25,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: CallRepository::class)]
-#[ORM\Table(name: 'calling___')]
+#[ORM\Table(name: 'calling')]
 #[ApiResource(
     operations: [
         new GetCollection(),
@@ -41,7 +41,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
         ),
     ],
     normalizationContext: ['groups' => ['call:read',  'partner:item:read']],
-    denormalizationContext: ['groups' => ['call:write']]
+    denormalizationContext: ['groups' => ['call:write']],
+    paginationClientEnabled: true,
+    paginationClientItemsPerPage: true
 )]
 #[ApiFilter(SearchFilter::class, properties: ['team' => 'exact'])]
 #[ApiFilter(OrderFilter::class, properties: ['createdAt', 'updatedAt'], arguments: ['orderParameterName' => 'order'])]
