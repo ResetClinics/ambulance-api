@@ -26,6 +26,7 @@ class AgreementTemplate
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['agreement:read'])]
     private ?int $id = null;
 
     #[ORM\Column(nullable: true)]
