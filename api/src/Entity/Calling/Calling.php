@@ -18,6 +18,7 @@ use App\Controller\Calling\ArriveAction;
 use App\Controller\Calling\CoddingAction;
 use App\Controller\Calling\CompleteAction;
 use App\Controller\Calling\CurrentAction;
+use App\Controller\Calling\DispatchAction;
 use App\Controller\Calling\HospitalizationAction;
 use App\Controller\Calling\HospitalizationWithoutTherapyAction;
 use App\Controller\Calling\HospitalizationWithTherapyAction;
@@ -59,7 +60,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[ApiFilter(SearchFilter::class, properties: ['team' => 'exact'])]
 #[Post(uriTemplate: '/callings/current', controller: CurrentAction::class, input: CallingDto::class, read: false)]
 #[Post(uriTemplate: '/callings/{id}/accept', controller: AcceptAction::class, input: CallingDto::class, read: false)]
-#[Post(uriTemplate: '/callings/{id}/dispatch', controller: ArriveAction::class, input: CallingDto::class, read: false)]
+#[Post(uriTemplate: '/callings/{id}/dispatch', controller: DispatchAction::class, input: CallingDto::class, read: false)]
 #[Post(uriTemplate: '/callings/{id}/arrive', controller: ArriveAction::class, input: CallingArriveDto::class, read: false)]
 #[Post(uriTemplate: '/callings/{id}/complete', controller: CompleteAction::class)]
 #[Post(uriTemplate: '/callings/{id}/codding', controller: CoddingAction::class)]
