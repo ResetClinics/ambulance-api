@@ -25,7 +25,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: CallRepository::class)]
-#[ORM\Table(name: 'calling__')]
+#[ORM\Table(name: 'calling')]
 #[ApiResource(
     operations: [
         new GetCollection(),
