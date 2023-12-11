@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity\User;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
@@ -12,11 +14,12 @@ use ApiPlatform\Metadata\Put;
 use App\Controller\User\MyAction;
 use App\Entity\Device;
 use App\Entity\Team\Team;
+use App\Filter\Realty\Lead\SearchByContactFilter;
+use App\Filter\User\SearchByNameAndPhoneAndEmailFilter;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use phpDocumentor\Reflection\Types\This;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -36,6 +39,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[UniqueEntity(fields: ['phone'], message: 'Этот номер телефона уже используется.')]
 #[Post(uriTemplate: '/users/my', controller: MyAction::class, input: UserDto::class, read: false)]
+#[ApiFilter(
+    SearchByNameAndPhoneAndEmailFilter::class,
+    properties: ['search']
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
