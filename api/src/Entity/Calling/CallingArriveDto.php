@@ -7,9 +7,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class CallingArriveDto
 {
-    #[Assert\NotNull]
-    #[Groups(['calling:read', 'calling:write'])]
-    public ?string $fio = null;
-    #[Groups(['calling:read', 'calling:write'])]
-    public ?string $passport = null;
+    public function __construct(
+        #[Assert\NotNull]
+        #[Groups(['calling:write'])]
+        public readonly ?string $fio = null,
+        #[Groups(['calling:write'])]
+        public readonly ?string $passport = null,
+        #[Assert\NotNull]
+        #[Groups(['calling:write'])]
+        public readonly ?string $age = null
+    )
+    {}
 }
