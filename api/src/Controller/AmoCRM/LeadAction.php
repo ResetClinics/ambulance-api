@@ -277,8 +277,12 @@ class LeadAction extends AbstractController
 
         if ($lead->statusId === 38307946 || $lead->statusId === 38874646) {
             $calling->setStatus(Status::assigned());
-        } elseif ($lead->statusId === 38187418) {
+        } elseif ($lead->statusId === 62358394) {
             $calling->setStatus(Status::accepted());
+        } elseif ($lead->statusId === 38187418) {
+            $calling->setStatus(Status::dispatched());
+        } elseif ($lead->statusId === 62358398) {
+            $calling->setStatus(Status::arrived());
         } else {
             $calling->setStatus(Status::completed());
         }
