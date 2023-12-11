@@ -49,7 +49,7 @@ class DispatchAction extends AbstractController
         $this->client->leads()->update($leads);
 
 
-        $calling->setAccepted(new DateTimeImmutable());
+        $calling->setDispatched(new DateTimeImmutable());
 
         $flusher->flush();
         return $this->json($calling, Response::HTTP_ACCEPTED);
