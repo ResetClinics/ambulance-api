@@ -49,7 +49,7 @@ class AcceptAction extends AbstractController
 
         /** @var LeadModel $lead */
         foreach ($leads as $lead) {
-            $lead->setStatusId(38187418);
+            $lead->setStatusId(62358394);
         }
 
         $this->client->leads()->update($leads);

@@ -59,17 +59,15 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[ApiFilter(SearchFilter::class, properties: ['team' => 'exact'])]
 #[Post(uriTemplate: '/callings/current', controller: CurrentAction::class, input: CallingDto::class, read: false)]
 #[Post(uriTemplate: '/callings/{id}/accept', controller: AcceptAction::class, input: CallingDto::class, read: false)]
-#[Post(
-    uriTemplate: '/callings/{id}/reject',
-    controller: RejectAction::class
-)]
-#[Post(uriTemplate: '/callings/arrive', controller: ArriveAction::class, input: CallingDto::class, read: false)]
+#[Post(uriTemplate: '/callings/{id}/dispatch', controller: ArriveAction::class, input: CallingDto::class, read: false)]
+#[Post(uriTemplate: '/callings/{id}/arrive', controller: ArriveAction::class, input: CallingArriveDto::class, read: false)]
 #[Post(uriTemplate: '/callings/{id}/complete', controller: CompleteAction::class)]
 #[Post(uriTemplate: '/callings/{id}/codding', controller: CoddingAction::class)]
 #[Post(uriTemplate: '/callings/{id}/hospitalization', controller: HospitalizationAction::class)]
 #[Post(uriTemplate: '/callings/{id}/hospitalization-with-therapy', controller: HospitalizationWithTherapyAction::class)]
 #[Post(uriTemplate: '/callings/{id}/hospitalization-without-therapy', controller: HospitalizationWithoutTherapyAction::class)]
 #[Post(uriTemplate: '/callings/{id}/repeat', controller: RepeatAction::class)]
+#[Post(uriTemplate: '/callings/{id}/reject',controller: RejectAction::class)]
 #[ApiFilter(OrderFilter::class, properties: ['createdAt', 'updatedAt'], arguments: ['orderParameterName' => 'order'])]
 class Calling
 {
@@ -90,6 +88,10 @@ class Calling
     #[ORM\Column(length: 16)]
     #[Groups(['calling:read', 'calling:write'])]
     private string $phone;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
+    private ?string $fio = null;
 
     #[ORM\Column(length: 32)]
     #[Groups(['calling:read', 'calling:write'])]
@@ -152,6 +154,10 @@ class Calling
     #[ORM\Column(nullable: true)]
     #[Groups(['calling:read'])]
     private ?DateTimeImmutable $acceptedAt = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read'])]
+    private ?DateTimeImmutable $dispatchedAt = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['calling:read'])]
@@ -294,12 +300,19 @@ class Calling
 
     public function setArrived(DateTimeImmutable $arrivedAt): void
     {
-        if (!$this->status->isAccepted()) {
-            throw new DomainException('Вызов имеет статус отличный от принят');
-        }
+        //if (!$this->status->isAccepted()) {
+        //    throw new DomainException('Вызов имеет статус отличный от принят');
+        //}
         $this->status = Status::arrived();
         $this->arrivedAt = $arrivedAt;
     }
+
+    public function setDispatched(DateTimeImmutable $dispatchedAt): void
+    {
+        $this->status = Status::dispatched();
+        $this->dispatchedAt = $dispatchedAt;
+    }
+
 
     public function setComplete(DateTimeImmutable $completedAt): void
     {
@@ -774,5 +787,20 @@ class Calling
     public function setCoastHospitalAdmission(?int $coastHospitalAdmission): void
     {
         $this->coastHospitalAdmission = $coastHospitalAdmission;
+    }
+
+    public function getFio(): ?string
+    {
+        return $this->fio;
+    }
+
+    public function setFio(?string $fio): void
+    {
+        $this->fio = $fio;
+    }
+
+    public function getDispatchedAt(): ?DateTimeImmutable
+    {
+        return $this->dispatchedAt;
     }
 }

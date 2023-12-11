@@ -8,20 +8,22 @@ use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Filters\LeadsFilter;
 use AmoCRM\Models\LeadModel;
 use App\Entity\Calling\Calling;
-use App\Entity\Calling\CallingArriveDto;
+use App\Entity\User\User;
 use App\Flusher;
 use App\Repository\CallingRepository;
 use App\Repository\TeamRepository;
 use App\Services\AmoCRM;
 use DateTimeImmutable;
+use DomainException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-class ArriveAction extends AbstractController
+class DispatchAction extends AbstractController
 {
+
     private AmoCRMApiClient $client;
     public function __construct(
         AmoCRM                             $amoCRM
@@ -30,13 +32,10 @@ class ArriveAction extends AbstractController
         $this->client = $amoCRM->getClient();
     }
 
-    public function __invoke(
-        Calling $calling,
-        CallingArriveDto $dto,
-        TeamRepository $teams,
-        CallingRepository $callings,
-        Flusher $flusher): JsonResponse
+    public function __invoke(Calling $calling, TeamRepository $teams, CallingRepository $callings, Flusher $flusher): JsonResponse
     {
+        /** @var User $user */
+        $user = $this->getUser();
 
         $filter = new LeadsFilter();
         $filter->setIds([$calling->getNumberCalling()]);
@@ -45,16 +44,13 @@ class ArriveAction extends AbstractController
 
         /** @var LeadModel $lead */
         foreach ($leads as $lead) {
-            $lead->setStatusId(62358398);
+            $lead->setStatusId(38187418);
         }
 
         $this->client->leads()->update($leads);
 
 
-        $calling->setFio($dto->fio);
-        $calling->setPassport($dto->passport);
-
-        $calling->setArrived(new DateTimeImmutable());
+        $calling->setAccepted(new DateTimeImmutable());
 
         $flusher->flush();
         return $this->json($calling, Response::HTTP_ACCEPTED);

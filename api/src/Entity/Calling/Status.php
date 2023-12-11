@@ -11,10 +11,11 @@ class Status
     public const ASSIGNED = 'assigned';
     public const ACCEPTED = 'accepted';
 
-    public const REJECTED = 'rejected';
+    public const DISPATCHED = 'dispatched';
 
     public const ARRIVED = 'arrived';
     public const COMPLETED = 'completed';
+    public const REJECTED = 'rejected';
 
     private string $name;
 
@@ -23,6 +24,7 @@ class Status
         Assert::oneOf($name, [
             self::ASSIGNED,
             self::ACCEPTED,
+            self::DISPATCHED,
             self::REJECTED,
             self::ARRIVED,
             self::COMPLETED,
@@ -39,6 +41,11 @@ class Status
     public static function accepted(): self
     {
         return new self(self::ACCEPTED);
+    }
+
+    public static function dispatched(): self
+    {
+        return new self(self::DISPATCHED);
     }
 
     public static function rejected(): self
@@ -74,6 +81,11 @@ class Status
     public function isAccepted(): bool
     {
         return $this->name === self::ACCEPTED;
+    }
+
+    public function isDispatched(): bool
+    {
+        return $this->name === self::DISPATCHED;
     }
 
     public function isRejected(): bool

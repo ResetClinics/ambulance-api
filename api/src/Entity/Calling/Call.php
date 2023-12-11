@@ -25,7 +25,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: CallRepository::class)]
-#[ORM\Table(name: 'calling')]
+#[ORM\Table(name: 'calling__')]
 #[ApiResource(
     operations: [
         new GetCollection(),
@@ -131,6 +131,9 @@ class Call
 
     #[ORM\Column(nullable: true)]
     #[Groups(['call:read'])]
+    private ?DateTimeImmutable $dispatchedAt = null;
+    #[ORM\Column(nullable: true)]
+    #[Groups(['call:read'])]
     private ?DateTimeImmutable $arrivedAt = null;
 
     #[ORM\Column(nullable: true)]
@@ -213,6 +216,9 @@ class Call
     #[Groups(['call:read', 'call:write'])]
     private ?string $lat;
 
+    #[ORM\Column(nullable: true)]
+    #[Groups(['call:read', 'call:write'])]
+    private ?string $fio = null;
 
     public function __construct(
         string  $numberCalling,
@@ -750,5 +756,25 @@ class Call
     public function setCoastHospitalAdmission(?int $coastHospitalAdmission): void
     {
         $this->coastHospitalAdmission = $coastHospitalAdmission;
+    }
+
+    public function getFio(): ?string
+    {
+        return $this->fio;
+    }
+
+    public function setFio(?string $fio): void
+    {
+        $this->fio = $fio;
+    }
+
+    public function getDispatchedAt(): ?DateTimeImmutable
+    {
+        return $this->dispatchedAt;
+    }
+
+    public function setDispatchedAt(?DateTimeImmutable $dispatchedAt): void
+    {
+        $this->dispatchedAt = $dispatchedAt;
     }
 }
