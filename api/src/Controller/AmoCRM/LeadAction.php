@@ -266,7 +266,7 @@ class LeadAction extends AbstractController
         $calling->setAddress($lead->address);
         $calling->setDescription($lead->description ?: '');
         $calling->setNosology($lead->nosology);
-        $calling->setAge($lead->age);
+        //$calling->setAge($lead->age);
         $calling->setChronicDiseases($lead->hz);
         $calling->setLeadType($lead->leadType);
         $calling->setPartnerName($lead->partnerName);
