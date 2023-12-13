@@ -68,7 +68,7 @@ class HospitalizationAction extends AbstractController
         $message .= 'Заявка №' . $calling->getNumberCalling() . PHP_EOL;
         $message .= $calling->getPrice() ? 'Итоговая цена ' . $calling->getPrice() . PHP_EOL : '';
         $message .= $calling->getCoastHospital() ? 'Стоимость госпитализации ' . $calling->getCoastHospital() . PHP_EOL : '';
-        $message .= $calling->getName() ? 'ФИО пациента ' . $calling->getName() . PHP_EOL : '';
+        $message .= $calling->getFio() ? 'ФИО пациента ' . $calling->getFio() . PHP_EOL : '';
         $message .= $calling->getAge() ? 'Возраст пациента ' . $calling->getAge() . PHP_EOL : '';
         $message .= $calling->getPassport() ? 'Паспорт ' . $calling->getPassport() . PHP_EOL : '';
         $message .= $calling->getCostDay() ? 'Стоимость в сутки ' . $calling->getCostDay() . PHP_EOL : '';
@@ -82,7 +82,7 @@ class HospitalizationAction extends AbstractController
         foreach ($leads as $lead) {
             $entityId = $lead->getId();
             $lead->setStatusId(45084664);
-            $lead->setName($currentDate->format('d.m.y') . ' ' . $calling->getName());
+            $lead->setName($currentDate->format('d.m.y') . ' ' . $calling->getFio());
             $lead->setPrice($calling->getPrice());
         }
 

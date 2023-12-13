@@ -74,7 +74,7 @@ class HospitalizationWithoutTherapyAction extends AbstractController
         $message .= 'Заявка №' . $calling->getNumberCalling() . PHP_EOL;
         $message .= $calling->getPrice() ? 'Стоимость госпитализации ' . $calling->getPrice() . PHP_EOL : '';
         $message .= $calling->getCoastHospital() ? 'Стоимость стационара ' . $calling->getCoastHospital() . PHP_EOL : '';
-        $message .= $calling->getName() ? 'ФИО пациента ' . $calling->getName() . PHP_EOL : '';
+        $message .= $calling->getFio() ? 'ФИО пациента ' . $calling->getFio() . PHP_EOL : '';
         $message .= $calling->getAge() ? 'Возраст пациента ' . $calling->getAge() . PHP_EOL : '';
         $message .= $calling->getPassport() ? 'Паспорт ' . $calling->getPassport() . PHP_EOL : '';
         $message .= $calling->getCostDay() ? 'Стоимость в сутки ' . $calling->getCostDay() . PHP_EOL : '';
@@ -89,7 +89,7 @@ class HospitalizationWithoutTherapyAction extends AbstractController
             $entityId = $lead->getId();
             $lead->setPipelineId(5000668);
             $lead->setStatusId(142);
-            $lead->setName($currentDate->format('d.m.y') . ' ' . $calling->getName());
+            $lead->setName($currentDate->format('d.m.y') . ' ' . $calling->getFio());
             $lead->setPrice($calling->getPrice());
         }
 

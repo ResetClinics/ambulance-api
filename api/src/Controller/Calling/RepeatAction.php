@@ -65,7 +65,7 @@ class RepeatAction extends AbstractController
         $message = 'Информация от бригады' . PHP_EOL;
         $message .= 'Заявка №' . $calling->getNumberCalling() . PHP_EOL;
         $message .= $calling->getPrice() ? 'Итоговая цена ' . $calling->getPrice() . PHP_EOL : '';
-        $message .= $calling->getName() ? 'ФИО пациента ' . $calling->getName() . PHP_EOL : '';
+        $message .= $calling->getFio() ? 'ФИО пациента ' . $calling->getFio() . PHP_EOL : '';
         $message .= $calling->getAge() ? 'Возраст пациента ' . $calling->getAge() . PHP_EOL : '';
         $message .= $calling->getEstimated() ? 'Ориентировочная цена ' . $calling->getEstimated() . PHP_EOL : '';
         $message .= $calling->getPrepayment() ? 'Предоплата ' . $calling->getPrepayment() . PHP_EOL : '';
@@ -81,7 +81,7 @@ class RepeatAction extends AbstractController
         foreach ($leads as $lead) {
             $entityId = $lead->getId();
             $lead->setStatusId(45084664);
-            $lead->setName($currentDate->format('d.m.y') . ' ' . $calling->getName());
+            $lead->setName($currentDate->format('d.m.y') . ' ' . $calling->getFio());
             $lead->setPrice($calling->getPrice());
         }
 

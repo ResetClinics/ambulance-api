@@ -52,7 +52,7 @@ class RepeatedCallScheduler
             throw new NotFoundHttpException('Не найден контакт при создании повтора');
         }
 
-        $name = $calling->getResultDateFormat() . ' ПОВТОР ' . $calling->getName();
+        $name = $calling->getResultDateFormat() . ' ПОВТОР ' . $calling->getFio();
 
         $customFieldsValues = new CustomFieldsValuesCollection();
         foreach ($lead->getCustomFieldsValues() as $customFieldsValue){
