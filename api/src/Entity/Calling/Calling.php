@@ -40,7 +40,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\Entity(repositoryClass: CallingRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(),
+        new GetCollection(uriTemplate: '/calls'),
         new Post(),
         new Get(
             normalizationContext: [
