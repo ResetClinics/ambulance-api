@@ -55,7 +55,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
         new Put(),
     ],
     normalizationContext: ['groups' => ['calling:read',  'partner:item:read']],
-    denormalizationContext: ['groups' => ['calling:write']]
+    denormalizationContext: ['groups' => ['calling:write']],
+    paginationClientEnabled: true,
+    paginationClientItemsPerPage: true
 )]
 #[ApiFilter(SearchFilter::class, properties: ['team' => 'exact'])]
 #[Post(uriTemplate: '/callings/current', controller: CurrentAction::class, input: CallingDto::class, read: false)]
