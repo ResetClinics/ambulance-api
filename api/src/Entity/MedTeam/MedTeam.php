@@ -16,8 +16,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MedTeamRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['med-team:read']],
-    denormalizationContext: ['groups' => ['med-tam:write']],
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
 )]
