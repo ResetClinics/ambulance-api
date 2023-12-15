@@ -16,6 +16,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MedTeamRepository::class)]
 #[ApiResource(
+    normalizationContext: ['groups' => ['med-team:read', 'user:item:read']],
+    denormalizationContext: ['groups' => ['med-team:write']],
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
 )]
@@ -32,24 +34,24 @@ class MedTeam
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['med-tam:read'])]
+    #[Groups(['med-team:read'])]
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Groups(['med-tam:read', 'med-tam:write'])]
+    #[Groups(['med-team:read', 'med-team:write'])]
     #[Assert\NotNull]
     private ?DateTimeImmutable $plannedAt = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['med-tam:read', 'med-tam:write'])]
+    #[Groups(['med-team:read', 'med-team:write'])]
     private ?DateTimeImmutable $startedAt = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['med-tam:read', 'med-tam:write'])]
+    #[Groups(['med-team:read', 'med-team:write'])]
     private ?DateTimeImmutable $completedAt = null;
 
     #[ORM\Column(length: 32)]
-    #[Groups(['med-tam:read', 'med-tam:write'])]
+    #[Groups(['med-team:read', 'med-team:write'])]
     #[Assert\Choice(choices: [
         'draft',
         'scheduled',
@@ -61,12 +63,12 @@ class MedTeam
     private string $status = 'draft';
 
     #[ORM\ManyToOne]
-    #[Groups(['med-tam:read', 'med-tam:write'])]
+    #[Groups(['med-team:read', 'med-team:write'])]
     #[ApiFilter(SearchFilter::class, properties: ['admin.id' => 'exact'])]
     private ?User $admin = null;
 
     #[ORM\ManyToOne]
-    #[Groups(['med-tam:read', 'med-tam:write'])]
+    #[Groups(['med-team:read', 'med-team:write'])]
     #[ApiFilter(SearchFilter::class, properties: ['admin.id' => 'exact'])]
     private ?User $doctor = null;
 
