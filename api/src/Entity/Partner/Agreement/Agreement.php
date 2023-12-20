@@ -36,7 +36,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             'agreement:read',
             'agreement:item:read',
             'partner:item:read',
-            'service:item:read'
+            'service-category:item:read'
         ]],
     denormalizationContext: ['groups' => ['agreement:write']],
 )]
