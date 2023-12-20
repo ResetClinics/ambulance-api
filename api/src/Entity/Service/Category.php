@@ -7,33 +7,39 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use App\Entity\Calling\Row;
-use App\Repository\Service\ServiceRepository;
+use App\Entity\Partner\Agreement\Row;
+use App\Repository\Service\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ORM\Entity(repositoryClass: ServiceRepository::class)]
-#[ORM\Table(name: 'service_services')]
+#[ORM\Entity(repositoryClass: CategoryRepository::class)]
+#[ORM\Table(name: 'service_categories')]
 #[ApiResource(
-    normalizationContext: ['groups' => ['service:read', 'service:item:read']],
-    denormalizationContext: ['groups' => ['service:write']],
+    operations: [
+        new GetCollection(),
+        new Post(),
+        new Get(),
+        new Put(),
+    ],
+    normalizationContext: ['groups' => ['service-category:read', 'service-category:item:read']],
+    denormalizationContext: ['groups' => ['service-category:write']],
 )]
-class Service
+class Category
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['service:item:read'])]
+    #[Groups(['service-category:item:read'])]
     private ?int $id = null;
-
-    #[ORM\Column(length: 255)]
-    #[Groups(['service:item:read', 'service:write'])]
-    private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'service', targetEntity: Row::class)]
     private Collection $rows;
+
+    #[ORM\Column(length: 255)]
+    #[Groups(['service-category:item:read', 'service-category:write'])]
+    private ?string $name = null;
 
     public function __construct()
     {
@@ -45,20 +51,8 @@ class Service
         return $this->id;
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
     /**
-     * @return Collection<int, Row>
+     * @return Collection<int, \App\Entity\Calling\Row>
      */
     public function getRows(): Collection
     {
@@ -83,6 +77,18 @@ class Service
                 $row->setService(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }

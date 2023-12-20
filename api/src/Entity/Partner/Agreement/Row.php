@@ -3,7 +3,7 @@
 namespace App\Entity\Partner\Agreement;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\Entity\Service\Service;
+use App\Entity\Service\Category;
 use App\Repository\Partner\Agreement\RowRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -32,7 +32,7 @@ class Row
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['agreement:read', 'agreement:write'])]
     #[Assert\NotBlank]
-    private ?Service $service = null;
+    private ?Category $service = null;
 
     #[ORM\Column]
     #[Groups(['agreement:read', 'agreement:write'])]
@@ -74,12 +74,12 @@ class Row
         return $this;
     }
 
-    public function getService(): ?Service
+    public function getService(): ?Category
     {
         return $this->service;
     }
 
-    public function setService(?Service $service): self
+    public function setService(?Category $service): self
     {
         $this->service = $service;
 

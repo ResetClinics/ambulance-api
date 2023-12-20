@@ -28,6 +28,8 @@ use App\Entity\Partner;
 use App\Entity\User\User;
 use App\Repository\CallingRepository;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use DomainException;
@@ -246,6 +248,10 @@ class Calling
     #[Groups(['calling:read', 'calling:write'])]
     private ?string $lat;
 
+    #[ORM\OneToMany(mappedBy: 'calling', targetEntity: Row::class, cascade: ['persist'])]
+    #[Groups(['calling:read', 'calling:write'])]
+    private Collection $services;
+
 
     public function __construct(
         string  $numberCalling,
@@ -272,6 +278,7 @@ class Calling
         $this->deleted = false;
         $this->lat = null;
         $this->lon = null;
+        $this->services = new ArrayCollection();
     }
 
 
@@ -805,5 +812,35 @@ class Calling
     public function getDispatchedAt(): ?DateTimeImmutable
     {
         return $this->dispatchedAt;
+    }
+
+    /**
+     * @return Collection<int, Row>
+     */
+    public function getServices(): Collection
+    {
+        return $this->services;
+    }
+
+    public function addService(Row $row): self
+    {
+        if (!$this->services->contains($row)) {
+            $this->services->add($row);
+            $row->setCalling($this);
+        }
+
+        return $this;
+    }
+
+    public function removeService(Row $row): self
+    {
+        if ($this->services->removeElement($row)) {
+            // set the owning side to null (unless already changed)
+            if ($row->getCalling() === $this) {
+                $row->setCalling(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -7,7 +7,7 @@ use ApiPlatform\Symfony\EventListener\EventPriorities;
 
 use App\Entity\Calling\Calling;
 use App\Entity\Partner;
-use App\Entity\Service\Service;
+use App\Entity\Service\Category;
 use App\Entity\User\User;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,7 +42,7 @@ class PaginateJsonSubscriber implements EventSubscriberInterface
             $apiResourceClass !== Partner\Agreement\Agreement::class &&
             $apiResourceClass !== User::class &&
             $apiResourceClass !== Calling::class &&
-            $apiResourceClass !== Service::class
+            $apiResourceClass !== Category::class
         ) {
             return;
         }
