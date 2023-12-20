@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         'groups' => [
             'agreement:read',
             'agreement:item:read',
-            'service:item:read'
+            'service-category:item:read'
         ]],
     denormalizationContext: ['groups' => ['agreement:write']],
     paginationClientEnabled: true,
