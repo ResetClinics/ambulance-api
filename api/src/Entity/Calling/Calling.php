@@ -43,7 +43,17 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[ApiResource(
     operations: [
         new GetCollection(uriTemplate: '/calls'),
-        new Post(),
+        new Post(
+            normalizationContext: [
+                'groups' => [
+                    'calling:read',
+                    'calling:item:read',
+                    'calling:detail:read',
+                    'partner:item:read',
+                    'service:item:read'
+                ]
+            ]
+        ),
         new Get(
             normalizationContext: [
                 'groups' => [
@@ -55,7 +65,17 @@ use Gedmo\Mapping\Annotation as Gedmo;
                 ]
             ]
         ),
-        new Put(),
+        new Put(
+            normalizationContext: [
+                'groups' => [
+                    'calling:read',
+                    'calling:item:read',
+                    'calling:detail:read',
+                    'partner:item:read',
+                    'service:item:read'
+                ]
+            ]
+        ),
     ],
     normalizationContext: ['groups' => ['calling:read',  'partner:item:read', 'service:item:read']],
     denormalizationContext: ['groups' => ['calling:write']],
