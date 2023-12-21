@@ -56,7 +56,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
         ),
         new Put(),
     ],
-    normalizationContext: ['groups' => ['calling:read',  'partner:item:read']],
+    normalizationContext: ['groups' => ['calling:read',  'partner:item:read', 'service:item:read']],
     denormalizationContext: ['groups' => ['calling:write']],
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
