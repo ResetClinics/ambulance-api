@@ -50,7 +50,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
                     'calling:read',
                     'calling:item:read',
                     'calling:detail:read',
-                    'partner:item:read'
+                    'partner:item:read',
+                    'service:item:read'
                 ]
             ]
         ),
