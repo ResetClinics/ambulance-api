@@ -3,16 +3,13 @@
 namespace App\Entity\Service;
 
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
 use App\Entity\Calling\Row;
 use App\Repository\Service\ServiceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ServiceRepository::class)]
 #[ORM\Table(name: 'service_services')]
@@ -34,6 +31,15 @@ class Service
 
     #[ORM\OneToMany(mappedBy: 'service', targetEntity: Row::class)]
     private Collection $rows;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Choice(choices: [
+        'replay',
+        'hospital',
+        'default',
+    ])]
+    #[Groups(['service:item:read', 'service:write'])]
+    private ?string $type = 'default';
 
     public function __construct()
     {
@@ -83,6 +89,18 @@ class Service
                 $row->setService(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }
