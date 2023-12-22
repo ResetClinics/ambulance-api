@@ -850,6 +850,12 @@ class Calling
             $row->setCalling($this);
         }
 
+        $this->price = 0;
+        /** @var Row $serviceRow */
+        foreach ($this->services as $serviceRow){
+            $this->price  += $serviceRow->getPrice() !== null ? (int) $serviceRow->getPrice() : 0;
+        }
+
         return $this;
     }
 
@@ -860,6 +866,12 @@ class Calling
             if ($row->getCalling() === $this) {
                 $row->setCalling(null);
             }
+        }
+
+        $this->price = 0;
+        /** @var Row $serviceRow */
+        foreach ($this->services as $serviceRow){
+            $this->price  += $serviceRow->getPrice() !== null ? (int) $serviceRow->getPrice() : 0;
         }
 
         return $this;
