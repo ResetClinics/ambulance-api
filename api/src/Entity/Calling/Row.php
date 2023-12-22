@@ -40,6 +40,10 @@ class Row
     #[Groups(['calling:read', 'calling:write'])]
     private ?\DateTimeImmutable $plannedAt = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
+    private ?string $description = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -101,6 +105,18 @@ class Row
     public function setPlannedAt(?\DateTimeImmutable $plannedAt): self
     {
         $this->plannedAt = $plannedAt;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }
