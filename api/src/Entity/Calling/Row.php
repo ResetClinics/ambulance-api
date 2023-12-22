@@ -32,6 +32,14 @@ class Row
     #[ORM\ManyToOne(inversedBy: 'rows')]
     private ?Calling $calling = null;
 
+    #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
+    private ?int $plannedPrice = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
+    private ?\DateTimeImmutable $plannedAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,6 +77,30 @@ class Row
     public function setCalling(?Calling $calling): self
     {
         $this->calling = $calling;
+
+        return $this;
+    }
+
+    public function getPlannedPrice(): ?int
+    {
+        return $this->plannedPrice;
+    }
+
+    public function setPlannedPrice(?int $plannedPrice): self
+    {
+        $this->plannedPrice = $plannedPrice;
+
+        return $this;
+    }
+
+    public function getPlannedAt(): ?\DateTimeImmutable
+    {
+        return $this->plannedAt;
+    }
+
+    public function setPlannedAt(?\DateTimeImmutable $plannedAt): self
+    {
+        $this->plannedAt = $plannedAt;
 
         return $this;
     }
