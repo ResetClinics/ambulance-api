@@ -97,6 +97,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $devices;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $email = null;
 
 
