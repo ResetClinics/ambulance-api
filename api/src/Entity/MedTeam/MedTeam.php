@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MedTeamRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['med-team:read', 'user:item:read']],
+    normalizationContext: ['groups' => ['med-team:read', 'user:item:read', 'phone:read']],
     denormalizationContext: ['groups' => ['med-team:write']],
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
@@ -71,6 +71,10 @@ class MedTeam
     #[Groups(['med-team:read', 'med-team:write'])]
     #[ApiFilter(SearchFilter::class, properties: ['admin.id' => 'exact'])]
     private ?User $doctor = null;
+
+    #[ORM\ManyToOne]
+    #[Groups(['med-team:read', 'med-team:write'])]
+    private ?Phone $phone = null;
 
 
     public function getId(): ?int
@@ -146,6 +150,18 @@ class MedTeam
     public function setDoctor(?User $doctor): self
     {
         $this->doctor = $doctor;
+
+        return $this;
+    }
+
+    public function getPhone(): ?Phone
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?Phone $phone): self
+    {
+        $this->phone = $phone;
 
         return $this;
     }
