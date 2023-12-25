@@ -47,12 +47,12 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/sing-in, roles: PUBLIC_ACCESS }
-        - { path: ^/app, roles: ROLE_SUPER_ADMIN }
+        - { path: ^/app, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
-        - { path: ^/api/callings, roles: ROLE_ADMIN }
-        - { path: ^/api/medicines, roles: ROLE_ADMIN }
-        - { path: ^/api/teams, roles: ROLE_ADMIN }
-        - { path: ^/api/users, roles: ROLE_ADMIN }
+        - { path: ^/api/callings, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/medicines, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/teams, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/users, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/amo-crm, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: ROLE_APP }
