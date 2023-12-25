@@ -4,6 +4,7 @@ namespace App\Repository\Hospital;
 
 use App\Entity\Hospital\Hospital;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -39,28 +40,15 @@ class HospitalRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Hospital[] Returns an array of Hospital objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('h')
-//            ->andWhere('h.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('h.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Hospital
-//    {
-//        return $this->createQueryBuilder('h')
-//            ->andWhere('h.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findOneByExternal(string $external): ?Hospital
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.external = :external')
+            ->setParameter(':external', $external)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

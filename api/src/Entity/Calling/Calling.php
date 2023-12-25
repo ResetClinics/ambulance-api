@@ -200,16 +200,16 @@ class Calling
     private ?DateTimeImmutable $dateTime = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     #[Groups(['calling:detail:read'])]
     #[ApiFilter(SearchFilter::class, properties: ['admin.id' => 'exact'])]
-    private User $admin;
+    private ?User $admin;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     #[Groups(['calling:detail:read'])]
     #[ApiFilter(SearchFilter::class, properties: ['doctor.id' => 'exact'])]
-    private User $doctor;
+    private ?User $doctor;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['calling:read', 'calling:write'])]
@@ -286,6 +286,9 @@ class Calling
     #[Groups(['calling:read', 'calling:write'])]
     private ?int $totalAmount = null;
 
+    #[ORM\ManyToOne(targetEntity: self::class)]
+    private ?self $owner = null;
+
 
     public function __construct(
         string  $numberCalling,
@@ -294,8 +297,8 @@ class Calling
         string  $phone,
         ?string $address,
         ?string $description,
-        User    $admin,
-        User    $doctor
+        ?User    $admin,
+        ?User    $doctor
     )
     {
         $this->name = $name;
@@ -938,6 +941,18 @@ class Calling
     public function setTotalAmount(?int $totalAmount): self
     {
         $this->totalAmount = $totalAmount;
+
+        return $this;
+    }
+
+    public function getOwner(): ?self
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?self $owner): self
+    {
+        $this->owner = $owner;
 
         return $this;
     }

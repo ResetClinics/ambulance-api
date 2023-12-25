@@ -5,6 +5,7 @@ namespace App\Entity\Hospital;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
+use App\Entity\Calling\Calling;
 use App\Entity\Partner;
 use App\Repository\Hospital\HospitalRepository;
 use Doctrine\DBAL\Types\Types;
@@ -71,6 +72,9 @@ class Hospital
     #[ORM\Column(nullable: true)]
     #[Groups(['hospital:read', 'hospital:write'])]
     private ?int $amount = null;
+
+    #[ORM\ManyToOne]
+    private ?Calling $owner = null;
 
     public function getId(): ?int
     {
@@ -157,6 +161,18 @@ class Hospital
     public function setAmount(?int $amount): self
     {
         $this->amount = $amount;
+
+        return $this;
+    }
+
+    public function getOwner(): ?Calling
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?Calling $owner): self
+    {
+        $this->owner = $owner;
 
         return $this;
     }
