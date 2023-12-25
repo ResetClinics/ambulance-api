@@ -76,6 +76,9 @@ class Hospital
     #[ORM\ManyToOne]
     private ?Calling $owner = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $prepayment = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -173,6 +176,18 @@ class Hospital
     public function setOwner(?Calling $owner): self
     {
         $this->owner = $owner;
+
+        return $this;
+    }
+
+    public function getPrepayment(): ?int
+    {
+        return $this->prepayment;
+    }
+
+    public function setPrepayment(?int $prepayment): self
+    {
+        $this->prepayment = $prepayment;
 
         return $this;
     }

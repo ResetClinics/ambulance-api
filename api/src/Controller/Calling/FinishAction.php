@@ -85,7 +85,7 @@ class FinishAction extends AbstractController
                 $hospital .= $serviceRow->getPlannedPrice() ? 'Ориентировочная цена ' . $serviceRow->getPlannedPrice() . PHP_EOL : '';
                 $hospital .= $serviceRow->getPrice() ? 'Предоплата ' . $serviceRow->getPrice() . PHP_EOL : '';
                 $hospital .= $serviceRow->getPlannedAt() ? '!ПОВТОР! Дата ' . $serviceRow->getPlannedAt()->format('d.m.y') . PHP_EOL : '';
-                $this->hospitalization($calling);
+                $this->hospitalization($calling, $serviceRow);
 
                 $this->sender->sendToAdmin(
                     $calling,
@@ -99,7 +99,7 @@ class FinishAction extends AbstractController
                 $replay .= $serviceRow->getPlannedPrice() ? 'Ориентировочная цена ' . $serviceRow->getPlannedPrice() . PHP_EOL : '';
                 $replay .= $serviceRow->getPrice() ? 'Предоплата ' . $serviceRow->getPrice() . PHP_EOL : '';
                 $replay .= $serviceRow->getPlannedAt() ? '!ПОВТОР! Дата ' . $serviceRow->getPlannedAt()->format('d.m.y') . PHP_EOL : '';
-                $this->repeat($calling);
+                $this->repeat($calling, $serviceRow);
 
                 $this->sender->sendToAdmin(
                     $calling,
@@ -175,7 +175,7 @@ class FinishAction extends AbstractController
         $this->flusher->flush();
     }
 
-    private function hospitalization(Calling $calling): void
+    private function hospitalization(Calling $calling, Row $row): void
     {
         $lead = $this->client->leads()->getOne((int)$calling->getNumberCalling());
 
@@ -246,11 +246,13 @@ class FinishAction extends AbstractController
 
             $hospital->setOwner($calling);
 
+            $hospital->setPrepayment($row->getPrice());
+
             $this->hospitals->save($hospital, true);
         }
     }
 
-    private function repeat(Calling $calling): void
+    private function repeat(Calling $calling, Row $row): void
     {
         $lead = $this->client->leads()->getOne($calling->getNumberCalling());
 
@@ -326,6 +328,8 @@ class FinishAction extends AbstractController
             );
 
             $repeat->setOwner($calling);
+
+            $repeat->setPrepayment($row->getPrice());
 
             $this->callings->save($repeat, true);
         }
