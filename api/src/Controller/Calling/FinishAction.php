@@ -246,7 +246,9 @@ class FinishAction extends AbstractController
 
             $hospital->setOwner($calling);
 
-            $hospital->setPrepayment($row->getPrice());
+            $price = $row->getPrice() !== null ? (int)$row->getPrice() : null;
+
+            $hospital->setPrepayment($price);
 
             $this->hospitals->save($hospital, true);
         }
@@ -329,7 +331,9 @@ class FinishAction extends AbstractController
 
             $repeat->setOwner($calling);
 
-            $repeat->setPrepayment($row->getPrice());
+            $price = $row->getPrice() !== null ? (int)$row->getPrice() : null;
+
+            $repeat->setPrepayment($price);
 
             $this->callings->save($repeat, true);
         }
