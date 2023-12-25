@@ -7,6 +7,8 @@ use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
+use App\Entity\Base;
+use App\Entity\Car;
 use App\Entity\User\User;
 use App\Repository\MedTeam\MedTeamRepository;
 use DateTimeImmutable;
@@ -16,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MedTeamRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['med-team:read', 'user:item:read', 'phone:read']],
+    normalizationContext: ['groups' => ['med-team:read', 'user:item:read', 'phone:read', 'car:read', 'base:read']],
     denormalizationContext: ['groups' => ['med-team:write']],
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
@@ -80,6 +82,14 @@ class MedTeam
     #[ORM\Column(nullable: true)]
     #[Groups(['med-team:read', 'med-team:write'])]
     private ?DateTimeImmutable $plannedFinishAt = null;
+
+    #[ORM\ManyToOne]
+    #[Groups(['med-team:read', 'med-team:write'])]
+    private ?Base $base = null;
+
+    #[ORM\ManyToOne]
+    #[Groups(['med-team:read', 'med-team:write'])]
+    private ?Car $car = null;
 
     public function getId(): ?int
     {
@@ -178,6 +188,30 @@ class MedTeam
     public function setPlannedFinishAt(?DateTimeImmutable $plannedFinishAt): self
     {
         $this->plannedFinishAt = $plannedFinishAt;
+
+        return $this;
+    }
+
+    public function getBase(): ?Base
+    {
+        return $this->base;
+    }
+
+    public function setBase(?Base $base): self
+    {
+        $this->base = $base;
+
+        return $this;
+    }
+
+    public function getCar(): ?Car
+    {
+        return $this->car;
+    }
+
+    public function setCar(?Car $car): self
+    {
+        $this->car = $car;
 
         return $this;
     }
