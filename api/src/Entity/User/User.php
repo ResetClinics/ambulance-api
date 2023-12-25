@@ -58,7 +58,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank(message: "Телефон обязателен для заполнения.")]
     #[Assert\Regex(
         pattern: '/\d{11}/',
-        message: 'Номер телефона должен состоять из 10 цифр.'
+        message: 'Номер телефона должен состоять из 11 цифр.'
     )]
     private ?string $phone = null;
 
