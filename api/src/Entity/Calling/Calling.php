@@ -279,9 +279,11 @@ class Calling
     private ?int $amount = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
     private ?int $paymentNextOrder = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
     private ?int $totalAmount = null;
 
 
