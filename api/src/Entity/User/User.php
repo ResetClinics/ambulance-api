@@ -17,6 +17,7 @@ use App\Entity\Team\Team;
 use App\Filter\Realty\Lead\SearchByContactFilter;
 use App\Filter\User\SearchByNameAndPhoneAndEmailFilter;
 use App\Repository\UserRepository;
+use App\State\UserHashPasswordProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,6 +25,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -65,7 +67,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     private ?string $name = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     #[Groups(['user:read', 'user:write', 'team:item:get'])]
     private ?string $position = null;
 
@@ -74,14 +76,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $avatar = null;
 
     #[ORM\Column]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:write'])]
     private array $roles = [];
 
     #[ORM\Column]
-    #[Groups(['user:write'])]
     private ?string $password = null;
 
     #[Assert\Length(min: 4)]
+    #[Groups(['user:write'])]
+    #[SerializedName('password')]
     private ?string $plainPassword = null;
 
     #[ORM\OneToMany(mappedBy: 'administrator', targetEntity: Team::class)]
@@ -92,6 +95,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Device::class)]
     private Collection $devices;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $email = null;
 
 
     public function __construct($externalId = null)
@@ -282,5 +288,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __toString(): string
     {
         return $this->name;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(?string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
     }
 }

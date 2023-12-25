@@ -19,6 +19,7 @@ use App\Controller\Calling\CoddingAction;
 use App\Controller\Calling\CompleteAction;
 use App\Controller\Calling\CurrentAction;
 use App\Controller\Calling\DispatchAction;
+use App\Controller\Calling\FinishAction;
 use App\Controller\Calling\HospitalizationAction;
 use App\Controller\Calling\HospitalizationWithoutTherapyAction;
 use App\Controller\Calling\HospitalizationWithTherapyAction;
@@ -88,6 +89,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[Post(uriTemplate: '/callings/{id}/dispatch', controller: DispatchAction::class, input: CallingDto::class, read: false)]
 #[Post(uriTemplate: '/callings/{id}/arrive', controller: ArriveAction::class, input: CallingArriveDto::class, read: false)]
 #[Post(uriTemplate: '/callings/{id}/complete', controller: CompleteAction::class)]
+#[Post(uriTemplate: '/callings/{id}/finish', controller: FinishAction::class)]
 #[Post(uriTemplate: '/callings/{id}/codding', controller: CoddingAction::class)]
 #[Post(uriTemplate: '/callings/{id}/hospitalization', controller: HospitalizationAction::class)]
 #[Post(uriTemplate: '/callings/{id}/hospitalization-with-therapy', controller: HospitalizationWithTherapyAction::class)]
