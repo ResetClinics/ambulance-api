@@ -20,6 +20,7 @@ use App\Repository\UserRepository;
 use App\State\UserHashPasswordProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -100,6 +101,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['user:read', 'user:write'])]
     private ?string $email = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $address = null;
 
 
     public function __construct($externalId = null)
@@ -300,6 +304,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(?string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?string $address): self
+    {
+        $this->address = $address;
 
         return $this;
     }
