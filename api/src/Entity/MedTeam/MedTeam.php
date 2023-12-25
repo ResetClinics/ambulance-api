@@ -24,7 +24,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiFilter(
     DateFilter::class,
     properties: [
-        'plannedA' => DateFilterInterface::EXCLUDE_NULL,
+        'plannedStartAt' => DateFilterInterface::EXCLUDE_NULL,
+        'plannedFinishAt' => DateFilterInterface::EXCLUDE_NULL,
         'startedAt' => DateFilterInterface::EXCLUDE_NULL,
         'completedAt' => DateFilterInterface::EXCLUDE_NULL,
     ]
@@ -40,7 +41,7 @@ class MedTeam
     #[ORM\Column]
     #[Groups(['med-team:read', 'med-team:write'])]
     #[Assert\NotNull]
-    private ?DateTimeImmutable $plannedAt = null;
+    private ?DateTimeImmutable $plannedStartAt = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['med-team:read', 'med-team:write'])]
@@ -76,20 +77,23 @@ class MedTeam
     #[Groups(['med-team:read', 'med-team:write'])]
     private ?Phone $phone = null;
 
+    #[ORM\Column(nullable: true)]
+    #[Groups(['med-team:read', 'med-team:write'])]
+    private ?DateTimeImmutable $plannedFinishAt = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getPlannedAt(): ?DateTimeImmutable
+    public function getPlannedStartAt(): ?DateTimeImmutable
     {
-        return $this->plannedAt;
+        return $this->plannedStartAt;
     }
 
-    public function setPlannedAt(DateTimeImmutable $plannedAt): self
+    public function setPlannedStartAt(DateTimeImmutable $plannedStartAt): self
     {
-        $this->plannedAt = $plannedAt;
+        $this->plannedStartAt = $plannedStartAt;
 
         return $this;
     }
@@ -162,6 +166,18 @@ class MedTeam
     public function setPhone(?Phone $phone): self
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getPlannedFinishAt(): ?DateTimeImmutable
+    {
+        return $this->plannedFinishAt;
+    }
+
+    public function setPlannedFinishAt(?DateTimeImmutable $plannedFinishAt): self
+    {
+        $this->plannedFinishAt = $plannedFinishAt;
 
         return $this;
     }
