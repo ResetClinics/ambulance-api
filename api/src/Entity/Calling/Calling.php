@@ -275,6 +275,15 @@ class Calling
     #[Groups(['calling:read', 'calling:write'])]
     private Collection $services;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $amount = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $paymentNextOrder = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $totalAmount = null;
+
 
     public function __construct(
         string  $numberCalling,
@@ -853,9 +862,17 @@ class Calling
         }
 
         $this->price = 0;
+        $this->paymentNextOrder = 0;
+        $this->totalAmount = 0;
+
         /** @var Row $serviceRow */
         foreach ($this->services as $serviceRow){
-            $this->price  += $serviceRow->getPrice() !== null ? (int) $serviceRow->getPrice() : 0;
+            if ($serviceRow->getService()->getType() === 'default'){
+                $this->price  += $serviceRow->getPrice() !== null ? (int) $serviceRow->getPrice() : 0;
+            }else{
+                $this->paymentNextOrder  += $serviceRow->getPrice() !== null ? (int) $serviceRow->getPrice() : 0;
+            }
+            $this->totalAmount = $this->price + $this->paymentNextOrder;
         }
 
         return $this;
@@ -871,10 +888,54 @@ class Calling
         }
 
         $this->price = 0;
+        $this->paymentNextOrder = 0;
+        $this->totalAmount = 0;
+
         /** @var Row $serviceRow */
         foreach ($this->services as $serviceRow){
-            $this->price  += $serviceRow->getPrice() !== null ? (int) $serviceRow->getPrice() : 0;
+            if ($serviceRow->getService()->getType() === 'default'){
+                $this->price  += $serviceRow->getPrice() !== null ? (int) $serviceRow->getPrice() : 0;
+            }else{
+                $this->paymentNextOrder  += $serviceRow->getPrice() !== null ? (int) $serviceRow->getPrice() : 0;
+            }
+            $this->totalAmount = $this->price + $this->paymentNextOrder;
         }
+
+        return $this;
+    }
+
+    public function getAmount(): ?int
+    {
+        return $this->amount;
+    }
+
+    public function setAmount(?int $amount): self
+    {
+        $this->amount = $amount;
+
+        return $this;
+    }
+
+    public function getPaymentNextOrder(): ?int
+    {
+        return $this->paymentNextOrder;
+    }
+
+    public function setPaymentNextOrder(?int $paymentNextOrder): self
+    {
+        $this->paymentNextOrder = $paymentNextOrder;
+
+        return $this;
+    }
+
+    public function getTotalAmount(): ?int
+    {
+        return $this->totalAmount;
+    }
+
+    public function setTotalAmount(?int $totalAmount): self
+    {
+        $this->totalAmount = $totalAmount;
 
         return $this;
     }
