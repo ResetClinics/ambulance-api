@@ -16,6 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     normalizationContext: ['groups' => ['service:read', 'service:item:read']],
     denormalizationContext: ['groups' => ['service:write']],
+    order: ['sort' => 'ASC'],
 )]
 class Service
 {
@@ -40,6 +41,9 @@ class Service
     ])]
     #[Groups(['service:item:read', 'service:write'])]
     private ?string $type = 'default';
+
+    #[ORM\Column(nullable: true)]
+    private ?int $sort = null;
 
     public function __construct()
     {
@@ -101,6 +105,18 @@ class Service
     public function setType(?string $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getSort(): ?int
+    {
+        return $this->sort;
+    }
+
+    public function setSort(?int $sort): self
+    {
+        $this->sort = $sort;
 
         return $this;
     }
