@@ -25,6 +25,7 @@ class InitAgreementCommand extends Command
         private readonly Flusher $flusher,
     )
     {
+        parent::__construct();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
