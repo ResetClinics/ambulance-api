@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ServiceRepository::class)]
 #[ORM\Table(name: 'service_services')]
 #[ApiResource(
-    normalizationContext: ['groups' => ['service:read', 'service:item:read']],
+    normalizationContext: ['groups' => ['service:read', 'service:item:read', 'service-category:item:read']],
     denormalizationContext: ['groups' => ['service:write']],
     order: ['sort' => 'ASC'],
 )]
@@ -43,7 +43,12 @@ class Service
     private ?string $type = 'default';
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['service:item:read', 'service:write'])]
     private ?int $sort = null;
+
+    #[ORM\ManyToOne(inversedBy: 'services')]
+    #[Groups(['service:item:read', 'service:write'])]
+    private ?Category $category = null;
 
     public function __construct()
     {
@@ -117,6 +122,18 @@ class Service
     public function setSort(?int $sort): self
     {
         $this->sort = $sort;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }
