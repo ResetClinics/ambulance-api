@@ -280,7 +280,7 @@ class FinishAction extends AbstractController
             throw new NotFoundHttpException('Не найден контакт при создании повтора');
         }
 
-        $name = $calling->getResultDateFormat() . ' ПОВТОР ' . $calling->getFio();
+        $name = $row->getPlannedAt()->format('d.m.y ') . ' ПОВТОР в ' . $row->getPlannedAt()->format('H:s ') . ' ' . $calling->getFio();
 
         $customFieldsValues = new CustomFieldsValuesCollection();
         foreach ($lead->getCustomFieldsValues() as $customFieldsValue){

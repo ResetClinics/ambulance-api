@@ -1,0 +1,46 @@
+<?php
+
+namespace App\Command;
+
+use App\Flusher;
+use App\Repository\Partner\Agreement\AgreementRepository;
+use App\Repository\Partner\Agreement\AgreementTemplateRepository;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+
+#[AsCommand(
+    name: 'init:agreement',
+    description: 'Add a short description for your command',
+)]
+class InitAgreementCommand extends Command
+{
+
+
+    public function __construct(
+        private readonly AgreementRepository $agreements,
+        private readonly AgreementTemplateRepository $templates,
+        private readonly Flusher $flusher,
+    )
+    {
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $io = new SymfonyStyle($input, $output);
+
+        foreach ($this->agreements as $agreement){
+            $this->agreements->remove($agreement);
+        }
+
+        $this->flusher->flush();
+
+
+
+        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
+
+        return Command::SUCCESS;
+    }
+}
