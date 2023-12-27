@@ -183,14 +183,14 @@ class Calling
 
     #[ORM\Column]
     #[Groups(['calling:read'])]
-    #[Context(normalizationContext: [DateTimeNormalizer::FORMAT_KEY => 'd.m.Y HH:mm'])]
+    #[Context(normalizationContext: [DateTimeNormalizer::FORMAT_KEY => 'd.m.Y H:m'])]
     #[Gedmo\Timestampable(on: 'create')]
     private DateTimeImmutable $createdAt;
 
 
     #[ORM\Column]
     #[Groups(['calling:read'])]
-    #[Context(normalizationContext: [DateTimeNormalizer::FORMAT_KEY => 'd.m.Y HH:mm'])]
+    #[Context(normalizationContext: [DateTimeNormalizer::FORMAT_KEY => 'd.m.Y H:m'])]
     #[Gedmo\Timestampable(on: 'create')]
     private DateTimeImmutable $updatedAt;
 
