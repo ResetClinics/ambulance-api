@@ -35,14 +35,15 @@ class InitAgreementCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         foreach ($this->agreementRows->findAll() as $agreementRow){
-            $this->agreementRows->remove($agreementRow);
+            $this->agreementRows->remove($agreementRow, true);
         }
 
         foreach ($this->agreements->findAll() as $agreement){
-            $this->agreements->remove($agreement);
+            $this->agreements->remove($agreement, true);
         }
 
         $this->flusher->flush();
+
 
 
 
