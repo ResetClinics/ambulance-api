@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity\Calling;
 
+use ApiPlatform\Doctrine\Common\Filter\DateFilterInterface;
 use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\ApiFilter;
@@ -97,6 +99,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[Post(uriTemplate: '/callings/{id}/repeat', controller: RepeatAction::class)]
 #[Post(uriTemplate: '/callings/{id}/reject',controller: RejectAction::class)]
 #[ApiFilter(OrderFilter::class, properties: ['createdAt', 'updatedAt'], arguments: ['orderParameterName' => 'order'])]
+#[ApiFilter(
+    DateFilter::class,
+    properties: [
+        'createdAt' => DateFilterInterface::EXCLUDE_NULL,
+        'updatedAt' => DateFilterInterface::EXCLUDE_NULL,
+        'completedAt' => DateFilterInterface::EXCLUDE_NULL,
+    ]
+)]
 class Calling
 {
     #[ORM\Id]
