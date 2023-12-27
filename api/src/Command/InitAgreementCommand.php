@@ -47,7 +47,9 @@ class InitAgreementCommand extends Command
 
         $this->flusher->flush();
 
+        /** @var Partner $partner */
         foreach ($this->partners as $partner){
+            $io->success($partner->getName());
             $this->createAgreement($partner);
         }
 
