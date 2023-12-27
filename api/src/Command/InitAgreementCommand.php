@@ -53,6 +53,7 @@ class InitAgreementCommand extends Command
             $this->createAgreement($partner);
         }
 
+        $this->flusher->flush();
         $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
 
         return Command::SUCCESS;
@@ -63,6 +64,7 @@ class InitAgreementCommand extends Command
         $agreement = new Partner\Agreement\Agreement();
         $agreement->setPartner($partner);
         $agreement->setStartsAt(new \DateTimeImmutable('01.12.2023'));
+        $this->agreements->save($agreement, true);
         /** @var Partner\Agreement\AgreementTemplate $template */
         foreach ($this->templates as $template){
             $row = new Partner\Agreement\Row();
@@ -73,6 +75,8 @@ class InitAgreementCommand extends Command
             $row->setRepeatNumber($template->getRepeatNumber());
 
             $agreement->addRow($row);
+
+            $this->agreementRows->save($row, true);
         }
         $this->agreements->save($agreement, true);
     }
