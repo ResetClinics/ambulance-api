@@ -29,6 +29,7 @@ use App\Controller\Calling\RejectAction;
 use App\Controller\Calling\RepeatAction;
 use App\Entity\Partner;
 use App\Entity\User\User;
+use App\Filter\Call\EmployeeFilter;
 use App\Repository\CallingRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -80,7 +81,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
             ]
         ),
     ],
-    normalizationContext: ['groups' => ['calling:read',  'partner:item:read', 'service:item:read']],
+    normalizationContext: ['groups' => ['calling:read',  'partner:item:read', 'service:item:read', 'user:item:read']],
     denormalizationContext: ['groups' => ['calling:write']],
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
@@ -106,6 +107,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
         'updatedAt' => DateFilterInterface::EXCLUDE_NULL,
         'completedAt' => DateFilterInterface::EXCLUDE_NULL,
     ]
+)]
+#[ApiFilter(
+    EmployeeFilter::class,
+    properties: ['employee']
 )]
 class Calling
 {
@@ -211,13 +216,13 @@ class Calling
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: true)]
-    #[Groups(['calling:detail:read'])]
+    #[Groups(['calling:read'])]
     #[ApiFilter(SearchFilter::class, properties: ['admin.id' => 'exact'])]
     private ?User $admin;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: true)]
-    #[Groups(['calling:detail:read'])]
+    #[Groups(['calling:read'])]
     #[ApiFilter(SearchFilter::class, properties: ['doctor.id' => 'exact'])]
     private ?User $doctor;
 
