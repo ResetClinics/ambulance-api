@@ -30,9 +30,7 @@ class Fetcher
 
         $row = $stmt->fetchAssociative() ?: [];
 
-        dump($row);
         $data = array_shift($row);
-        dump($data);
 
         return $data ? (int)$data['value'] : 0;
     }
