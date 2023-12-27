@@ -23,19 +23,15 @@ class PartnerReward
                 $call->getPartner()?->getId(),
                 $row->getService()?->getCategory()?->getId(),
                 0,
-                $call->getMkadDistance()
+                $call->getMkadDistance() === null ? 0 : $call->getMkadDistance()
             );
 
             $percent = $this->fetcher->fetch($query);
             $reward = (int)(($row->getPrice() - $row->getService()->getCoastPrice()) / 100 * $percent);
 
             $fullReward  += $reward;
-            dump($row->getService()->getName());
-            dump($percent);
-            dump($row->getPrice());
-            dump($reward);
+
             $row->setPartnerReward($reward);
-            dump('************************');
         }
 
         $call->setPartnerReward($fullReward);
