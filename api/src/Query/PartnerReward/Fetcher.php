@@ -34,6 +34,6 @@ class Fetcher
 
         dump($data);
 
-        return $data ? (int)$data['value'] : 0;
+        return $data !== null ? (int)$data : 0;
     }
 }
