@@ -63,7 +63,7 @@ class MedTeam
         'cancelled',
     ])]
     #[ApiFilter(SearchFilter::class, properties: ['status' => 'exact'])]
-    private string $status = 'draft';
+    private string $status = 'scheduled';
 
     #[ORM\ManyToOne]
     #[Groups(['med-team:read', 'med-team:write'])]

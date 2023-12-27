@@ -44,6 +44,10 @@ class Row
     #[Groups(['calling:read', 'calling:write'])]
     private ?string $description = null;
 
+    #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
+    private ?int $partnerReward = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -117,6 +121,18 @@ class Row
     public function setDescription(string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getPartnerReward(): ?int
+    {
+        return $this->partnerReward;
+    }
+
+    public function setPartnerReward(?int $partnerReward): self
+    {
+        $this->partnerReward = $partnerReward;
 
         return $this;
     }

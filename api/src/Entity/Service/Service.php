@@ -50,6 +50,10 @@ class Service
     #[Groups(['service:item:read', 'service:write'])]
     private ?Category $category = null;
 
+    #[ORM\Column(nullable: true)]
+    #[Groups(['service:item:read', 'service:write'])]
+    private ?int $coastPrice = 0;
+
     public function __construct()
     {
         $this->rows = new ArrayCollection();
@@ -134,6 +138,18 @@ class Service
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getCoastPrice(): ?int
+    {
+        return $this->coastPrice;
+    }
+
+    public function setCoastPrice(?int $coastPrice): self
+    {
+        $this->coastPrice = $coastPrice;
 
         return $this;
     }

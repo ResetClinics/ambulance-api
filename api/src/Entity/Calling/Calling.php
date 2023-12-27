@@ -176,7 +176,7 @@ class Calling
     #[ORM\Column]
     #[Groups(['calling:read'])]
     #[Context(normalizationContext: [DateTimeNormalizer::FORMAT_KEY => 'd.m.Y HH:mm'])]
-    #[Gedmo\Timestampable]
+    #[Gedmo\Timestampable(on: 'create')]
     private DateTimeImmutable $updatedAt;
 
     #[ORM\Column(nullable: true)]
@@ -288,6 +288,10 @@ class Calling
 
     #[ORM\ManyToOne(targetEntity: self::class)]
     private ?self $owner = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
+    private ?int $partnerReward = null;
 
 
     public function __construct(
@@ -953,6 +957,18 @@ class Calling
     public function setOwner(?self $owner): self
     {
         $this->owner = $owner;
+
+        return $this;
+    }
+
+    public function getPartnerReward(): ?int
+    {
+        return $this->partnerReward;
+    }
+
+    public function setPartnerReward(?int $partnerReward): self
+    {
+        $this->partnerReward = $partnerReward;
 
         return $this;
     }

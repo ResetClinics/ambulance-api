@@ -260,6 +260,7 @@ class LeadAction extends AbstractController
             $calling->setPartner($partner);
         }
 
+        $calling->setUpdatedAt(new DateTimeImmutable());
         $calling->setTitle($lead->name);
         $calling->setName($lead->clientName);
         $calling->setPhone($lead->clientPhone);
