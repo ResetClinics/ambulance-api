@@ -997,4 +997,9 @@ class Calling
 
         return $this;
     }
+
+    public function isComplete(): bool
+    {
+        return $this->status === Status::completed();
+    }
 }

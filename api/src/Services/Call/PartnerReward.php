@@ -3,7 +3,6 @@
 namespace App\Services\Call;
 
 use App\Entity\Calling\Calling;
-use App\Flusher;
 use App\Query\PartnerReward\Fetcher;
 use App\Query\PartnerReward\Query;
 
@@ -11,7 +10,6 @@ class PartnerReward
 {
     public function __construct(
         readonly private Fetcher $fetcher,
-        readonly private Flusher $flusher,
     )
     {
     }
@@ -41,7 +39,5 @@ class PartnerReward
         }
 
         $call->setPartnerReward($fullReward);
-
-        $this->flusher->flush();
     }
 }

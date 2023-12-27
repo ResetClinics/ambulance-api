@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Flusher;
 use App\Repository\CallingRepository;
 use App\Services\Call\PartnerReward;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -19,6 +20,7 @@ class TestCommand extends Command
     public function __construct(
         readonly private CallingRepository $calls,
         readonly private PartnerReward $partnerReward,
+        readonly private Flusher $flusher,
     )
     {
         parent::__construct();
@@ -33,6 +35,7 @@ class TestCommand extends Command
                 dump('-------------------------');
                 dump($call->getPartner()?->getName());
                $this->partnerReward->calculate($call);
+               $this->flusher->flush();
             }
         }
 
