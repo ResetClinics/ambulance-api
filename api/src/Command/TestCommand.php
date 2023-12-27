@@ -47,7 +47,7 @@ class TestCommand extends Command
                         $call->getPartner()?->getId(),
                         $row->getService()?->getCategory()?->getId(),
                         0,
-                        0
+                        $call->getMkadDistance()
                     );
 
                     $percent = $this->fetcher->fetch($query);

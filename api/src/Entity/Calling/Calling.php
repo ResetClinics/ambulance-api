@@ -293,6 +293,9 @@ class Calling
     #[Groups(['calling:read', 'calling:write'])]
     private ?int $partnerReward = null;
 
+    #[ORM\Column(nullable: true, options: ["default" => 0])]
+    #[Groups(['calling:read', 'calling:write'])]
+    private ?int $mkadDistance = null;
 
     public function __construct(
         string  $numberCalling,
@@ -969,6 +972,18 @@ class Calling
     public function setPartnerReward(?int $partnerReward): self
     {
         $this->partnerReward = $partnerReward;
+
+        return $this;
+    }
+
+    public function getMkadDistance(): ?int
+    {
+        return $this->mkadDistance;
+    }
+
+    public function setMkadDistance(?int $mkadDistance): self
+    {
+        $this->mkadDistance = $mkadDistance;
 
         return $this;
     }
