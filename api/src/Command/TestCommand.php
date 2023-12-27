@@ -39,7 +39,7 @@ class TestCommand extends Command
         foreach ($this->calls->findAll() as $call){
             if (count($call->getServices())){
                 dump('-------------------------');
-                dump($call->getName());
+                dump($call->getPartner()?->getName());
                 /** @var Row $row */
                 $fullReward = 0;
                 foreach ($call->getServices() as $row){
@@ -54,7 +54,10 @@ class TestCommand extends Command
                     $reward = (int)(($row->getPrice() - $row->getService()->getCoastPrice()) / 100 * $percent);
 
                     $fullReward  += $reward;
-                    dump($row->getService()->getName(), $percent, $reward);
+                    dump($row->getService()->getName());
+                    dump($percent);
+                    dump($row->getPrice());
+                    dump($reward);
                     $row->setPartnerReward($reward);
                     dump('************************');
                 }
