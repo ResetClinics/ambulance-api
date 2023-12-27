@@ -34,12 +34,12 @@ class InitAgreementCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        foreach ($this->agreementRows as $agreementRow){
-            $this->agreementRows->remove($agreementRow);
-        }
+       // foreach ($this->agreementRows as $agreementRow){
+       //     $this->agreementRows->remove($agreementRow);
+       // }
+//
 
-
-        foreach ($this->agreements as $agreement){
+        foreach ($this->agreements->findAll() as $agreement){
             $this->agreements->remove($agreement);
         }
 
