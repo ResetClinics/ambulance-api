@@ -32,8 +32,6 @@ class Fetcher
 
         $data = array_shift($row);
 
-        dump($data);
-
         return $data !== null ? (int)$data : 0;
     }
 }
