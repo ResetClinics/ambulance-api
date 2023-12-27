@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Flusher;
 use App\Repository\Partner\Agreement\AgreementRepository;
 use App\Repository\Partner\Agreement\AgreementTemplateRepository;
+use App\Repository\Partner\Agreement\RowRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,6 +21,7 @@ class InitAgreementCommand extends Command
 
 
     public function __construct(
+        private readonly RowRepository $agreementRows,
         private readonly AgreementRepository $agreements,
         private readonly AgreementTemplateRepository $templates,
         private readonly Flusher $flusher,
@@ -31,6 +33,11 @@ class InitAgreementCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+
+        foreach ($this->agreementRows as $agreementRow){
+            $this->agreementRows->remove($agreementRow);
+        }
+
 
         foreach ($this->agreements as $agreement){
             $this->agreements->remove($agreement);
