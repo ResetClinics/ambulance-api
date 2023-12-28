@@ -4,6 +4,7 @@ namespace App\Entity\MedTeam;
 
 use ApiPlatform\Doctrine\Common\Filter\DateFilterInterface;
 use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
@@ -32,6 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         'completedAt' => DateFilterInterface::EXCLUDE_NULL,
     ]
 )]
+#[ApiFilter(OrderFilter::class, properties: ['plannedStartAt'], arguments: ['orderParameterName' => 'order'])]
 class MedTeam
 {
     #[ORM\Id]
