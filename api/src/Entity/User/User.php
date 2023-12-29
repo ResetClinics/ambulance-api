@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity\User;
 
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
@@ -17,7 +17,6 @@ use App\Entity\Team\Team;
 use App\Filter\Realty\Lead\SearchByContactFilter;
 use App\Filter\User\SearchByNameAndPhoneAndEmailFilter;
 use App\Repository\UserRepository;
-use App\State\UserHashPasswordProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -104,6 +103,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $address = null;
 
+    #[ORM\Column(options: ['default' => 1])]
+    #[Groups(['user:read', 'user:item:read', 'user:write'])]
+    #[ApiFilter(BooleanFilter::class)]
+    private ?bool $active = true;
+
 
     public function __construct($externalId = null)
     {
@@ -151,6 +155,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
+        if (!$this->active){
+            return [];
+        }
         /** @var array<array-key, string> $roles */
         $roles = $this->roles;
         $roles[] = 'ROLE_USER';
@@ -315,6 +322,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAddress(?string $address): self
     {
         $this->address = $address;
+
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
 
         return $this;
     }
