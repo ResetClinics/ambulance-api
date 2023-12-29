@@ -228,6 +228,11 @@ class SetTeamAction extends AbstractController
     {
         file_put_contents(
             dirname(__DIR__) . '/../../var/set_team.txt',
+            print_r(1, true),
+            FILE_APPEND)
+        ;
+        file_put_contents(
+            dirname(__DIR__) . '/../../var/set_team.txt',
             print_r($leadDto, true),
             FILE_APPEND)
         ;
