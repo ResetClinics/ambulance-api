@@ -43,10 +43,6 @@ class SetTeamAction extends AbstractController
 
     public function __invoke(Request $request): JsonResponse
     {
-        file_put_contents(
-            dirname(__DIR__) . '/../../var/set_team.txt',
-            print_r(0, true),
-            FILE_APPEND);
 
         $data = $request->request->all();
 
@@ -79,13 +75,8 @@ class SetTeamAction extends AbstractController
 
         $this->sendMessageToAmo((int)$leadId, $message);
 
-        file_put_contents(
-            dirname(__DIR__) . '/../../var/set_team.txt',
-            print_r(4, true),
-            FILE_APPEND);
-
-
         $leadCustomFieldsValues = new CustomFieldsValuesCollection();
+
         $textCustomFieldValueModel = new TextCustomFieldValuesModel();
         $textCustomFieldValueModel->setFieldId(873881);
         $textCustomFieldValueModel->setValues(
@@ -93,18 +84,8 @@ class SetTeamAction extends AbstractController
                 ->add((new TextCustomFieldValueModel())->setValue($medTeam->getDoctor()->getName()))
         );
         $leadCustomFieldsValues->add($textCustomFieldValueModel);
-        $leadData->setCustomFieldsValues($leadCustomFieldsValues);
-        $leadCollection = new LeadsCollection();
 
-        $leadCollection->add($leadData);
 
-        try {
-            $this->client->leads()->update($leadCollection);
-        } catch (AmoCRMApiException $e) {
-            die;
-        }
-
-        $leadCustomFieldsValues = new CustomFieldsValuesCollection();
         $textCustomFieldValueModel = new TextCustomFieldValuesModel();
         $textCustomFieldValueModel->setFieldId(873879);
         $textCustomFieldValueModel->setValues(
@@ -112,8 +93,9 @@ class SetTeamAction extends AbstractController
                 ->add((new TextCustomFieldValueModel())->setValue($medTeam->getAdmin()->getName()))
         );
         $leadCustomFieldsValues->add($textCustomFieldValueModel);
-        $leadData->setCustomFieldsValues($leadCustomFieldsValues);
 
+
+        $leadData->setCustomFieldsValues($leadCustomFieldsValues);
         $leadCollection = new LeadsCollection();
 
         $leadCollection->add($leadData);
@@ -123,17 +105,6 @@ class SetTeamAction extends AbstractController
         } catch (AmoCRMApiException $e) {
             die;
         }
-        file_put_contents(
-            dirname(__DIR__) . '/../../var/set_team.txt',
-            print_r(55, true),
-            FILE_APPEND);
-
-        file_put_contents(
-            dirname(__DIR__) . '/../../var/set_team.txt',
-            print_r($medTeam->getId(), true),
-            FILE_APPEND);
-
-
 
         return $this->json(null, Response::HTTP_OK);
     }
