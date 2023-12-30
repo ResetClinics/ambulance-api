@@ -79,6 +79,11 @@ class SetTeamAction extends AbstractController
 
         $this->sendMessageToAmo((int)$leadId, $message);
 
+        file_put_contents(
+            dirname(__DIR__) . '/../../var/set_team.txt',
+            print_r(4, true),
+            FILE_APPEND);
+
 
         $leadCustomFieldsValues = new CustomFieldsValuesCollection();
         $textCustomFieldValueModel = new TextCustomFieldValuesModel();
@@ -110,6 +115,10 @@ class SetTeamAction extends AbstractController
         } catch (AmoCRMApiException $e) {
             die;
         }
+        file_put_contents(
+            dirname(__DIR__) . '/../../var/set_team.txt',
+            print_r(55, true),
+            FILE_APPEND);
 
         file_put_contents(
             dirname(__DIR__) . '/../../var/set_team.txt',
