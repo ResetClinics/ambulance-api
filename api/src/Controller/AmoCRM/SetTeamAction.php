@@ -94,7 +94,15 @@ class SetTeamAction extends AbstractController
         );
         $leadCustomFieldsValues->add($textCustomFieldValueModel);
         $leadData->setCustomFieldsValues($leadCustomFieldsValues);
+        $leadCollection = new LeadsCollection();
 
+        $leadCollection->add($leadData);
+
+        try {
+            $this->client->leads()->update($leadCollection);
+        } catch (AmoCRMApiException $e) {
+            die;
+        }
 
         $leadCustomFieldsValues = new CustomFieldsValuesCollection();
         $textCustomFieldValueModel = new TextCustomFieldValuesModel();
