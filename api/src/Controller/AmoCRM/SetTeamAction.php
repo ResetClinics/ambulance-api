@@ -71,8 +71,6 @@ class SetTeamAction extends AbstractController
 
         $leadData = $leads->first();
 
-
-
         $lead = $this->getLeadDto($leadData);
 
 
