@@ -73,7 +73,7 @@ class SetTeamAction extends AbstractController
 
         $lead = new LeadForEmployee();
 
-        $lead->price = $lead->getPrice();
+        $lead->price = $leadData->getPrice();
 
 
         foreach ($leadData->getCustomFieldsValues() as $field) {
