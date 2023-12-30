@@ -63,66 +63,18 @@ class SetTeamAction extends AbstractController
 
         $leadId = $_POST['leads']['status'][0]['id'];
 
+        $filter = new LeadsFilter();
+        $filter->setIds([$leadId]);
+
+        $leads = $this->client->leads()->get($filter);
+
+        $lead = $leads->first();
 
         file_put_contents(
             dirname(__DIR__) . '/../../var/set_team.txt',
-            print_r($leadId, true),
+            print_r($lead, true),
             FILE_APPEND);
 
-        $leadData = [];
-        if (isset($data['leads']['update'][0])) {
-            $leadData = $data['leads']['update'][0];
-        }
-
-        file_put_contents(
-            dirname(__DIR__) . '/../../var/set_team.txt',
-            print_r(1, true),
-            FILE_APPEND);
-
-        if (isset($data['leads']['add'][0])) {
-            $leadData = $data['leads']['update'][0];
-        }
-
-        file_put_contents(
-            dirname(__DIR__) . '/../../var/set_team.txt',
-            print_r(2, true),
-            FILE_APPEND);
-
-        if (!$leadData) {
-            return $this->json(null, Response::HTTP_OK);
-        }
-
-        file_put_contents(
-            dirname(__DIR__) . '/../../var/set_team.txt',
-            print_r(3, true),
-            FILE_APPEND);
-
-        if ((int)$leadData['pipeline_id'] !== 4018768) {
-            return $this->json(null, Response::HTTP_OK);
-        }
-
-        file_put_contents(
-            dirname(__DIR__) . '/../../var/set_team.txt',
-            print_r(4, true),
-            FILE_APPEND);
-
-        $leadDto = $this->getLeadInfo((int)$leadData['id']);
-        if (!$leadDto) {
-            return $this->json(null, Response::HTTP_OK);
-        }
-
-        file_put_contents(
-            dirname(__DIR__) . '/../../var/set_team.txt',
-            print_r(5, true),
-            FILE_APPEND);
-
-        try {
-
-            //тут мы должны сработать с лидом
-            $this->onSetTeam($leadDto);
-        } catch (\Exception $e) {
-            throw new DomainException($e->getMessage());
-        }
 
 
         return $this->json(null, Response::HTTP_OK);
