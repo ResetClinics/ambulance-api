@@ -11,6 +11,7 @@ use AmoCRM\Models\CustomFieldsValues\ValueModels\BaseEnumCodeCustomFieldValueMod
 use AmoCRM\Models\LeadModel;
 use App\Dto\Amo\Employee;
 use App\Dto\Amo\Lead;
+use App\Dto\Amo\LeadForEmployee;
 use App\Entity\Calling\Calling;
 use App\Entity\Calling\Status;
 use App\Entity\Partner;
@@ -61,14 +62,71 @@ class SetTeamAction extends AbstractController
 
         $data = $request->request->all();
 
-        $leadId = $_POST['leads']['status'][0]['id'];
+        $leadId = $data['leads']['status'][0]['id'];
 
         $filter = new LeadsFilter();
         $filter->setIds([$leadId]);
 
         $leads = $this->client->leads()->get($filter);
 
-        $lead = $leads->first();
+        $leadData = $leads->first();
+
+        $lead = new LeadForEmployee();
+
+        $lead->price = $lead->getPrice();
+
+
+        foreach ($leadData->getCustomFieldsValues() as $field) {
+
+            if ($field->getFieldId() === 879807) {
+                $lead->numberCalling = $field->getValues()?->first()->getValue();
+            }
+            if ($field->getFieldId() === 880453) {
+                $lead->dateTime = $field->getValues()?->first()->getValue()?->toString();
+            }
+            if ($field->getFieldId() === 870903) {
+                $lead->address = $field->getValues()?->first()->getValue();
+            }
+
+            if ($field->getFieldId() === 875863) {
+                $lead->team = $field->getValues()?->first()->getValue();
+            }
+            if ($field->getFieldId() === 880527) {
+                $lead->nosology = $field->getValues()?->first()->getValue();
+            }
+
+            if ($field->getFieldId() === 870907) {
+                $lead->age = $field->getValues()?->first()->getValue();
+            }
+
+            if ($field->getFieldId() === 870945) {
+                $lead->description = $field->getValues()?->first()->getValue() ?: '';
+            }
+
+            if ($field->getFieldId() === 884333) {
+                $lead->hz = $field->getValues()?->first()->getValue();
+            }
+
+            if ($field->getFieldId() === 960101) {
+                $lead->leadType = $field->getValues()?->first()->getValue();
+            }
+
+            if ($field->getFieldId() === 896921) {
+                $lead->sendPhone = $field->getValues()?->first()->getValue();
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+
 
         file_put_contents(
             dirname(__DIR__) . '/../../var/set_team.txt',
@@ -80,147 +138,5 @@ class SetTeamAction extends AbstractController
         return $this->json(null, Response::HTTP_OK);
     }
 
-    private function getLeadInfo(int $leadId): ?Lead
-    {
-        $lead = $this->client->leads()->getOne($leadId, [LeadModel::CONTACTS, LeadModel::CATALOG_ELEMENTS]);
-        if (!$lead) {
-            throw new DomainException('Не найден лид');
-        }
-
-        if (!$lead->getCustomFieldsValues()) {
-            throw new DomainException('Не заполнены поля');
-        }
-
-
-        if (!$lead->getMainContact()) {
-            throw new DomainException('Не указан контакт');
-        }
-
-        $contact = $this->client->contacts()->getOne($lead->getMainContact()->getId());
-
-        if (!$contact) {
-            throw new DomainException('Не найден контакт');
-        }
-
-        $name = $contact->getName();
-
-        if (!$name) {
-            return null;
-        }
-
-        $phone = null;
-
-        /** @var MultitextCustomFieldValuesModel $field */
-        foreach ($contact->getCustomFieldsValues() as $field) {
-            if ($field->getFieldId() === 604157) {
-                $phone = $field->getValues()?->first()->getValue();
-            }
-        }
-
-        if (!$phone) {
-            throw new DomainException('Не найден телефон');
-        }
-
-        $leadDto = new Lead($leadId, $name, $phone);
-
-        $leadDto->name = $lead->getName();
-        $leadDto->statusId = $lead->getStatusId();
-
-        foreach ($lead->getCustomFieldsValues() as $field) {
-
-            if ($field->getFieldId() === 879807) {
-                $leadDto->numberCalling = $field->getValues()?->first()->getValue();
-            }
-            if ($field->getFieldId() === 880453) {
-                /** @var Carbon $dateTime */
-                $leadDto->dateTime = $field->getValues()?->first()->getValue()?->toString();
-                //$date_time = date("d.m.Y H:i:s", $one_field['values'][0]['value']);
-            }
-            if ($field->getFieldId() === 870903) {
-                $leadDto->address = $field->getValues()?->first()->getValue();
-            }
-
-            if ($field->getFieldId() === 875863) {
-                $leadDto->team = $field->getValues()?->first()->getValue();
-            }
-            if ($field->getFieldId() === 880527) {
-                $leadDto->nosology = $field->getValues()?->first()->getValue();
-            }
-
-            if ($field->getFieldId() === 870907) {
-                $leadDto->age = $field->getValues()?->first()->getValue();
-            }
-
-            if ($field->getFieldId() === 870945) {
-                $leadDto->description = $field->getValues()?->first()->getValue() ?: '';
-            }
-
-            if ($field->getFieldId() === 884333) {
-                $leadDto->hz = $field->getValues()?->first()->getValue();
-            }
-
-            if ($field->getFieldId() === 960101) {
-                $leadDto->leadType = $field->getValues()?->first()->getValue();
-            }
-
-            if ($field->getFieldId() === 882361) {
-                $first = $field->getValues()?->first();
-
-                if ($first instanceof BaseEnumCodeCustomFieldValueModel) {
-                    $leadDto->partnerExternalId = $first->getEnumId() ? (string)$first->getEnumId() : null;
-                }
-                $leadDto->partnerName = $field->getValues()?->first()->getValue();
-            }
-            if ($field->getFieldId() === 896921) {
-                $leadDto->sendPhone = $field->getValues()?->first()->getValue();
-            }
-
-
-            if ($field->getFieldId() === 873879) {
-                $userName = $field->getValues()?->first()->getValue();
-                $filter = new LeadsFilter();
-
-                $filter->setNames($userName);
-
-                $filter->setStatuses([[
-                    'pipeline_id' => 4105087,
-                ]]);
-
-                $leadsEmployee = $this->client->leads()->get($filter);
-                $leadEmployee = $leadsEmployee->first();
-                $leadDto->admin = new Employee($leadEmployee->getId(), $leadEmployee->getName(), 'ROLE_ADMIN');
-            }
-            if ($field->getFieldId() === 873881) {
-                $userName = $field->getValues()?->first()->getValue();
-                $filter = new LeadsFilter();
-
-                $filter->setNames($userName);
-
-                $filter->setStatuses([[
-                    'pipeline_id' => 4105087,
-                ]]);
-
-                $leadsEmployee = $this->client->leads()->get($filter);
-                $leadEmployee = $leadsEmployee->first();
-                $leadDto->doctor = new Employee($leadEmployee->getId(), $leadEmployee->getName(), 'ROLE_DOCTOR');
-            }
-        }
-
-        return $leadDto;
-    }
-
-    private function onSetTeam(Lead $leadDto)
-    {
-        file_put_contents(
-            dirname(__DIR__) . '/../../var/set_team.txt',
-            print_r(1, true),
-            FILE_APPEND)
-        ;
-        file_put_contents(
-            dirname(__DIR__) . '/../../var/set_team.txt',
-            print_r($leadDto, true),
-            FILE_APPEND)
-        ;
-    }
 
 }
