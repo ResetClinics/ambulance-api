@@ -71,10 +71,36 @@ class SetTeamAction extends AbstractController
 
         $leadData = $leads->first();
 
+
+
+        $lead = $this->getLeadDto($leadData);
+
+
+
+
+
+
+
+
+
+
+
+        file_put_contents(
+            dirname(__DIR__) . '/../../var/set_team.txt',
+            print_r($lead, true),
+            FILE_APPEND);
+
+
+
+        return $this->json(null, Response::HTTP_OK);
+    }
+
+
+    private function getLeadDto($leadData): LeadForEmployee
+    {
         $lead = new LeadForEmployee();
 
         $lead->price = $leadData->getPrice();
-
 
         foreach ($leadData->getCustomFieldsValues() as $field) {
 
@@ -114,29 +140,8 @@ class SetTeamAction extends AbstractController
             if ($field->getFieldId() === 896921) {
                 $lead->sendPhone = $field->getValues()?->first()->getValue();
             }
-
         }
 
-
-
-
-
-
-
-
-
-
-
-
-        file_put_contents(
-            dirname(__DIR__) . '/../../var/set_team.txt',
-            print_r($lead, true),
-            FILE_APPEND);
-
-
-
-        return $this->json(null, Response::HTTP_OK);
+        return $lead;
     }
-
-
 }
