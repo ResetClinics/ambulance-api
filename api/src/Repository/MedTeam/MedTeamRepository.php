@@ -45,6 +45,7 @@ class MedTeamRepository extends ServiceEntityRepository
             ->andWhere('t.status = :work')
             ->andWhere('t.phone = :val')
             ->setParameter('val', $team)
+            ->setParameter('work', 'work')
             ->orderBy('t.plannedStartAt', 'DESC')
             ->getQuery()
             ->getOneOrNullResult()
