@@ -17,6 +17,7 @@ use App\Entity\Calling\Status;
 use App\Entity\Partner;
 use App\Flusher;
 use App\Repository\CallingRepository;
+use App\Repository\MedTeam\MedTeamRepository;
 use App\Repository\PartnerRepository;
 use App\Repository\UserRepository;
 use App\Services\AmoCRM;
@@ -26,6 +27,7 @@ use Carbon\Carbon;
 use DateTimeImmutable;
 use DomainException;
 use mysql_xdevapi\Exception;
+use phpDocumentor\Reflection\Types\This;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,6 +40,7 @@ class SetTeamAction extends AbstractController
 {
     private AmoCRMApiClient $client;
     private CallingSender $sender;
+    private MedTeamRepository $medTeamRepository;
 
     public function __construct(
         private readonly Api $geocodingApi,
@@ -46,11 +49,13 @@ class SetTeamAction extends AbstractController
         private readonly CallingRepository $callings,
         private readonly PartnerRepository $partners,
         private readonly Flusher           $flusher,
-        CallingSender                     $sender
+        CallingSender                     $sender,
+        MedTeamRepository $medTeamRepository
     )
     {
         $this->client = $amoCRM->getClient();
         $this->sender = $sender;
+        $this->medTeamRepository = $medTeamRepository;
     }
 
     public function __invoke(Request $request): JsonResponse
@@ -74,6 +79,9 @@ class SetTeamAction extends AbstractController
         $lead = $this->getLeadDto($leadData);
 
 
+        $medTeam = $this->medTeamRepository->getLastWorkByNumber($lead->team);
+
+
 
 
 
@@ -85,7 +93,7 @@ class SetTeamAction extends AbstractController
 
         file_put_contents(
             dirname(__DIR__) . '/../../var/set_team.txt',
-            print_r($lead, true),
+            print_r($medTeam, true),
             FILE_APPEND);
 
 
