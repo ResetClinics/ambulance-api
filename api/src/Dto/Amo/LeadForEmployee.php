@@ -16,4 +16,5 @@ class LeadForEmployee
     public $leadType = null;
     public $sendPhone = null;
 
+
 }

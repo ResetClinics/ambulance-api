@@ -5,10 +5,15 @@ declare(strict_types=1);
 namespace App\Controller\AmoCRM;
 
 use AmoCRM\Client\AmoCRMApiClient;
+use AmoCRM\Collections\CustomFieldsValuesCollection;
+use AmoCRM\Collections\Leads\LeadsCollection;
 use AmoCRM\Collections\NotesCollection;
 use AmoCRM\Exceptions\AmoCRMApiException;
 use AmoCRM\Filters\LeadsFilter;
 use AmoCRM\Helpers\EntityTypesInterface;
+use AmoCRM\Models\CustomFieldsValues\TextCustomFieldValuesModel;
+use AmoCRM\Models\CustomFieldsValues\ValueCollections\TextCustomFieldValueCollection;
+use AmoCRM\Models\CustomFieldsValues\ValueModels\TextCustomFieldValueModel;
 use AmoCRM\Models\NoteType\CommonNote;
 use App\Dto\Amo\LeadForEmployee;
 use App\Entity\MedTeam\MedTeam;
@@ -75,6 +80,36 @@ class SetTeamAction extends AbstractController
         $this->sendMessageToAmo((int)$leadId, $message);
 
 
+        $leadCustomFieldsValues = new CustomFieldsValuesCollection();
+        $textCustomFieldValueModel = new TextCustomFieldValuesModel();
+        $textCustomFieldValueModel->setFieldId(873881);
+        $textCustomFieldValueModel->setValues(
+            (new TextCustomFieldValueCollection())
+                ->add((new TextCustomFieldValueModel())->setValue($medTeam->getDoctor()->getName()))
+        );
+        $leadCustomFieldsValues->add($textCustomFieldValueModel);
+        $leadData->setCustomFieldsValues($leadCustomFieldsValues);
+
+
+        $leadCustomFieldsValues = new CustomFieldsValuesCollection();
+        $textCustomFieldValueModel = new TextCustomFieldValuesModel();
+        $textCustomFieldValueModel->setFieldId(873879);
+        $textCustomFieldValueModel->setValues(
+            (new TextCustomFieldValueCollection())
+                ->add((new TextCustomFieldValueModel())->setValue($medTeam->getAdmin()->getName()))
+        );
+        $leadCustomFieldsValues->add($textCustomFieldValueModel);
+        $leadData->setCustomFieldsValues($leadCustomFieldsValues);
+
+        $leadCollection = new LeadsCollection();
+
+        $leadCollection->add($leadData);
+
+        try {
+            $this->client->leads()->update($leadCollection);
+        } catch (AmoCRMApiException $e) {
+            die;
+        }
 
         file_put_contents(
             dirname(__DIR__) . '/../../var/set_team.txt',
