@@ -82,11 +82,6 @@ class SetTeamAction extends AbstractController
             return $this->json(null, Response::HTTP_OK);
         }
 
-        if (!$leadDto->doctor || !$leadDto->admin) {
-            return $this->json(null, Response::HTTP_OK);
-        }
-
-
         try {
 
             //тут мы должны сработать с лидом
