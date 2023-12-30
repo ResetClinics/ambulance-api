@@ -5,8 +5,13 @@ declare(strict_types=1);
 namespace App\Controller\AmoCRM;
 
 use AmoCRM\Client\AmoCRMApiClient;
+use AmoCRM\Collections\NotesCollection;
+use AmoCRM\Exceptions\AmoCRMApiException;
 use AmoCRM\Filters\LeadsFilter;
+use AmoCRM\Helpers\EntityTypesInterface;
+use AmoCRM\Models\NoteType\CommonNote;
 use App\Dto\Amo\LeadForEmployee;
+use App\Entity\MedTeam\MedTeam;
 use App\Repository\MedTeam\MedTeamRepository;
 use App\Services\AmoCRM;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -51,16 +56,23 @@ class SetTeamAction extends AbstractController
 
         $lead = $this->getLeadDto($leadData);
 
-
         $medTeam = $this->medTeamRepository->getLastWorkByNumber($lead->team);
 
+        if (!$medTeam){
+            return $this->json(null, Response::HTTP_OK);
+        }
 
+        if (!$medTeam->getAdmin()){
+            return $this->json(null, Response::HTTP_OK);
+        }
 
+        if (!$medTeam->getDoctor()){
+            return $this->json(null, Response::HTTP_OK);
+        }
 
+        $message = $this->createMessage($lead, $medTeam);
 
-
-
-
+        $this->sendMessageToAmo($leadId, $message);
 
 
 
@@ -74,6 +86,47 @@ class SetTeamAction extends AbstractController
         return $this->json(null, Response::HTTP_OK);
     }
 
+
+    public function sendMessageToAmo($leadId, $message){
+        $notesCollection = new NotesCollection();
+        $messageNote = new CommonNote();
+        $messageNote->setEntityId( $leadId)
+            ->setText($message)
+            ->setCreatedBy(0);
+
+        $notesCollection->add($messageNote);
+
+        try {
+            $leadNotesService = $this->client->notes(EntityTypesInterface::LEADS);
+            $leadNotesService->add($notesCollection);
+        } catch (AmoCRMApiException $e) {
+        }
+    }
+
+    private function createMessage(LeadForEmployee $lead, MedTeam $team): string
+    {
+        $message = '!!!';
+
+        $message .= 'Заявка №: '. $lead->numberCalling.PHP_EOL;
+        $message .= 'Тип заявки: '.$lead->leadType.PHP_EOL;
+
+        $message .= 'Бригада №: '. $lead->team.PHP_EOL;
+        $message .= 'Сумма: '. $lead->price.PHP_EOL.PHP_EOL;
+
+        $message .= 'Врач: '. $team->getDoctor()->getName().PHP_EOL;
+        $message .= 'Администратор: '. $team->getAdmin()->getName().PHP_EOL;
+        $message .= 'Время прибытия: '. $lead->dateTime.PHP_EOL.PHP_EOL;
+
+        $message .= 'Адрес: '. $lead->address.PHP_EOL.PHP_EOL;
+
+        $message .= 'Нозология: '. $lead->nosology.PHP_EOL;
+        $message .= 'Возраст: '. $lead->age.PHP_EOL;
+        $message .= 'ХЗ: '. $lead->hz.PHP_EOL.PHP_EOL;
+
+
+        $message .= 'Примечание: '. $lead->description.PHP_EOL;
+        return $message;
+    }
 
     private function getLeadDto($leadData): LeadForEmployee
     {
