@@ -157,7 +157,7 @@ class SetTeamAction extends AbstractController
 
     private function createMessage(LeadForEmployee $lead, MedTeam $team): string
     {
-        $message = '!!!';
+        $message = '';
 
         $message .= 'Заявка №: '. $lead->numberCalling.PHP_EOL;
         $message .= 'Тип заявки: '.$lead->leadType.PHP_EOL;
