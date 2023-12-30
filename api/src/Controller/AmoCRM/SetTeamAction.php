@@ -72,7 +72,7 @@ class SetTeamAction extends AbstractController
 
         $message = $this->createMessage($lead, $medTeam);
 
-        $this->sendMessageToAmo($leadId, $message);
+        $this->sendMessageToAmo((int)$leadId, $message);
 
 
 
