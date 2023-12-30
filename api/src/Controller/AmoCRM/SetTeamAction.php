@@ -6,55 +6,28 @@ namespace App\Controller\AmoCRM;
 
 use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Filters\LeadsFilter;
-use AmoCRM\Models\CustomFieldsValues\MultitextCustomFieldValuesModel;
-use AmoCRM\Models\CustomFieldsValues\ValueModels\BaseEnumCodeCustomFieldValueModel;
-use AmoCRM\Models\LeadModel;
-use App\Dto\Amo\Employee;
-use App\Dto\Amo\Lead;
 use App\Dto\Amo\LeadForEmployee;
-use App\Entity\Calling\Calling;
-use App\Entity\Calling\Status;
-use App\Entity\Partner;
-use App\Flusher;
-use App\Repository\CallingRepository;
 use App\Repository\MedTeam\MedTeamRepository;
-use App\Repository\PartnerRepository;
-use App\Repository\UserRepository;
 use App\Services\AmoCRM;
-use App\Services\CallingSender;
-use App\Services\YaGeolocation\Api;
-use Carbon\Carbon;
-use DateTimeImmutable;
-use DomainException;
-use mysql_xdevapi\Exception;
-use phpDocumentor\Reflection\Types\This;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use function Symfony\Component\DependencyInjection\Loader\Configurator\iterator;
 
 #[Route('/api/amo-crm/set-team', name: 'amo-crm_set-team', methods: ["POST"])]
 class SetTeamAction extends AbstractController
 {
     private AmoCRMApiClient $client;
-    private CallingSender $sender;
+
     private MedTeamRepository $medTeamRepository;
 
     public function __construct(
-        private readonly Api $geocodingApi,
         AmoCRM                             $amoCRM,
-        private readonly UserRepository    $users,
-        private readonly CallingRepository $callings,
-        private readonly PartnerRepository $partners,
-        private readonly Flusher           $flusher,
-        CallingSender                     $sender,
         MedTeamRepository $medTeamRepository
     )
     {
         $this->client = $amoCRM->getClient();
-        $this->sender = $sender;
         $this->medTeamRepository = $medTeamRepository;
     }
 
