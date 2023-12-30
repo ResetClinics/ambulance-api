@@ -66,7 +66,7 @@ class SetTeamAction extends AbstractController
 
         file_put_contents(
             dirname(__DIR__) . '/../../var/set_team.txt',
-            print_r($medTeam, true),
+            print_r($medTeam->getId(), true),
             FILE_APPEND);
 
 
