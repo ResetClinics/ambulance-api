@@ -41,14 +41,18 @@ class MedTeamRepository extends ServiceEntityRepository
 
     public function getLastWorkByNumber(mixed $team): ?MedTeam
     {
-        return $this->createQueryBuilder('t')
+        $data = $this->createQueryBuilder('t')
             ->andWhere('t.status = :work')
             ->andWhere('t.phone = :val')
             ->setParameter('val', $team)
             ->setParameter('work', 'work')
             ->orderBy('t.plannedStartAt', 'DESC')
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult();
         ;
+
+        $data = $data === null ? [] : $data;
+
+        return array_shift($data);
     }
 }
