@@ -30,6 +30,7 @@ use App\Controller\Calling\RepeatAction;
 use App\Entity\Partner;
 use App\Entity\User\User;
 use App\Filter\Call\EmployeeFilter;
+use App\Filter\Call\SearchByFieldsFilter;
 use App\Repository\CallingRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -86,7 +87,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
 )]
-#[ApiFilter(SearchFilter::class, properties: ['team' => 'exact'])]
+#[ApiFilter(
+    SearchFilter::class,
+    properties: [
+        'team' => 'exact',
+    ])]
 #[Post(uriTemplate: '/callings/current', controller: CurrentAction::class, input: CallingDto::class, read: false)]
 #[Post(uriTemplate: '/callings/{id}/accept', controller: AcceptAction::class, input: CallingDto::class, read: false)]
 #[Post(uriTemplate: '/callings/{id}/dispatch', controller: DispatchAction::class, input: CallingDto::class, read: false)]
@@ -111,6 +116,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[ApiFilter(
     EmployeeFilter::class,
     properties: ['employee']
+)]
+#[ApiFilter(
+    SearchByFieldsFilter::class,
+    properties: ['search']
 )]
 class Calling
 {
