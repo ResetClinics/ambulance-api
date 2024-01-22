@@ -20,23 +20,23 @@ use App\Repository\PartnerRepository;
 use App\Repository\UserRepository;
 use App\Services\AmoCRM;
 use App\Services\CallingSender;
+use App\Services\TrackerToMkad;
 use App\Services\YaGeolocation\Api;
 use Carbon\Carbon;
 use DateTimeImmutable;
 use DomainException;
-use mysql_xdevapi\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use function Symfony\Component\DependencyInjection\Loader\Configurator\iterator;
 
 #[Route('/api/amo-crm/lead', name: 'amo-crm_lead', methods: ["POST"])]
 class LeadAction extends AbstractController
 {
     private AmoCRMApiClient $client;
     private CallingSender $sender;
+    private TrackerToMkad $trackerToMkad;
 
     public function __construct(
         private readonly Api $geocodingApi,
@@ -45,11 +45,13 @@ class LeadAction extends AbstractController
         private readonly CallingRepository $callings,
         private readonly PartnerRepository $partners,
         private readonly Flusher           $flusher,
-        CallingSender                     $sender
+        CallingSender                     $sender,
+        TrackerToMkad $trackerToMkad
     )
     {
         $this->client = $amoCRM->getClient();
         $this->sender = $sender;
+        $this->trackerToMkad = $trackerToMkad;
     }
 
     public function __invoke(Request $request): JsonResponse
@@ -299,6 +301,14 @@ class LeadAction extends AbstractController
                     $calling->setLat($geolocation->getLat());
                     $calling->setLon($geolocation->getLon());
                 }
+
+                $distance = $this->trackerToMkad->getDistance(
+                    (float)$geolocation->getLat(),
+                    (float)$geolocation->getLon()
+                );
+
+                $calling->setMkadDistance($distance);
+
             }catch (DomainException){}
         }
 
