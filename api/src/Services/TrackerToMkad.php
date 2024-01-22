@@ -4,7 +4,7 @@ namespace App\Services;
 
 
 use App\MkadDistance\Distance;
-use DomainException;
+use Exception;
 
 class TrackerToMkad
 {
@@ -16,7 +16,7 @@ class TrackerToMkad
             )->calculate();
 
             return (int)$distance;
-        }catch (DomainException $e){
+        }catch (Exception $e){
             return 0;
         }
     }
