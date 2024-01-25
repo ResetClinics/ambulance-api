@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Entity\Calling\Calling;
 use App\Entity\Partner\Agreement\Agreement;
+use App\Filter\Partner\PartnerCallingCompletedAtFilter;
 use App\Repository\PartnerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -28,6 +29,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     normalizationContext: ['groups' => ['partner:read', 'partner:item:read']],
     denormalizationContext: ['groups' => ['partner:write']],
 )]
+#[ApiFilter(PartnerCallingCompletedAtFilter::class, properties: ['name' => 'completedAt'])]
 class Partner
 {
     #[ORM\Id]
