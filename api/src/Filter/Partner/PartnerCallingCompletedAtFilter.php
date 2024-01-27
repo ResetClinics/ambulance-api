@@ -28,10 +28,14 @@ class PartnerCallingCompletedAtFilter extends AbstractFilter
         $alias = $queryBuilder->getRootAliases()[0];
         $queryBuilder
             ->join(sprintf('%s.callings', $alias), 'c')
-            ->andWhere('c.completedAt >= :before')
-            ->andWhere('c.completedAt < :after')
+            ->andWhere('c.completedAt > :before')
+            ->andWhere('c.completedAt <= :after')
             ->setParameter('before', new DateTime($value['before']))
-            ->setParameter('after', new DateTime($value['after']));
+            ->setParameter('after', new DateTime($value['after']))
+        ;
+
+
+        dd($queryBuilder->getQuery()->getSQL());
 
     }
 
