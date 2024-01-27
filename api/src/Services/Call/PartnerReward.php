@@ -22,7 +22,6 @@ class PartnerReward
             return;
         }
 
-
         foreach ($call->getServices() as $row){
 
             $query = new Query(
@@ -34,6 +33,7 @@ class PartnerReward
             );
 
             $percent = $this->fetcher->fetch($query);
+
             $reward = (int)(($row->getPrice() - $row->getService()->getCoastPrice()) / 100 * $percent);
 
             $fullReward  += $reward;
