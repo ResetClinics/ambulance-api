@@ -6,7 +6,6 @@ use App\Entity\Calling\Calling;
 use App\Entity\Calling\Status;
 use App\Query\PartnerReward\Fetcher;
 use App\Query\PartnerReward\Query;
-use DateTimeImmutable;
 
 class PartnerReward
 {
@@ -30,7 +29,7 @@ class PartnerReward
                 $call->getCompletedAt(),
                 $call->getPartner()?->getId(),
                 $row->getService()?->getCategory()?->getId(),
-                0,
+                $call->getCountRepeat(),
                 $call->getMkadDistance() === null ? 0 : $call->getMkadDistance()
             );
 

@@ -36,7 +36,19 @@ class TestCommand extends Command
         $io = new SymfonyStyle($input, $output);
         ini_set('memory_limit', '-1');
 
-        foreach ($this->callings->findAll() as $calling){
+
+
+        $callings = $this->callings->createQueryBuilder('c')
+            ->andWhere('c.id > :val')
+            ->setParameter('val', 10000)
+            ->getQuery()
+            ->getResult()
+        ;
+
+
+        foreach ($callings as $key => $calling){
+
+            dump($key);
 
             if ($calling->getStatus() !== Status::COMPLETED){
                 continue;

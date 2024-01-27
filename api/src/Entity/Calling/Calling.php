@@ -39,6 +39,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use DomainException;
 use Exception;
+use phpDocumentor\Reflection\Types\This;
 use Symfony\Component\Serializer\Annotation\Context;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
@@ -1015,5 +1016,14 @@ class Calling
     public function isComplete(): bool
     {
         return $this->status === Status::completed();
+    }
+
+    public function getCountRepeat(): int
+    {
+        if ($this->owner){
+            return $this->owner->getCountRepeat() + 1;
+        }
+
+        return 0;
     }
 }
