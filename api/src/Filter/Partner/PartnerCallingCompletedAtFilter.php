@@ -33,7 +33,6 @@ class PartnerCallingCompletedAtFilter extends AbstractFilter
             ->setParameter('before', new DateTime($value['before']))
             ->setParameter('after', new DateTime($value['after']));
 
-        //dd($queryBuilder->getQuery()->getSQL());
     }
 
     public function getDescription(string $resourceClass): array

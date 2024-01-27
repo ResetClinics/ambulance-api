@@ -3,6 +3,7 @@
 namespace App\Repository\Partner\Agreement;
 
 use App\Entity\Partner\Agreement\Agreement;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,6 +22,9 @@ class AgreementRepository extends ServiceEntityRepository
         parent::__construct($registry, Agreement::class);
     }
 
+
+
+
     public function save(Agreement $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
@@ -37,6 +41,21 @@ class AgreementRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function findCurrentByPartnerId($partnerId, DateTimeImmutable $startsAt): ?Agreement
+    {
+        $result =  $this->createQueryBuilder('a')
+            ->andWhere('a.partner = :partner')
+            ->setParameter('partner', $partnerId)
+            ->andWhere('a.startsAt <= :startsAt')
+            ->setParameter('startsAt', $startsAt)
+            ->orderBy('a.startsAt', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+
+        return array_shift($result);
     }
 
 //    /**

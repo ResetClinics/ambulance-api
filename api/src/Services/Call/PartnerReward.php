@@ -3,8 +3,10 @@
 namespace App\Services\Call;
 
 use App\Entity\Calling\Calling;
+use App\Entity\Calling\Status;
 use App\Query\PartnerReward\Fetcher;
 use App\Query\PartnerReward\Query;
+use DateTimeImmutable;
 
 class PartnerReward
 {
@@ -17,9 +19,15 @@ class PartnerReward
     public function calculate(Calling $call): void
     {
         $fullReward = 0;
+        if ($call->getStatus() !== Status::COMPLETED){
+            return;
+        }
+
+
         foreach ($call->getServices() as $row){
 
             $query = new Query(
+                $call->getCompletedAt(),
                 $call->getPartner()?->getId(),
                 $row->getService()?->getCategory()?->getId(),
                 0,
