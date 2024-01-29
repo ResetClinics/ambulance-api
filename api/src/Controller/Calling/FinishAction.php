@@ -147,6 +147,16 @@ class FinishAction extends AbstractController
 
         $message .= $calling->getNote() ? 'Примечание ' . $calling->getNote() . PHP_EOL : '';
 
+
+        $description = $calling->getDescription() ? $calling->getNote() . PHP_EOL : '';
+
+        /** @var Row $row */
+        foreach ($calling->getServices()->toArray() as $row){
+            $description = $row->getDescription() ? $row->getDescription() . PHP_EOL : '';
+        }
+
+        $message .= $description ? 'Комментарий ' . $description . PHP_EOL : '';
+
         $currentDate = new DateTimeImmutable('now', new DateTimeZone('Europe/Moscow'));
 
         $entityId = null;
