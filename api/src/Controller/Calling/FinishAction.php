@@ -88,7 +88,7 @@ class FinishAction extends AbstractController
                 $hospital .=  'Госпитализация ' . PHP_EOL;
                 $hospital .= $serviceRow->getPlannedPrice() ? 'Ориентировочная цена ' . $serviceRow->getPlannedPrice() . PHP_EOL : '';
                 $hospital .= $serviceRow->getPrice() ? 'Предоплата ' . $serviceRow->getPrice() . PHP_EOL : '';
-                $hospital .= $serviceRow->getPlannedAt() ? '!ПОВТОР! Дата ' . $serviceRow->getPlannedAt()->format('d.m.y') . PHP_EOL : '';
+                $hospital .= $serviceRow->getPlannedAt() ? '*ПОВТОР* Дата ' . $serviceRow->getPlannedAt()->format('d.m.y H:m') . PHP_EOL : '';
                 $this->hospitalization($calling, $serviceRow);
 
                 $this->sender->sendToAdmin(
@@ -102,7 +102,7 @@ class FinishAction extends AbstractController
                 $replay .=  'Повтор ' . PHP_EOL;
                 $replay .= $serviceRow->getPlannedPrice() ? 'Ориентировочная цена ' . $serviceRow->getPlannedPrice() . PHP_EOL : '';
                 $replay .= $serviceRow->getPrice() ? 'Предоплата ' . $serviceRow->getPrice() . PHP_EOL : '';
-                $replay .= $serviceRow->getPlannedAt() ? '!ПОВТОР! Дата ' . $serviceRow->getPlannedAt()->format('d.m.y') . PHP_EOL : '';
+                $replay .= $serviceRow->getPlannedAt() ? '*ПОВТОР* Дата ' . $serviceRow->getPlannedAt()->format('d.m.y H:m') . PHP_EOL : '';
                 $this->repeat($calling, $serviceRow);
 
                 $this->sender->sendToAdmin(

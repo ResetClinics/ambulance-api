@@ -14,6 +14,7 @@ use AmoCRM\Helpers\EntityTypesInterface;
 use AmoCRM\Models\LeadModel;
 use AmoCRM\Models\NoteType\CommonNote;
 use App\Entity\Calling\Calling;
+use App\Entity\Calling\Row;
 use App\Flusher;
 use App\Repository\CallingRepository;
 use App\Services\AmoCRM;
@@ -69,9 +70,20 @@ class RepeatAction extends AbstractController
         $message .= $calling->getAge() ? 'Возраст пациента ' . $calling->getAge() . PHP_EOL : '';
         $message .= $calling->getEstimated() ? 'Ориентировочная цена ' . $calling->getEstimated() . PHP_EOL : '';
         $message .= $calling->getPrepayment() ? 'Предоплата ' . $calling->getPrepayment() . PHP_EOL : '';
-        $message .= $calling->getResultDateFormat() ? '!ПОВТОР! Дата ' . $calling->getResultDateFormat() . PHP_EOL : '';
+        $message .= $calling->getResultDateFormat() ? '*ПОВТОР* Дата ' . $calling->getResultDateFormat() . PHP_EOL : '';
         $message .= $calling->getResultTime() ? 'Время ' . $calling->getResultTime() . PHP_EOL : '';
+
+
+        $description = '';
+
+        /** @var Row $row */
+        foreach ($calling->getServices()->toArray() as $row){
+            $description = $row->getDescription() ? $row->getDescription() . PHP_EOL : '';
+        }
+
         $message .= $calling->getNote() ? 'Примечание ' . $calling->getNote() . PHP_EOL : '';
+
+        $message .= $description ? 'Комментарий ' . $description . PHP_EOL : '';
 
         $currentDate = new DateTimeImmutable('now', new DateTimeZone('Europe/Moscow'));
 

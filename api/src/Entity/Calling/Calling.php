@@ -782,7 +782,7 @@ class Calling
      */
     public function getResultDateFormat(): ?string
     {
-        return $this->resultDate ? (new DateTimeImmutable($this->resultDate))->format('d.m.y') : null;
+        return $this->resultDate ? (new DateTimeImmutable($this->resultDate))->format('d.m.y H:m') : null;
     }
 
     public function setResultDate(?string $resultDate): self
