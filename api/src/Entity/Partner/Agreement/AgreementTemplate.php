@@ -20,7 +20,8 @@ use Symfony\Component\Validator\Constraints as Assert;
     denormalizationContext: ['groups' => ['agreement:write']],
     order: ['service', 'distance'],
     paginationClientEnabled: true,
-    paginationClientItemsPerPage: true
+    paginationClientItemsPerPage: true,
+    paginationMaximumItemsPerPage: 500
 )]
 class AgreementTemplate
 {
