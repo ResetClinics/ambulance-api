@@ -310,6 +310,10 @@ class Calling
 
     #[ORM\Column(nullable: true)]
     #[Groups(['calling:read', 'calling:write'])]
+    private ?int $paymentHospitalization = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
     private ?int $totalAmount = null;
 
     #[ORM\ManyToOne(targetEntity: self::class)]
@@ -1029,5 +1033,15 @@ class Calling
         }
 
         return 0;
+    }
+
+    public function getPaymentHospitalization(): ?int
+    {
+        return $this->paymentHospitalization;
+    }
+
+    public function setPaymentHospitalization(?int $paymentHospitalization): void
+    {
+        $this->paymentHospitalization = $paymentHospitalization;
     }
 }

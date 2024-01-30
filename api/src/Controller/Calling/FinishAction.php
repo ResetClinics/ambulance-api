@@ -66,17 +66,21 @@ class FinishAction extends AbstractController
 
         $price = 0;
         $paymentNextOrder = 0;
+        $paymentHospitalization = 0;
 
         /** @var Row $serviceRow */
         foreach ($calling->getServices() as $serviceRow){
             if ($serviceRow->getService()->getType() === 'default'){
                 $price  += $serviceRow->getPrice() !== null ? (int) $serviceRow->getPrice() : 0;
+            }elseif ($serviceRow->getService()->getType() === 'hospital') {
+                $paymentHospitalization  += $serviceRow->getPrice() !== null ? (int) $serviceRow->getPrice() : 0;
             }else{
                 $paymentNextOrder  += $serviceRow->getPrice() !== null ? (int) $serviceRow->getPrice() : 0;
             }
         }
 
         $calling->setPrice($price);
+        $calling->setPaymentHospitalization($paymentHospitalization);
         $calling->setPaymentNextOrder($paymentNextOrder);
 
         $replay = '';
