@@ -21,6 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     order: ['service', 'distance'],
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true,
+    paginationItemsPerPage: 500,
     paginationMaximumItemsPerPage: 500
 )]
 class AgreementTemplate
