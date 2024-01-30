@@ -42,6 +42,7 @@ use Exception;
 use phpDocumentor\Reflection\Types\This;
 use Symfony\Component\Serializer\Annotation\Context;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -1018,6 +1019,9 @@ class Calling
         return $this->status === Status::completed();
     }
 
+
+    #[SerializedName('repeat')]
+    #[Groups(['calling:read'])]
     public function getCountRepeat(): int
     {
         if ($this->owner){
