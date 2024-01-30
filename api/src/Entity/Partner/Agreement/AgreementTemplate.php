@@ -18,6 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             'service-category:item:read'
         ]],
     denormalizationContext: ['groups' => ['agreement:write']],
+    order: ['service', 'distance'],
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
 )]
