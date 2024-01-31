@@ -152,7 +152,7 @@ class FinishAction extends AbstractController
         $message .= $calling->getNote() ? 'Примечание ' . $calling->getNote() . PHP_EOL : '';
 
 
-        $description = $calling->getDescription() ? $calling->getDescription() . PHP_EOL : '';
+        $description = '';
 
         /** @var Row $row */
         foreach ($calling->getServices()->toArray() as $row){
