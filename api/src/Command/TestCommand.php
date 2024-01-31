@@ -40,6 +40,7 @@ class TestCommand extends Command
 
         $callings = $this->callings->createQueryBuilder('c')
             ->andWhere('c.id > :val')
+            //->setParameter('val', 13607)
             ->setParameter('val', 13181)
             ->getQuery()
             ->getResult()
@@ -48,7 +49,7 @@ class TestCommand extends Command
 
         foreach ($callings as $key => $calling){
 
-            dump($key);
+            dump($key .  ' - key');
 
             if ($calling->getStatus() !== Status::COMPLETED){
                 continue;

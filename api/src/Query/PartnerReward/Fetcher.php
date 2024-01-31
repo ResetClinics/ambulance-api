@@ -5,7 +5,7 @@ namespace App\Query\PartnerReward;
 use App\Entity\Partner\Agreement\Agreement;
 use App\Repository\Partner\Agreement\AgreementRepository;
 use Doctrine\DBAL\Connection;
-use phpDocumentor\Reflection\Types\This;
+use Doctrine\DBAL\Exception;
 
 class Fetcher
 {
@@ -13,6 +13,10 @@ class Fetcher
         private readonly Connection $connection,
         private readonly AgreementRepository $agreements,
     ) {}
+
+    /**
+     * @throws Exception
+     */
     public function fetch(Query $query): int
     {
         $agreement = $this->agreements->findCurrentByPartnerId(
@@ -24,20 +28,95 @@ class Fetcher
             return 0;
         }
 
-        $row = $this->getResult($agreement, $query->repeat, $query);
+        $distance = null;
 
-        $data = array_shift($row);
-
-        if (!$data){
-            return 0;
+        if ($query->distance === 0){
+            $distance = $this->getEqualDistance($agreement, $query);
         }
 
-        $result = array_shift($data);
+        if ($distance === null){
+            $distance = $this->getMaxDistance($agreement, $query);
+        }
+        if ($distance === null){
+            $distance = $this->getMinDistance($agreement, $query);
+        }
 
-        return $result !== null ? (int)$result : 0;
+        return $this->getPercent($agreement, $distance, $query);
     }
 
-    private function getResult(Agreement $agreement, $repeat, Query $query): array
+
+    /**
+     * @throws Exception
+     */
+    private function getEqualDistance(Agreement $agreement, Query $query): ?int
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select('r.distance as value')
+            ->from('row', 'r')
+            ->andWhere('r.agreement_id = :agreementId')
+            ->setParameter('agreementId', $agreement->getId())
+            ->andWhere('r.service_id = :service')
+            ->setParameter('service', $query->serviceId)
+            ->andWhere('r.distance = :distance')
+            ->setParameter('distance', $query->distance)
+        ;
+
+        $qb->orderBy('r.distance', 'ASC');
+        $stmt = $qb->executeQuery();
+        $row = $stmt->fetchAssociative() ?: [];
+        return array_shift($row);
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getMaxDistance(Agreement $agreement, Query $query): ?int
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select('r.distance as value')
+            ->from('row', 'r')
+            ->andWhere('r.agreement_id = :agreementId')
+            ->setParameter('agreementId', $agreement->getId())
+           ->andWhere('r.service_id = :service')
+           ->setParameter('service', $query->serviceId)
+            ->andWhere('r.distance > :distance')
+            ->setParameter('distance', $query->distance)
+        ;
+
+        $qb->orderBy('r.distance', 'ASC');
+        $stmt = $qb->executeQuery();
+        $row = $stmt->fetchAssociative() ?: [];
+        return array_shift($row);
+    }
+
+
+    /**
+     * @throws Exception
+     */
+    private function getMinDistance(Agreement $agreement, Query $query): ?int
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select('r.distance as value')
+            ->from('row', 'r')
+            ->andWhere('r.agreement_id = :agreementId')
+            ->setParameter('agreementId', $agreement->getId())
+            ->andWhere('r.service_id = :service')
+            ->setParameter('service', $query->serviceId)
+            ->andWhere('r.distance <= :distance')
+            ->setParameter('distance', $query->distance)
+        ;
+
+        $qb->orderBy('r.distance', 'DESC');
+        $stmt = $qb->executeQuery();
+        $row = $stmt->fetchAssociative() ?: [];
+        return array_shift($row);
+    }
+
+
+    /**
+     * @throws Exception
+     */
+    private function getPercent(Agreement $agreement, $distance, Query $query): int
     {
         $qb = $this->connection->createQueryBuilder()
             ->select('r.percent as value')
@@ -47,21 +126,19 @@ class Fetcher
             ->setParameter('agreementId', $agreement->getId())
             ->andWhere('r.service_id = :service')
             ->setParameter('service', $query->serviceId)
-            ->andWhere('r.repeat_number = :repeat')
-            ->setParameter('repeat', $repeat)
-            ->andWhere('r.distance <= :distance')
-            ->setParameter('distance', $query->distance)
+            ->andWhere('r.repeat_number <= :repeat')
+            ->setParameter('repeat', $query->repeat)
+            ->andWhere('r.distance = :distance')
+            ->setParameter('distance', $distance)
         ;
 
-        $qb->orderBy('r.distance', 'DESC');
+        $qb->orderBy('r.repeat_number', 'DESC');
         $stmt = $qb->executeQuery();
 
-        $row = $stmt->fetchAllAssociative() ?: [];
+        $row = $stmt->fetchAssociative() ?: [];
 
-        if (count($row) === 0 && $repeat > 0){
-            $row = $this->getResult($agreement, $repeat - 1,  $query);
-        }
+        $result = array_shift($row);
 
-        return $row;
+        return $result === null ? 0: $result;
     }
 }
