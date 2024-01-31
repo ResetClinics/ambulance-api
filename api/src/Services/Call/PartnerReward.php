@@ -38,6 +38,9 @@ class PartnerReward
 
             $fullReward  += $reward;
 
+            $row->setPercent($percent);
+            $coastPrice = $row->getService()->getCoastPrice() === null ? 0 : $row->getService()->getCoastPrice();
+            $row->setCoastPrice($coastPrice);
             $row->setPartnerReward($reward);
         }
 

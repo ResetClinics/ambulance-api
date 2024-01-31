@@ -48,6 +48,15 @@ class Row
     #[Groups(['calling:read', 'calling:write'])]
     private ?int $partnerReward = null;
 
+    #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
+    private ?int $coastPrice = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
+    private ?int $percent = null;
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -135,5 +144,25 @@ class Row
         $this->partnerReward = $partnerReward;
 
         return $this;
+    }
+
+    public function getCoastPrice(): ?int
+    {
+        return $this->coastPrice;
+    }
+
+    public function setCoastPrice(?int $coastPrice): void
+    {
+        $this->coastPrice = $coastPrice;
+    }
+
+    public function getPercent(): ?int
+    {
+        return $this->percent;
+    }
+
+    public function setPercent(?int $percent): void
+    {
+        $this->percent = $percent;
     }
 }
