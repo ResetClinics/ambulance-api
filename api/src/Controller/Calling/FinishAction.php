@@ -140,17 +140,19 @@ class FinishAction extends AbstractController
             throw new NotFoundHttpException('Не найден лид №' . $calling->getNumberCalling() . ' в AmoCRM');
         }
 
-        $message = 'Информация от бригады' . PHP_EOL;
-        $message .= 'Заявка №' . $calling->getNumberCalling() . PHP_EOL;
-        $message .= $calling->getPrice() ? 'Итоговая цена ' . $calling->getPrice() . PHP_EOL : '';
-        $message .= $calling->getFio() ? 'ФИО пациента ' . $calling->getFio() . PHP_EOL : '';
-        $message .= $calling->getAge() ? 'Возраст пациента ' . $calling->getAge() . PHP_EOL : '';
+        $message = 'Информация от бригады:' . PHP_EOL;
+
+        $message .= $calling->getPrice() ? 'Итоговая цена: ' . $calling->getPrice() . PHP_EOL : '';
+        $message .= $calling->getPhone() ? 'Номер телефона заказчика: ' . $calling->getPhone() . PHP_EOL : '';
+        $message .= $calling->getFio() ? 'ФИО пациента: ' . $calling->getFio() . PHP_EOL : '';
+        $message .= $calling->getAge() ? 'Возраст пациента: ' . $calling->getAge() . PHP_EOL : '';
+        $message .= $calling->getAddress() ? 'Адрес: ' . $calling->getAddress() . PHP_EOL : '';
+        $message .= $calling->getMkadDistance() ? 'Расстояние до МКАД: ' . $calling->getMkadDistance() . PHP_EOL : '';
 
         $message .= $hospital;
         $message .= $replay;
 
         $message .= $calling->getNote() ? 'Примечание ' . $calling->getNote() . PHP_EOL : '';
-
 
         $description = '';
 
@@ -160,6 +162,10 @@ class FinishAction extends AbstractController
         }
 
         $message .= $description ? 'Комментарий ' . $description . PHP_EOL : '';
+
+        $message .=  PHP_EOL;
+
+        $message .= 'Заявка №' . $calling->getNumberCalling() . PHP_EOL;
 
         $currentDate = new DateTimeImmutable('now', new DateTimeZone('Europe/Moscow'));
 
