@@ -28,9 +28,11 @@ class Base
     #[Assert\NotBlank]
     private ?string $name = null;
 
+    #[Groups(['base:read', 'base:write'])]
     #[ORM\Column(length: 16, nullable: true)]
     private ?string $lon = null;
 
+    #[Groups(['base:read', 'base:write'])]
     #[ORM\Column(length: 16, nullable: true)]
     private ?string $lat = null;
     public function getId(): ?int
