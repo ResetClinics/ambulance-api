@@ -66,4 +66,9 @@ class Base
     {
         return $this->lon;
     }
+
+    public function setLon(?string $lon): void
+    {
+        $this->lon = $lon;
+    }
 }
