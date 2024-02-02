@@ -28,6 +28,11 @@ class Base
     #[Assert\NotBlank]
     private ?string $name = null;
 
+    #[ORM\Column(length: 16, nullable: true)]
+    private ?string $lon = null;
+
+    #[ORM\Column(length: 16, nullable: true)]
+    private ?string $lat = null;
     public function getId(): ?int
     {
         return $this->id;
@@ -43,5 +48,20 @@ class Base
         $this->name = $name;
 
         return $this;
+    }
+
+    public function getLat(): ?string
+    {
+        return $this->lat;
+    }
+
+    public function setLat(?string $lat): void
+    {
+        $this->lat = $lat;
+    }
+
+    public function getLon(): ?string
+    {
+        return $this->lon;
     }
 }
