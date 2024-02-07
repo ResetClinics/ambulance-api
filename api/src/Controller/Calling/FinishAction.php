@@ -344,7 +344,11 @@ class FinishAction extends AbstractController
 
         $leadModel = $this->client->leads()->addOne($newLead);
 
-        if (!$this->callings->findOneByNumber((string)$leadModel->getId())){
+        $calling->setOwnerExternalId((string)$leadModel->getId());
+
+        $this->flusher->flush();
+
+       /* if (!$this->callings->findOneByNumber((string)$leadModel->getId())){
             $repeat = new Calling(
                 (string)$leadModel->getId(),
                 $name,
@@ -363,6 +367,6 @@ class FinishAction extends AbstractController
             $repeat->setPrepayment($price);
 
             $this->callings->save($repeat, true);
-        }
+        }*/
     }
 }

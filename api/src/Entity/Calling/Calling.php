@@ -327,6 +327,10 @@ class Calling
     #[Groups(['calling:read', 'calling:write'])]
     private ?int $mkadDistance = null;
 
+    #[ORM\Column(length: 32)]
+    #[Groups(['calling:read', 'calling:write'])]
+    private ?string $ownerExternalId = null;
+
     public function __construct(
         string  $numberCalling,
         string  $title,
@@ -1043,5 +1047,15 @@ class Calling
     public function setPaymentHospitalization(?int $paymentHospitalization): void
     {
         $this->paymentHospitalization = $paymentHospitalization;
+    }
+
+    public function getOwnerExternalId(): ?string
+    {
+        return $this->ownerExternalId;
+    }
+
+    public function setOwnerExternalId(?string $ownerExternalId): void
+    {
+        $this->ownerExternalId = $ownerExternalId;
     }
 }

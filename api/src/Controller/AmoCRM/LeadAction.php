@@ -238,6 +238,9 @@ class LeadAction extends AbstractController
 
         if (!$calling) {
             $isNew = true;
+
+            $owner = $this->callings->findOneByOwnerExternalId((string)$lead->id);
+
             $calling = new Calling(
                 (string)$lead->id,
                 $lead->name,
@@ -248,6 +251,9 @@ class LeadAction extends AbstractController
                 $admin,
                 $doctor
             );
+
+            $calling->setOwner($owner);
+
             $this->callings->save($calling);
         }
 
