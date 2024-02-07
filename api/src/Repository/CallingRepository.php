@@ -103,10 +103,12 @@ class CallingRepository extends ServiceEntityRepository
 
     public function findOneByOwnerExternalId(string $ownerExternalId): ?Calling
     {
-        return $this->createQueryBuilder('c')
+        $result = $this->createQueryBuilder('c')
             ->andWhere('c.ownerExternalId = :ownerExternalId')
             ->setParameter(':ownerExternalId', $ownerExternalId)
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getResult();
+
+        return array_shift($result);
     }
 }
