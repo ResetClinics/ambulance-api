@@ -242,19 +242,19 @@ class LeadAction extends AbstractController
 
         file_put_contents(
             dirname(__DIR__) . '/../../var/ffffff' . '.txt',
-            print_r(111 . PHP_EOL, true),
+            print_r(111 .' - ' . $lead->id . PHP_EOL, true),
             FILE_APPEND);
 
         if (!$calling) {
             $isNew = true;
             file_put_contents(
                 dirname(__DIR__) . '/../../var/ffffff' . '.txt',
-                print_r(222 . PHP_EOL, true),
+                print_r(222 .' - ' . $lead->id . PHP_EOL, true),
                 FILE_APPEND);
             $owner = $this->callings->findOneByOwnerExternalId((string)$lead->id);
             file_put_contents(
                 dirname(__DIR__) . '/../../var/ffffff' . '.txt',
-                print_r(333 . PHP_EOL, true),
+                print_r(333 .' - ' . $lead->id . PHP_EOL, true),
                 FILE_APPEND);
             $calling = new Calling(
                 (string)$lead->id,
@@ -270,12 +270,12 @@ class LeadAction extends AbstractController
             $calling->setOwner($owner);
             file_put_contents(
                 dirname(__DIR__) . '/../../var/ffffff' . '.txt',
-                print_r(444 . PHP_EOL, true),
+                print_r(444 .' - ' . $lead->id . PHP_EOL, true),
                 FILE_APPEND);
             $this->callings->save($calling, true);
             file_put_contents(
                 dirname(__DIR__) . '/../../var/ffffff' . '.txt',
-                print_r(555 . PHP_EOL, true),
+                print_r(555 .' - ' . $lead->id . PHP_EOL, true),
                 FILE_APPEND);
         }
 
