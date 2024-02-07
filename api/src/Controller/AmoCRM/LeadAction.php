@@ -25,6 +25,7 @@ use App\Services\YaGeolocation\Api;
 use Carbon\Carbon;
 use DateTimeImmutable;
 use DomainException;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -272,7 +273,16 @@ class LeadAction extends AbstractController
                 dirname(__DIR__) . '/../../var/ffffff' . '.txt',
                 print_r(444 .' - ' . $lead->id . PHP_EOL, true),
                 FILE_APPEND);
-            $this->callings->save($calling, true);
+            try {
+                $this->callings->save($calling, true);
+            } catch (Exception $e) {
+                file_put_contents(
+                    dirname(__DIR__) . '/../../var/ffffff' . '.txt',
+                    $e->getMessage(),
+                    FILE_APPEND);
+            }
+
+
             file_put_contents(
                 dirname(__DIR__) . '/../../var/ffffff' . '.txt',
                 print_r(555 .' - ' . $lead->id . PHP_EOL, true),
