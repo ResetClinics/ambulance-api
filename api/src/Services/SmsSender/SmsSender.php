@@ -20,7 +20,7 @@ class SmsSender
     {
         $this->client->request(
             'GET',
-            'https://sms.ru/sms/send?api_id=6F4B7B5D-AB04-3F68-8B13-AF80351F271E&to=' . $phone .'&msg=“'. $message .'”'
+            'https://sms.ru/sms/send?api_id=6F4B7B5D-AB04-3F68-8B13-AF80351F271E&to=' . $phone .'&msg='. $message . '&json=1'
         );
     }
 }
