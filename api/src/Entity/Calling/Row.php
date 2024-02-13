@@ -97,6 +97,8 @@ class Row
 
         $this->partnerReward = $reward;
 
+        $this->calling->calcTotalAmount();
+
         return $this;
     }
 
