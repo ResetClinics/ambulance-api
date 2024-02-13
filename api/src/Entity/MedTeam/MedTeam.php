@@ -8,6 +8,13 @@ use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use App\Controller\MedTeam\SendSms;
 use App\Entity\Base;
 use App\Entity\Car;
 use App\Entity\User\User;
@@ -22,6 +29,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MedTeamRepository::class)]
 #[ApiResource(
+    operations: [
+        new GetCollection(),
+        new Post(),
+        new Get(),
+        new Put(),
+        new Delete(),
+        new Patch(),
+        new Post(
+            uriTemplate: 'med_teams/{id}/send-sms',
+            controller: SendSms::class,
+            name: 'med_teams-send_sms'
+        )
+    ],
     normalizationContext: ['groups' => ['med-team:read', 'user:item:read', 'phone:read', 'car:read', 'base:read']],
     denormalizationContext: ['groups' => ['med-team:write']],
     paginationClientEnabled: true,

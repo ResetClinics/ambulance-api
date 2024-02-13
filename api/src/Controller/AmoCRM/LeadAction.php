@@ -258,7 +258,7 @@ class LeadAction extends AbstractController
 
 
             if ($owner){
-                $calling->setFio('111111');
+                $calling->setFio('фио');
             }
 
             $this->callings->save($calling, true);
