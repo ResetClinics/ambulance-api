@@ -15,7 +15,7 @@ class EmployeeNotification
 
     public function send(MedTeam $medTeam): void
     {
-        $message = $medTeam->getPlannedStartAt()->format('d.m.Y H:i') . '
+        $message = $medTeam->getPlannedStartAt()->format('d.m.Y') . '
 ';
         $message .= $medTeam->getPlannedStartAt()->format('H:i') . ' - ' .  $medTeam->getPlannedFinishAt()->format('H:i') . '
 ';
@@ -39,6 +39,15 @@ class EmployeeNotification
             $message .= 'Авто: ' . $medTeam->getCar()->getName() . '
 ';
         }
+
+        $message = '“Дата”
+“Время смены” (9.00-22.30)
+Бригада “№”
+В: “Фамилия врача”
+А: “Фамилия администратора”
+Ш: “Фамилия шофера” (если он есть в смене)
+Авто: “Марка авто” (если указана)';
+
 
         if ($medTeam->getAdmin()){
             $this->sender->send(
