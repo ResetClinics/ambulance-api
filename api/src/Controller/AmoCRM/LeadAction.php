@@ -256,6 +256,7 @@ class LeadAction extends AbstractController
 
             $calling->setOwner($owner);
 
+
             if ($owner){
                 $calling->setFio($owner->getFio());
             }
