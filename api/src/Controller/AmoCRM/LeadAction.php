@@ -258,7 +258,7 @@ class LeadAction extends AbstractController
 
             file_put_contents(
                 dirname(__DIR__) . '/../../var/owner-' . date("Y-m-d H:i:s") . '.txt',
-                print_r($owner, true) . PHP_EOL,
+                print_r($owner, true),
                 FILE_APPEND);
 
 
