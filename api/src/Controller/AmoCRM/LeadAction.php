@@ -256,6 +256,12 @@ class LeadAction extends AbstractController
 
             $calling->setOwner($owner);
 
+            file_put_contents(
+                dirname(__DIR__) . '/../../var/owner-' . date("Y-m-d H:i:s") . '.txt',
+                print_r($owner, true) . PHP_EOL,
+                FILE_APPEND);
+
+
             if ($owner){
                 $calling->setFio($owner->getFio());
             }
