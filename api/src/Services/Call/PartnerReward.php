@@ -34,13 +34,15 @@ class PartnerReward
 
             $percent = $this->fetcher->fetch($query);
 
+            $coastPrice = $row->getService()->getCoastPrice() === null ? 0 : $row->getService()->getCoastPrice();
+            $row->setCoastPrice($coastPrice);
+
             $reward = (int)(($row->getPrice() - $row->getService()->getCoastPrice()) / 100 * $percent);
 
             $fullReward  += $reward;
 
             $row->setPercent($percent);
-            $coastPrice = $row->getService()->getCoastPrice() === null ? 0 : $row->getService()->getCoastPrice();
-            $row->setCoastPrice($coastPrice);
+
             $row->setPartnerReward($reward);
         }
 
