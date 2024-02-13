@@ -3,8 +3,6 @@
 namespace App\Entity\Calling;
 
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\Put;
 use App\Entity\Service\Service;
 use App\Repository\Calling\RowRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,53 +11,49 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: RowRepository::class)]
 #[ORM\Table(name: 'calling_rows')]
 #[ApiResource(
-    operations: [
-        new Get(normalizationContext: ['groups' => ['calling-row:read',]]),
-        new Put(normalizationContext: ['groups' => ['calling-row:write',]]),
-    ],
+    openapi: false
 )]
 class Row
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['calling:read', 'calling:write', 'calling-row:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'rows')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['calling:read', 'calling:write', 'calling-row:read'])]
+    #[Groups(['calling:read', 'calling:write'])]
     private ?Service $service = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'calling-row:read', 'calling-row:write'])]
+    #[Groups(['calling:read', 'calling:write'])]
     private ?float $price = null;
 
     #[ORM\ManyToOne(inversedBy: 'rows')]
     private ?Calling $calling = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'calling-row:read'])]
+    #[Groups(['calling:read', 'calling:write'])]
     private ?int $plannedPrice = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'calling-row:read'])]
+    #[Groups(['calling:read', 'calling:write'])]
     private ?\DateTimeImmutable $plannedAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'calling-row:read', 'calling-row:write'])]
+    #[Groups(['calling:read', 'calling:write'])]
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'calling-row:read'])]
+    #[Groups(['calling:read', 'calling:write'])]
     private ?int $partnerReward = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'calling-row:read'])]
+    #[Groups(['calling:read', 'calling:write'])]
     private ?int $coastPrice = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'calling-row:read'])]
+    #[Groups(['calling:read', 'calling:write'])]
     private ?int $percent = null;
 
 

@@ -906,7 +906,19 @@ class Calling
             $row->setCalling($this);
         }
 
-        $this->calcTotalAmount();
+        $this->price = 0;
+        $this->paymentNextOrder = 0;
+        $this->totalAmount = 0;
+
+        /** @var Row $serviceRow */
+        foreach ($this->services as $serviceRow){
+            if ($serviceRow->getService()->getType() === 'default'){
+                $this->price  += $serviceRow->getPrice() !== null ? (int) $serviceRow->getPrice() : 0;
+            }else{
+                $this->paymentNextOrder  += $serviceRow->getPrice() !== null ? (int) $serviceRow->getPrice() : 0;
+            }
+            $this->totalAmount = $this->price + $this->paymentNextOrder;
+        }
 
         return $this;
     }
@@ -920,18 +932,9 @@ class Calling
             }
         }
 
-        $this->calcTotalAmount();
-
-        return $this;
-    }
-
-
-    public function calcTotalAmount(): void
-    {
         $this->price = 0;
         $this->paymentNextOrder = 0;
         $this->totalAmount = 0;
-        $this->partnerReward = 0;
 
         /** @var Row $serviceRow */
         foreach ($this->services as $serviceRow){
@@ -941,8 +944,9 @@ class Calling
                 $this->paymentNextOrder  += $serviceRow->getPrice() !== null ? (int) $serviceRow->getPrice() : 0;
             }
             $this->totalAmount = $this->price + $this->paymentNextOrder;
-            $this->partnerReward += $serviceRow->getPartnerReward();
         }
+
+        return $this;
     }
 
     public function getAmount(): ?int
