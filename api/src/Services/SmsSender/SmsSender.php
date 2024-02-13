@@ -20,7 +20,13 @@ class SmsSender
     {
         $this->client->request(
             'GET',
-            'https://sms.ru/sms/send?api_id=6F4B7B5D-AB04-3F68-8B13-AF80351F271E&to=' . $phone .'&msg='. $message . '&json=1'
+            'https://sms.ru/sms/send?api_id=6F4B7B5D-AB04-3F68-8B13-AF80351F271E&to=79657965566&msg=“Дата”
+“Время смены” (9.00-22.30)
+Бригада “№”
+В: “Фамилия врача”
+А: “Фамилия администратора”
+Ш: “Фамилия шофера” (если он есть в смене)
+Авто: “Марка авто” (если указана)&json=1'
         );
     }
 }
