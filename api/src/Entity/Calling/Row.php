@@ -89,16 +89,6 @@ class Row
     {
         $this->price = $price;
 
-        $coastPrice = $this->coastPrice === null ? 0 : $this->coastPrice;
-
-        $percent = $this->percent === null ? 0 : $this->percent;
-
-        $reward = (int)(($this->price - $coastPrice) / 100 * $percent);
-
-        $this->partnerReward = $reward;
-
-        $this->calling->calcTotalAmount();
-
         return $this;
     }
 
