@@ -15,23 +15,29 @@ class EmployeeNotification
 
     public function send(MedTeam $medTeam): void
     {
-        $message = $medTeam->getPlannedStartAt()->format('d.m.Y H:i') . PHP_EOL;
-        $message .= $medTeam->getPlannedStartAt()->format('H:i') . ' - ' .  $medTeam->getPlannedFinishAt()->format('H:i') . PHP_EOL;
+        $message = $medTeam->getPlannedStartAt()->format('d.m.Y H:i') . '
+';
+        $message .= $medTeam->getPlannedStartAt()->format('H:i') . ' - ' .  $medTeam->getPlannedFinishAt()->format('H:i') . '
+';
 
         if ($medTeam->getPhone()){
-            $message .= 'Бригада №' . $medTeam->getPhone()->getId() . PHP_EOL;
+            $message .= 'Бригада № ' . $medTeam->getPhone()->getId() . '
+';
         }
 
         if ($medTeam->getDoctor()){
-            $message .= 'В:' . $medTeam->getDoctor()->getName() . PHP_EOL;
+            $message .= 'В: ' . $medTeam->getDoctor()->getName() . '
+';
         }
 
         if ($medTeam->getAdmin()){
-            $message .= 'А:' . $medTeam->getAdmin()->getName() . PHP_EOL;
+            $message .= 'А: ' . $medTeam->getAdmin()->getName() . '
+';
         }
 
         if ($medTeam->getCar()){
-            $message .= 'Авто:' . $medTeam->getCar()->getName() . PHP_EOL;
+            $message .= 'Авто: ' . $medTeam->getCar()->getName() . '
+';
         }
 
         if ($medTeam->getAdmin()){
