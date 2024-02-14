@@ -97,7 +97,7 @@ class MedTeam
 
     #[ORM\ManyToOne]
     #[Groups(['med-team:read', 'med-team:write'])]
-    #[ApiFilter(SearchFilter::class, properties: ['admin.id' => 'exact'])]
+    #[ApiFilter(SearchFilter::class, properties: ['doctor.id' => 'exact'])]
     private ?User $doctor = null;
 
     #[ORM\ManyToOne]
@@ -119,6 +119,10 @@ class MedTeam
     #[ORM\OneToMany(mappedBy: 'medTeam', targetEntity: Location::class)]
     #[Groups(['med-team:read'])]
     private Collection $locations;
+
+    #[ORM\ManyToOne]
+    #[Groups(['med-team:read', 'med-team:write'])]
+    private ?User $driver = null;
 
     public function __construct()
     {
@@ -276,6 +280,18 @@ class MedTeam
                 $location->setMedTeam(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDriver(): ?User
+    {
+        return $this->driver;
+    }
+
+    public function setDriver(?User $driver): self
+    {
+        $this->driver = $driver;
 
         return $this;
     }
