@@ -34,10 +34,17 @@ class EmployeeNotification
             $message .= 'А: ' . $medTeam->getAdmin()->getName() . '%0D%0A';
         }
 
+        if ($medTeam->getDriver()){
+            $message .= 'Ш: ' . $medTeam->getDriver()->getName() . '%0D%0A';
+        }
+
+        if ($medTeam->getBase()){
+            $message .= 'База: ' . $medTeam->getBase()->getName() . '%0D%0A';
+        }
+
         if ($medTeam->getCar()){
             $message .= 'Авто: ' . $medTeam->getCar()->getName() . '%0D%0A';
         }
-
 
         if ($medTeam->getAdmin()){
             $this->sender->send(
@@ -49,6 +56,13 @@ class EmployeeNotification
         if ($medTeam->getDoctor()){
             $this->sender->send(
                 $medTeam->getDoctor()->getPhone(),
+                $message
+            );
+        }
+
+        if ($medTeam->getDriver()){
+            $this->sender->send(
+                $medTeam->getDriver()->getPhone(),
                 $message
             );
         }
