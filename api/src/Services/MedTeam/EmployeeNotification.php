@@ -3,13 +3,13 @@
 namespace App\Services\MedTeam;
 
 use App\Entity\MedTeam\MedTeam;
-use App\Services\SmsSender\SmsSender;
+use App\Services\SmsSender\McnSmsSender;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class EmployeeNotification
 {
     public function __construct(
-        readonly private SmsSender $sender
+        readonly private McnSmsSender $sender
     )
     {
     }
