@@ -26,6 +26,7 @@ class McnSmsSender
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
                     'Sec-Fetch-Mode' => 'cors',
+                    'Authorization' => 'Bearer 5fbaa4938bb36db16e357ba2079e9e2f5dfb7b3c4307a713',
                 ],
                 'json' => [
                     "title" => 'MCNtelecom',
