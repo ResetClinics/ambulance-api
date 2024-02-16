@@ -256,13 +256,13 @@ class LeadAction extends AbstractController
 
             $calling->setOwner($owner);
 
-
-            if ($owner){
-                $calling->setFio('фио');
-            }
-
             $this->callings->save($calling, true);
 
+        }
+
+        if ($calling->getOwner()){
+            $calling->setFio($calling->getOwner()->getFio());
+            $calling->setAge($calling->getOwner()->getAge());
         }
 
         if ($lead->partnerExternalId){
