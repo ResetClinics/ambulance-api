@@ -50,11 +50,6 @@ class ArriveAction extends AbstractController
 
         $this->client->leads()->update($leads);
 
-
-        $calling->setFio($dto->fio);
-        $calling->setPassport($dto->passport);
-        $calling->setAge($dto->age);
-
         $calling->setArrived(new DateTimeImmutable());
 
         $flusher->flush();
