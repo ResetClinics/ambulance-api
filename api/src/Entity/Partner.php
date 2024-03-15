@@ -12,11 +12,13 @@ use ApiPlatform\Metadata\Put;
 use App\Entity\Calling\Calling;
 use App\Entity\Partner\Agreement\Agreement;
 use App\Filter\Partner\PartnerCallingCompletedAtFilter;
+use App\Filter\Partner\SearchByFieldsFilter;
 use App\Repository\PartnerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PartnerRepository::class)]
 #[ApiResource(
@@ -30,6 +32,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
     denormalizationContext: ['groups' => ['partner:write']],
 )]
 #[ApiFilter(PartnerCallingCompletedAtFilter::class, properties: ['name' => 'completedAt'])]
+#[ApiFilter(
+    SearchByFieldsFilter::class,
+    properties: ['name']
+)]
 class Partner
 {
     #[ORM\Id]
@@ -40,7 +46,6 @@ class Partner
 
     #[ORM\Column(length: 255)]
     #[Groups(['partner:item:read', 'partner:write'])]
-    #[ApiFilter(SearchFilter::class, properties: ['name' => 'partial'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -52,6 +57,27 @@ class Partner
 
     #[ORM\OneToMany(mappedBy: 'partner', targetEntity: Agreement::class)]
     private Collection $agreements;
+
+    #[ORM\Column(length: 11, nullable: true)]
+    #[Groups(['partner:read', 'partner:write'])]
+    #[Assert\Regex(
+        pattern: '/\d{11}/',
+        message: 'Номер телефона должен состоять из 11 цифр.'
+    )]
+    private ?string $phone = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['partner:read', 'partner:write'])]
+    #[Assert\Email]
+    private ?string $email = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['partner:read', 'partner:write'])]
+    private ?string $fullName = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['partner:read', 'partner:write'])]
+    private ?string $contactPerson = null;
 
     public function __construct()
     {
@@ -149,6 +175,54 @@ class Partner
                 $agreement->setPartner(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(?string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getFullName(): ?string
+    {
+        return $this->fullName;
+    }
+
+    public function setFullName(?string $fullName): self
+    {
+        $this->fullName = $fullName;
+
+        return $this;
+    }
+
+    public function getContactPerson(): ?string
+    {
+        return $this->contactPerson;
+    }
+
+    public function setContactPerson(?string $contactPerson): self
+    {
+        $this->contactPerson = $contactPerson;
 
         return $this;
     }

@@ -14,7 +14,6 @@ use ApiPlatform\Metadata\Put;
 use App\Controller\User\MyAction;
 use App\Entity\Device;
 use App\Entity\Team\Team;
-use App\Filter\Realty\Lead\SearchByContactFilter;
 use App\Filter\User\SearchByNameAndPhoneAndEmailFilter;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
