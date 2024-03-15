@@ -124,6 +124,14 @@ class MedTeam
     #[Groups(['med-team:read', 'med-team:write'])]
     private ?User $driver = null;
 
+    #[ORM\Column(nullable: true)]
+    #[Groups(['med-team:read', 'med-team:write'])]
+    private ?DateTimeImmutable $plannedDutyStartAt = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['med-team:read', 'med-team:write'])]
+    private ?DateTimeImmutable $plannedDutyFinishAt = null;
+
     public function __construct()
     {
         $this->locations = new ArrayCollection();
@@ -294,6 +302,26 @@ class MedTeam
         $this->driver = $driver;
 
         return $this;
+    }
+
+    public function getPlannedDutyStartAt(): ?DateTimeImmutable
+    {
+        return $this->plannedDutyStartAt;
+    }
+
+    public function setPlannedDutyStartAt(?DateTimeImmutable $plannedDutyStartAt): void
+    {
+        $this->plannedDutyStartAt = $plannedDutyStartAt;
+    }
+
+    public function getPlannedDutyFinishAt(): ?DateTimeImmutable
+    {
+        return $this->plannedDutyFinishAt;
+    }
+
+    public function setPlannedDutyFinishAt(?DateTimeImmutable $plannedDutyFinishAt): void
+    {
+        $this->plannedDutyFinishAt = $plannedDutyFinishAt;
     }
 
 }

@@ -28,6 +28,10 @@ class Car
     #[Assert\NotBlank]
     private ?string $name = null;
 
+    #[ORM\Column(nullable: true)]
+    #[Groups(['car:read', 'car:write'])]
+    private ?bool $isCaddy = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -41,6 +45,18 @@ class Car
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function isIsCaddy(): ?bool
+    {
+        return $this->isCaddy;
+    }
+
+    public function setIsCaddy(?bool $isCaddy): self
+    {
+        $this->isCaddy = $isCaddy;
 
         return $this;
     }
