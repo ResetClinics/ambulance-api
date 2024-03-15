@@ -141,7 +141,7 @@ class MedTeam
     #[ApiFilter(SearchFilter::class, properties: ['status' => 'exact'])]
     #[Groups(['med-team:read', 'med-team:write'])]
     #[ORM\Column(length: 32, nullable: true, options: ['default' => 'daytime'])]
-    private ?string $type = null;
+    private ?string $type = 'daytime';
 
     public function __construct()
     {
