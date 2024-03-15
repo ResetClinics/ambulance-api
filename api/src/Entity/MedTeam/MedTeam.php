@@ -132,6 +132,17 @@ class MedTeam
     #[Groups(['med-team:read', 'med-team:write'])]
     private ?DateTimeImmutable $plannedDutyFinishAt = null;
 
+    #[Assert\Choice(choices: [
+        'daytime',
+        'night',
+        'evening',
+        'day',
+    ])]
+    #[ApiFilter(SearchFilter::class, properties: ['status' => 'exact'])]
+    #[Groups(['med-team:read', 'med-team:write'])]
+    #[ORM\Column(length: 32, nullable: true, options: ['default' => 'daytime'])]
+    private ?string $type = null;
+
     public function __construct()
     {
         $this->locations = new ArrayCollection();
@@ -322,6 +333,18 @@ class MedTeam
     public function setPlannedDutyFinishAt(?DateTimeImmutable $plannedDutyFinishAt): void
     {
         $this->plannedDutyFinishAt = $plannedDutyFinishAt;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
     }
 
 }
