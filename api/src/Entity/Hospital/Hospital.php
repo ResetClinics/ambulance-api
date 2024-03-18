@@ -178,9 +178,9 @@ class Hospital
         return $this;
     }
 
-    public function getAmount(): ?int
+    public function getAmount(): int
     {
-        return $this->amount;
+        return $this->additionalAmount === null ? 0 : $this->additionalAmount;
     }
 
     public function getOwner(): ?Calling
@@ -231,9 +231,9 @@ class Hospital
         return $this;
     }
 
-    public function getAdditionalAmount(): ?int
+    public function getAdditionalAmount(): int
     {
-        return $this->additionalAmount;
+        return $this->additionalAmount === null ? 0 : $this->additionalAmount;
     }
 
     public function setAdditionalAmount(?int $additionalAmount): self
@@ -245,9 +245,9 @@ class Hospital
         return $this;
     }
 
-    public function getMainAmount(): ?int
+    public function getMainAmount(): int
     {
-        return $this->mainAmount;
+        return $this->additionalAmount === null ? 0 : $this->additionalAmount;
     }
 
     public function setMainAmount(?int $mainAmount): self
