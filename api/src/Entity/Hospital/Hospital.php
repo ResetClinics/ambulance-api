@@ -8,9 +8,11 @@ use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use App\Entity\Calling\Calling;
 use App\Entity\Partner;
+use App\Filter\Hospital\SearchByNameAndPhoneFilter;
 use App\Repository\Hospital\HospitalRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -22,9 +24,15 @@ use Symfony\Component\Validator\Constraints as Assert;
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
 )]
-#[ApiFilter(OrderFilter::class, properties: ['id'], arguments: ['orderParameterName' => 'order'])]
+#[ApiFilter(OrderFilter::class, properties: ['id', 'createdAt'], arguments: ['orderParameterName' => 'order'])]
+#[ApiFilter(
+    SearchByNameAndPhoneFilter::class,
+    properties: ['search']
+)]
 class Hospital
 {
+    use TimestampableEntity;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -47,6 +55,7 @@ class Hospital
         'completed',
         'cancelled'
     ])]
+    #[ApiFilter(SearchFilter::class, properties: ['status' => 'exact'])]
     private ?string $status = 'assigned';
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -267,5 +276,11 @@ class Hospital
         $additionalAmount = $this->additionalAmount === null ? 0 : $this->additionalAmount;
 
         $this->amount = $mainAmount + $additionalAmount;
+    }
+
+    #[Groups(['hospital:read'])]
+    public function getCreated()
+    {
+        return $this->createdAt->format('d.m.Y H:i:s');
     }
 }
