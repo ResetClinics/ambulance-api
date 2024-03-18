@@ -7,6 +7,7 @@ use ApiPlatform\Symfony\EventListener\EventPriorities;
 
 use App\Entity\Calling\Calling;
 use App\Entity\Hospital\Clinic;
+use App\Entity\Hospital\Hospital;
 use App\Entity\Partner;
 use App\Entity\Service\Category;
 use App\Entity\Service\Service;
@@ -46,6 +47,7 @@ class PaginateJsonSubscriber implements EventSubscriberInterface
             $apiResourceClass !== Calling::class &&
             $apiResourceClass !== Category::class &&
             $apiResourceClass !== Service::class &&
+            $apiResourceClass !== Hospital::class &&
             $apiResourceClass !== Clinic::class
         ) {
             return;
