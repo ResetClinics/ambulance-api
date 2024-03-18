@@ -258,7 +258,7 @@ class Hospital
 
     public function getMainAmount(): int
     {
-        return $this->additionalAmount === null ? 0 : $this->additionalAmount;
+        return $this->mainAmount === null ? 0 : $this->mainAmount;
     }
 
     public function setMainAmount(?int $mainAmount): self
