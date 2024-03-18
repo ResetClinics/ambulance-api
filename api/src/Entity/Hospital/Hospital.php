@@ -45,7 +45,7 @@ class Hospital
         'completed',
         'cancelled'
     ])]
-    private ?string $status;
+    private ?string $status = 'assigned';
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['hospital:read', 'hospital:write'])]
@@ -70,14 +70,36 @@ class Hospital
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['hospital:read', 'hospital:write'])]
+    #[Groups(['hospital:read'])]
     private ?int $amount = null;
 
     #[ORM\ManyToOne]
+    #[Groups(['hospital:read', 'hospital:write'])]
     private ?Calling $owner = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['hospital:read', 'hospital:write'])]
     private ?int $prepayment = null;
+
+    #[ORM\ManyToOne(inversedBy: 'hospitals')]
+    #[Groups(['hospital:read', 'hospital:write'])]
+    private ?Clinic $clinic = null;
+
+    #[ORM\Column(length: 11, nullable: true)]
+    #[Groups(['hospital:read', 'hospital:write'])]
+    #[Assert\Regex(
+        pattern: '/\d{11}/',
+        message: 'Номер телефона должен состоять из 11 цифр.'
+    )]
+    private ?string $phone = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['hospital:read', 'hospital:write'])]
+    private ?int $additionalAmount = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['hospital:read', 'hospital:write'])]
+    private ?int $mainAmount = null;
 
     public function getId(): ?int
     {
@@ -161,13 +183,6 @@ class Hospital
         return $this->amount;
     }
 
-    public function setAmount(?int $amount): self
-    {
-        $this->amount = $amount;
-
-        return $this;
-    }
-
     public function getOwner(): ?Calling
     {
         return $this->owner;
@@ -190,5 +205,65 @@ class Hospital
         $this->prepayment = $prepayment;
 
         return $this;
+    }
+
+    public function getClinic(): ?Clinic
+    {
+        return $this->clinic;
+    }
+
+    public function setClinic(?Clinic $clinic): self
+    {
+        $this->clinic = $clinic;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getAdditionalAmount(): ?int
+    {
+        return $this->additionalAmount;
+    }
+
+    public function setAdditionalAmount(?int $additionalAmount): self
+    {
+        $this->additionalAmount = $additionalAmount;
+
+        $this->calcAmount();
+
+        return $this;
+    }
+
+    public function getMainAmount(): ?int
+    {
+        return $this->mainAmount;
+    }
+
+    public function setMainAmount(?int $mainAmount): self
+    {
+        $this->mainAmount = $mainAmount;
+
+        $this->calcAmount();
+
+        return $this;
+    }
+
+    private function calcAmount(): void
+    {
+        $mainAmount = $this->mainAmount === null ? 0 : $this->mainAmount;
+        $additionalAmount = $this->additionalAmount === null ? 0 : $this->additionalAmount;
+
+        $this->amount = $mainAmount + $additionalAmount;
     }
 }

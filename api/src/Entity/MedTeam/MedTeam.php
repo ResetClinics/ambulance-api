@@ -133,10 +133,10 @@ class MedTeam
     private ?DateTimeImmutable $plannedDutyFinishAt = null;
 
     #[Assert\Choice(choices: [
-        'daytime',
-        'night',
-        'evening',
-        'day',
+        'daytime', //дневная *
+        'night',   //ночная
+        'evening', //вечерняя
+        'day',     //суточная
     ])]
     #[ApiFilter(SearchFilter::class, properties: ['status' => 'exact'])]
     #[Groups(['med-team:read', 'med-team:write'])]

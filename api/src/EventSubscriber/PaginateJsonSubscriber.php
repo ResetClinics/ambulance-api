@@ -6,6 +6,7 @@ use ApiPlatform\Doctrine\Orm\Paginator;
 use ApiPlatform\Symfony\EventListener\EventPriorities;
 
 use App\Entity\Calling\Calling;
+use App\Entity\Hospital\Clinic;
 use App\Entity\Partner;
 use App\Entity\Service\Category;
 use App\Entity\Service\Service;
@@ -44,7 +45,8 @@ class PaginateJsonSubscriber implements EventSubscriberInterface
             $apiResourceClass !== User::class &&
             $apiResourceClass !== Calling::class &&
             $apiResourceClass !== Category::class &&
-            $apiResourceClass !== Service::class
+            $apiResourceClass !== Service::class &&
+            $apiResourceClass !== Clinic::class
         ) {
             return;
         }
