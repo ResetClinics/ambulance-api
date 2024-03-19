@@ -3,16 +3,16 @@
 namespace App\EventListener;
 
 use App\Entity\Hospital\Hospital;
-use Doctrine\Persistence\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PostUpdateEventArgs;
 
 class HospitalListener
 {
-    public function postUpdate(Hospital $hospital, LifecycleEventArgs $args)
+    public function postUpdate(Hospital $hospital, PostUpdateEventArgs $args): void
     {
-        $entityManager = $args->getObjectManager();
+        $entityManager = $args->getEntityManager();
+        $unitOfWork = $entityManager->getUnitOfWork();
 
-        // Обновляем значение amount при каждом обновлении main или additional
-        $hospital->setAmount($hospital->getMainAmount() + $hospital->getAdditionalAmount());
+        $hospital->setAmount($hospital->getAdditionalAmount() + $hospital->getMainAmount());
         $entityManager->persist($hospital);
         $entityManager->flush();
     }
