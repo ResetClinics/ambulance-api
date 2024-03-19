@@ -105,6 +105,7 @@ class Hospital
 
     #[ORM\ManyToOne(inversedBy: 'hospitals')]
     #[Groups(['hospital:read', 'hospital:write'])]
+    #[ApiFilter(SearchFilter::class, properties: ['clinic.id' => 'exact'])]
     private ?Clinic $clinic = null;
 
     #[ORM\Column(length: 11, nullable: true)]
