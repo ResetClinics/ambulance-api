@@ -10,14 +10,15 @@ use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use App\Entity\Calling\Calling;
 use App\Entity\Partner;
+use App\Entity\User\User;
 use App\Filter\Hospital\SearchByNameAndPhoneFilter;
 use App\Repository\Hospital\HospitalRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Blameable\Traits\BlameableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: HospitalRepository::class)]
 #[ORM\Table(name: 'hospital_hospitals')]
@@ -42,7 +43,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Hospital
 {
     use TimestampableEntity;
-    use BlameableEntity;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -123,6 +123,16 @@ class Hospital
     #[ORM\Column(nullable: true)]
     #[Groups(['hospital:read', 'hospital:write'])]
     private ?int $mainAmount = null;
+
+    #[ORM\ManyToOne]
+    #[Gedmo\Blameable(on: 'create')]
+    #[Groups(['hospital:read'])]
+    private ?User $createdBy = null;
+
+    #[ORM\ManyToOne]
+    #[Gedmo\Blameable(on: 'update')]
+    #[Groups(['hospital:read'])]
+    private ?User $updatedBy = null;
 
     public function getId(): ?int
     {
@@ -294,5 +304,29 @@ class Hospital
     public function getCreated()
     {
         return $this->createdAt->format('d.m.Y H:i:s');
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getUpdatedBy(): ?User
+    {
+        return $this->updatedBy;
+    }
+
+    public function setUpdatedBy(?User $updatedBy): self
+    {
+        $this->updatedBy = $updatedBy;
+
+        return $this;
     }
 }
