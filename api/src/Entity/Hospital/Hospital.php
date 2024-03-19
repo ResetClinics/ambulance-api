@@ -191,7 +191,7 @@ class Hospital
 
     public function getAmount(): int
     {
-        return $this->additionalAmount === null ? 0 : $this->additionalAmount;
+        return $this->amount === null ? 0 : $this->amount;
     }
 
     public function getOwner(): ?Calling
@@ -251,6 +251,8 @@ class Hospital
     {
         $this->additionalAmount = $additionalAmount;
 
+        $this->calcAmount();
+
         return $this;
     }
 
@@ -263,19 +265,22 @@ class Hospital
     {
         $this->mainAmount = $mainAmount;
 
+        $this->calcAmount();
+
         return $this;
+    }
+
+    private function calcAmount(): void
+    {
+        $mainAmount = $this->mainAmount === null ? 0 : $this->mainAmount;
+        $additionalAmount = $this->additionalAmount === null ? 0 : $this->additionalAmount;
+
+        $this->amount = $mainAmount + $additionalAmount;
     }
 
     #[Groups(['hospital:read'])]
-    public function getCreated(): string
+    public function getCreated()
     {
         return $this->createdAt->format('d.m.Y H:i:s');
-    }
-
-    public function setAmount(int $amount): self
-    {
-        $this->amount = $amount;
-
-        return $this;
     }
 }
