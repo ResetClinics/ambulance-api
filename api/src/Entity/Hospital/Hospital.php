@@ -2,6 +2,8 @@
 
 namespace App\Entity\Hospital;
 
+use ApiPlatform\Doctrine\Common\Filter\DateFilterInterface;
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
@@ -29,6 +31,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiFilter(
     SearchByNameAndPhoneFilter::class,
     properties: ['search']
+)]
+#[ApiFilter(
+    DateFilter::class,
+    properties: [
+        'createdAt' => DateFilterInterface::EXCLUDE_NULL,
+        'updatedAt' => DateFilterInterface::EXCLUDE_NULL,
+    ]
 )]
 class Hospital
 {
