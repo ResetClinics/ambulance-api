@@ -270,6 +270,7 @@ class FinishAction extends AbstractController
             $hospital->setStatus('assigned');
             $hospital->setFio($calling->getFio());
             $hospital->setPartner($calling->getPartner());
+            $hospital->setPhone($calling->getPhone());
 
             $hospital->setOwner($calling);
 
