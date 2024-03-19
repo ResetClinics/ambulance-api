@@ -35,7 +35,3 @@ services:
     App\Services\CallingSender:
         arguments:
             $token : "%env(FIREBASE_SERVER_TOKEN)%"
-
-    App\EventListener\HospitalListener:
-        tags:
-            - { name: doctrine.event_listener, event: postUpdate }
