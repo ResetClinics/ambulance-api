@@ -13,6 +13,7 @@ use App\Entity\Partner;
 use App\Entity\User\User;
 use App\Filter\Hospital\SearchByNameAndPhoneFilter;
 use App\Repository\Hospital\HospitalRepository;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -301,10 +302,23 @@ class Hospital
     }
 
     #[Groups(['hospital:read'])]
-    public function getCreated()
+    public function getCreatedAt(): string
     {
+        if (($this->createdAt === null || $this->createdAt == new DateTime('0000-00-00 00:00:00'))){
+            return '';
+        }
         return $this->createdAt->format('d.m.Y H:i:s');
     }
+
+    #[Groups(['hospital:read'])]
+    public function getUpdatedAt(): string
+    {
+        if (($this->updatedAt === null || $this->updatedAt == new DateTime('0000-00-00 00:00:00'))){
+            return '';
+        }
+        return $this->updatedAt->format('d.m.Y H:i:s');
+    }
+
 
     public function getCreatedBy(): ?User
     {
