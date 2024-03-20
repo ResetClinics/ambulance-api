@@ -260,7 +260,7 @@ class Hospital
 
     public function setPhone(?string $phone): self
     {
-        $this->phone = $phone;
+        $this->phone = $phone ? preg_replace('/\D/', '', $phone) : null;;
 
         return $this;
     }
