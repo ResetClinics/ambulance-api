@@ -79,6 +79,10 @@ class Partner
     #[Groups(['partner:read', 'partner:write'])]
     private ?string $contactPerson = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['partner:item:read', 'partner:write'])]
+    private ?string $whatsappGroup = null;
+
     public function __construct()
     {
         $this->callings = new ArrayCollection();
@@ -223,6 +227,18 @@ class Partner
     public function setContactPerson(?string $contactPerson): self
     {
         $this->contactPerson = $contactPerson;
+
+        return $this;
+    }
+
+    public function getWhatsappGroup(): ?string
+    {
+        return $this->whatsappGroup;
+    }
+
+    public function setWhatsappGroup(?string $whatsappGroup): self
+    {
+        $this->whatsappGroup = $whatsappGroup;
 
         return $this;
     }
