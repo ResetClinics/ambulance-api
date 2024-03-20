@@ -374,7 +374,7 @@ class Hospital
 
     public function getHospitalizedAt(): ?string
     {
-        return $this->hospitalizedAt ?: $this->hospitalizedAt->format('d.m.Y H:i:s');
+        return $this->hospitalizedAt?->format('d.m.Y H:i:s');
     }
 
     public function setHospitalizedAt(?DateTimeImmutable $hospitalizedAt): self
@@ -398,7 +398,7 @@ class Hospital
 
     public function getDischargedAt(): ?string
     {
-        return $this->dischargedAt ?: $this->dischargedAt->format('d.m.Y H:i:s');
+        return $this->dischargedAt?->format('d.m.Y H:i:s');
     }
 
     public function setDischargedAt(?DateTimeImmutable $dischargedAt): self
