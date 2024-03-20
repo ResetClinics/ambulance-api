@@ -13,7 +13,9 @@ use App\Entity\Partner;
 use App\Entity\User\User;
 use App\Filter\Hospital\SearchByNameAndPhoneFilter;
 use App\Repository\Hospital\HospitalRepository;
+use App\State\HospitalProcessor;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -27,7 +29,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
     normalizationContext: ['groups' => ['hospital:read',  'partner:item:read']],
     denormalizationContext: ['groups' => ['hospital:write']],
     paginationClientEnabled: true,
-    paginationClientItemsPerPage: true
+    paginationClientItemsPerPage: true,
+    processor: HospitalProcessor::class
 )]
 #[ApiFilter(OrderFilter::class, properties: ['id', 'createdAt'], arguments: ['orderParameterName' => 'order'])]
 #[ApiFilter(
@@ -39,6 +42,18 @@ use Gedmo\Mapping\Annotation as Gedmo;
     properties: [
         'createdAt' => DateFilterInterface::EXCLUDE_NULL,
         'updatedAt' => DateFilterInterface::EXCLUDE_NULL,
+        'hospitalizedAt' => DateFilterInterface::EXCLUDE_NULL,
+        'dischargedAt' => DateFilterInterface::EXCLUDE_NULL,
+    ]
+)]
+#[ApiFilter(
+    SearchFilter::class,
+    properties: [
+        'status' => 'exact',
+        'partner.id' => 'exact',
+        'clinic.id' => 'exact',
+        'hospitalizedBy.id' => 'exact',
+        'dischargedBy.id' => 'exact',
     ]
 )]
 class Hospital
@@ -67,7 +82,6 @@ class Hospital
         'completed',
         'cancelled'
     ])]
-    #[ApiFilter(SearchFilter::class, properties: ['status' => 'exact'])]
     private ?string $status = 'assigned';
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -85,7 +99,6 @@ class Hospital
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotNull]
     #[Groups(['hospital:read', 'hospital:write'])]
-    #[ApiFilter(SearchFilter::class, properties: ['partner.id' => 'exact'])]
     private ?Partner $partner = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -106,7 +119,6 @@ class Hospital
 
     #[ORM\ManyToOne(inversedBy: 'hospitals')]
     #[Groups(['hospital:read', 'hospital:write'])]
-    #[ApiFilter(SearchFilter::class, properties: ['clinic.id' => 'exact'])]
     private ?Clinic $clinic = null;
 
     #[ORM\Column(length: 11, nullable: true)]
@@ -134,6 +146,22 @@ class Hospital
     #[Gedmo\Blameable(on: 'update')]
     #[Groups(['hospital:read'])]
     private ?User $updatedBy = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['hospital:read'])]
+    private ?DateTimeImmutable $hospitalizedAt = null;
+
+    #[ORM\ManyToOne]
+    #[Groups(['hospital:read'])]
+    private ?User $hospitalizedBy = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['hospital:read'])]
+    private ?DateTimeImmutable $dischargedAt = null;
+
+    #[ORM\ManyToOne]
+    #[Groups(['hospital:read'])]
+    private ?User $dischargedBy = null;
 
     public function getId(): ?int
     {
@@ -340,6 +368,54 @@ class Hospital
     public function setUpdatedBy(?User $updatedBy): self
     {
         $this->updatedBy = $updatedBy;
+
+        return $this;
+    }
+
+    public function getHospitalizedAt(): ?string
+    {
+        return $this->hospitalizedAt ?: $this->hospitalizedAt->format('d.m.Y H:i:s');
+    }
+
+    public function setHospitalizedAt(?DateTimeImmutable $hospitalizedAt): self
+    {
+        $this->hospitalizedAt = $hospitalizedAt;
+
+        return $this;
+    }
+
+    public function getHospitalizedBy(): ?User
+    {
+        return $this->hospitalizedBy;
+    }
+
+    public function setHospitalizedBy(?User $hospitalizedBy): self
+    {
+        $this->hospitalizedBy = $hospitalizedBy;
+
+        return $this;
+    }
+
+    public function getDischargedAt(): ?string
+    {
+        return $this->dischargedAt ?: $this->dischargedAt->format('d.m.Y H:i:s');
+    }
+
+    public function setDischargedAt(?DateTimeImmutable $dischargedAt): self
+    {
+        $this->dischargedAt = $dischargedAt;
+
+        return $this;
+    }
+
+    public function getDischargedBy(): ?User
+    {
+        return $this->dischargedBy;
+    }
+
+    public function setDischargedBy(?User $dischargedBy): self
+    {
+        $this->dischargedBy = $dischargedBy;
 
         return $this;
     }
