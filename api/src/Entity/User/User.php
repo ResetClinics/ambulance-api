@@ -49,7 +49,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:read', 'user:item:read', 'team:item:get', 'team:item:get:team_my', 'calling:detail:read', 'hospital:read'])]
+    #[Groups([
+        'user:read',
+        'user:item:read',
+        'team:item:get',
+        'team:item:get:team_my',
+        'calling:detail:read',
+        'hospital:read',
+        'work-schedule:read'
+    ])]
     private ?int $id = null;
 
     #[ORM\Column(length: 11, unique: true)]
@@ -62,7 +70,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $phone = null;
 
     #[ORM\Column]
-    #[Groups(['user:read', 'user:item:read', 'user:write', 'team:item:get', 'calling:detail:read', 'hospital:read'])]
+    #[Groups([
+        'user:read',
+        'user:item:read',
+        'user:write',
+        'team:item:get',
+        'calling:detail:read',
+        'hospital:read',
+        'work-schedule:read'
+    ])]
     #[Assert\NotBlank]
     private ?string $name = null;
 

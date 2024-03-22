@@ -30,15 +30,23 @@ class PaginateJsonSubscriber implements EventSubscriberInterface
         ViewEvent $event
     ): void
     {
-        $method = $event->getRequest()->getMethod();
-        /** @var array $class */
-        $class = $event->getRequest()->attributes->get('_route_params');
-        /** @var string $apiResourceClass */
-        $apiResourceClass = $class['_api_resource_class'];
 
+        $method = $event->getRequest()->getMethod();
         if ($method !== Request::METHOD_GET) {
             return;
         }
+
+        /** @var array $class */
+        $class = $event->getRequest()->attributes->get('_route_params');
+
+        if (!array_key_exists('_api_resource_class', $class)){
+            return;
+        }
+
+        /** @var string $apiResourceClass */
+        $apiResourceClass = $class['_api_resource_class'];
+
+
 
         if (
             $apiResourceClass !== Partner::class &&
