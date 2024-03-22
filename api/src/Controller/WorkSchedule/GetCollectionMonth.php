@@ -49,7 +49,7 @@ class GetCollectionMonth extends AbstractController
 
         /** @var User $user */
         foreach ($users as $user){
-            $result['users'][$user->getId()] = [
+            $result['users'][$user->getName()] = [
                 'id' => $user->getId(),
                 'name' => $user->getName(),
                 'schedules' => $daysArray,
@@ -60,19 +60,19 @@ class GetCollectionMonth extends AbstractController
         /** @var WorkSchedule $workSchedule */
         foreach ($workSchedules as $workSchedule){
 
-            $employeeId = $workSchedule->getEmployee()->getId();
+            $employeeName = $workSchedule->getEmployee()->getName();
 
-            if (!array_key_exists($employeeId, $result['users'])){
-                $result['users'][$employeeId] = [
-                    'id' => $employeeId,
-                    'name' => $workSchedule->getEmployee()->getName(),
+            if (!array_key_exists($employeeName, $result['users'])){
+                $result['users'][$employeeName] = [
+                    'id' => $workSchedule->getEmployee()->getId(),
+                    'name' => $employeeName,
                     'schedules' => $daysArray,
                     'total' =>$totalTemplate
                 ];
             }
 
-            $result['users'][$employeeId]['schedules'][$workSchedule->getDay()] = $workSchedule->getType();
-            $result['users'][$employeeId]['total'][$workSchedule->getType()] += 1;
+            $result['users'][$employeeName]['schedules'][$workSchedule->getDay()] = $workSchedule->getType();
+            $result['users'][$employeeName]['total'][$workSchedule->getType()] += 1;
 
             $result['total'][$workSchedule->getDay()][$workSchedule->getType()] += 1;
         }
