@@ -43,6 +43,7 @@ class WorkScheduleRepository extends ServiceEntityRepository
     {
         $date = new \DateTime();
         $date->setDate($year, $month, 1);
+        $date->setTime(0,0);
 
         $startDate = $date->format('Y-m-d H:i:s');
 
