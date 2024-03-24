@@ -72,6 +72,7 @@ class GetCollectionMonth extends AbstractController
             }
 
             $result['users'][$employeeName]['schedules'][$workSchedule->getDay()] = [
+                'id' => $workSchedule->getId(),
                 'workDate' => $workSchedule->getWorkDate(),
                 'employee' => $workSchedule->getEmployee()->getId(),
                 'type' => $workSchedule->getType(),
