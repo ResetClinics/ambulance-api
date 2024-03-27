@@ -123,7 +123,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ApiFilter(BooleanFilter::class)]
     private ?bool $active = true;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(nullable: false, options: ['default' => 0])]
     #[Groups(['user:read', 'user:item:read', 'user:write'])]
     private ?bool $hideInReports = null;
 
