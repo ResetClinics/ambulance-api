@@ -123,6 +123,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ApiFilter(BooleanFilter::class)]
     private ?bool $active = true;
 
+    #[ORM\Column(nullable: true)]
+    #[Groups(['user:read', 'user:item:read', 'user:write'])]
+    private ?bool $hideInReports = null;
+
 
     public function __construct($externalId = null)
     {
@@ -349,6 +353,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setActive(bool $active): self
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    public function isHideInReports(): ?bool
+    {
+        return $this->hideInReports;
+    }
+
+    public function setHideInReports(?bool $hideInReports): self
+    {
+        $this->hideInReports = $hideInReports;
 
         return $this;
     }

@@ -49,6 +49,7 @@ class GetCollectionMonth extends AbstractController
 
         /** @var User $user */
         foreach ($users as $user){
+
             $result['users'][$user->getName()] = [
                 'id' => $user->getId(),
                 'name' => $user->getName(),
