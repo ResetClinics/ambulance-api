@@ -125,7 +125,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(nullable: false, options: ['default' => 0])]
     #[Groups(['user:read', 'user:item:read', 'user:write'])]
-    private ?bool $hideInReports = null;
+    private bool $hideInReports = false;
 
 
     public function __construct($externalId = null)
