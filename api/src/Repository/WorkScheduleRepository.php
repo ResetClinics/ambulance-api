@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\WorkSchedule;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -59,6 +60,20 @@ class WorkScheduleRepository extends ServiceEntityRepository
             ->setParameter('start_date', $startDate)
             ->setParameter('end_date', $endDate)
             ->orderBy('e.name')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findAllByUserAndDates(?int $user, ?DateTimeImmutable $dateStart, ?DateTimeImmutable $dateEnd)
+    {
+        return $this->createQueryBuilder('u')
+            ->leftJoin('u.employee', 'e')
+            ->andWhere('u.employee = :user')
+            ->andWhere('u.workDate >= :start_date')
+            ->andWhere('u.workDate < :end_date')
+            ->setParameter('user', $user)
+            ->setParameter('start_date', $dateStart)
+            ->setParameter('end_date', $dateEnd)
             ->getQuery()
             ->getResult();
     }
