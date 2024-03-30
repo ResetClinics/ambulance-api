@@ -378,7 +378,7 @@ class Hospital
     }
 
     #[Groups(['hospital:read'])]
-    public function getHospitalized(): ?string
+    public function getHospitalized(): ?DateTimeImmutable
     {
         return $this->hospitalizedAt;
     }
@@ -408,7 +408,7 @@ class Hospital
     }
 
     #[Groups(['hospital:read'])]
-    public function getDischarged(): ?string
+    public function getDischarged(): ?DateTimeImmutable
     {
         return $this->dischargedAt;
     }
