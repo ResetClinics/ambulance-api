@@ -377,6 +377,12 @@ class Hospital
         return $this->hospitalizedAt?->format('d.m.Y H:i:s');
     }
 
+    #[Groups(['hospital:read'])]
+    public function getHospitalized(): ?string
+    {
+        return $this->hospitalizedAt;
+    }
+
     public function setHospitalizedAt(?DateTimeImmutable $hospitalizedAt): self
     {
         $this->hospitalizedAt = $hospitalizedAt;
@@ -399,6 +405,12 @@ class Hospital
     public function getDischargedAt(): ?string
     {
         return $this->dischargedAt?->format('d.m.Y H:i:s');
+    }
+
+    #[Groups(['hospital:read'])]
+    public function getDischarged(): ?string
+    {
+        return $this->dischargedAt;
     }
 
     public function setDischargedAt(?DateTimeImmutable $dischargedAt): self
