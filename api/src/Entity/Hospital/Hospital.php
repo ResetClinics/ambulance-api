@@ -148,7 +148,7 @@ class Hospital
     private ?User $updatedBy = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['hospital:read'])]
+    #[Groups(['hospital:read', 'hospital:write'])]
     private ?DateTimeImmutable $hospitalizedAt = null;
 
     #[ORM\ManyToOne]
@@ -156,7 +156,7 @@ class Hospital
     private ?User $hospitalizedBy = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['hospital:read'])]
+    #[Groups(['hospital:read', 'hospital:write'])]
     private ?DateTimeImmutable $dischargedAt = null;
 
     #[ORM\ManyToOne]
