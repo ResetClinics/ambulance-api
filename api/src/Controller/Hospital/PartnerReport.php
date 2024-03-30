@@ -51,7 +51,7 @@ class PartnerReport extends AbstractController
             $query = new Query(
                 $hospital->getDischarged(),
                 $hospital->getPartner()->getId(),
-                10,
+                2,
                 0,
                 0
             );
