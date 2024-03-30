@@ -3,6 +3,7 @@
 namespace App\Repository\Hospital;
 
 use App\Entity\Hospital\Hospital;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -50,5 +51,23 @@ class HospitalRepository extends ServiceEntityRepository
             ->setParameter(':external', $external)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function findByPartnerAndDischargedAt(
+        int $partnerId,
+        DateTimeImmutable $dischargedAtAfter,
+        DateTimeImmutable $dischargedAtBefore
+    )
+    {
+        return $this->createQueryBuilder('h')
+            ->andWhere('h.partner = :partner')
+            ->andWhere('h.dischargedAt >= :dischargedAtAfter')
+            ->andWhere('h.dischargedAt < :dischargedAtBefore')
+            ->setParameter('partner', $partnerId)
+            ->setParameter('dischargedAtAfter', $dischargedAtAfter)
+            ->setParameter('dischargedAtBefore', $dischargedAtBefore)
+            ->orderBy('h.dischargedAt')
+            ->getQuery()
+            ->getResult();
     }
 }
