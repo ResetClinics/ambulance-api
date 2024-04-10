@@ -73,6 +73,24 @@ class PartnerReport extends AbstractController
 
         }
 
+        $hospitals = $this->hospitals->findByPartnerAndDischargedAt(
+            (int)$partnerId,
+            new DateTimeImmutable($dischargedAtAfter),
+            new DateTimeImmutable($dischargedAtBefore),
+        );
+
+        /** @var Hospital $hospital */
+        foreach ($hospitals as $hospital){
+            $items[] = [
+                'hospitalized' => $hospital->getHospitalized()?->format('d.m.Y'),
+                'discharged' => 'Не выписан',
+                'fio' => $hospital->getFio(),
+                'phone' => $hospital->getPhone(),
+                'amount' => 0,
+                'reward' => 0
+            ];
+        }
+
         return $this->json([
             'items' => $items,
             'amount' => $totalAmount,

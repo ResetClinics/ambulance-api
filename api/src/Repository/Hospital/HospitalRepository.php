@@ -70,4 +70,25 @@ class HospitalRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+
+    public function findByPartnerAndHospitalizedAt(
+        int $partnerId,
+        DateTimeImmutable $hospitalizedAtAfter,
+        DateTimeImmutable $hospitalizedAtBefore
+    )
+    {
+        return $this->createQueryBuilder('h')
+            ->andWhere('h.partner = :partner')
+            ->andWhere('h.hospitalizedAt >= :hospitalizedAtAfter')
+            ->andWhere('h.hospitalizedAt < :hospitalizedAtBefore')
+            ->andWhere('h.status = :status')
+            ->setParameter('partner', $partnerId)
+            ->setParameter('dischargedAtAfter', $hospitalizedAtAfter)
+            ->setParameter('dischargedAtBefore', $hospitalizedAtBefore)
+            ->setParameter('status', 'inpatient')
+            ->orderBy('h.hospitalizedAt')
+            ->getQuery()
+            ->getResult();
+    }
 }
