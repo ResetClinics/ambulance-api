@@ -158,6 +158,18 @@ class MedTeam
         return $this->plannedStartAt;
     }
 
+    public function getPlannedHours(): int
+    {
+        $interval = $this->plannedStartAt->diff($this->plannedFinishAt);
+        $hours = $interval->h;
+        return $hours + ($interval->days * 24);
+    }
+
+
+    public function getDay(): int
+    {
+        return  (int)$this->plannedStartAt->format('d');
+    }
     public function setPlannedStartAt(DateTimeImmutable $plannedStartAt): self
     {
         $this->plannedStartAt = $plannedStartAt;

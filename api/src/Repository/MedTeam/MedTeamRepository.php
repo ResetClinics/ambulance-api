@@ -3,6 +3,7 @@
 namespace App\Repository\MedTeam;
 
 use App\Entity\MedTeam\MedTeam;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -54,5 +55,19 @@ class MedTeamRepository extends ServiceEntityRepository
         $data = $data === null ? [] : $data;
 
         return array_shift($data);
+    }
+
+    public function findByPlanned(DateTimeImmutable $startDate, DateTimeImmutable $endDate)
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.plannedStartAt >= :plannedStartAtAfter')
+            ->andWhere('t.plannedStartAt < :plannedStartAtBefore')
+            ->andWhere('t.status = :status')
+            ->setParameter('plannedStartAtAfter', $startDate)
+            ->setParameter('plannedStartAtBefore', $endDate)
+            ->setParameter('status', 'completed')
+            ->orderBy('t.plannedStartAt')
+            ->getQuery()
+            ->getResult();
     }
 }
