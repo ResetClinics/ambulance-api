@@ -1,12 +1,8 @@
 <?php
 
 namespace App\Controller\MedTeam;
-use App\Entity\Hospital\Hospital;
 use App\Entity\MedTeam\MedTeam;
 use App\Entity\User\User;
-use App\Query\PartnerReward\Fetcher;
-use App\Query\PartnerReward\Query;
-use App\Repository\Hospital\HospitalRepository;
 use App\Repository\MedTeam\MedTeamRepository;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
@@ -19,8 +15,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class Report extends AbstractController
 {
     public function __construct(
-        private readonly Fetcher $partnerRewardFetcher,
-        private readonly HospitalRepository $hospitals,
         private readonly MedTeamRepository $medTeams,
         private readonly UserRepository $users
     )
@@ -65,14 +59,14 @@ class Report extends AbstractController
             $totalDays[$i] = $totalTemplate;
         }
 
-        $result = [
+        $resultAdmin = [
             'total' => $totalDays,
             'users' => []
         ];
 
         /** @var User $user */
         foreach ($users as $user){
-            $result['users'][$user->getName()] = [
+            $resultAdmin['users'][$user->getName()] = [
                 'id' => $user->getId(),
                 'name' => $user->getName(),
                 'clocks' => $daysArray,
@@ -84,8 +78,8 @@ class Report extends AbstractController
         foreach ($medTeams as $medTeam){
 
             $employeeName = $medTeam->getAdmin()->getName();
-            if (!array_key_exists($employeeName, $result['users'])){
-                $result['users'][$employeeName] = [
+            if (!array_key_exists($employeeName, $resultAdmin['users'])){
+                $resultAdmin['users'][$employeeName] = [
                     'id' => $medTeam->getAdmin()->getId(),
                     'name' => $employeeName,
                     'clocks' => $daysArray,
@@ -93,12 +87,96 @@ class Report extends AbstractController
                 ];
             }
 
-            $result['users'][$employeeName]['clocks'][$medTeam->getDay()] = $medTeam->getPlannedHours();
-            $result['users'][$employeeName]['total'][$medTeam->getType()] += 1;
+            $resultAdmin['users'][$employeeName]['clocks'][$medTeam->getDay()] = $medTeam->getPlannedHours();
+            $resultAdmin['users'][$employeeName]['total'][$medTeam->getType()] += 1;
 
-            $result['total'][$medTeam->getDay()][$medTeam->getType()] += 1;
+            $resultAdmin['total'][$medTeam->getDay()][$medTeam->getType()] += 1;
         }
 
-        return $this->json($result);
+        $users = $this->users->findAllByRole('ROLE_DOCTOR');
+
+        $resultDoctor = [
+            'total' => $totalDays,
+            'users' => []
+        ];
+
+        /** @var User $user */
+        foreach ($users as $user){
+            $resultDoctor['users'][$user->getName()] = [
+                'id' => $user->getId(),
+                'name' => $user->getName(),
+                'clocks' => $daysArray,
+                'total' =>$totalTemplate
+            ];
+        }
+
+        /** @var MedTeam $medTeam */
+        foreach ($medTeams as $medTeam){
+
+            $employeeName = $medTeam->getDoctor()->getName();
+            if (!array_key_exists($employeeName, $resultDoctor['users'])){
+                $resultDoctor['users'][$employeeName] = [
+                    'id' => $medTeam->getDoctor()->getId(),
+                    'name' => $employeeName,
+                    'clocks' => $daysArray,
+                    'total' =>$totalTemplate
+                ];
+            }
+
+            $resultDoctor['users'][$employeeName]['clocks'][$medTeam->getDay()] = $medTeam->getPlannedHours();
+            $resultDoctor['users'][$employeeName]['total'][$medTeam->getType()] += 1;
+
+            $resultDoctor['total'][$medTeam->getDay()][$medTeam->getType()] += 1;
+        }
+
+
+        $users = $this->users->findAllByRole('ROLE_DRIVER');
+
+        $resultDriver = [
+            'total' => $totalDays,
+            'users' => []
+        ];
+
+        /** @var User $user */
+        foreach ($users as $user){
+            $resultDriver['users'][$user->getName()] = [
+                'id' => $user->getId(),
+                'name' => $user->getName(),
+                'clocks' => $daysArray,
+                'total' =>$totalTemplate
+            ];
+        }
+
+        /** @var MedTeam $medTeam */
+        foreach ($medTeams as $medTeam){
+
+            if (!$medTeam->getDriver()){
+                continue;
+            }
+
+            $employeeName = $medTeam->getDriver()->getName();
+            if (!array_key_exists($employeeName, $resultDriver['users'])){
+                $resultDriver['users'][$employeeName] = [
+                    'id' => $medTeam->getDriver()->getId(),
+                    'name' => $employeeName,
+                    'clocks' => $daysArray,
+                    'total' =>$totalTemplate
+                ];
+            }
+
+            $resultDriver['users'][$employeeName]['clocks'][$medTeam->getDay()] = $medTeam->getPlannedHours();
+            $resultDriver['users'][$employeeName]['total'][$medTeam->getType()] += 1;
+
+            $resultDriver['total'][$medTeam->getDay()][$medTeam->getType()] += 1;
+        }
+
+
+        return $this->json(
+            [
+                'admins' => $resultAdmin,
+                'doctors' => $resultDoctor,
+                'drivers' => $resultDriver
+            ]
+        );
     }
 }
