@@ -73,7 +73,7 @@ class PartnerReport extends AbstractController
 
         }
 
-        $hospitals = $this->hospitals->findByPartnerAndDischargedAt(
+        $hospitals = $this->hospitals->findByPartnerAndHospitalizedAt(
             (int)$partnerId,
             new DateTimeImmutable($dischargedAtAfter),
             new DateTimeImmutable($dischargedAtBefore),
