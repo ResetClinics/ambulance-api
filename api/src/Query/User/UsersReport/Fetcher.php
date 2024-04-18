@@ -132,6 +132,10 @@ class Fetcher
      */
     public function getArr(array $result, ?int $adminId, Calling $call): array
     {
+        if (!array_key_exists($adminId, $result)){
+            return  $result;
+        }
+
         $result[$adminId]['calls'] += 1;
         $result[$adminId]['amount'] += $call->getPrice();
         if ($result[$adminId]['calls'] > 0) {
