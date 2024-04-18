@@ -78,10 +78,12 @@ class Fetcher
         foreach ($teams as $team){
             $hours = $team->getPlannedHours();
             $adminId = $team->getAdmin()->getId();
-            $result[$adminId]['workShift'] += 1;
-            $result[$adminId]['hours'] += $hours;
+            if (array_key_exists($adminId,$result)) {
+                $result[$adminId]['workShift'] += 1;
+                $result[$adminId]['hours'] += $hours;
+            }
             $doctorId = $team->getDoctor()->getId();
-            if ($doctorId !== $adminId) {
+            if ($doctorId !== $adminId && array_key_exists($doctorId,$result)) {
                 $result[$doctorId]['workShift'] += 1;
                 $result[$doctorId]['hours'] += $hours;
             }
