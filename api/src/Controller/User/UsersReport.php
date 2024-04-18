@@ -31,6 +31,6 @@ class UsersReport extends AbstractController
 
         $result = $this->fetcher->fetch($query);
 
-        return $this->json($result);
+        return $this->json(array_values($result));
     }
 }
