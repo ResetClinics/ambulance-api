@@ -117,7 +117,7 @@ class Fetcher
         $result[$adminId]['amount'] += $call->getPrice();
         if ($result[$adminId]['calls'] > 0) {
             $result[$adminId]['averageCheck']
-                = $result[$adminId]['amount'] / $result[$adminId]['calls'];
+                = (int)($result[$adminId]['amount'] / $result[$adminId]['calls']);
         }
 
 
