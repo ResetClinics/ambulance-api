@@ -8,6 +8,7 @@ use App\Entity\Calling\Calling;
 use App\Entity\Calling\Status;
 use App\Entity\Team\Team;
 use App\Entity\User\User;
+use DatePeriod;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -110,5 +111,19 @@ class CallingRepository extends ServiceEntityRepository
             ->getResult();
 
         return array_shift($result);
+    }
+
+    public function findAllByCompletedAtFromPeriod(DatePeriod $period): array
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        return $qb
+            ->andWhere('c.completedAt >= :start')
+            ->andWhere('c.completedAt < :end')
+            ->setParameter('start', $period->getStartDate())
+            ->setParameter('end', $period->getEndDate())
+            ->getQuery()
+            ->getResult()
+        ;
     }
 }
