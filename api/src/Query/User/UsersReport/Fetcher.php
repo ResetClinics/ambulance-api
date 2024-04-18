@@ -4,7 +4,9 @@ namespace App\Query\User\UsersReport;
 
 use App\Entity\Calling\Calling;
 use App\Entity\Calling\Status;
+use App\Entity\MedTeam\MedTeam;
 use App\Repository\CallingRepository;
+use App\Repository\MedTeam\MedTeamRepository;
 use App\Services\PeriodService\PeriodService;
 use DatePeriod;
 use DateTimeInterface;
@@ -19,6 +21,7 @@ class Fetcher
         public readonly PeriodService     $periodService,
         public readonly CallingRepository $calls,
         private readonly Connection       $connection,
+        private readonly MedTeamRepository $teams,
     )
     {
     }
@@ -31,6 +34,7 @@ class Fetcher
     {
         $period = $this->periodService->createDatePeriodFromRequest($query->period);
         $calls = $this->calls->findAllByCompletedAtFromPeriod($period);
+        $teams = $this->teams->findByPlanned($period->getStartDate(), $period->getEndDate());
 
         $roles = [
             'ROLE_DOCTOR',
@@ -54,6 +58,8 @@ class Fetcher
                 'averageCheck' => 0,
                 'repeat' => 0,
                 'coding' => 0,
+                'workShift' => 0,
+                'hours' => 0,
             ];
         }
 
@@ -65,6 +71,19 @@ class Fetcher
             $doctorId = $call->getDoctor()->getId();
             if ($doctorId !== $adminId) {
                 $result = $this->getArr($result, $doctorId, $call);
+            }
+        }
+
+        /** @var MedTeam $team */
+        foreach ($teams as $team){
+            $hours = $team->getPlannedHours();
+            $adminId = $team->getAdmin()->getId();
+            $result[$adminId]['workShift'] += 1;
+            $result[$adminId]['hours'] += $hours;
+            $doctorId = $team->getDoctor()->getId();
+            if ($doctorId !== $adminId) {
+                $result[$doctorId]['workShift'] += 1;
+                $result[$doctorId]['hours'] += $hours;
             }
         }
 
