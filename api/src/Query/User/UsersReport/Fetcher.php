@@ -110,7 +110,9 @@ class Fetcher
                 'u.name',
                 'u.roles',
             )
-            ->from('user', 'u');
+            ->from('user', 'u')
+            ->andWhere('u.active = 1')
+        ;
 
         $orX = $qb->expr()->orX();
 
