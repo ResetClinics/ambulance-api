@@ -53,7 +53,7 @@ class Fetcher
             $result[$user['id']] = [
                 'id' => $user['id'],
                 'name' => $user['name'],
-                'roles' => $user['roles'],
+                'roles' => json_decode($user['roles'], true),
                 'calls' => 0,
                 'amount' => 0,
                 'averageCheck' => 0,
