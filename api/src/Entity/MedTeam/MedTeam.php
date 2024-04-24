@@ -359,4 +359,14 @@ class MedTeam
         return $this;
     }
 
+    public function getDutyHours(): int
+    {
+        if (!$this->plannedDutyStartAt || !$this->plannedDutyFinishAt){
+            return 0;
+        }
+        $interval = $this->plannedDutyStartAt->diff($this->plannedDutyFinishAt);
+        $hours = $interval->h;
+        return $hours + ($interval->days * 24);
+    }
+
 }

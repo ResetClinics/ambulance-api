@@ -54,13 +54,38 @@ class Fetcher
                 'id' => $user['id'],
                 'name' => $user['name'],
                 'roles' => json_decode($user['roles'], true),
-                'calls' => 0,
-                'amount' => 0,
-                'averageCheck' => 0,
-                'repeat' => 0,
-                'coding' => 0,
-                'workShift' => 0,
-                'hours' => 0,
+
+                //**************
+
+                'revenue' => 0,                     //Выручка ВСЕГО
+                'salary' => 'n/a',                  //ЗП ВСЕГО
+
+                'workShiftCount' => 0,              //Смены ВСЕГО шт
+                'workShiftHours' => 0,              //Смены ВСЕГО часы
+                'workShiftSalary' => 'n/a',        //ЗП Смены ВСЕГО
+
+                'dutyCount' => 0,                   //Дежурства в смену на мероприятиях
+                'dutyHours' => 0,                   //Дежурства в смену на мероприятиях
+                'dutySalary' => 'n/a',              //ЗП Дежурства в смену на мероприятиях
+
+                'callsRevenue' => 0,                   //Выручка Выезды ВСЕГО
+                'callsCount' => 0,                     //
+                'callsAverageCheck' => 0,              //
+                'callsSalary' => 'n/a',                //
+
+                'callsPrimaryRevenue' => 0,             //Выручка выезды перпичные
+                'callsPrimaryCount' => 0,               //
+                'callsPrimaryAverageCheck' => 0,        //
+                'callsPrimarySalary' => 'n/a',          //
+
+                'callsRepeatRevenue' => 0,          //Выручка выезды повторы
+                'callsRepeatCount' => 0,            //
+                'callsRepeatAverageCheck' => 0,     //
+                'callsRepeatSalary' => 'n/a',       //
+
+                'codingRevenue' => 0,               //Кодирование выручка
+                'codingCount' => 0,                 //Кодирование количество
+                'codingSalary' => 'n/a',            //Кодирование зарплата
             ];
         }
 
@@ -78,15 +103,24 @@ class Fetcher
         /** @var MedTeam $team */
         foreach ($teams as $team){
             $hours = $team->getPlannedHours();
+            $dutyHours = $team->getDutyHours();
             $adminId = $team->getAdmin()->getId();
             if (array_key_exists($adminId,$result)) {
-                $result[$adminId]['workShift'] += 1;
-                $result[$adminId]['hours'] += $hours;
+                $result[$adminId]['workShiftCount'] += 1;
+                $result[$adminId]['workShiftHours'] += $hours;
+                if ($dutyHours > 0){
+                    $result[$adminId]['dutyCount'] += 1;
+                    $result[$adminId]['dutyHours'] += $dutyHours;
+                }
             }
             $doctorId = $team->getDoctor()->getId();
             if ($doctorId !== $adminId && array_key_exists($doctorId,$result)) {
-                $result[$doctorId]['workShift'] += 1;
-                $result[$doctorId]['hours'] += $hours;
+                $result[$doctorId]['workShiftCount'] += 1;
+                $result[$doctorId]['workShiftHours'] += $hours;
+                if ($dutyHours > 0){
+                    $result[$doctorId]['dutyCount'] += 1;
+                    $result[$doctorId]['dutyHours'] += $dutyHours;
+                }
             }
         }
 
@@ -141,27 +175,37 @@ class Fetcher
             return  $result;
         }
 
-        $result[$adminId]['calls'] += 1;
-        $result[$adminId]['amount'] += $call->getPrice();
-        if ($result[$adminId]['calls'] > 0) {
-            $result[$adminId]['averageCheck']
-                = (int)($result[$adminId]['amount'] / $result[$adminId]['calls']);
+        $result[$adminId]['revenue'] += $call->getPrice();
+
+        // вызовы всего
+        $result[$adminId]['callsCount'] += 1;
+        $result[$adminId]['callsRevenue'] += $call->getPrice();
+        if ($result[$adminId]['callsCount'] > 0) {
+            $result[$adminId]['callsAverageCheck']
+                = (int)($result[$adminId]['callsRevenue'] / $result[$adminId]['callsCount']);
         }
 
-
-        foreach ($call->getServices() as $service){
-            if ($service->getService()?->getType() === 'replay'){
-                $repeat = $this->calls->findOneByOwnerExternalId($call->getNumberCalling());
-                if ($repeat){
-                    $result[$adminId]['repeat'] += 1;
-                }
+        //первычные вызовы
+        if ($call->getCountRepeat() === 0){
+            $result[$adminId]['callsPrimaryCount'] += 1;
+            $result[$adminId]['callsPrimaryRevenue'] += $call->getPrice();
+            if ($result[$adminId]['callsPrimaryCount'] > 0) {
+                $result[$adminId]['callsPrimaryAverageCheck']
+                    = (int)($result[$adminId]['callsPrimaryRevenue'] / $result[$adminId]['callsPrimaryCount']);
             }
-            break;
+        }else{ // вторичные вызовы
+            $result[$adminId]['callsRepeatCount'] += 1;
+            $result[$adminId]['callsRepeatRevenue'] += $call->getPrice();
+            if ($result[$adminId]['callsRepeatCount'] > 0) {
+                $result[$adminId]['callsRepeatAverageCheck']
+                    = (int)($result[$adminId]['callsRepeatRevenue'] / $result[$adminId]['callsRepeatCount']);
+            }
         }
 
         foreach ($call->getServices() as $service){
             if ($service->getService()?->getCategory()?->getId() === 3){
-                $result[$adminId]['coding'] += 1;
+                $result[$adminId]['codingCount'] += 1;
+                $result[$adminId]['codingRevenue'] += $service->getPrice();
             }
             break;
         }
