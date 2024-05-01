@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\User\MyAction;
 use App\Entity\Device;
+use App\Entity\Role\Role;
 use App\Entity\Team\Team;
 use App\Filter\User\SearchByNameAndPhoneAndEmailFilter;
 use App\Repository\UserRepository;
@@ -127,12 +128,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read', 'user:item:read', 'user:write'])]
     private bool $hideInReports = false;
 
+    #[ORM\ManyToMany(targetEntity: Role::class)]
+    #[Groups(['user:read', 'user:write'])]
+    private Collection $accessRoles;
+
 
     public function __construct($externalId = null)
     {
         $this->teams = new ArrayCollection();
         $this->externalId = $externalId;
         $this->devices = new ArrayCollection();
+        $this->accessRoles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -365,6 +371,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setHideInReports(?bool $hideInReports): self
     {
         $this->hideInReports = $hideInReports;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Role>
+     */
+    public function getAccessRoles(): Collection
+    {
+        return $this->accessRoles;
+    }
+
+    public function addAccessRole(Role $accessRole): self
+    {
+        if (!$this->accessRoles->contains($accessRole)) {
+            $this->accessRoles->add($accessRole);
+        }
+
+        return $this;
+    }
+
+    public function removeAccessRole(Role $accessRole): self
+    {
+        $this->accessRoles->removeElement($accessRole);
 
         return $this;
     }
