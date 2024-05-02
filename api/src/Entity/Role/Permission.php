@@ -16,6 +16,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new GetCollection(),
     ],
     normalizationContext: ['groups' => ['permission:read']],
+    paginationEnabled: false,
 )]
 #[ApiFilter(OrderFilter::class, properties: ['id', 'description'], arguments: ['orderParameterName' => 'order'])]
 class Permission
