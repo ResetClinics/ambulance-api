@@ -40,6 +40,22 @@ class InitCommand extends Command
             'id' => 'calls-delete',
             'description' => 'Вызовы: удаление'
         ],
+        [
+            'id' => 'calls-index-owner',
+            'description' => 'Вызовы: просмотр списка своих заказов'
+        ],
+        [
+            'id' => 'calls-view-owner',
+            'description' => 'Вызовы: просмотр детально своих заказов'
+        ],
+        [
+            'id' => 'calls-address-full',
+            'description' => 'Вызовы: просмотр полного адреса'
+        ],
+        [
+            'id' => 'calls-phone-full',
+            'description' => 'Вызовы: просмотр полного телефона'
+        ],
         //Партнеры
         [
             'id' => 'partners-index',
@@ -54,12 +70,44 @@ class InitCommand extends Command
             'description' => 'Партнеры: просмотр детально'
         ],
         [
+            'id' => 'partners-view-calls',
+            'description' => 'Партнеры: просмотр вызовов'
+        ],
+        [
+            'id' => 'partners-view-hospital',
+            'description' => 'Партнеры: просмотр стационаров'
+        ],
+        [
             'id' => 'partners-edit',
             'description' => 'Партнеры: изменение'
         ],
         [
             'id' => 'partners-delete',
             'description' => 'Партнеры: удаление'
+        ],
+        [
+            'id' => 'partners-report',
+            'description' => 'Партнеры: скачать отчет'
+        ],
+        [
+            'id' => 'partners-agreements-index',
+            'description' => 'Партнеры/Соглашения: просмотр списка'
+        ],
+        [
+            'id' => 'partners-agreements-create',
+            'description' => 'Партнеры/Соглашения: добавление'
+        ],
+        [
+            'id' => 'partners-agreements-view',
+            'description' => 'Партнеры/Соглашения: просмотр детально'
+        ],
+        [
+            'id' => 'partners-agreements-update',
+            'description' => 'Партнеры/Соглашения: изменение'
+        ],
+        [
+            'id' => 'partners-agreements-delete',
+            'description' => 'Партнеры/Соглашения: удаление'
         ],
         //Пользователи
         [
@@ -81,6 +129,10 @@ class InitCommand extends Command
         [
             'id' => 'users-delete',
             'description' => 'Пользователи: удаление'
+        ],
+        [
+            'id' => 'users-report-index',
+            'description' => 'Пользователи: просмотр полного отчета'
         ],
         //Карта
         [
@@ -154,6 +206,132 @@ class InitCommand extends Command
         [
             'id' => 'permissions-index',
             'description' => 'Разрешения: просмотр списка'
+        ],
+        //Шаблоны соглашений
+        [
+            'id' => 'agreement_templates-index',
+            'description' => 'Шаблоны соглашений: просмотр списка'
+        ],
+        [
+            'id' => 'agreement_templates-create',
+            'description' => 'Шаблоны соглашений: добавление'
+        ],
+        [
+            'id' => 'agreement_templates-view',
+            'description' => 'Шаблоны соглашений: просмотр детально'
+        ],
+        [
+            'id' => 'agreement_templates-edit',
+            'description' => 'Шаблоны соглашений: изменение'
+        ],
+        [
+            'id' => 'agreement_templates-delete',
+            'description' => 'Шаблоны соглашений: удаление'
+        ],
+        //Услуги
+        [
+            'id' => 'services-index',
+            'description' => 'Услуги: просмотр списка'
+        ],
+        [
+            'id' => 'services-create',
+            'description' => 'Услуги: добавление'
+        ],
+        [
+            'id' => 'services-view',
+            'description' => 'Услуги: просмотр детально'
+        ],
+        [
+            'id' => 'services-edit',
+            'description' => 'Услуги: изменение'
+        ],
+        [
+            'id' => 'services-delete',
+            'description' => 'Услуги: удаление'
+        ],
+        //Категории услуг
+        [
+            'id' => 'service_categories-index',
+            'description' => 'Категории услуг: просмотр списка'
+        ],
+        [
+            'id' => 'service_categories-create',
+            'description' => 'Категории услуг: добавление'
+        ],
+        [
+            'id' => 'service_categories-view',
+            'description' => 'Категории услуг: просмотр детально'
+        ],
+        [
+            'id' => 'service_categories-edit',
+            'description' => 'Категории услуг: изменение'
+        ],
+        [
+            'id' => 'service_categories-delete',
+            'description' => 'Категории услуг: удаление'
+        ],
+        //Телефонные аппараты
+        [
+            'id' => 'phones-index',
+            'description' => 'Телефонные аппараты: просмотр списка'
+        ],
+        [
+            'id' => 'phones-create',
+            'description' => 'Телефонные аппараты: добавление'
+        ],
+        [
+            'id' => 'phones-view',
+            'description' => 'Телефонные аппараты: просмотр детально'
+        ],
+        [
+            'id' => 'phones-edit',
+            'description' => 'Телефонные аппараты: изменение'
+        ],
+        [
+            'id' => 'phones-delete',
+            'description' => 'Телефонные аппараты: удаление'
+        ],
+        //Базы
+        [
+            'id' => 'bases-index',
+            'description' => 'Базы: просмотр списка'
+        ],
+        [
+            'id' => 'bases-create',
+            'description' => 'Базы: добавление'
+        ],
+        [
+            'id' => 'bases-view',
+            'description' => 'Базы: просмотр детально'
+        ],
+        [
+            'id' => 'bases-edit',
+            'description' => 'Базы: изменение'
+        ],
+        [
+            'id' => 'bases-delete',
+            'description' => 'Базы: удаление'
+        ],
+        //Автомобили
+        [
+            'id' => 'cars-index',
+            'description' => 'Автомобили: просмотр списка'
+        ],
+        [
+            'id' => 'cars-create',
+            'description' => 'Автомобили: добавление'
+        ],
+        [
+            'id' => 'cars-view',
+            'description' => 'Автомобили: просмотр детально'
+        ],
+        [
+            'id' => 'cars-edit',
+            'description' => 'Автомобили: изменение'
+        ],
+        [
+            'id' => 'cars-delete',
+            'description' => 'Автомобили: удаление'
         ],
     ];
 
