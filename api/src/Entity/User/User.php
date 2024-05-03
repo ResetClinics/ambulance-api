@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\User\MyAction;
 use App\Entity\Device;
+use App\Entity\Role\Permission;
 use App\Entity\Role\Role;
 use App\Entity\Team\Team;
 use App\Filter\User\SearchByNameAndPhoneAndEmailFilter;
@@ -397,5 +398,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->accessRoles->removeElement($accessRole);
 
         return $this;
+    }
+
+    #[Groups(['user:read'])]
+    public function getPermissions(): array
+    {
+        $permissions = [];
+        /** @var Role $role */
+        foreach ($this->accessRoles as $role){
+            /** @var Permission $permission */
+            foreach ($role->getPermissions() as $permission){
+                $permissions[] = $permission->getId();
+            }
+        }
+
+        return array_unique($permissions);
     }
 }
