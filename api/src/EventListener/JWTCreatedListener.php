@@ -28,6 +28,7 @@ final class JWTCreatedListener implements EventSubscriberInterface
         $payload['name'] = $user->getName();
         $payload['position'] = $user->getPosition();
         $payload['avatar'] = $user->getAvatar();
+        $payload['permissions'] = $user->getPermissions();
 
         $event->setData($payload);
     }
