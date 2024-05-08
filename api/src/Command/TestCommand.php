@@ -47,15 +47,23 @@ class TestCommand extends Command
 
 
         $contactId = null;
+        $companyId = null;
         /** @var LinkModel $link */
         foreach ($allLinks as $link) {
-            dump($link);
-           //if ($link->getMetadata()['main_contact']) {
-           //    $contactId = $link->getToEntityId();
-           //}
+           if (
+               $link->getMetadata()
+               && isset($link->getMetadata()['main_contact'])
+               && $link->getMetadata()['main_contact']
+           ) {
+               $contactId = $link->getToEntityId();
+           }
+
+           if ($link->getToEntityType() === 'companies'){
+               $companyId = $link->getToEntityId();
+           }
         }
 
-        dd($contactId);
+
 
         return Command::SUCCESS;
     }
