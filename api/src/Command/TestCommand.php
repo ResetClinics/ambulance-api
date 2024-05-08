@@ -50,9 +50,9 @@ class TestCommand extends Command
         /** @var LinkModel $link */
         foreach ($allLinks as $link) {
             dump($link);
-            if ($link->getMetadata()['main_contact']) {
-                $contactId = $link->getToEntityId();
-            }
+           //if ($link->getMetadata()['main_contact']) {
+           //    $contactId = $link->getToEntityId();
+           //}
         }
 
         dd($contactId);
