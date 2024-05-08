@@ -2,19 +2,18 @@
 
 namespace App\Command;
 
-use App\Entity\Calling\Status;
-use App\Flusher;
-use App\Query\PartnerReward\Fetcher;
-use App\Query\PartnerReward\Query;
-use App\Repository\CallingRepository;
-use App\Services\Call\PartnerReward;
-use DateTimeImmutable;
+use AmoCRM\Client\AmoCRMApiClient;
+use AmoCRM\Filters\EntitiesLinksFilter;
+use AmoCRM\Helpers\EntityTypesInterface;
+use AmoCRM\Models\LinkModel;
+use App\Services\AmoCRM;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use function Amp\Iterator\concat;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 
 #[AsCommand(
     name: 'app:test',
@@ -22,44 +21,41 @@ use function Amp\Iterator\concat;
 )]
 class TestCommand extends Command
 {
+    private AmoCRMApiClient $client;
     public function __construct(
-        readonly private PartnerReward $partnerReward,
-        readonly private CallingRepository $callings,
-        readonly private Flusher $flusher
+        AmoCRM        $amoCRM,
     )
     {
         parent::__construct();
+        $this->client = $amoCRM->getClient();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        ini_set('memory_limit', '-1');
 
+        $lead = $this->client->leads()->getOne('22852671');
 
-
-        $callings = $this->callings->createQueryBuilder('c')
-            ->andWhere('c.id > :val')
-            //->setParameter('val', 13607)
-            ->setParameter('val', 13181)
-            ->getQuery()
-            ->getResult()
-        ;
-
-
-        foreach ($callings as $key => $calling){
-
-            dump($key .  ' - key');
-
-            if ($calling->getStatus() !== Status::COMPLETED){
-                continue;
-            }
-
-            $this->partnerReward->calculate($calling);
-            $this->flusher->flush();
+        if (!$lead) {
+            throw new NotFoundHttpException('Не получен лид');
         }
 
-        $io->success('Test successful.');
+        $linksService = $this->client->links(EntityTypesInterface::LEADS);
+
+        $filter = new EntitiesLinksFilter(['22852671']);
+        $allLinks = $linksService->get($filter);
+
+
+        $contactId = null;
+        /** @var LinkModel $link */
+        foreach ($allLinks as $link) {
+            dump($link);
+            if ($link->getMetadata()['main_contact']) {
+                $contactId = $link->getToEntityId();
+            }
+        }
+
+        dd($contactId);
 
         return Command::SUCCESS;
     }
