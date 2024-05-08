@@ -15,6 +15,7 @@ use AmoCRM\Exceptions\AmoCRMoAuthApiException;
 use AmoCRM\Filters\EntitiesLinksFilter;
 use AmoCRM\Filters\LeadsFilter;
 use AmoCRM\Helpers\EntityTypesInterface;
+use AmoCRM\Models\CompanyModel;
 use AmoCRM\Models\ContactModel;
 use AmoCRM\Models\LeadModel;
 use AmoCRM\Models\LinkModel;
@@ -149,10 +150,19 @@ class HospitalizationWithTherapyAction extends AbstractController
 
 
         $contactId = null;
+        $companyId = null;
         /** @var LinkModel $link */
         foreach ($allLinks as $link) {
-            if ($link->getMetadata()['main_contact']) {
+            if (
+                $link->getMetadata()
+                && isset($link->getMetadata()['main_contact'])
+                && $link->getMetadata()['main_contact']
+            ) {
                 $contactId = $link->getToEntityId();
+            }
+
+            if ($link->getToEntityType() === 'companies'){
+                $companyId = $link->getToEntityId();
             }
         }
 
@@ -190,6 +200,13 @@ class HospitalizationWithTherapyAction extends AbstractController
                     )
             );
 
+        if ($companyId){
+            $newLead ->setCompany(
+                (new CompanyModel())
+                    ->setId($companyId)
+            );
+        }
+
         $leadsCollection = new LeadsCollection();
         $leadsCollection->add($newLead);
 
@@ -212,10 +229,19 @@ class HospitalizationWithTherapyAction extends AbstractController
 
 
         $contactId = null;
+        $companyId = null;
         /** @var LinkModel $link */
         foreach ($allLinks as $link) {
-            if ($link->getMetadata()['main_contact']) {
+            if (
+                $link->getMetadata()
+                && isset($link->getMetadata()['main_contact'])
+                && $link->getMetadata()['main_contact']
+            ) {
                 $contactId = $link->getToEntityId();
+            }
+
+            if ($link->getToEntityType() === 'companies'){
+                $companyId = $link->getToEntityId();
             }
         }
 
@@ -244,6 +270,14 @@ class HospitalizationWithTherapyAction extends AbstractController
                             ->setIsMain(true)
                     )
             );
+
+
+        if ($companyId){
+            $newLead ->setCompany(
+                (new CompanyModel())
+                    ->setId($companyId)
+            );
+        }
 
         $leadsCollection = new LeadsCollection();
         $leadsCollection->add($newLead);

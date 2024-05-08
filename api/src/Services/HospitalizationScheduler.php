@@ -8,6 +8,7 @@ use AmoCRM\Collections\CustomFieldsValuesCollection;
 use AmoCRM\Collections\Leads\LeadsCollection;
 use AmoCRM\Filters\EntitiesLinksFilter;
 use AmoCRM\Helpers\EntityTypesInterface;
+use AmoCRM\Models\CompanyModel;
 use AmoCRM\Models\ContactModel;
 use AmoCRM\Models\LeadModel;
 use AmoCRM\Models\LinkModel;
@@ -41,10 +42,19 @@ class HospitalizationScheduler
 
 
         $contactId = null;
+        $companyId = null;
         /** @var LinkModel $link */
         foreach ($allLinks as $link) {
-            if ($link->getMetadata()['main_contact']) {
+            if (
+                $link->getMetadata()
+                && isset($link->getMetadata()['main_contact'])
+                && $link->getMetadata()['main_contact']
+            ) {
                 $contactId = $link->getToEntityId();
+            }
+
+            if ($link->getToEntityType() === 'companies'){
+                $companyId = $link->getToEntityId();
             }
         }
 
@@ -81,6 +91,13 @@ class HospitalizationScheduler
                             ->setIsMain(true)
                     )
             );
+
+        if ($companyId){
+            $newLead ->setCompany(
+                (new CompanyModel())
+                    ->setId($companyId)
+            );
+        }
 
         $leadsCollection = new LeadsCollection();
         $leadsCollection->add($newLead);

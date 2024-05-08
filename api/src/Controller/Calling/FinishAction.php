@@ -218,13 +218,21 @@ class FinishAction extends AbstractController
 
 
         $contactId = null;
+        $companyId = null;
         /** @var LinkModel $link */
         foreach ($allLinks as $link) {
-            if ($link->getMetadata()['main_contact']) {
+            if (
+                $link->getMetadata()
+                && isset($link->getMetadata()['main_contact'])
+                && $link->getMetadata()['main_contact']
+            ) {
                 $contactId = $link->getToEntityId();
             }
-        }
 
+            if ($link->getToEntityType() === 'companies'){
+                $companyId = $link->getToEntityId();
+            }
+        }
         if (!$contactId) {
             throw new NotFoundHttpException('Не найден контакт при создании стационара');
         }
@@ -258,6 +266,14 @@ class FinishAction extends AbstractController
                             ->setIsMain(true)
                     )
             );
+
+
+        if ($companyId){
+            $newLead ->setCompany(
+                (new CompanyModel())
+                    ->setId($companyId)
+            );
+        }
 
         $leadsCollection = new LeadsCollection();
         $leadsCollection->add($newLead);
