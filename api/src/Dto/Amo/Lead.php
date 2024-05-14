@@ -24,6 +24,7 @@ class Lead
 
     public ?Employee $admin = null;
     public ?Employee $doctor = null;
+    public ?string $operatorId = null;
 
 
     public function __construct(int $id, string $clientName, string $clientPhone)

@@ -3,6 +3,8 @@
 namespace App\Command;
 
 use AmoCRM\Client\AmoCRMApiClient;
+use AmoCRM\Filters\LeadsFilter;
+use App\Dto\Amo\Employee;
 use App\Services\AmoCRM;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -38,9 +40,19 @@ class TestCommand extends Command
         }
 
         foreach ($lead->getCustomFieldsValues() as $field) {
-            dump($field);
+            if ($field->getFieldId() === 873881) {
+                $userName = $field->getValues()?->first()->getValue();
+
+                dump($this->getNumberInsideBrackets($userName));
+            }
         }
 
         return Command::SUCCESS;
+    }
+
+    function getNumberInsideBrackets($str): ?int
+    {
+        preg_match('/\((\d+)\)/', $str, $matches);
+        return isset($matches[1]) ? (int)$matches[1] : null;
     }
 }
