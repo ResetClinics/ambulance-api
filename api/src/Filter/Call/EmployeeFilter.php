@@ -17,7 +17,7 @@ final class EmployeeFilter extends AbstractFilter
                 'type' => 'integer',
                 'required' => false,
                 'swagger' => [
-                    'description' => 'Search by admin.id or doctor.id',
+                    'description' => 'Search by admin.id or doctor.id or operator.id',
                     'name' => 'search',
                     'type' => 'integer',
                 ],
@@ -46,6 +46,7 @@ final class EmployeeFilter extends AbstractFilter
             $queryBuilder->expr()->orX(
                 $queryBuilder->expr()->eq($alias . '.admin', ':employee'),
                 $queryBuilder->expr()->eq($alias . '.doctor', ':employee'),
+                $queryBuilder->expr()->eq($alias . '.operator', ':employee'),
             )
         )->setParameter('employee', $value);
     }
