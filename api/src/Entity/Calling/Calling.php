@@ -330,6 +330,11 @@ class Calling
     #[Groups(['calling:read', 'calling:write'])]
     private ?string $ownerExternalId = null;
 
+    #[ORM\ManyToOne]
+    #[Groups(['calling:read'])]
+    #[ApiFilter(SearchFilter::class, properties: ['operator.id' => 'exact'])]
+    private ?User $operator = null;
+
     public function __construct(
         string  $numberCalling,
         string  $title,
@@ -1056,5 +1061,17 @@ class Calling
     public function setOwnerExternalId(?string $ownerExternalId): void
     {
         $this->ownerExternalId = $ownerExternalId;
+    }
+
+    public function getOperator(): ?User
+    {
+        return $this->operator;
+    }
+
+    public function setOperator(?User $operator): self
+    {
+        $this->operator = $operator;
+
+        return $this;
     }
 }

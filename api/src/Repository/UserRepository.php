@@ -75,7 +75,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
 
-    public function findOneByExternalId(int $externalId): ?User
+    public function findOneByExternalId(?int $externalId): ?User
     {
         return $this->createQueryBuilder('u')
             ->andWhere('u.externalId = :externalId')
@@ -84,7 +84,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getOneOrNullResult();
     }
 
-    public function getByExternalId(int $externalId): User
+    public function getByExternalId(?int $externalId): User
     {
         if ($user =  $this->createQueryBuilder('u')
             ->andWhere('u.externalId = :externalId')

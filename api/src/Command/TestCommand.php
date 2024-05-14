@@ -44,8 +44,7 @@ class TestCommand extends Command
             if ($field->getFieldId() === 966613) {
                 $userName = $field->getValues()?->first()->getValue();
 
-                dump($userName);
-                dump($this->getNumberInsideBrackets($userName));
+                $this->getNumberInsideBrackets($userName);
             }
         }
 

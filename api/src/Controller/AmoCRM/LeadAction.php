@@ -192,6 +192,11 @@ class LeadAction extends AbstractController
                 $leadDto->sendPhone = $field->getValues()?->first()->getValue();
             }
 
+            if ($field->getFieldId() === 966613) {
+                $userName = $field->getValues()?->first()->getValue();
+
+                $leadDto->operatorId = $this->getNumberInsideBrackets($userName);
+            }
 
             if ($field->getFieldId() === 873879) {
                 $userName = $field->getValues()?->first()->getValue();
@@ -235,6 +240,7 @@ class LeadAction extends AbstractController
 
         $admin = $this->users->getByExternalId($lead->admin->getId());
         $doctor = $this->users->getByExternalId($lead->doctor->getId());
+        $operator = $this->users->findOneByExternalId($lead->operatorId);
 
         $isNew = false;
 
@@ -263,7 +269,9 @@ class LeadAction extends AbstractController
 
         }
 
-
+        if ($operator){
+            $calling->setOperator($operator);
+        }
 
         if ($lead->partnerExternalId){
             $partner = $this->partners->findOneByExternalId($lead->partnerExternalId);
@@ -335,5 +343,15 @@ class LeadAction extends AbstractController
             );
         }
 
+    }
+
+    private function getNumberInsideBrackets(?string $userName): ?int
+    {
+        if (!$userName)
+            return null;
+
+        preg_match('/\((\d+)\)/', $userName, $matches);
+
+        return isset($matches[1]) ? (int)$matches[1] : null;
     }
 }
