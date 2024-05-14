@@ -39,6 +39,8 @@ class TestCommand extends Command
             throw new NotFoundHttpException('Не получен лид');
         }
 
+        dump($lead);
+
         foreach ($lead->getCustomFieldsValues() as $field) {
             if ($field->getFieldId() === 873881) {
                 $userName = $field->getValues()?->first()->getValue();
