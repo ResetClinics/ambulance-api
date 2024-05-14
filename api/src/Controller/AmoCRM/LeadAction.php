@@ -240,7 +240,7 @@ class LeadAction extends AbstractController
 
         $admin = $this->users->getByExternalId($lead->admin->getId());
         $doctor = $this->users->getByExternalId($lead->doctor->getId());
-        $operator = $this->users->findOneByExternalId($lead->operatorId);
+        $operator = $this->users->find($lead->operatorId);
 
         $isNew = false;
 
