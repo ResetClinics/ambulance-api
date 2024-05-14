@@ -31,7 +31,7 @@ class TestCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $lead = $this->client->leads()->getOne('22852671');
+        $lead = $this->client->leads()->getOne('22891185');
 
         if (!$lead) {
             throw new NotFoundHttpException('Не получен лид');
