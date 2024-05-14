@@ -3,9 +3,6 @@
 namespace App\Command;
 
 use AmoCRM\Client\AmoCRMApiClient;
-use AmoCRM\Filters\EntitiesLinksFilter;
-use AmoCRM\Helpers\EntityTypesInterface;
-use AmoCRM\Models\LinkModel;
 use App\Services\AmoCRM;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -40,30 +37,9 @@ class TestCommand extends Command
             throw new NotFoundHttpException('Не получен лид');
         }
 
-        $linksService = $this->client->links(EntityTypesInterface::LEADS);
-
-        $filter = new EntitiesLinksFilter(['22852671']);
-        $allLinks = $linksService->get($filter);
-
-
-        $contactId = null;
-        $companyId = null;
-        /** @var LinkModel $link */
-        foreach ($allLinks as $link) {
-           if (
-               $link->getMetadata()
-               && isset($link->getMetadata()['main_contact'])
-               && $link->getMetadata()['main_contact']
-           ) {
-               $contactId = $link->getToEntityId();
-           }
-
-           if ($link->getToEntityType() === 'companies'){
-               $companyId = $link->getToEntityId();
-           }
+        foreach ($lead->getCustomFieldsValues() as $field) {
+            dump($field);
         }
-
-
 
         return Command::SUCCESS;
     }
