@@ -43,6 +43,7 @@ class TestCommand extends Command
             if ($field->getFieldId() === 873881) {
                 $userName = $field->getValues()?->first()->getValue();
 
+                dump($userName);
                 dump($this->getNumberInsideBrackets($userName));
             }
         }
@@ -53,6 +54,7 @@ class TestCommand extends Command
     function getNumberInsideBrackets($str): ?int
     {
         preg_match('/\((\d+)\)/', $str, $matches);
+        dump($matches);
         return isset($matches[1]) ? (int)$matches[1] : null;
     }
 }
