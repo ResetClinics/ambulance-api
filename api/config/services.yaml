@@ -35,3 +35,7 @@ services:
     App\Services\CallingSender:
         arguments:
             $token : "%env(FIREBASE_SERVER_TOKEN)%"
+
+    App\EventSubscriber\PaymentSettingUpdateSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber }
