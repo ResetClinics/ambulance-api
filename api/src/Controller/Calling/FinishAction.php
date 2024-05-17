@@ -25,6 +25,7 @@ use App\Flusher;
 use App\Repository\CallingRepository;
 use App\Repository\Hospital\HospitalRepository;
 use App\Services\AmoCRM;
+use App\Services\Call\OperatorReward;
 use App\Services\Call\PartnerReward;
 use App\Services\CallingSender;
 use DateTimeImmutable;
@@ -44,6 +45,7 @@ class FinishAction extends AbstractController
     private CallingRepository $callings;
     private HospitalRepository $hospitals;
     private PartnerReward $partnerReward;
+    private OperatorReward $operatorReward;
 
     public function __construct(
         AmoCRM        $amoCRM,
@@ -51,6 +53,7 @@ class FinishAction extends AbstractController
         CallingRepository $callings,
         HospitalRepository $hospitals,
         PartnerReward $partnerReward,
+        OperatorReward $operatorReward,
         Flusher $flusher
     )
     {
@@ -60,6 +63,7 @@ class FinishAction extends AbstractController
         $this->callings = $callings;
         $this->hospitals = $hospitals;
         $this->partnerReward = $partnerReward;
+        $this->operatorReward = $operatorReward;
     }
 
     public function __invoke(Calling $calling, CallingRepository $callings, Flusher $flusher): JsonResponse
@@ -199,6 +203,7 @@ class FinishAction extends AbstractController
         $calling->setComplete(new DateTimeImmutable());
 
         $this->partnerReward->calculate($calling);
+        $this->operatorReward->calculate($calling);
 
         $this->flusher->flush();
     }

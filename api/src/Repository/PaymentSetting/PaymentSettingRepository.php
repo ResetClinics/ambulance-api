@@ -56,9 +56,9 @@ class PaymentSettingRepository extends ServiceEntityRepository
         return $this->get(PaymentSetting::OPERATOR_PERCENT_THERAPY)->getValue();
     }
 
-    public function getOperatorPercentStationary(): int
+    public function getOperatorRewardStationary(): int
     {
-        return $this->get(PaymentSetting::OPERATOR_PERCENT_STATIONARY)->getValue();
+        return $this->get(PaymentSetting::OPERATOR_REWARD_STATIONARY)->getValue();
     }
 
     public function get($value): PaymentSetting

@@ -25,6 +25,7 @@ use App\Controller\Calling\FinishAction;
 use App\Controller\Calling\HospitalizationAction;
 use App\Controller\Calling\HospitalizationWithoutTherapyAction;
 use App\Controller\Calling\HospitalizationWithTherapyAction;
+use App\Controller\Calling\RecalculateOperatorReward;
 use App\Controller\Calling\RejectAction;
 use App\Controller\Calling\RepeatAction;
 use App\Entity\Partner;
@@ -93,6 +94,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
     properties: [
         'team' => 'exact',
     ])]
+#[Post(uriTemplate: '/callings/recalculate-operators-rewards', controller: RecalculateOperatorReward::class)]
 #[Post(uriTemplate: '/callings/current', controller: CurrentAction::class, input: CallingDto::class, read: false)]
 #[Post(uriTemplate: '/callings/{id}/accept', controller: AcceptAction::class, input: CallingDto::class, read: false)]
 #[Post(uriTemplate: '/callings/{id}/dispatch', controller: DispatchAction::class, input: CallingDto::class, read: false)]

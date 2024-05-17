@@ -126,4 +126,13 @@ class CallingRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    public function findAllWhoHasOperator()
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.operator IS NOT NULL')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Entity\Service\Service;
 use App\Repository\Calling\RowRepository;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\This;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: RowRepository::class)]
@@ -164,5 +165,39 @@ class Row
     public function setPercent(?int $percent): void
     {
         $this->percent = $percent;
+    }
+
+    /**
+     * Услуга является Стационаром
+     */
+    public function isStationary(): bool
+    {
+        return$this->getService()?->getType() === 'hospital';
+    }
+
+    /**
+     * Услуга является кодированием
+     */
+
+    public function isCoding(): bool
+    {
+        return $this->getService()?->getCategory()?->getId() === 3;
+    }
+
+    /**
+     * Услуга является терапией
+     */
+
+    public function isTherapy(): bool
+    {
+        return $this->getService()?->getCategory()?->getId() === 1;
+    }
+
+    /**
+     * Услуга является госпитализацией (доставка в больницу)
+     */
+    public function isHospital(): bool
+    {
+        return $this->getService()?->getId() === 12;
     }
 }

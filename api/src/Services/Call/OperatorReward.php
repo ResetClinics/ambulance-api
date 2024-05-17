@@ -17,7 +17,6 @@ class OperatorReward
 
     public function calculate(Calling $call): void
     {
-        $fullReward = 0;
         if ($call->getStatus() !== Status::COMPLETED){
             return;
         }
@@ -28,18 +27,30 @@ class OperatorReward
         $stationary = 0;
 
         foreach ($call->getServices() as $row){
-
-            if ($row->getService()->getType() === 'default'){
-
-
-                if ($row->getService()->getCategory()->getId() === 1){
-
-                }
-
-                $hospital += $this->paymentSettings->getOperatorPercentHospital();
+            if ($row->isTherapy()){
+                $therapy += $row->getPrice();
+            }elseif ($row->isHospital()){
+                $hospital += $row->getPrice();
+            }elseif ($row->isCoding()){
+                $coding += $row->getPrice();
+            }elseif ($row->isStationary()){
+                $stationary += 1;
             }
-
         }
+
+        $therapy = $therapy / 100 * $this->paymentSettings->getOperatorPercentTherapy();
+        $hospital = $hospital / 100 * $this->paymentSettings->getOperatorPercentHospital();
+        $coding = $coding / 100 * $this->paymentSettings->getOperatorPercentCoding();
+        $stationary = $stationary  * $this->paymentSettings->getOperatorRewardStationary();
+
+        $call->setOperatorReward(
+            new \App\Entity\Calling\OperatorReward(
+                $therapy,
+                $hospital,
+                $coding,
+                $stationary
+            )
+        );
     }
 
 }

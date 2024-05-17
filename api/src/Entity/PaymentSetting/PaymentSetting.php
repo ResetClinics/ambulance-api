@@ -47,8 +47,8 @@ class PaymentSetting
     public const OPERATOR_PERCENT_HOSPITAL = 'operator_percent_hospital';
     /** Процент оператору за кодировку */
     public const OPERATOR_PERCENT_CODING = 'operator_percent_coding';
-    /** Процент оператору за стационар */
-    public const OPERATOR_PERCENT_STATIONARY = 'operator_percent_stationary';
+    /** Награда оператору за стационар */
+    public const OPERATOR_REWARD_STATIONARY = 'operator_reward_stationary';
 
     #[ORM\Id]
     #[ORM\Column]
