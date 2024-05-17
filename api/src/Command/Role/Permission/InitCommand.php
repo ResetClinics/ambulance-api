@@ -333,6 +333,29 @@ class InitCommand extends Command
             'id' => 'cars-delete',
             'description' => 'Автомобили: удаление'
         ],
+
+
+        //Настройки
+        [
+            'id' => 'settings-index',
+            'description' => 'Настройки: просмотр списка'
+        ],
+        [
+            'id' => 'settings-create',
+            'description' => 'Настройки: добавление'
+        ],
+        [
+            'id' => 'settings-view',
+            'description' => 'Настройки: просмотр детально'
+        ],
+        [
+            'id' => 'settings-edit',
+            'description' => 'Настройки: изменение'
+        ],
+        [
+            'id' => 'settings-delete',
+            'description' => 'Настройки: удаление'
+        ],
     ];
 
     public function __construct(
