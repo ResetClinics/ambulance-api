@@ -9,6 +9,7 @@ use App\Entity\Calling\Calling;
 use App\Entity\Hospital\Clinic;
 use App\Entity\Hospital\Hospital;
 use App\Entity\Partner;
+use App\Entity\PaymentSetting\PaymentSetting;
 use App\Entity\Service\Category;
 use App\Entity\Service\Service;
 use App\Entity\User\User;
@@ -56,7 +57,8 @@ class PaginateJsonSubscriber implements EventSubscriberInterface
             $apiResourceClass !== Category::class &&
             $apiResourceClass !== Service::class &&
             $apiResourceClass !== Hospital::class &&
-            $apiResourceClass !== Clinic::class
+            $apiResourceClass !== Clinic::class &&
+            $apiResourceClass !== PaymentSetting::class
         ) {
             return;
         }
