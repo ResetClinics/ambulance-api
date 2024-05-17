@@ -335,6 +335,10 @@ class Calling
     #[ApiFilter(SearchFilter::class, properties: ['operator.id' => 'exact'])]
     private ?User $operator = null;
 
+    #[ORM\Embedded(class: OperatorReward::class)]
+    #[Groups(['calling:read'])]
+    private OperatorReward $operatorReward;
+
     public function __construct(
         string  $numberCalling,
         string  $title,
@@ -361,6 +365,7 @@ class Calling
         $this->lat = null;
         $this->lon = null;
         $this->services = new ArrayCollection();
+        $this->operatorReward = new OperatorReward(0,0,0,0);
     }
 
 
@@ -1073,5 +1078,15 @@ class Calling
         $this->operator = $operator;
 
         return $this;
+    }
+
+    public function getOperatorReward(): OperatorReward
+    {
+        return $this->operatorReward;
+    }
+
+    public function setOperatorReward(OperatorReward $operatorReward): void
+    {
+        $this->operatorReward = $operatorReward;
     }
 }

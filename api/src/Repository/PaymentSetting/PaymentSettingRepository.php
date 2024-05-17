@@ -5,6 +5,7 @@ namespace App\Repository\PaymentSetting;
 use App\Entity\PaymentSetting\PaymentSetting;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Translation\Exception\NotFoundResourceException;
 
 /**
  * @extends ServiceEntityRepository<PaymentSetting>
@@ -39,28 +40,39 @@ class PaymentSettingRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return PaymentSetting[] Returns an array of PaymentSetting objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
 
-//    public function findOneBySomeField($value): ?PaymentSetting
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function getOperatorPercentCoding(): int
+    {
+        return $this->get(PaymentSetting::OPERATOR_PERCENT_CODING)->getValue();
+    }
+
+    public function getOperatorPercentHospital(): int
+    {
+        return $this->get(PaymentSetting::OPERATOR_PERCENT_HOSPITAL)->getValue();
+    }
+
+    public function getOperatorPercentTherapy(): int
+    {
+        return $this->get(PaymentSetting::OPERATOR_PERCENT_THERAPY)->getValue();
+    }
+
+    public function getOperatorPercentStationary(): int
+    {
+        return $this->get(PaymentSetting::OPERATOR_PERCENT_STATIONARY)->getValue();
+    }
+
+    public function get($value): PaymentSetting
+    {
+        $result = $this->createQueryBuilder('p')
+            ->andWhere('p.id = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if (!$result){
+            throw new NotFoundResourceException();
+        }
+
+        return $result;
+    }
 }

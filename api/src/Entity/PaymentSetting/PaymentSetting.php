@@ -41,9 +41,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class PaymentSetting
 {
+    /** Процент оператору за терапию */
     public const OPERATOR_PERCENT_THERAPY = 'operator_percent_therapy';
+    /** Процент оператору за госпитализацию */
     public const OPERATOR_PERCENT_HOSPITAL = 'operator_percent_hospital';
+    /** Процент оператору за кодировку */
     public const OPERATOR_PERCENT_CODING = 'operator_percent_coding';
+    /** Процент оператору за стационар */
     public const OPERATOR_PERCENT_STATIONARY = 'operator_percent_stationary';
 
     #[ORM\Id]

@@ -86,6 +86,8 @@ class Fetcher
                 'codingRevenue' => 0,               //Кодирование выручка
                 'codingCount' => 0,                 //Кодирование количество
                 'codingSalary' => 'n/a',            //Кодирование зарплата
+
+                'hospitalCount' => 0,            //Количество госпитализаций
             ];
         }
 
@@ -206,6 +208,8 @@ class Fetcher
             if ($service->getService()?->getCategory()?->getId() === 3){
                 $result[$adminId]['codingCount'] += 1;
                 $result[$adminId]['codingRevenue'] += $service->getPrice();
+            }elseif ($service->getService()->getType() === 'hospital'){
+                $result[$adminId]['hospitalCount'] += 1;
             }
             break;
         }
