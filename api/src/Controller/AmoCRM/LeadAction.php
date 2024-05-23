@@ -149,7 +149,14 @@ class LeadAction extends AbstractController
             throw new DomainException('Не указан контакт');
         }
 
-        $contact = $this->client->contacts()->getOne($lead->getMainContact()->getId());
+        try {
+            $contact = $this->client->contacts()->getOne($lead->getMainContact()->getId());
+        }catch (AmoCRMApiException $e) {
+            throw new DomainException(
+                'Не удалось получить контакт id' . $lead->getMainContact()->getId() . ' ' . $e->getMessage()
+            );
+        }
+
 
         if (!$contact) {
             throw new DomainException('Не найден контакт');
