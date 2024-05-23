@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace App\Controller\AmoCRM;
 
 use AmoCRM\Client\AmoCRMApiClient;
+use AmoCRM\Collections\NotesCollection;
+use AmoCRM\Exceptions\AmoCRMApiException;
 use AmoCRM\Filters\LeadsFilter;
+use AmoCRM\Helpers\EntityTypesInterface;
 use AmoCRM\Models\CustomFieldsValues\MultitextCustomFieldValuesModel;
 use AmoCRM\Models\CustomFieldsValues\ValueModels\BaseEnumCodeCustomFieldValueModel;
 use AmoCRM\Models\LeadModel;
+use AmoCRM\Models\NoteType\CommonNote;
 use App\Dto\Amo\Employee;
 use App\Dto\Amo\Lead;
 use App\Entity\Calling\Calling;
@@ -77,10 +81,17 @@ class LeadAction extends AbstractController
             return $this->json(null, Response::HTTP_OK);
         }
 
-        $leadDto = $this->getLeadInfo((int)$leadData['id']);
-        if (!$leadDto) {
+        try {
+            $leadDto = $this->getLeadInfo((int)$leadData['id']);
+            if (!$leadDto) {
+                $this->sendMessageToAmo((int)$leadData['id'], 'Не удалось получить информацию по лиду');
+                return $this->json(null, Response::HTTP_OK);
+            }
+        }catch (DomainException $e) {
+            $this->sendMessageToAmo((int)$leadData['id'], $e->getMessage());
             return $this->json(null, Response::HTTP_OK);
         }
+
 
         if (!$leadDto->doctor || !$leadDto->admin) {
             return $this->json(null, Response::HTTP_OK);
@@ -96,6 +107,25 @@ class LeadAction extends AbstractController
 
         return $this->json(null, Response::HTTP_OK);
     }
+
+
+    public function sendMessageToAmo($leadId, $message){
+        $notesCollection = new NotesCollection();
+        $messageNote = new CommonNote();
+        $messageNote->setEntityId( $leadId)
+            ->setText($message)
+            ->setCreatedBy(0);
+
+        $notesCollection->add($messageNote);
+
+        try {
+            $leadNotesService = $this->client->notes(EntityTypesInterface::LEADS);
+            $leadNotesService->add($notesCollection);
+        } catch (AmoCRMApiException $e) {
+        }
+    }
+
+
 
     private function getLeadInfo(int $leadId): ?Lead
     {
