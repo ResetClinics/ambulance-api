@@ -356,6 +356,20 @@ class InitCommand extends Command
             'id' => 'settings-delete',
             'description' => 'Настройки: удаление'
         ],
+
+        //профессиональные навыки
+        [
+            'id' => 'can_be-admin',
+            'description' => 'Может быть администратором бригады'
+        ],
+        [
+            'id' => 'can_be-doctor',
+            'description' => 'Может быть доктором бригады'
+        ],
+        [
+            'id' => 'can_be-driver',
+            'description' => 'Может быть водителем бригады'
+        ],
     ];
 
     public function __construct(
