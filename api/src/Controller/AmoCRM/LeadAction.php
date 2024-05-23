@@ -94,6 +94,7 @@ class LeadAction extends AbstractController
 
 
         if (!$leadDto->doctor || !$leadDto->admin) {
+            $this->sendMessageToAmo((int)$leadData['id'], 'Не удалось определить доктора и админа');
             return $this->json(null, Response::HTTP_OK);
         }
 
@@ -101,6 +102,7 @@ class LeadAction extends AbstractController
         try {
             $this->onSetTeam($leadDto);
         } catch (\Exception $e) {
+            $this->sendMessageToAmo((int)$leadData['id'], 'Ошибка добавления вызова ' . $e->getMessage());
             throw new DomainException($e->getMessage());
         }
 
