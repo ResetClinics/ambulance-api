@@ -44,14 +44,14 @@ class LeadAction extends AbstractController
     private TrackerToMkad $trackerToMkad;
 
     public function __construct(
-        private readonly Api $geocodingApi,
+        private readonly Api               $geocodingApi,
         AmoCRM                             $amoCRM,
         private readonly UserRepository    $users,
         private readonly CallingRepository $callings,
         private readonly PartnerRepository $partners,
         private readonly Flusher           $flusher,
-        CallingSender                     $sender,
-        TrackerToMkad $trackerToMkad
+        CallingSender                      $sender,
+        TrackerToMkad                      $trackerToMkad
     )
     {
         $this->client = $amoCRM->getClient();
@@ -86,7 +86,7 @@ class LeadAction extends AbstractController
             if (!$leadDto) {
                 return $this->json(null, Response::HTTP_OK);
             }
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             $this->sendMessageToAmo((int)$leadData['id'], 'Ошибка получения данных ' . $e->getMessage());
             return $this->json(null, Response::HTTP_OK);
         }
@@ -110,10 +110,11 @@ class LeadAction extends AbstractController
     }
 
 
-    public function sendMessageToAmo($leadId, $message){
+    public function sendMessageToAmo($leadId, $message)
+    {
         $notesCollection = new NotesCollection();
         $messageNote = new CommonNote();
-        $messageNote->setEntityId( $leadId)
+        $messageNote->setEntityId($leadId)
             ->setText($message)
             ->setCreatedBy(0);
 
@@ -127,10 +128,14 @@ class LeadAction extends AbstractController
     }
 
 
-
     private function getLeadInfo(int $leadId): ?Lead
     {
-        $lead = $this->client->leads()->getOne($leadId, [LeadModel::CONTACTS, LeadModel::CATALOG_ELEMENTS]);
+        try {
+            $lead = $this->client->leads()->getOne($leadId, [LeadModel::CONTACTS, LeadModel::CATALOG_ELEMENTS]);
+        } catch (AmoCRMApiException $e) {
+            throw new DomainException('Не удалось получить лид id' . $leadId . ' ' . $e->getMessage());
+        }
+
         if (!$lead) {
             throw new DomainException('Не найден лид');
         }
@@ -300,13 +305,13 @@ class LeadAction extends AbstractController
 
         }
 
-        if ($operator){
+        if ($operator) {
             $calling->setOperator($operator);
         }
 
-        if ($lead->partnerExternalId){
+        if ($lead->partnerExternalId) {
             $partner = $this->partners->findOneByExternalId($lead->partnerExternalId);
-            if (!$partner){
+            if (!$partner) {
                 $partner = new Partner();
                 $partner->setExternalId($lead->partnerExternalId);
                 $this->partners->save($partner);
@@ -347,10 +352,10 @@ class LeadAction extends AbstractController
             $calling->setDateTime(new DateTimeImmutable($lead->dateTime));
         }
 
-        if((!$calling->getLat() || !$calling->getLon()) && !empty($calling->getAddress())){
+        if ((!$calling->getLat() || !$calling->getLon()) && !empty($calling->getAddress())) {
             try {
                 $geolocation = $this->geocodingApi->getPositionByAddress($calling->getAddress());
-                if ($geolocation){
+                if ($geolocation) {
                     $calling->setLat($geolocation->getLat());
                     $calling->setLon($geolocation->getLon());
                 }
@@ -362,7 +367,8 @@ class LeadAction extends AbstractController
 
                 $calling->setMkadDistance($distance);
 
-            }catch (DomainException){}
+            } catch (DomainException) {
+            }
         }
 
         $this->flusher->flush();
