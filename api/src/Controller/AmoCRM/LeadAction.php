@@ -84,17 +84,16 @@ class LeadAction extends AbstractController
         try {
             $leadDto = $this->getLeadInfo((int)$leadData['id']);
             if (!$leadDto) {
-                $this->sendMessageToAmo((int)$leadData['id'], 'Не удалось получить информацию по лиду');
                 return $this->json(null, Response::HTTP_OK);
             }
-        }catch (DomainException $e) {
-            $this->sendMessageToAmo((int)$leadData['id'], $e->getMessage());
+        }catch (Exception $e) {
+            $this->sendMessageToAmo((int)$leadData['id'], 'Ошибка получения данных ' . $e->getMessage());
             return $this->json(null, Response::HTTP_OK);
         }
 
 
         if (!$leadDto->doctor || !$leadDto->admin) {
-            $this->sendMessageToAmo((int)$leadData['id'], 'Не удалось определить доктора и админа');
+            $this->sendMessageToAmo((int)$leadData['id'], 'Не указан доктор или администратор');
             return $this->json(null, Response::HTTP_OK);
         }
 
@@ -102,7 +101,7 @@ class LeadAction extends AbstractController
         try {
             $this->onSetTeam($leadDto);
         } catch (\Exception $e) {
-            $this->sendMessageToAmo((int)$leadData['id'], 'Ошибка добавления вызова ' . $e->getMessage());
+            $this->sendMessageToAmo((int)$leadData['id'], 'Ошибка обработки команды ' . $e->getMessage());
             throw new DomainException($e->getMessage());
         }
 
