@@ -71,9 +71,13 @@ final class SearchByPermissionsFilter extends AbstractFilter
             $queryBuilder->expr()->in($alias . '.id', $subQuery->getDQL())
         );
 
-        $queryBuilder->setParameters(array_merge(
-            $queryBuilder->getParameters()->toArray(),
-            ['permission_ids' => $value]
-        ));
+        $parameters = [];
+        foreach ($queryBuilder->getParameters() as $parameter){
+            $parameters[$parameter->getName()] = $parameter->getValue();
+        }
+
+        $parameters['permission_ids'] = $value;
+
+        $queryBuilder->setParameters($parameters);
     }
 }

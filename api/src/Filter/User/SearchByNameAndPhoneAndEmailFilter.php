@@ -49,9 +49,13 @@ final class SearchByNameAndPhoneAndEmailFilter extends AbstractFilter
             )
         );
 
-        $queryBuilder->setParameters(array_merge(
-            $queryBuilder->getParameters()->toArray(),
-            ['search' => '%' . $value . '%']
-        ));
+        $parameters = [];
+        foreach ($queryBuilder->getParameters() as $parameter){
+            $parameters[$parameter->getName()] = $parameter->getValue();
+        }
+
+        $parameters['search'] = '%' . $value . '%';
+
+        $queryBuilder->setParameters($parameters);
     }
 }
