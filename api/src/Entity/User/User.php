@@ -17,6 +17,7 @@ use App\Entity\Role\Permission;
 use App\Entity\Role\Role;
 use App\Entity\Team\Team;
 use App\Filter\User\SearchByNameAndPhoneAndEmailFilter;
+use App\Filter\User\SearchByPermissionsFilter;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -45,6 +46,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiFilter(
     SearchByNameAndPhoneAndEmailFilter::class,
     properties: ['search']
+)]
+#[ApiFilter(
+    SearchByPermissionsFilter::class,
+    properties: ['permissions']
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
