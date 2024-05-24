@@ -47,6 +47,11 @@ final class SearchByNameAndPhoneAndEmailFilter extends AbstractFilter
                 $queryBuilder->expr()->like($alias . '.name', ':search'),
                 $queryBuilder->expr()->like($alias . '.phone', ':search'),
             )
-        )->setParameter('search', '%' . $value . '%');
+        );
+
+        $queryBuilder->setParameters(array_merge(
+            $queryBuilder->getParameters()->toArray(),
+            ['search' => '%' . $value . '%']
+        ));
     }
 }
