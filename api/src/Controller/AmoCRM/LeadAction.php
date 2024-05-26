@@ -334,7 +334,14 @@ class LeadAction extends AbstractController
         }
 
         if ($lead->partnerExternalId) {
-            $partner = $this->partners->findOneByExternalId($lead->partnerExternalId);
+            try {
+                $partner = $this->partners->findOneByExternalId($lead->partnerExternalId);
+            }catch (Exception $exception) {
+                throw new DomainException(
+                    'Не найден партнер id ' . $lead->partnerExternalId . ' ' . $exception->getMessage()
+                );
+            }
+
             if (!$partner) {
                 $partner = new Partner();
                 $partner->setExternalId($lead->partnerExternalId);
