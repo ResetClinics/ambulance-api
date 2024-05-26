@@ -289,7 +289,14 @@ class LeadAction extends AbstractController
      */
     private function onSetTeam(Lead $lead): void
     {
-        $calling = $this->callings->findOneByNumber((string)$lead->id);
+        try {
+            $calling = $this->callings->findOneByNumber((string)$lead->id);
+        }catch (Exception $exception) {
+            throw new DomainException(
+                'Не найден вызов внешний id ' . $lead->id . ' ' . $exception->getMessage()
+            );
+        }
+
 
         try {
             $admin = $this->users->getByExternalId($lead->admin->getId());
