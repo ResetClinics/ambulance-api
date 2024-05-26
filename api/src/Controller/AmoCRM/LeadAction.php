@@ -314,7 +314,7 @@ class LeadAction extends AbstractController
         }
 
         try {
-            $operator = $this->users->getByExternalId($lead->operatorId);
+            $operator = $this->users->find($lead->operatorId);
         }catch (Exception $exception) {
             throw new DomainException(
                 'Ошибка определения оператора id ' . $lead->operatorId . ' ' . $exception->getMessage()
