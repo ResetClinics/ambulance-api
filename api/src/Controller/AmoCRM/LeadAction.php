@@ -300,7 +300,14 @@ class LeadAction extends AbstractController
         if (!$calling) {
             $isNew = true;
 
-            $owner = $this->callings->findOneByOwnerExternalId((string)$lead->id);
+            try {
+                $owner = $this->callings->findOneByOwnerExternalId((string)$lead->id);
+            }catch (Exception $exception) {
+                throw new DomainException(
+                    'Не найден владелец лида id ' . $lead->id . ' ' . $exception->getMessage()
+                );
+            }
+
 
             $calling = new Calling(
                 (string)$lead->id,
