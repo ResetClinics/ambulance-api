@@ -291,8 +291,21 @@ class LeadAction extends AbstractController
     {
         $calling = $this->callings->findOneByNumber((string)$lead->id);
 
-        $admin = $this->users->getByExternalId($lead->admin->getId());
-        $doctor = $this->users->getByExternalId($lead->doctor->getId());
+        try {
+            $admin = $this->users->getByExternalId($lead->admin->getId());
+        }catch (Exception $exception) {
+            throw new DomainException(
+                'Не найден админ внешний id ' . $lead->admin->getId() . ' ' . $exception->getMessage()
+            );
+        }
+        try {
+            $doctor = $this->users->getByExternalId($lead->doctor->getId());
+        }catch (Exception $exception) {
+            throw new DomainException(
+                'Не найден  врач внешний id ' . $lead->doctor->getId() . ' ' . $exception->getMessage()
+            );
+        }
+
         $operator = $this->users->find($lead->operatorId);
 
         $isNew = false;
