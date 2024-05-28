@@ -3,7 +3,6 @@
 namespace App\Controller\Partner;
 use App\Entity\Calling\Calling;
 use App\Entity\Calling\Status;
-use App\Query\PartnerReward\Fetcher;
 use App\Repository\CallingRepository;
 use DateInterval;
 use DatePeriod;
@@ -17,7 +16,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class CallsReport extends AbstractController
 {
     public function __construct(
-        private readonly Fetcher $partnerRewardFetcher,
         private readonly CallingRepository $calls
     )
     {
@@ -127,14 +125,6 @@ class CallsReport extends AbstractController
             }
 
         }
-
-
-
-        foreach ($partners as $key => $partner){
-
-        }
-
-
 
         return $this->json([
             'items' => $partners,
