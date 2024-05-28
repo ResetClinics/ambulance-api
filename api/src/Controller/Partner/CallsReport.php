@@ -42,6 +42,7 @@ class CallsReport extends AbstractController
 
         $partners = [];
 
+        $debit = 0;
         $callEntrance = 0;
         $callAccrued = 0;
         $hospitalEntrance = 0;
@@ -61,6 +62,7 @@ class CallsReport extends AbstractController
                     'id' => $call->getPartner()->getId(),
                     'name' => $call->getPartner()->getName(),
                     'calls' => [],
+                    'debit' => 0,
                     'callEntrance' => 0,
                     'callAccrued' => 0,
                     'hospitalEntrance' => 0,
@@ -72,6 +74,7 @@ class CallsReport extends AbstractController
 
             $partners[$call->getPartner()->getId()]['calls'][$call->getId()] = [
                 'name' => $call->getFio(),
+                'debit' => 0,
                 'callEntrance' => 0,
                 'callAccrued' => 0,
                 'hospitalEntrance' => 0,
@@ -122,12 +125,17 @@ class CallsReport extends AbstractController
                     $callEntrance  += $service->getPrice();
                     $callAccrued += $service->getPartnerReward();
                 }
+
+                $partners[$call->getPartner()->getId()]['calls'][$call->getId()]['debit'] = $call->getPrice();
+                $partners[$call->getPartner()->getId()]['debit'] += $call->getPrice();
+                $debit += $call->getPrice();
             }
 
         }
 
         return $this->json([
             'items' => $partners,
+            'debit' => $debit,
             'callEntrance' => $callEntrance,
             'callAccrued' => $callAccrued,
             'hospitalEntrance' => $hospitalEntrance,
