@@ -32,9 +32,9 @@ class CallsReport extends AbstractController
         $completedAtBefore = $request->query->get('completedAtBefore');
 
         $period = new DatePeriod(
-            new DateTimeImmutable($completedAtAfter),
+            new DateTimeImmutable($completedAtBefore),
             new DateInterval('P1D'),
-            new DateTimeImmutable($completedAtBefore));
+            new DateTimeImmutable($completedAtAfter));
 
 
         $calls = $this->calls->findAllByCompletedAtFromPeriod($period);
