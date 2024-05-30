@@ -172,8 +172,8 @@ class CallsReport extends AbstractController
                 'hospitalAccrued' => 0,
                 'stationaryEntrance' => $hospital->getAmount(),
                 'stationaryAccrued' => $reward,
-                'hospitalized' => $hospital->getHospitalizedAt(),
-                'discharged' => $hospital->getDischargedAt(),
+                'hospitalized' => $hospital->getHospitalized()->format('d.m.Y'),
+                'discharged' => $hospital->getDischarged()->format('d.m.Y'),
             ];
 
             $partners[$hospital->getPartner()->getId()]['stationaryEntrance']
