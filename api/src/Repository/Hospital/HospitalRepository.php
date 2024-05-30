@@ -3,6 +3,7 @@
 namespace App\Repository\Hospital;
 
 use App\Entity\Hospital\Hospital;
+use DatePeriod;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
@@ -90,5 +91,20 @@ class HospitalRepository extends ServiceEntityRepository
             ->orderBy('h.hospitalizedAt')
             ->getQuery()
             ->getResult();
+    }
+
+
+    public function findAllByDischargedAtFromPeriod(DatePeriod $period): array
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        return $qb
+            ->andWhere('c.dischargedAt >= :start')
+            ->andWhere('c.dischargedAt < :end')
+            ->setParameter('start', $period->getStartDate())
+            ->setParameter('end', $period->getEndDate())
+            ->getQuery()
+            ->getResult()
+            ;
     }
 }
