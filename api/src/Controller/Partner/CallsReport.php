@@ -123,7 +123,7 @@ class CallsReport extends AbstractController
                     $callAccrued += $service->getPartnerReward();
                 }
 
-                $partners[$call->getPartner()->getId()]['calls'][$call->getId()]['debit'] = $call->getPrice();
+                $partners[$call->getPartner()->getId()]['calls'][$id]['debit'] = $call->getPrice();
                 $partners[$call->getPartner()->getId()]['debit'] += $call->getPrice();
                 $debit += $call->getPrice();
             }
