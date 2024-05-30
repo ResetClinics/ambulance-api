@@ -184,8 +184,8 @@ class CallsReport extends AbstractController
             $stationaryEntrance  += $hospital->getAmount();
             $stationaryAccrued += $reward;
 
-            $partners[$call->getPartner()->getId()]['calls'][$id]['debit'] = $hospital->getAmount();
-            $partners[$call->getPartner()->getId()]['debit'] += $hospital->getAmount();
+            $partners[$hospital->getPartner()->getId()]['calls'][$id]['debit'] = $hospital->getAmount();
+            $partners[$hospital->getPartner()->getId()]['debit'] += $hospital->getAmount();
             $debit += $hospital->getAmount();
 
         }
