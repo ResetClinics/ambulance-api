@@ -151,7 +151,7 @@ class LeadAction extends AbstractController
 
         try {
             $contact = $this->client->contacts()->getOne($lead->getMainContact()->getId());
-        }catch (AmoCRMApiException $e) {
+        } catch (AmoCRMApiException $e) {
             throw new DomainException(
                 'Не удалось получить контакт id' . $lead->getMainContact()->getId() . ' ' . $e->getMessage()
             );
@@ -177,7 +177,7 @@ class LeadAction extends AbstractController
                     $phone = $field->getValues()?->first()->getValue();
                 }
             }
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             throw new DomainException('Ошибка получения телефона ' . $e->getMessage());
         }
 
@@ -261,34 +261,35 @@ class LeadAction extends AbstractController
                         $leadEmployee = $leadsEmployee->first();
                         $leadDto->admin = new Employee($leadEmployee->getId(), $leadEmployee->getName(), 'ROLE_ADMIN');
                     }
-                }catch (Exception $exception) {
+                } catch (Exception $exception) {
                     throw new DomainException('Ошибка получения админа ' . $exception->getMessage());
                 }
 
-                try {
-                    if ($field->getFieldId() === 873881) {
-                        $userName = $field->getValues()?->first()->getValue();
-                        $filter = new LeadsFilter();
 
-                        $filter->setNames($userName);
+                if ($field->getFieldId() === 873881) {
+                    $userName = $field->getValues()?->first()->getValue();
+                    $filter = new LeadsFilter();
 
-                        $filter->setStatuses([[
-                            'pipeline_id' => 4105087,
-                        ]]);
+                    $filter->setNames($userName);
 
+                    $filter->setStatuses([[
+                        'pipeline_id' => 4105087,
+                    ]]);
+
+                    try {
                         $leadsEmployee = $this->client->leads()->get($filter);
                         $leadEmployee = $leadsEmployee->first();
-                        $leadDto->doctor = new Employee($leadEmployee->getId(), $leadEmployee->getName(), 'ROLE_DOCTOR');
+                    } catch (Exception $exception) {
+                        throw new DomainException('не получен доктор  ' . $userName . ' из амо ' . $exception->getMessage());
                     }
-                }catch (Exception $exception) {
-                    throw new DomainException('Ошибка получения доктора ' . $exception->getMessage());
+                    $leadDto->doctor = new Employee($leadEmployee->getId(), $leadEmployee->getName(), 'ROLE_DOCTOR');
                 }
 
+
             }
-        }catch (Exception $exception) {
+        } catch (Exception $exception) {
             throw new DomainException('Ошибка обработки данных лида ' . $exception->getMessage());
         }
-
 
 
         return $leadDto;
@@ -301,7 +302,7 @@ class LeadAction extends AbstractController
     {
         try {
             $calling = $this->callings->findOneByNumber((string)$lead->id);
-        }catch (Exception $exception) {
+        } catch (Exception $exception) {
             throw new DomainException(
                 'Не найден вызов внешний id ' . $lead->id . ' ' . $exception->getMessage()
             );
@@ -310,14 +311,14 @@ class LeadAction extends AbstractController
 
         try {
             $admin = $this->users->getByExternalId($lead->admin->getId());
-        }catch (Exception $exception) {
+        } catch (Exception $exception) {
             throw new DomainException(
                 'Не найден админ внешний id ' . $lead->admin->getId() . ' ' . $exception->getMessage()
             );
         }
         try {
             $doctor = $this->users->getByExternalId($lead->doctor->getId());
-        }catch (Exception $exception) {
+        } catch (Exception $exception) {
             throw new DomainException(
                 'Не найден  врач внешний id ' . $lead->doctor->getId() . ' ' . $exception->getMessage()
             );
@@ -325,7 +326,7 @@ class LeadAction extends AbstractController
 
         try {
             $operator = $this->users->find($lead->operatorId);
-        }catch (Exception $exception) {
+        } catch (Exception $exception) {
             throw new DomainException(
                 'Ошибка определения оператора id ' . $lead->operatorId . ' ' . $exception->getMessage()
             );
@@ -338,7 +339,7 @@ class LeadAction extends AbstractController
 
             try {
                 $owner = $this->callings->findOneByOwnerExternalId((string)$lead->id);
-            }catch (Exception $exception) {
+            } catch (Exception $exception) {
                 throw new DomainException(
                     'Не найден владелец лида id ' . $lead->id . ' ' . $exception->getMessage()
                 );
@@ -372,7 +373,7 @@ class LeadAction extends AbstractController
         if ($lead->partnerExternalId) {
             try {
                 $partner = $this->partners->findOneByExternalId($lead->partnerExternalId);
-            }catch (Exception $exception) {
+            } catch (Exception $exception) {
                 throw new DomainException(
                     'Не найден партнер id ' . $lead->partnerExternalId . ' ' . $exception->getMessage()
                 );
