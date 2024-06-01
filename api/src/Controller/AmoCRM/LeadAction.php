@@ -246,34 +246,44 @@ class LeadAction extends AbstractController
                     $leadDto->operatorId = $this->getNumberInsideBrackets($userName);
                 }
 
-                if ($field->getFieldId() === 873879) {
-                    $userName = $field->getValues()?->first()->getValue();
-                    $filter = new LeadsFilter();
+                try {
+                    if ($field->getFieldId() === 873879) {
+                        $userName = $field->getValues()?->first()->getValue();
+                        $filter = new LeadsFilter();
 
-                    $filter->setNames($userName);
+                        $filter->setNames($userName);
 
-                    $filter->setStatuses([[
-                        'pipeline_id' => 4105087,
-                    ]]);
+                        $filter->setStatuses([[
+                            'pipeline_id' => 4105087,
+                        ]]);
 
-                    $leadsEmployee = $this->client->leads()->get($filter);
-                    $leadEmployee = $leadsEmployee->first();
-                    $leadDto->admin = new Employee($leadEmployee->getId(), $leadEmployee->getName(), 'ROLE_ADMIN');
+                        $leadsEmployee = $this->client->leads()->get($filter);
+                        $leadEmployee = $leadsEmployee->first();
+                        $leadDto->admin = new Employee($leadEmployee->getId(), $leadEmployee->getName(), 'ROLE_ADMIN');
+                    }
+                }catch (Exception $exception) {
+                    throw new DomainException('Ошибка получения админа ' . $exception->getMessage());
                 }
-                if ($field->getFieldId() === 873881) {
-                    $userName = $field->getValues()?->first()->getValue();
-                    $filter = new LeadsFilter();
 
-                    $filter->setNames($userName);
+                try {
+                    if ($field->getFieldId() === 873881) {
+                        $userName = $field->getValues()?->first()->getValue();
+                        $filter = new LeadsFilter();
 
-                    $filter->setStatuses([[
-                        'pipeline_id' => 4105087,
-                    ]]);
+                        $filter->setNames($userName);
 
-                    $leadsEmployee = $this->client->leads()->get($filter);
-                    $leadEmployee = $leadsEmployee->first();
-                    $leadDto->doctor = new Employee($leadEmployee->getId(), $leadEmployee->getName(), 'ROLE_DOCTOR');
+                        $filter->setStatuses([[
+                            'pipeline_id' => 4105087,
+                        ]]);
+
+                        $leadsEmployee = $this->client->leads()->get($filter);
+                        $leadEmployee = $leadsEmployee->first();
+                        $leadDto->doctor = new Employee($leadEmployee->getId(), $leadEmployee->getName(), 'ROLE_DOCTOR');
+                    }
+                }catch (Exception $exception) {
+                    throw new DomainException('Ошибка получения доктора ' . $exception->getMessage());
                 }
+
             }
         }catch (Exception $exception) {
             throw new DomainException('Ошибка обработки данных лида ' . $exception->getMessage());
