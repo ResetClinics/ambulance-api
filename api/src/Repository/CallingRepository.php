@@ -127,6 +127,18 @@ class CallingRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findAllByClientNull(): array
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        return $qb
+            ->andWhere('c.client IS NULL')
+            ->setMaxResults(100)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     public function findAllWhoHasOperator()
     {
         return $this->createQueryBuilder('c')

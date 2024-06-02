@@ -28,6 +28,7 @@ use App\Controller\Calling\HospitalizationWithTherapyAction;
 use App\Controller\Calling\RecalculateOperatorReward;
 use App\Controller\Calling\RejectAction;
 use App\Controller\Calling\RepeatAction;
+use App\Entity\Client;
 use App\Entity\Partner;
 use App\Entity\User\User;
 use App\Filter\Call\EmployeeFilter;
@@ -340,6 +341,11 @@ class Calling
     #[ORM\Embedded(class: OperatorReward::class)]
     #[Groups(['calling:read'])]
     private OperatorReward $operatorReward;
+
+    #[ORM\ManyToOne(inversedBy: 'callings')]
+    #[Groups(['calling:read', 'calling:write'])]
+    #[ApiFilter(SearchFilter::class, properties: ['operator.id' => 'exact'])]
+    private ?Client $client = null;
 
     public function __construct(
         string  $numberCalling,
@@ -1090,5 +1096,17 @@ class Calling
     public function setOperatorReward(OperatorReward $operatorReward): void
     {
         $this->operatorReward = $operatorReward;
+    }
+
+    public function getClient(): ?Client
+    {
+        return $this->client;
+    }
+
+    public function setClient(?Client $client): self
+    {
+        $this->client = $client;
+
+        return $this;
     }
 }

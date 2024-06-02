@@ -17,9 +17,11 @@ use App\Dto\Amo\Employee;
 use App\Dto\Amo\Lead;
 use App\Entity\Calling\Calling;
 use App\Entity\Calling\Status;
+use App\Entity\Client;
 use App\Entity\Partner;
 use App\Flusher;
 use App\Repository\CallingRepository;
+use App\Repository\ClientRepository;
 use App\Repository\PartnerRepository;
 use App\Repository\UserRepository;
 use App\Services\AmoCRM;
@@ -49,6 +51,7 @@ class LeadAction extends AbstractController
         private readonly UserRepository    $users,
         private readonly CallingRepository $callings,
         private readonly PartnerRepository $partners,
+        private readonly ClientRepository $clients,
         private readonly Flusher           $flusher,
         CallingSender                      $sender,
         TrackerToMkad                      $trackerToMkad
@@ -346,6 +349,16 @@ class LeadAction extends AbstractController
             }
 
 
+            $client = $this->clients->findByPhone($lead->clientPhone);
+
+            if (!$client){
+                $client = new Client(
+                    $lead->clientPhone,
+                    $lead->clientName
+                );
+                $this->clients->save($client, true);
+            }
+
             $calling = new Calling(
                 (string)$lead->id,
                 $lead->name,
@@ -356,6 +369,8 @@ class LeadAction extends AbstractController
                 $admin,
                 $doctor
             );
+
+            $calling->setClient($client);
 
             $calling->setOwner($owner);
 
