@@ -133,7 +133,7 @@ class CallingRepository extends ServiceEntityRepository
 
         return $qb
             ->andWhere('c.client IS NULL')
-            ->setMaxResults(100)
+            ->setMaxResults(1000)
             ->getQuery()
             ->getResult()
             ;
