@@ -32,7 +32,12 @@ class InitClientsCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        foreach ($this->callings->findAllByClientNull() as $calling){
+        $callings = $this->callings->findAllByClientNull();
+        if (count($callings) === 0){
+            $io->success('Больше нет вызовов для инициализации.');
+        }
+
+        foreach ($callings as $calling){
             $client = $this->clients->findByPhone($calling->getPhone());
 
             if (!$client){
