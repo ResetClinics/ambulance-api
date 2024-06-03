@@ -21,11 +21,11 @@ class Client
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['client:read'])]
+    #[Groups(['client:read', 'calling:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 11, nullable: true)]
-    #[Groups(['client:read', 'client:write'])]
+    #[Groups(['client:read', 'client:write', 'calling:read'])]
     #[Assert\Regex(
         pattern: '/\d{11}/',
         message: 'Номер телефона должен состоять из 11 цифр.'
@@ -33,7 +33,7 @@ class Client
     private ?string $phone = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['client:read', 'client:write'])]
+    #[Groups(['client:read', 'client:write', 'calling:read'])]
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Calling::class)]
