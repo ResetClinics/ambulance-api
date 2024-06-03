@@ -108,7 +108,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[Post(uriTemplate: '/callings/{id}/hospitalization-without-therapy', controller: HospitalizationWithoutTherapyAction::class)]
 #[Post(uriTemplate: '/callings/{id}/repeat', controller: RepeatAction::class)]
 #[Post(uriTemplate: '/callings/{id}/reject',controller: RejectAction::class)]
-#[ApiFilter(OrderFilter::class, properties: ['createdAt', 'updatedAt'], arguments: ['orderParameterName' => 'order'])]
+#[ApiFilter(OrderFilter::class, properties: ['createdAt', 'updatedAt', 'completedAt'], arguments: ['orderParameterName' => 'order'])]
 #[ApiFilter(
     DateFilter::class,
     properties: [
