@@ -344,7 +344,7 @@ class Calling
 
     #[ORM\ManyToOne(inversedBy: 'callings')]
     #[Groups(['calling:read', 'calling:write'])]
-    #[ApiFilter(SearchFilter::class, properties: ['operator.id' => 'exact'])]
+    #[ApiFilter(SearchFilter::class, properties: ['client.id' => 'exact'])]
     private ?Client $client = null;
 
     public function __construct(
