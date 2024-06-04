@@ -52,6 +52,7 @@ security:
         - { path: ^/api/callings, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/medicines, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/teams, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/med_teams/report-user-list, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/users, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/roles, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/permissions, roles: IS_AUTHENTICATED_FULLY }
