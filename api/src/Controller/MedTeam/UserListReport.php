@@ -28,6 +28,10 @@ class UserListReport extends AbstractController
         $start = $request->query->get('start');
         $end = $request->query->get('end');
 
+        if (!$start || !$end){
+            return $this->json([]);
+        }
+
         $teams = $this->teams->findByPlanned(
             (new DateTimeImmutable($start))->setTime(0, 0),
             (new DateTimeImmutable($end))->setTime(23, 59, 59)
@@ -39,7 +43,7 @@ class UserListReport extends AbstractController
         foreach ($teams as $team){
            if ($team->getAdmin()){
                $result[] = [
-                   'data' => $team->getPlannedStartAt()->format('n/j/y'),
+                   'data' => $team->getPlannedStartAt()->format('j/n/y'),
                    'team' => $team->getPhone()?->getId() ?: '',
                    'start' => $team->getPlannedStartAt()?->format('H:i') ?: '',
                    'end' => $team->getPlannedFinishAt()?->format('H:i') ?: '',
@@ -50,7 +54,7 @@ class UserListReport extends AbstractController
            }
             if ($team->getDoctor()){
                 $result[] = [
-                    'data' => $team->getPlannedStartAt()->format('n/j/y'),
+                    'data' => $team->getPlannedStartAt()->format('j/n/y'),
                     'team' => $team->getPhone()?->getId() ?: '',
                     'start' => $team->getPlannedStartAt()?->format('H:i') ?: '',
                     'end' => $team->getPlannedFinishAt()?->format('H:i') ?: '',
@@ -61,7 +65,7 @@ class UserListReport extends AbstractController
             }
             if ($team->getDriver()){
                 $result[] = [
-                    'data' => $team->getPlannedStartAt()->format('n/j/y'),
+                    'data' => $team->getPlannedStartAt()->format('j/n/y'),
                     'team' => $team->getPhone()?->getId() ?: '',
                     'start' => $team->getPlannedStartAt()?->format('H:i') ?: '',
                     'end' => $team->getPlannedFinishAt()?->format('H:i') ?: '',
