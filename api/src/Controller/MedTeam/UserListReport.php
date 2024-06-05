@@ -32,7 +32,7 @@ class UserListReport extends AbstractController
             return $this->json([]);
         }
 
-        $teams = $this->teams->findByPlanned(
+        $teams = $this->teams->findForReportByPlanned(
             (new DateTimeImmutable($start))->setTime(0, 0),
             (new DateTimeImmutable($end))->setTime(23, 59, 59)
         );
@@ -43,7 +43,7 @@ class UserListReport extends AbstractController
         foreach ($teams as $team){
            if ($team->getAdmin()){
                $result[] = [
-                   'data' => $team->getPlannedStartAt()->format('j/n/y'),
+                   'data' => $team->getPlannedStartAt()->format('d.m.y'),
                    'team' => $team->getPhone()?->getId() ?: '',
                    'start' => $team->getPlannedStartAt()?->format('H:i') ?: '',
                    'end' => $team->getPlannedFinishAt()?->format('H:i') ?: '',

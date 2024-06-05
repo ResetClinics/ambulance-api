@@ -71,4 +71,17 @@ class MedTeamRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+
+    public function findForReportByPlanned(DateTimeInterface $startDate, DateTimeInterface $endDate)
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.plannedStartAt >= :plannedStartAtAfter')
+            ->andWhere('t.plannedStartAt < :plannedStartAtBefore')
+            ->setParameter('plannedStartAtAfter', $startDate)
+            ->setParameter('plannedStartAtBefore', $endDate)
+            ->orderBy('t.plannedStartAt')
+            ->getQuery()
+            ->getResult();
+    }
 }
