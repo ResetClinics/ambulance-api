@@ -54,7 +54,7 @@ class UserListReport extends AbstractController
            }
             if ($team->getDoctor()){
                 $result[] = [
-                    'data' => $team->getPlannedStartAt()->format('j/n/y'),
+                    'data' => $team->getPlannedStartAt()->format('d.m.y'),
                     'team' => $team->getPhone()?->getId() ?: '',
                     'start' => $team->getPlannedStartAt()?->format('H:i') ?: '',
                     'end' => $team->getPlannedFinishAt()?->format('H:i') ?: '',
@@ -65,7 +65,7 @@ class UserListReport extends AbstractController
             }
             if ($team->getDriver()){
                 $result[] = [
-                    'data' => $team->getPlannedStartAt()->format('j/n/y'),
+                    'data' => $team->getPlannedStartAt()->format('d.m.y'),
                     'team' => $team->getPhone()?->getId() ?: '',
                     'start' => $team->getPlannedStartAt()?->format('H:i') ?: '',
                     'end' => $team->getPlannedFinishAt()?->format('H:i') ?: '',
