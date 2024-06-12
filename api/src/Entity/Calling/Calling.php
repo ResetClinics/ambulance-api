@@ -347,6 +347,14 @@ class Calling
     #[ApiFilter(SearchFilter::class, properties: ['client.id' => 'exact'])]
     private ?Client $client = null;
 
+    #[ORM\Column(nullable: false, options: ['default' => 0])]
+    #[Groups(['calling:read', 'calling:write'])]
+    private bool $noBusinessCards;
+
+    #[ORM\Column(nullable: false, options: ['default' => 0])]
+    #[Groups(['calling:read', 'calling:write'])]
+    private bool $partnerHospitalization;
+
     public function __construct(
         string  $numberCalling,
         string  $title,
@@ -374,6 +382,8 @@ class Calling
         $this->lon = null;
         $this->services = new ArrayCollection();
         $this->operatorReward = new OperatorReward(0,0,0,0);
+        $this->noBusinessCards = false;
+        $this->partnerHospitalization = false;
     }
 
 
@@ -1108,5 +1118,42 @@ class Calling
         $this->client = $client;
 
         return $this;
+    }
+
+    public function isNoBusinessCards(): bool
+    {
+        return $this->noBusinessCards;
+    }
+
+    public function setNoBusinessCards(bool $noBusinessCards): self
+    {
+        $this->noBusinessCards = $noBusinessCards;
+
+        return $this;
+    }
+
+
+    #[Groups(['calling:read'])]
+    public function isCurrentNoBusinessCards(): bool
+    {
+        return $this->partner?->isNoBusinessCards() ?:$this->noBusinessCards;
+    }
+
+    public function isPartnerHospitalization(): bool
+    {
+        return $this->partnerHospitalization;
+    }
+
+    public function setPartnerHospitalization(bool $partnerHospitalization): self
+    {
+        $this->partnerHospitalization = $partnerHospitalization;
+
+        return $this;
+    }
+
+    #[Groups(['calling:read'])]
+    public function isCurrentPartnerHospitalization(): bool
+    {
+        return $this->partner?->isPartnerHospitalization() ?:$this->partnerHospitalization;
     }
 }

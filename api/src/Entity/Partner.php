@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
@@ -83,10 +82,20 @@ class Partner
     #[Groups(['partner:item:read', 'partner:write'])]
     private ?string $whatsappGroup = null;
 
+    #[ORM\Column(nullable: false, options: ['default' => 0])]
+    #[Groups(['partner:read', 'partner:write'])]
+    private bool $noBusinessCards;
+
+    #[ORM\Column(nullable: false, options: ['default' => 0])]
+    #[Groups(['partner:read', 'partner:write'])]
+    private bool $partnerHospitalization;
+
     public function __construct()
     {
         $this->callings = new ArrayCollection();
         $this->agreements = new ArrayCollection();
+        $this->noBusinessCards = false;
+        $this->partnerHospitalization = false;
     }
 
     public function getId(): ?int
@@ -239,6 +248,30 @@ class Partner
     public function setWhatsappGroup(?string $whatsappGroup): self
     {
         $this->whatsappGroup = $whatsappGroup;
+
+        return $this;
+    }
+
+    public function isNoBusinessCards(): bool
+    {
+        return $this->noBusinessCards;
+    }
+
+    public function setNoBusinessCards(bool $noBusinessCards): self
+    {
+        $this->noBusinessCards = $noBusinessCards;
+
+        return $this;
+    }
+
+    public function isPartnerHospitalization(): bool
+    {
+        return $this->partnerHospitalization;
+    }
+
+    public function setPartnerHospitalization(bool $partnerHospitalization): self
+    {
+        $this->partnerHospitalization = $partnerHospitalization;
 
         return $this;
     }
