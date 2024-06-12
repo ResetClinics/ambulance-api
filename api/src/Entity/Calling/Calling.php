@@ -355,6 +355,10 @@ class Calling
     #[Groups(['calling:read', 'calling:write'])]
     private bool $partnerHospitalization;
 
+    #[ORM\Embedded(class: TransportCharge::class)]
+    #[Groups(['calling:read', 'calling:write'])]
+    private TransportCharge $transportCharge;
+
     public function __construct(
         string  $numberCalling,
         string  $title,
@@ -384,6 +388,7 @@ class Calling
         $this->operatorReward = new OperatorReward(0,0,0,0);
         $this->noBusinessCards = false;
         $this->partnerHospitalization = false;
+        $this->transportCharge = new TransportCharge();
     }
 
 
@@ -1155,5 +1160,15 @@ class Calling
     public function isCurrentPartnerHospitalization(): bool
     {
         return $this->partner?->isPartnerHospitalization() ?:$this->partnerHospitalization;
+    }
+
+    public function getTransportCharge(): TransportCharge
+    {
+        return $this->transportCharge;
+    }
+
+    public function setTransportCharge(TransportCharge $transportCharge): void
+    {
+        $this->transportCharge = $transportCharge;
     }
 }
