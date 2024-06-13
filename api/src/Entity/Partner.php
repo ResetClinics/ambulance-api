@@ -90,12 +90,17 @@ class Partner
     #[Groups(['partner:read', 'partner:write'])]
     private bool $partnerHospitalization;
 
+    #[ORM\Column(nullable: false, options: ['default' => 0])]
+    #[Groups(['partner:read', 'partner:write'])]
+    private bool $our;
+
     public function __construct()
     {
         $this->callings = new ArrayCollection();
         $this->agreements = new ArrayCollection();
         $this->noBusinessCards = false;
         $this->partnerHospitalization = false;
+        $this->our = false;
     }
 
     public function getId(): ?int
@@ -272,6 +277,18 @@ class Partner
     public function setPartnerHospitalization(bool $partnerHospitalization): self
     {
         $this->partnerHospitalization = $partnerHospitalization;
+
+        return $this;
+    }
+
+    public function isOur(): bool
+    {
+        return $this->our;
+    }
+
+    public function setOur(bool $our): self
+    {
+        $this->our = $our;
 
         return $this;
     }
