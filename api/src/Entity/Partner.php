@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
@@ -84,14 +85,17 @@ class Partner
 
     #[ORM\Column(nullable: false, options: ['default' => 0])]
     #[Groups(['partner:read', 'partner:write'])]
+    #[ApiFilter(BooleanFilter::class)]
     private bool $noBusinessCards;
 
     #[ORM\Column(nullable: false, options: ['default' => 0])]
     #[Groups(['partner:read', 'partner:write'])]
+    #[ApiFilter(BooleanFilter::class)]
     private bool $partnerHospitalization;
 
     #[ORM\Column(nullable: false, options: ['default' => 0])]
     #[Groups(['partner:read', 'partner:write'])]
+    #[ApiFilter(BooleanFilter::class)]
     private bool $our;
 
     public function __construct()
