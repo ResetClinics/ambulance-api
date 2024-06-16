@@ -19,6 +19,7 @@ use App\Entity\Base;
 use App\Entity\Car;
 use App\Entity\User\User;
 use App\Repository\MedTeam\MedTeamRepository;
+use App\State\MedTeam\PostProcessor;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -35,7 +36,9 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Get(),
         new Put(),
         new Delete(),
-        new Patch(),
+        new Patch(
+            processor: PostProcessor::class
+        ),
         new Post(
             uriTemplate: 'med_teams/{id}/send-sms',
             controller: SendSms::class,

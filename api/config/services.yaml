@@ -47,3 +47,7 @@ services:
     App\State\Call\PostProcessor:
         bind:
             $processor: '@api_platform.doctrine.orm.state.persist_processor'
+
+    App\State\MedTeam\PostProcessor:
+        bind:
+            $processor: '@api_platform.doctrine.orm.state.persist_processor'
