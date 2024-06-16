@@ -43,3 +43,7 @@ services:
     App\State\AdministratorReport\PostProcessor:
         bind:
             $processor: '@api_platform.doctrine.orm.state.persist_processor'
+
+    App\State\Call\PostProcessor:
+        bind:
+            $processor: '@api_platform.doctrine.orm.state.persist_processor'
