@@ -84,14 +84,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
                     'partner:item:read',
                     'service:item:read',
                     'media_object:read',
-                    'media_object:write'
                 ]
             ],
             processor: PostProcessor::class
         ),
     ],
     normalizationContext: ['groups' => ['calling:read',  'partner:item:read', 'service:item:read', 'user:item:read']],
-    denormalizationContext: ['groups' => ['calling:write']],
+    denormalizationContext: ['groups' => ['calling:write','media_object:write']],
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
 )]
