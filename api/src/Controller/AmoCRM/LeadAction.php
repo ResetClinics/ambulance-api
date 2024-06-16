@@ -208,6 +208,10 @@ class LeadAction extends AbstractController
                     $leadDto->address = $field->getValues()?->first()->getValue();
                 }
 
+                if ($field->getFieldId() === 968865) {
+                    $leadDto->addressInfo = $field->getValues()?->first()->getValue();
+                }
+
                 if ($field->getFieldId() === 875863) {
                     $leadDto->team = $field->getValues()?->first()->getValue();
                 }
@@ -408,6 +412,7 @@ class LeadAction extends AbstractController
         $calling->setName($lead->clientName);
         $calling->setPhone($lead->clientPhone);
         $calling->setAddress($lead->address);
+        $calling->setAddressInfo($lead->addressInfo);
         $calling->setDescription($lead->description ?: '');
         $calling->setNosology($lead->nosology);
         //$calling->setAge($lead->age);

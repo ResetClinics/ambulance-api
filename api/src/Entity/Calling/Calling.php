@@ -367,6 +367,9 @@ class Calling
     #[Groups(['calling:read', 'calling:write'])]
     private Collection $images;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $addressInfo = null;
+
     public function __construct(
         string  $numberCalling,
         string  $title,
@@ -1188,6 +1191,18 @@ class Calling
     public function removeImage(MediaObject $mediaObject): self
     {
         $this->images->removeElement($mediaObject);
+
+        return $this;
+    }
+
+    public function getAddressInfo(): ?string
+    {
+        return $this->addressInfo;
+    }
+
+    public function setAddressInfo(?string $addressInfo): self
+    {
+        $this->addressInfo = $addressInfo;
 
         return $this;
     }

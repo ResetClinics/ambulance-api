@@ -12,6 +12,7 @@ class Lead
     public ?string $numberCalling = null;
     public ?string $dateTime = null;
     public ?string $address = null;
+    public ?string $addressInfo = null;
     public ?string $team = null;
     public ?string $nosology = null;
     public ?string $age = null;
@@ -25,6 +26,7 @@ class Lead
     public ?Employee $admin = null;
     public ?Employee $doctor = null;
     public ?int $operatorId = null;
+
 
 
     public function __construct(int $id, string $clientName, string $clientPhone)
