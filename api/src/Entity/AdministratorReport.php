@@ -8,20 +8,38 @@ use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Entity\MedTeam\MedTeam;
 use App\Repository\AdministratorReportRepository;
+use App\State\AdministratorReport\PostProcessor;
 use DateTimeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Blameable\Traits\BlameableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AdministratorReportRepository::class)]
 #[ORM\Table(name: 'administrator_reports')]
 #[ApiResource(
-    normalizationContext: ['groups' => ['administrator_report:read']],
-    denormalizationContext: ['groups' => ['administrator_report:write']],
+    operations: [
+        new GetCollection(),
+        new Post(
+            processor: PostProcessor::class
+        ),
+        new Get(),
+        new Put(
+            processor: PostProcessor::class
+        ),
+        new Delete(),
+    ],
+    normalizationContext: ['groups' => ['administrator_report:read', 'media_object:read']],
+    denormalizationContext: ['groups' => ['administrator_report:write', 'media_object:write']],
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
 )]
@@ -48,20 +66,49 @@ class AdministratorReport
 
     #[ORM\ManyToOne]
     #[Groups(['administrator_report:read', 'administrator_report:write'])]
-    #[Assert\NotBlank]
+   // #[Assert\NotBlank]
     private ?MedTeam $team = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['administrator_report:read', 'administrator_report:write'])]
     private ?int $mileage = null;
 
+    #[ORM\ManyToMany(targetEntity: MediaObject::class, cascade: ['persist'])]
+    #[ORM\JoinTable(name: 'administrator_reports_mileage_receipts')]
+    #[ORM\JoinColumn(name: 'administrator_report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'media_object_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[Groups(['administrator_report:read', 'administrator_report:write'])]
+    private Collection $mileageReceipts;
+
     #[ORM\Column(nullable: true)]
     #[Groups(['administrator_report:read', 'administrator_report:write'])]
     private ?int $toolRoad = null;
 
+    #[ORM\ManyToMany(targetEntity: MediaObject::class, cascade: ['persist'])]
+    #[ORM\JoinTable(name: 'administrator_reports_toll_road_receipts')]
+    #[ORM\JoinColumn(name: 'administrator_report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'media_object_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[Groups(['administrator_report:read', 'administrator_report:write'])]
+    private Collection $tollRoadReceipts;
+
     #[ORM\Column(nullable: true)]
     #[Groups(['administrator_report:read', 'administrator_report:write'])]
     private ?int $parkingFees = null;
+
+    #[ORM\ManyToMany(targetEntity: MediaObject::class, cascade: ['persist'])]
+    #[ORM\JoinTable(name: 'administrator_reports_parking_fees_receipts')]
+    #[ORM\JoinColumn(name: 'administrator_report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'media_object_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[Groups(['administrator_report:read', 'administrator_report:write'])]
+    private Collection $parkingFeesReceipts;
+
+
+    public function __construct()
+    {
+        $this->mileageReceipts = new ArrayCollection();
+        $this->parkingFeesReceipts = new ArrayCollection();
+        $this->tollRoadReceipts = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -126,5 +173,78 @@ class AdministratorReport
     public function getUpdatedAt(): ?DateTimeInterface
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @return Collection<int, MediaObject>
+     */
+    public function getMileageReceipts(): Collection
+    {
+        return $this->mileageReceipts;
+    }
+
+    public function addMileageReceipt(MediaObject $mileageReceipt): self
+    {
+        if (!$this->mileageReceipts->contains($mileageReceipt)) {
+            $this->mileageReceipts->add($mileageReceipt);
+        }
+
+        return $this;
+    }
+
+    public function removeMileageReceipt(MediaObject $mileageReceipt): self
+    {
+        $this->mileageReceipts->removeElement($mileageReceipt);
+
+        return $this;
+    }
+
+
+    /**
+     * @return Collection<int, MediaObject>
+     */
+    public function getTollRoadReceipts(): Collection
+    {
+        return $this->tollRoadReceipts;
+    }
+
+    public function addTollRoadReceipt(MediaObject $toLlRoadReceipt): self
+    {
+        if (!$this->tollRoadReceipts->contains($toLlRoadReceipt)) {
+            $this->tollRoadReceipts->add($toLlRoadReceipt);
+        }
+
+        return $this;
+    }
+
+    public function removeTollRoadReceipt(MediaObject $toLlRoadReceipt): self
+    {
+        $this->tollRoadReceipts->removeElement($toLlRoadReceipt);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MediaObject>
+     */
+    public function getParkingFeesReceipts(): Collection
+    {
+        return $this->parkingFeesReceipts;
+    }
+
+    public function addParkingFeesReceipt(MediaObject $mediaObject): self
+    {
+        if (!$this->parkingFeesReceipts->contains($mediaObject)) {
+            $this->parkingFeesReceipts->add($mediaObject);
+        }
+
+        return $this;
+    }
+
+    public function removeParkingFeesReceipt(MediaObject $mediaObject): self
+    {
+        $this->parkingFeesReceipts->removeElement($mediaObject);
+
+        return $this;
     }
 }

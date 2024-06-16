@@ -29,11 +29,13 @@ use App\Controller\Calling\RecalculateOperatorReward;
 use App\Controller\Calling\RejectAction;
 use App\Controller\Calling\RepeatAction;
 use App\Entity\Client;
+use App\Entity\MediaObject;
 use App\Entity\Partner;
 use App\Entity\User\User;
 use App\Filter\Call\EmployeeFilter;
 use App\Filter\Call\SearchByFieldsFilter;
 use App\Repository\CallingRepository;
+use App\State\Call\PostProcessor;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -82,7 +84,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
                     'partner:item:read',
                     'service:item:read'
                 ]
-            ]
+            ],
+            processor: PostProcessor::class
         ),
     ],
     normalizationContext: ['groups' => ['calling:read',  'partner:item:read', 'service:item:read', 'user:item:read']],
@@ -355,6 +358,14 @@ class Calling
     #[Groups(['calling:read', 'calling:write'])]
     private bool $partnerHospitalization;
 
+
+    #[ORM\ManyToMany(targetEntity: MediaObject::class, cascade: ['persist'])]
+    #[ORM\JoinTable(name: 'calling_images')]
+    #[ORM\JoinColumn(name: 'call_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'media_object_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[Groups(['calling:read', 'calling:write'])]
+    private Collection $images;
+
     public function __construct(
         string  $numberCalling,
         string  $title,
@@ -384,6 +395,8 @@ class Calling
         $this->operatorReward = new OperatorReward(0,0,0,0);
         $this->noBusinessCards = false;
         $this->partnerHospitalization = false;
+
+        $this->images = new ArrayCollection();
     }
 
 
@@ -1155,5 +1168,26 @@ class Calling
     public function isCurrentPartnerHospitalization(): bool
     {
         return $this->partner?->isPartnerHospitalization() ?:$this->partnerHospitalization;
+    }
+
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(MediaObject $mediaObject): self
+    {
+        if (!$this->images->contains($mediaObject)) {
+            $this->images->add($mediaObject);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(MediaObject $mediaObject): self
+    {
+        $this->images->removeElement($mediaObject);
+
+        return $this;
     }
 }
