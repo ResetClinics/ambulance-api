@@ -22,6 +22,8 @@ class Lead
     public ?string $partnerExternalId = null;
     public ?string $partnerName = null;
     public bool $sendPhone = false;
+    public bool $noBusinessCards = false;
+    public bool $partnerHospitalization = false;
 
     public ?Employee $admin = null;
     public ?Employee $doctor = null;

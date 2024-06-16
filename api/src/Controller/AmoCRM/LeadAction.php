@@ -247,6 +247,15 @@ class LeadAction extends AbstractController
                     $leadDto->sendPhone = $field->getValues()?->first()->getValue();
                 }
 
+                if ($field->getFieldId() === 968691) {
+                    $leadDto->partnerHospitalization = $field->getValues()?->first()->getValue();
+                }
+
+                if ($field->getFieldId() === 968867) {
+                    $leadDto->noBusinessCards = $field->getValues()?->first()->getValue();
+                }
+
+
                 if ($field->getFieldId() === 966613) {
                     $userName = $field->getValues()?->first()->getValue();
 
@@ -420,6 +429,8 @@ class LeadAction extends AbstractController
         $calling->setLeadType($lead->leadType);
         $calling->setPartnerName($lead->partnerName);
         $calling->setSendPhone($lead->sendPhone);
+        $calling->setPartnerHospitalization($lead->partnerHospitalization);
+        $calling->setNoBusinessCards($lead->noBusinessCards);
 
         $calling->setAdmin($admin);
         $calling->setDoctor($doctor);
