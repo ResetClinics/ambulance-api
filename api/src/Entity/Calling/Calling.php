@@ -82,7 +82,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
                     'calling:item:read',
                     'calling:detail:read',
                     'partner:item:read',
-                    'service:item:read'
+                    'service:item:read',
+                    'media_object:read',
+                    'media_object:write'
                 ]
             ],
             processor: PostProcessor::class
