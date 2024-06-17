@@ -5,6 +5,7 @@ namespace App\EventSubscriber;
 use ApiPlatform\Doctrine\Orm\Paginator;
 use ApiPlatform\Symfony\EventListener\EventPriorities;
 
+use App\Entity\AdministratorReport;
 use App\Entity\Calling\Calling;
 use App\Entity\Hospital\Clinic;
 use App\Entity\Hospital\Hospital;
@@ -58,6 +59,7 @@ class PaginateJsonSubscriber implements EventSubscriberInterface
             $apiResourceClass !== Service::class &&
             $apiResourceClass !== Hospital::class &&
             $apiResourceClass !== Clinic::class &&
+            $apiResourceClass !== AdministratorReport::class &&
             $apiResourceClass !== PaymentSetting::class
         ) {
             return;

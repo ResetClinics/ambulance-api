@@ -65,24 +65,24 @@ class MedTeam
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['med-team:read'])]
+    #[Groups(['med-team:read', 'administrator_report:read'])]
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Groups(['med-team:read', 'med-team:write'])]
+    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read'])]
     #[Assert\NotNull]
     private ?DateTimeImmutable $plannedStartAt = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['med-team:read', 'med-team:write'])]
+    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read'])]
     private ?DateTimeImmutable $startedAt = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['med-team:read', 'med-team:write'])]
+    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read'])]
     private ?DateTimeImmutable $completedAt = null;
 
     #[ORM\Column(length: 32)]
-    #[Groups(['med-team:read', 'med-team:write'])]
+    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read'])]
     #[Assert\Choice(choices: [
         'draft',
         'scheduled',
@@ -94,17 +94,17 @@ class MedTeam
     private string $status = 'scheduled';
 
     #[ORM\ManyToOne]
-    #[Groups(['med-team:read', 'med-team:write'])]
+    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:read'])]
     #[ApiFilter(SearchFilter::class, properties: ['admin.id' => 'exact'])]
     private ?User $admin = null;
 
     #[ORM\ManyToOne]
-    #[Groups(['med-team:read', 'med-team:write'])]
+    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read'])]
     #[ApiFilter(SearchFilter::class, properties: ['doctor.id' => 'exact'])]
     private ?User $doctor = null;
 
     #[ORM\ManyToOne]
-    #[Groups(['med-team:read', 'med-team:write'])]
+    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read'])]
     private ?Phone $phone = null;
 
     #[ORM\Column(nullable: true)]
@@ -112,11 +112,11 @@ class MedTeam
     private ?DateTimeImmutable $plannedFinishAt = null;
 
     #[ORM\ManyToOne]
-    #[Groups(['med-team:read', 'med-team:write'])]
+    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read'])]
     private ?Base $base = null;
 
     #[ORM\ManyToOne]
-    #[Groups(['med-team:read', 'med-team:write'])]
+    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read'])]
     private ?Car $car = null;
 
     #[ORM\OneToMany(mappedBy: 'medTeam', targetEntity: Location::class)]
@@ -124,15 +124,15 @@ class MedTeam
     private Collection $locations;
 
     #[ORM\ManyToOne]
-    #[Groups(['med-team:read', 'med-team:write'])]
+    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read'])]
     private ?User $driver = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['med-team:read', 'med-team:write'])]
+    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read'])]
     private ?DateTimeImmutable $plannedDutyStartAt = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['med-team:read', 'med-team:write'])]
+    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read'])]
     private ?DateTimeImmutable $plannedDutyFinishAt = null;
 
     #[Assert\Choice(choices: [

@@ -22,7 +22,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Blameable\Traits\BlameableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Serializer\Annotation\Context;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
 #[ORM\Entity(repositoryClass: AdministratorReportRepository::class)]
 #[ORM\Table(name: 'administrator_reports')]
@@ -32,13 +34,23 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Post(
             processor: PostProcessor::class
         ),
-        new Get(),
+        new Get(
+            normalizationContext: ['groups' => [
+                'administrator_report:read',
+                'administrator_report:detail:read',
+                'media_object:read',
+                'user:item:read',
+                'phone:read',
+                'car:read',
+                'base:read'
+            ]],
+        ),
         new Put(
             processor: PostProcessor::class
         ),
         new Delete(),
     ],
-    normalizationContext: ['groups' => ['administrator_report:read', 'media_object:read']],
+    normalizationContext: ['groups' => ['administrator_report:read', 'media_object:read', 'user:item:read']],
     denormalizationContext: ['groups' => ['administrator_report:write', 'media_object:write']],
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
@@ -77,7 +89,7 @@ class AdministratorReport
     #[ORM\JoinTable(name: 'administrator_reports_mileage_receipts')]
     #[ORM\JoinColumn(name: 'administrator_report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'media_object_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[Groups(['administrator_report:read', 'administrator_report:write'])]
+    #[Groups(['administrator_report:detail:read', 'administrator_report:write'])]
     private Collection $mileageReceipts;
 
     #[ORM\Column(nullable: true)]
@@ -88,7 +100,7 @@ class AdministratorReport
     #[ORM\JoinTable(name: 'administrator_reports_toll_road_receipts')]
     #[ORM\JoinColumn(name: 'administrator_report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'media_object_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[Groups(['administrator_report:read', 'administrator_report:write'])]
+    #[Groups(['administrator_report:detail:read', 'administrator_report:write'])]
     private Collection $tollRoadReceipts;
 
     #[ORM\Column(nullable: true)]
@@ -99,7 +111,7 @@ class AdministratorReport
     #[ORM\JoinTable(name: 'administrator_reports_parking_fees_receipts')]
     #[ORM\JoinColumn(name: 'administrator_report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'media_object_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[Groups(['administrator_report:read', 'administrator_report:write'])]
+    #[Groups(['administrator_report:detail:read', 'administrator_report:write'])]
     private Collection $parkingFeesReceipts;
 
 
@@ -164,12 +176,14 @@ class AdministratorReport
     }
 
     #[Groups(['administrator_report:read'])]
+    #[Context(normalizationContext: [DateTimeNormalizer::FORMAT_KEY => 'd.m.Y H:m'])]
     public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
     #[Groups(['administrator_report:read'])]
+    #[Context(normalizationContext: [DateTimeNormalizer::FORMAT_KEY => 'd.m.Y H:m'])]
     public function getUpdatedAt(): ?DateTimeInterface
     {
         return $this->updatedAt;
