@@ -25,9 +25,11 @@ class PostProcessor implements ProcessorInterface
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
     {
 
-        if ($data->getStatus() !== 'completed' && $data->getCompletedAt() !== null) {
-            return $this->processor->process($data, $operation, $uriVariables, $context);
-        }
+
+
+       if ($data->getStatus() !== 'completed' && $data->getCompletedAt() !== null) {
+           return $this->processor->process($data, $operation, $uriVariables, $context);
+       }
 
         $request = $this->requestStack->getCurrentRequest();
         $requestData = $request->toArray();
