@@ -51,11 +51,11 @@ class PostProcessor implements ProcessorInterface
         $report->setTeam($data);
 
         if ($mileageReceipts && is_array($mileageReceipts)){
-            foreach ($mileageReceipts as $mileageReceipt) {
+            foreach ($mileageReceipts as $key => $mileageReceipt) {
                 $image = new MediaObject();
                 $image->base64content = $mileageReceipt['base64content'] ?? null;
                 if ($image->base64content) {
-                    $imageFile = new UploadedBase64File($image->base64content, "mileage_receipt.png");
+                    $imageFile = new UploadedBase64File($image->base64content, "mileage_receipt-".$key.".png");
                     $image->file = $imageFile;
                     $report->addMileageReceipt($image);
                 }
@@ -64,11 +64,11 @@ class PostProcessor implements ProcessorInterface
 
 
         if ($parkingFeesReceipts && is_array($parkingFeesReceipts)){
-            foreach ($parkingFeesReceipts as $parkingFeesReceipt) {
+            foreach ($parkingFeesReceipts as $key => $parkingFeesReceipt) {
                 $image = new MediaObject();
                 $image->base64content = $parkingFeesReceipt['base64content'] ?? null;
                 if ($image->base64content) {
-                    $imageFile = new UploadedBase64File($image->base64content, "parking_fees_receipt.png");
+                    $imageFile = new UploadedBase64File($image->base64content, "parking_fees_receipt-".$key.".png");
                     $image->file = $imageFile;
                     $report->addParkingFeesReceipt($image);
                 }
@@ -76,11 +76,11 @@ class PostProcessor implements ProcessorInterface
         }
 
         if ($tollRoadReceipts && is_array($tollRoadReceipts)){
-            foreach ($tollRoadReceipts as $tollRoadReceipt) {
+            foreach ($tollRoadReceipts as $key => $tollRoadReceipt) {
                 $image = new MediaObject();
                 $image->base64content = $tollRoadReceipt['base64content'] ?? null;
                 if ($image->base64content) {
-                    $imageFile = new UploadedBase64File($image->base64content, "parking_fees_receipt.png");
+                    $imageFile = new UploadedBase64File($image->base64content, "total_road_receipt-".$key.".png");
                     $image->file = $imageFile;
                     $report->addTollRoadReceipt($image);
                 }
