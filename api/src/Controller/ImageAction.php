@@ -10,15 +10,18 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/api/uploads/{filename}', name: 'amo-crm_test', methods: ["GET"])]
 class ImageAction extends AbstractController
 {
 
-    public function __invoke(string $filename, Request $request): BinaryFileResponse
+    public function __invoke(string $filename, Request $request,KernelInterface $kernel): BinaryFileResponse
     {
-        $imageFile = '/app/uploads/' . $filename;
+        $projectDir = $kernel->getProjectDir();
+
+        $imageFile = $projectDir .'/uploads/' . $filename;
 
         return $this->file($imageFile, $filename, ResponseHeaderBag::DISPOSITION_INLINE);
     }
