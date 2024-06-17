@@ -370,6 +370,28 @@ class InitCommand extends Command
             'id' => 'can_be-driver',
             'description' => 'Может быть водителем бригады'
         ],
+
+        //Отчеты администратора
+        [
+            'id' => 'administrator_reports-index',
+            'description' => 'Отчеты администратора: просмотр списка'
+        ],
+        [
+            'id' => 'administrator_reports-create',
+            'description' => 'Отчеты администратора: добавление'
+        ],
+        [
+            'id' => 'administrator_reports-view',
+            'description' => 'Отчеты администратора: просмотр детально'
+        ],
+        [
+            'id' => 'administrator_reports-edit',
+            'description' => 'Отчеты администратора: изменение'
+        ],
+        [
+            'id' => 'administrator_reports-delete',
+            'description' => 'Отчеты администратора: удаление'
+        ],
     ];
 
     public function __construct(
