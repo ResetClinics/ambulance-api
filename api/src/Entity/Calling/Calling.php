@@ -134,7 +134,7 @@ class Calling
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['calling:read'])]
+    #[Groups(['calling:read', 'hospital:detail:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 256)]
@@ -364,7 +364,7 @@ class Calling
     #[ORM\JoinTable(name: 'calling_images')]
     #[ORM\JoinColumn(name: 'call_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'media_object_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'hospital:detail:read'])]
     private Collection $images;
 
     #[ORM\Column(length: 255, nullable: true)]

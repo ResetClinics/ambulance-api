@@ -8,6 +8,12 @@ use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Entity\Calling\Calling;
 use App\Entity\Partner;
 use App\Entity\User\User;
@@ -26,7 +32,24 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\Entity(repositoryClass: HospitalRepository::class)]
 #[ORM\Table(name: 'hospital_hospitals')]
 #[ApiResource(
-    normalizationContext: ['groups' => ['hospital:read',  'partner:item:read']],
+    operations: [
+        new GetCollection(),
+        new Post(),
+        new Get(
+            normalizationContext: [
+                'groups' => [
+                    'hospital:read',
+                    'hospital:detail:read',
+                    'partner:item:read',
+                    'media_object:read'
+                ]
+            ],
+        ),
+        new Put(),
+        new Delete(),
+        new Patch(),
+    ],
+    normalizationContext: ['groups' => ['hospital:read', 'partner:item:read']],
     denormalizationContext: ['groups' => ['hospital:write']],
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true,
@@ -110,7 +133,7 @@ class Hospital
     private ?int $amount = null;
 
     #[ORM\ManyToOne]
-    #[Groups(['hospital:read', 'hospital:write'])]
+    #[Groups(['hospital:read', 'hospital:write', 'hospital:detail:read'])]
     private ?Calling $owner = null;
 
     #[ORM\Column(nullable: true)]
@@ -332,7 +355,7 @@ class Hospital
     #[Groups(['hospital:read'])]
     public function getCreatedAt(): string
     {
-        if (($this->createdAt === null || $this->createdAt == new DateTime('0000-00-00 00:00:00'))){
+        if (($this->createdAt === null || $this->createdAt == new DateTime('0000-00-00 00:00:00'))) {
             return '';
         }
         return $this->createdAt->format('d.m.Y H:i:s');
@@ -341,7 +364,7 @@ class Hospital
     #[Groups(['hospital:read'])]
     public function getUpdatedAt(): string
     {
-        if (($this->updatedAt === null || $this->updatedAt == new DateTime('0000-00-00 00:00:00'))){
+        if (($this->updatedAt === null || $this->updatedAt == new DateTime('0000-00-00 00:00:00'))) {
             return '';
         }
         return $this->updatedAt->format('d.m.Y H:i:s');
