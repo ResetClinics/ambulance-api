@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api/uploads/{filename}', name: 'amo-crm_test', methods: ["GET"])]
+#[Route('/api/uploads/{filename}', name: 'get_upload_image', methods: ["GET"])]
 class ImageAction extends AbstractController
 {
     public function __invoke(string $filename, Request $request, KernelInterface $kernel): Response
