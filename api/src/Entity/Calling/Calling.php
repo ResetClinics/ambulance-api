@@ -368,6 +368,7 @@ class Calling
     private Collection $images;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
     private ?string $addressInfo = null;
 
     public function __construct(
