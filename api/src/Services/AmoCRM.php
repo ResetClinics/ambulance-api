@@ -16,7 +16,7 @@ class AmoCRM
         $apiClient = new AmoCRMApiClient(
             'd80b0f1f-1687-4b1e-8abd-9f3cbbe7a19e',
             'fCUzh7hiQ1bcuKQSrdJVp7Mnwnwi4b2vsK4W7yzhBCcumEkvRcHl3wX3hVxglhmK',
-            'https://ambulance.rc-respect.ru/api/amo-crm/auth/callback'
+            'https://reset-med.ru/app/api/amo-crm/auth/callback'
         );
 
         $token = $tokens->getToken();
