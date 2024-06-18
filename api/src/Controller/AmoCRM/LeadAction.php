@@ -22,6 +22,8 @@ use App\Entity\Partner;
 use App\Flusher;
 use App\Repository\CallingRepository;
 use App\Repository\ClientRepository;
+use App\Repository\Partner\Agreement\AgreementRepository;
+use App\Repository\Partner\Agreement\AgreementTemplateRepository;
 use App\Repository\PartnerRepository;
 use App\Repository\UserRepository;
 use App\Services\AmoCRM;
@@ -53,6 +55,8 @@ class LeadAction extends AbstractController
         private readonly PartnerRepository $partners,
         private readonly ClientRepository $clients,
         private readonly Flusher           $flusher,
+        private readonly AgreementRepository $agreements,
+        private readonly AgreementTemplateRepository $templates,
         CallingSender                      $sender,
         TrackerToMkad                      $trackerToMkad
     )
@@ -411,6 +415,21 @@ class LeadAction extends AbstractController
                 $partner = new Partner();
                 $partner->setExternalId($lead->partnerExternalId);
                 $this->partners->save($partner);
+
+                $agreement = new Partner\Agreement\Agreement();
+                $agreement->setPartner($partner);
+                $agreement->setStartsAt(new \DateTimeImmutable('01.12.2023'));
+                foreach ($this->templates->findAll() as $template){
+                    $row = new Partner\Agreement\Row();
+                    $row->setAgreement($agreement);
+                    $row->setService($template->getService());
+                    $row->setDistance($template->getDistance());
+                    $row->setPercent($template->getPercent());
+                    $row->setRepeatNumber($template->getRepeatNumber());
+
+                    $agreement->addRow($row);
+                }
+                $this->agreements->save($agreement);
             }
             $partner->setName($lead->partnerName);
             $calling->setPartner($partner);
