@@ -95,10 +95,13 @@ class CelLeadAction extends AbstractController
 
         //todo: статусы с константы
         switch ($customerRequest) {
-            case 'Вывод из запоя':
+            case 'Выезд на дом':
+            case 'Психиатр на дом':
                 $newStatus = 38307946;
                 break;
-            case 'Стационар':
+            case 'Стационар НД':
+            case 'Стационар Грай':
+            case 'Стационар Партнёра':
                 $newStatus = 38709310;
                 break;
             case 'Реабилитация':
