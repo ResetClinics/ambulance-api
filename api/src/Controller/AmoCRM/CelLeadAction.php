@@ -30,9 +30,11 @@ class CelLeadAction extends AbstractController
 
     public function __invoke(Request $request): JsonResponse
     {
+        //todo: получить данные serializer в команду и возможно сразу определять нужное поле без повторного запроса
         $data = $request->request->all();
 
         try {
+            //todo: вынести в handler
             $leadId = $this->getLeadId($data);
             $this->celLeadById($leadId);
         }catch (Exception $e) {
@@ -43,6 +45,7 @@ class CelLeadAction extends AbstractController
 
         return $this->json(null, Response::HTTP_OK);
     }
+
 
     private function getLeadId($data)
     {
@@ -90,6 +93,7 @@ class CelLeadAction extends AbstractController
 
         $newStatus = null;
 
+        //todo: статусы с константы
         switch ($customerRequest) {
             case 'Вывод из запоя':
                 $newStatus = 38307946;
