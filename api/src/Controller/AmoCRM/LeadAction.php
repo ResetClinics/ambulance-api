@@ -94,13 +94,13 @@ class LeadAction extends AbstractController
                 return $this->json(null, Response::HTTP_OK);
             }
         } catch (Exception $e) {
-            $this->sendMessageToAmo((int)$leadData['id'], 'Ошибка получения данных ' . $e->getMessage());
+            //$this->sendMessageToAmo((int)$leadData['id'], 'Ошибка получения данных ' . $e->getMessage());
             return $this->json(null, Response::HTTP_OK);
         }
 
 
         if (!$leadDto->doctor || !$leadDto->admin) {
-            $this->sendMessageToAmo((int)$leadData['id'], 'Не указан доктор или администратор');
+            //$this->sendMessageToAmo((int)$leadData['id'], 'Не указан доктор или администратор');
             return $this->json(null, Response::HTTP_OK);
         }
 
@@ -108,7 +108,7 @@ class LeadAction extends AbstractController
         try {
             $this->onSetTeam($leadDto);
         } catch (\Exception $e) {
-            $this->sendMessageToAmo((int)$leadData['id'], 'Ошибка обработки команды ' . $e->getMessage());
+            //$this->sendMessageToAmo((int)$leadData['id'], 'Ошибка обработки команды ' . $e->getMessage());
             throw new DomainException($e->getMessage());
         }
 
