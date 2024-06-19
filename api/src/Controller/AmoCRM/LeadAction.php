@@ -366,7 +366,14 @@ class LeadAction extends AbstractController
             }
 
 
-            $client = $this->clients->findByPhone($lead->clientPhone);
+            try {
+                $client = $this->clients->findByPhone($lead->clientPhone);
+            } catch (Exception $exception) {
+                throw new DomainException(
+                    'не определен клиент  ' . $lead->clientPhone . ' ' . $exception->getMessage()
+                );
+            }
+
 
             if (!$client){
                 $client = new Client(
