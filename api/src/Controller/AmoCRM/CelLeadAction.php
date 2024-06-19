@@ -107,10 +107,11 @@ class CelLeadAction extends AbstractController
         }
 
         if (!$newStatus) {
-            throw new DomainException(
-                'CelLeadAction: Ошибка определения нового статуса заявки ID: ' .
-                $leadId . ' запрос;' . $customerRequest
-            );
+            return;
+           //throw new DomainException(
+           //    'CelLeadAction: Ошибка определения нового статуса заявки ID: ' .
+           //    $leadId . ' запрос;' . $customerRequest
+           //);
         }
 
         $lead->setStatusId($newStatus);
