@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api/amo-crm/lead', name: 'amo-crm_cel_lead', methods: ["POST"])]
+#[Route('/api/amo-crm/cel-lead', name: 'amo-crm_cel_lead', methods: ["POST"])]
 class CelLeadAction extends AbstractController
 {
     private AmoCRMApiClient $client;
