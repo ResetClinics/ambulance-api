@@ -344,13 +344,13 @@ class LeadAction extends AbstractController
             );
         }
 
-        try {
-            $operator = $this->users->find($lead->operatorId);
-        } catch (Exception $exception) {
-            throw new DomainException(
-                'Ошибка определения оператора id ' . $lead->operatorId . ' ' . $exception->getMessage()
-            );
-        }
+       // try {
+       //     $operator = $this->users->find($lead->operatorId);
+       // } catch (Exception $exception) {
+       //     throw new DomainException(
+       //         'Ошибка определения оператора id ' . $lead->operatorId . ' ' . $exception->getMessage()
+       //     );
+       // }
 
         $isNew = false;
 
@@ -405,9 +405,9 @@ class LeadAction extends AbstractController
 
         }
 
-        if ($operator) {
-            $calling->setOperator($operator);
-        }
+       // if ($operator) {
+       //     $calling->setOperator($operator);
+       // }
 
         if ($lead->partnerExternalId) {
             try {
