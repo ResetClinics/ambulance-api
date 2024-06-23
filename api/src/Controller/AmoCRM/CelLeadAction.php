@@ -33,6 +33,13 @@ class CelLeadAction extends AbstractController
         //todo: получить данные serializer в команду и возможно сразу определять нужное поле без повторного запроса
         $data = $request->request->all();
 
+        file_put_contents(
+            dirname(__DIR__) . '/../../var/cel-lead-data' . date("Y-m-d H:i:s") . '.txt',
+            print_r($data , true). PHP_EOL,
+            FILE_APPEND);
+
+
+
         try {
             //todo: вынести в handler
             $leadId = $this->getLeadId($data);
