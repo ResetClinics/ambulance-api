@@ -30,35 +30,6 @@ class CelLeadAction extends AbstractController
 
     public function __invoke(Request $request): JsonResponse
     {
-        /*
-todo: получить данные serializer в команду и возможно сразу определять нужное поле без повторного запроса
-$data = Array
-(
-    [leads] => Array
-        (
-            [status] => Array
-                (
-                    [0] => Array
-                        (
-                            [id] => 23285577
-                            [status_id] => 142
-                            [pipeline_id] => 4108468
-                            [old_status_id] => 38816524
-                            [old_pipeline_id] => 4108468
-                        )
-
-                )
-
-        )
-
-    [account] => Array
-        (
-            [id] => 29317822
-            [subdomain] => af4040148
-        )
-
-)
-         */
         $data = $request->request->all();
 
         try {
@@ -116,7 +87,7 @@ $data = Array
         }
 
         if (!$customerRequest) {
-            throw new DomainException('CelLeadAction: Ошибка определения запроса заявки ID: ' . $leadId);
+            return;
         }
 
         $newStatus = null;
@@ -139,10 +110,6 @@ $data = Array
 
         if (!$newStatus) {
             return;
-           //throw new DomainException(
-           //    'CelLeadAction: Ошибка определения нового статуса заявки ID: ' .
-           //    $leadId . ' запрос;' . $customerRequest
-           //);
         }
 
         $lead->setStatusId($newStatus);
