@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\AmoCRM;
 
 use AmoCRM\Client\AmoCRMApiClient;
-use AmoCRM\Collections\Leads\LeadsCollection;
-use AmoCRM\Models\LeadModel;
+use AmoCRM\Filters\LeadsFilter;
 use App\Services\AmoCRM;
 use DomainException;
 use Exception;
@@ -31,12 +30,13 @@ class CelLeadAction extends AbstractController
 
     public function __invoke(Request $request): JsonResponse
     {
+        //todo: получить данные serializer в команду и возможно сразу определять нужное поле без повторного запроса
         $data = $request->request->all();
 
         try {
             //todo: вынести в handler
-            $lead = $this->getLead($data);
-            $this->celLeadById($lead);
+            $leadId = $this->getLeadId($data);
+            $this->celLeadById($leadId);
         }catch (Exception $e) {
             return $this->json([
                 'error' =>  $e->getMessage(),
@@ -46,24 +46,40 @@ class CelLeadAction extends AbstractController
         return $this->json(null, Response::HTTP_OK);
     }
 
-    /**
-     * @throws \AmoCRM\Exceptions\InvalidArgumentException
-     */
-    private function getLead($data): LeadModel
+
+    private function getLeadId($data)
     {
         if (
             !isset($data['leads']) ||
             !isset($data['leads']['status']) ||
-            !isset($data['leads']['status'][0])
+            !isset($data['leads']['status'][0]) ||
+            !isset($data['leads']['status'][0]['id'])
         ) {
-            throw new InvalidArgumentException('CelLeadAction: Отсутствуют необходимые данные для создания заявки');
+            throw new InvalidArgumentException('CelLeadAction: Отсутствует необходимое поле для получения ID заявки');
         }
 
-        return LeadModel::fromArray($data['leads']['status'][0]);
+        return $data['leads']['status'][0]['id'];
     }
 
-    private function celLeadById(LeadModel $lead): void
+
+    private function celLeadById($leadId): void
     {
+
+        if (!$leadId) {
+            throw new DomainException('CelLeadAction: Не определен идентификатор заявки');
+        }
+
+        $filter = new LeadsFilter();
+        $filter->setIds([$leadId]);
+
+        try {
+            $leads = $this->client->leads()->get($filter);
+        } catch (Exception $e) {
+            throw new DomainException('CelLeadAction: Ошибка получения заявки ID: ' . $leadId . ' ' . $e->getMessage());
+        }
+
+        $lead = $leads->first();
+
         $customerRequest = null;
         foreach ($lead->getCustomFieldsValues() as $field) {
             if ($field->getFieldId() === 875587) {
@@ -72,7 +88,7 @@ class CelLeadAction extends AbstractController
         }
 
         if (!$customerRequest) {
-            return;
+            throw new DomainException('CelLeadAction: Ошибка определения запроса заявки ID: ' . $leadId);
         }
 
         $newStatus = null;
@@ -95,18 +111,19 @@ class CelLeadAction extends AbstractController
 
         if (!$newStatus) {
             return;
+           //throw new DomainException(
+           //    'CelLeadAction: Ошибка определения нового статуса заявки ID: ' .
+           //    $leadId . ' запрос;' . $customerRequest
+           //);
         }
 
         $lead->setStatusId($newStatus);
-
-        $leads = new LeadsCollection();
-        $leads->add($lead);
 
         try {
             $this->client->leads()->update($leads);
         } catch (Exception $e) {
             throw new DomainException(
-                'Ошибка записи статуса '.$newStatus. ' заявки ID: ' . $lead->getId() . ' ' . $e->getMessage()
+                'Ошибка записи статуса '.$newStatus. ' заявки ID: ' . $leadId . ' ' . $e->getMessage()
             );
         }
     }
