@@ -37,6 +37,10 @@ class AmoCrmToAppDenormalizer implements CrmToAppDenormalizerInterface
 
         $leadDto->mainContactId = $lead->getMainContact()?->getId();
 
+        if (!$lead->getCustomFieldsValues()){
+            return $leadDto;
+        }
+
         foreach ($lead->getCustomFieldsValues() as $field) {
 
             if ($field->getFieldId() === 879807) {
