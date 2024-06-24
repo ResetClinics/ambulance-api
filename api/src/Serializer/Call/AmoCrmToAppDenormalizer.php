@@ -18,6 +18,12 @@ class AmoCrmToAppDenormalizer implements CrmToAppDenormalizerInterface
     public function denormalize(mixed $data, string $type, string $format = null, array $context = [])
     {
 
+        file_put_contents(
+            dirname(__DIR__) . '/../../var/hook-home-call-lead-list-data-' . date("Y-m-d H:i:s") . '.txt',
+            print_r($data, true).PHP_EOL,
+            FILE_APPEND);
+
+
         if (isset($data['leads']['update'][0])) {
             $leadData = $data['leads']['update'][0];
         } elseif (isset($data['leads']['add'][0])) {
@@ -26,7 +32,19 @@ class AmoCrmToAppDenormalizer implements CrmToAppDenormalizerInterface
             throw new DomainException('Нет данных в теле запроса');
         }
 
+        file_put_contents(
+            dirname(__DIR__) . '/../../var/hook-home-call-lead-data-' . date("Y-m-d H:i:s") . '.txt',
+            print_r($leadData, true).PHP_EOL,
+            FILE_APPEND);
+
+
         $lead = LeadModel::fromArray($leadData);
+
+        file_put_contents(
+            dirname(__DIR__) . '/../../var/hook-home-call-lead-model-' . date("Y-m-d H:i:s") . '.txt',
+            print_r($lead, true).PHP_EOL,
+            FILE_APPEND);
+
 
         $leadDto = new Lead(
             $lead->getId(),

@@ -37,24 +37,18 @@ class WebHookHomeCallAction extends AbstractController
     {
         $data = $request->request->all();
 
-        file_put_contents(
-            dirname(__DIR__) . '/../../var/hook-home-call-' . date("Y-m-d H:i:s") . '.txt',
-            print_r($data, true).PHP_EOL,
-            FILE_APPEND);
-
-
         try {
             $lead = $this->leadDenormalizer->denormalize($data, Lead::class);
-            file_put_contents(
-                dirname(__DIR__) . '/../../var/hook-home-call-lead.txt',
-                print_r($lead, true).PHP_EOL,
-                FILE_APPEND);
+            //file_put_contents(
+            //    dirname(__DIR__) . '/../../var/hook-home-call-lead.txt',
+            //    print_r($lead, true).PHP_EOL,
+            //    FILE_APPEND);
             $violations = $this->validator->validate($lead);
             if (count($violations)) {
-                file_put_contents(
-                    dirname(__DIR__) . '/../../var/hook-home-call-validate-lead.txt',
-                    print_r($violations, true).PHP_EOL,
-                    FILE_APPEND);
+                //file_put_contents(
+                //    dirname(__DIR__) . '/../../var/hook-home-call-validate-lead.txt',
+                //    print_r($violations, true).PHP_EOL,
+                //    FILE_APPEND);
                 return $this->json(null, Response::HTTP_OK);
             }
 
@@ -66,10 +60,10 @@ class WebHookHomeCallAction extends AbstractController
 
             $violations = $this->validator->validate($contact);
             if (count($violations)) {
-                file_put_contents(
-                    dirname(__DIR__) . '/../../var/hook-home-call-validate-contact.txt',
-                    print_r($violations, true).PHP_EOL,
-                    FILE_APPEND);
+                //file_put_contents(
+                //    dirname(__DIR__) . '/../../var/hook-home-call-validate-contact.txt',
+                //    print_r($violations, true).PHP_EOL,
+                //    FILE_APPEND);
                 return $this->json(null, Response::HTTP_OK);
             }
 
@@ -86,11 +80,11 @@ class WebHookHomeCallAction extends AbstractController
             $this->handler->handle($command);
 
         } catch (Exception $e) {
-            file_put_contents(
-                dirname(__DIR__) . '/../../var/hook-home-call-exception-' . date("Y-m-d H:i:s") . '.txt',
-                print_r($e->getMessage(), true).PHP_EOL,
-                FILE_APPEND);
-
+            //file_put_contents(
+            //    dirname(__DIR__) . '/../../var/hook-home-call-exception-' . date("Y-m-d H:i:s") . '.txt',
+            //    print_r($e->getMessage(), true).PHP_EOL,
+            //    FILE_APPEND);
+//
             return $this->json(null, Response::HTTP_OK);
         }
 
