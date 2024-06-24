@@ -16,6 +16,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\MedTeam\SendSms;
 use App\Entity\Base;
+use App\Entity\Calling\Calling;
 use App\Entity\Car;
 use App\Entity\User\User;
 use App\Repository\MedTeam\MedTeamRepository;
@@ -146,9 +147,13 @@ class MedTeam
     #[ORM\Column(length: 32, nullable: true, options: ['default' => 'daytime'])]
     private ?string $type = 'daytime';
 
+    #[ORM\OneToMany(mappedBy: 'team', targetEntity: Calling::class)]
+    private Collection $callings;
+
     public function __construct()
     {
         $this->locations = new ArrayCollection();
+        $this->callings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -370,6 +375,36 @@ class MedTeam
         $interval = $this->plannedDutyStartAt->diff($this->plannedDutyFinishAt);
         $hours = $interval->h;
         return $hours + ($interval->days * 24);
+    }
+
+    /**
+     * @return Collection<int, Calling>
+     */
+    public function getCallings(): Collection
+    {
+        return $this->callings;
+    }
+
+    public function addCalling(Calling $calling): self
+    {
+        if (!$this->callings->contains($calling)) {
+            $this->callings->add($calling);
+            $calling->setTeam($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCalling(Calling $calling): self
+    {
+        if ($this->callings->removeElement($calling)) {
+            // set the owning side to null (unless already changed)
+            if ($calling->getTeam() === $this) {
+                $calling->setTeam(null);
+            }
+        }
+
+        return $this;
     }
 
 }

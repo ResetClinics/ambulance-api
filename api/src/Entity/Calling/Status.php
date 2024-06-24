@@ -8,6 +8,8 @@ use Webmozart\Assert\Assert;
 
 class Status
 {
+    public const WAITING = 'waiting';
+
     public const ASSIGNED = 'assigned';
     public const ACCEPTED = 'accepted';
 
@@ -22,6 +24,7 @@ class Status
     public function __construct(string $name)
     {
         Assert::oneOf($name, [
+            self::WAITING,
             self::ASSIGNED,
             self::ACCEPTED,
             self::DISPATCHED,
@@ -31,6 +34,11 @@ class Status
         ]);
 
         $this->name = $name;
+    }
+
+    public static function waiting(): self
+    {
+        return new self(self::WAITING);
     }
 
     public static function assigned(): self
@@ -71,6 +79,11 @@ class Status
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function isWaiting(): bool
+    {
+        return $this->name === self::WAITING;
     }
 
     public function isAssigned(): bool

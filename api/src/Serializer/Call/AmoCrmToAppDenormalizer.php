@@ -12,111 +12,81 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AmoCrmToAppDenormalizer implements CrmToAppDenormalizerInterface
 {
-    /**
-     * @throws InvalidArgumentException
-     */
-    public function denormalize(mixed $data, string $type, string $format = null, array $context = [])
+    public function denormalize(mixed $data, string $type, string $format = null, array $context = []): Lead
     {
 
-        file_put_contents(
-            dirname(__DIR__) . '/../../var/hook-home-call-lead-list-data-' . date("Y-m-d H:i:s") . '.txt',
-            print_r($data, true).PHP_EOL,
-            FILE_APPEND);
-
-
         if (isset($data['leads']['update'][0])) {
-            $leadData = $data['leads']['update'][0];
+            $lead = $data['leads']['update'][0];
         } elseif (isset($data['leads']['add'][0])) {
-            $leadData = $data['leads']['add'][0];
+            $lead = $data['leads']['add'][0];
         } else {
             throw new DomainException('Нет данных в теле запроса');
         }
 
-        file_put_contents(
-            dirname(__DIR__) . '/../../var/hook-home-call-lead-data-' . date("Y-m-d H:i:s") . '.txt',
-            print_r($leadData, true).PHP_EOL,
-            FILE_APPEND);
-
-
-        $lead = LeadModel::fromArray($leadData);
-
-        file_put_contents(
-            dirname(__DIR__) . '/../../var/hook-home-call-lead-model-' . date("Y-m-d H:i:s") . '.txt',
-            print_r($lead, true).PHP_EOL,
-            FILE_APPEND);
-
-
         $leadDto = new Lead(
-            $lead->getId(),
-            $lead->getStatusId(),
-            $lead->getPipelineId(),
-            $lead->getName()
+            (int)$lead['id'],
+            (int)$lead['status_id'],
+            (int)$lead['pipeline_id'],
+            $lead['name'],
         );
 
-        $leadDto->mainContactId = $lead->getMainContact()?->getId();
 
-        if (!$lead->getCustomFieldsValues()){
-            return $leadDto;
+        if (array_key_exists('responsible_user_id', $lead) && !is_null($lead['responsible_user_id'])) {
+            $leadDto->setOperatorId((int)$lead['responsible_user_id']);
         }
 
-        foreach ($lead->getCustomFieldsValues() as $field) {
+        if (!empty($lead['custom_fields'])) {
+            foreach ($lead['custom_fields'] as $field) {
 
-            if ($field->getFieldId() === 879807) {
-                $leadDto->numberCalling = $field->getValues()?->first()->getValue();
-            }
-            if ($field->getFieldId() === 880453) {
-                /** @var Carbon $dateTime */
-                $leadDto->dateTime = $field->getValues()?->first()->getValue()?->toString();
-            }
-            if ($field->getFieldId() === 870903) {
-                $leadDto->address = $field->getValues()?->first()->getValue();
-            }
-
-            if ($field->getFieldId() === 968865) {
-                $leadDto->addressInfo = $field->getValues()?->first()->getValue();
-            }
-
-            if ($field->getFieldId() === 875863) {
-                $leadDto->team = $field->getValues()?->first()->getValue();
-            }
-            if ($field->getFieldId() === 880527) {
-                $leadDto->nosology = $field->getValues()?->first()->getValue();
-            }
-
-            if ($field->getFieldId() === 870907) {
-                $leadDto->age = $field->getValues()?->first()->getValue();
-            }
-
-            if ($field->getFieldId() === 870945) {
-                $leadDto->description = $field->getValues()?->first()->getValue() ?: '';
-            }
-
-            if ($field->getFieldId() === 884333) {
-                $leadDto->hz = $field->getValues()?->first()->getValue();
-            }
-
-            if ($field->getFieldId() === 960101) {
-                $leadDto->leadType = $field->getValues()?->first()->getValue();
-            }
-
-            if ($field->getFieldId() === 882361) {
-                $first = $field->getValues()?->first();
-
-                if ($first instanceof BaseEnumCodeCustomFieldValueModel) {
-                    $leadDto->partnerExternalId = $first->getEnumId() ? (string)$first->getEnumId() : null;
+                if ((int)$field['id'] === 880453) {
+                    $leadDto->dateTime = $field['values'][0] ?? null;
                 }
-                $leadDto->partnerName = $field->getValues()?->first()->getValue();
-            }
-            if ($field->getFieldId() === 896921) {
-                $leadDto->sendPhone = $field->getValues()?->first()->getValue();
-            }
+                if ((int)$field['id'] === 870903) {
+                    $leadDto->address = $field['values'][0]['value'] ?? null;
+                }
 
-            if ($field->getFieldId() === 968691) {
-                $leadDto->partnerHospitalization = $field->getValues()?->first()->getValue();
-            }
+                if ((int)$field['id'] === 968865) {
+                    $leadDto->addressInfo = $field['values'][0]['value'] ?? null;
+                }
 
-            if ($field->getFieldId() === 968867) {
-                $leadDto->noBusinessCards = $field->getValues()?->first()->getValue();
+                if ((int)$field['id'] === 875863) {
+                    $leadDto->team = $field['values'][0]['value'] ?? null;
+                }
+                if ((int)$field['id'] === 880527) {
+                    $leadDto->nosology = $field['values'][0]['value'] ?? null;
+                }
+
+                if ((int)$field['id'] === 870907) {
+                    $leadDto->age = $field['values'][0]['value'] ?? null;
+                }
+
+                if ((int)$field['id'] === 870945) {
+                    $leadDto->description = $field['values'][0]['value'] ?? '';
+                }
+
+                if ((int)$field['id'] === 884333) {
+                    $leadDto->hz = $field['values'][0]['value'] ?? null;
+                }
+
+                if ((int)$field['id'] === 960101) {
+                    $leadDto->leadType = $field['values'][0]['value'] ?? null;
+                }
+
+                if ((int)$field['id'] === 882361) {
+                    $leadDto->partnerExternalId = $field['values'][0]['enum'] ?? null;
+                    $leadDto->partnerName = $field['values'][0]['value'] ?? null;
+                }
+                if ((int)$field['id'] === 896921) {
+                    $leadDto->sendPhone = $field['values'][0]['value'] ?? false;
+                }
+
+                if ((int)$field['id'] === 968691) {
+                    $leadDto->partnerHospitalization = $field['values'][0]['value'] ?? false;
+                }
+
+                if ((int)$field['id'] === 968867) {
+                    $leadDto->noBusinessCards = $field['values'][0]['value'] ?? false;
+                }
             }
         }
 

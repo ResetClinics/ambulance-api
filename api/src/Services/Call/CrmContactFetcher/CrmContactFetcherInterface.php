@@ -6,5 +6,5 @@ use App\UseCase\Call\SendFromCrm\Contact;
 
 interface CrmContactFetcherInterface
 {
-    public function fetch(int $contactId): Contact;
+    public function fetch(int $leadId): Contact;
 }

@@ -1,10 +1,9 @@
 <?php
 
-namespace App\UseCase\Call\SendFromCrm;
+namespace App\UseCase\Client\Create;
 
 use Symfony\Component\Validator\Constraints as Assert;
-
-class Contact
+class Command
 {
     #[Assert\NotBlank]
     private ?string $name;

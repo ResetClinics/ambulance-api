@@ -29,6 +29,7 @@ use App\Controller\Calling\RecalculateOperatorReward;
 use App\Controller\Calling\RejectAction;
 use App\Controller\Calling\RepeatAction;
 use App\Entity\Client;
+use App\Entity\MedTeam\MedTeam;
 use App\Entity\MediaObject;
 use App\Entity\Partner;
 use App\Entity\User\User;
@@ -370,6 +371,9 @@ class Calling
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['calling:read', 'calling:write'])]
     private ?string $addressInfo = null;
+
+    #[ORM\ManyToOne(inversedBy: 'callings')]
+    private ?MedTeam $team = null;
 
     public function __construct(
         string  $numberCalling,
@@ -1204,6 +1208,18 @@ class Calling
     public function setAddressInfo(?string $addressInfo): self
     {
         $this->addressInfo = $addressInfo;
+
+        return $this;
+    }
+
+    public function getTeam(): ?MedTeam
+    {
+        return $this->team;
+    }
+
+    public function setTeam(?MedTeam $team): self
+    {
+        $this->team = $team;
 
         return $this;
     }

@@ -29,6 +29,11 @@ class CallingRepository extends ServiceEntityRepository
         parent::__construct($registry, Calling::class);
     }
 
+    public function add(Calling $entity): void
+    {
+        $this->getEntityManager()->persist($entity);
+    }
+
     public function save(Calling $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);

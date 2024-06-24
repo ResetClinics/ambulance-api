@@ -2,17 +2,25 @@
 
 namespace App\UseCase\Call\SendFromCrm;
 
+use Symfony\Component\Validator\Constraints as Assert;
 
 class Lead
 {
     private int $id;
     private ?string $name;
+
+    #[Assert\NotBlank]
     private int $status;
+
+    #[Assert\NotBlank]
     private int $pipelineId;
 
     public ?string $numberCalling = null;
     public ?int $mainContactId = null;
+    private ?int $operatorId = null;
+
     public ?string $dateTime = null;
+    #[Assert\NotBlank]
     public ?string $address = null;
     public ?string $addressInfo = null;
     public ?string $team = null;
@@ -21,7 +29,10 @@ class Lead
     public ?string $description = null;
     public ?string $hz = null;
     public ?string $leadType = null;
+
+    #[Assert\NotBlank]
     public ?string $partnerExternalId = null;
+    #[Assert\NotBlank]
     public ?string $partnerName = null;
     public bool $sendPhone = false;
     public bool $noBusinessCards = false;
@@ -71,4 +82,15 @@ class Lead
     {
         return in_array($this->status, self::LEAD_STATUSES);
     }
+
+    public function getOperatorId(): ?int
+    {
+        return $this->operatorId;
+    }
+
+    public function setOperatorId(?int $operatorId): void
+    {
+        $this->operatorId = $operatorId;
+    }
+
 }

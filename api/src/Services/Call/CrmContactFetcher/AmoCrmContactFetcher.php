@@ -5,6 +5,7 @@ namespace App\Services\Call\CrmContactFetcher;
 use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Exceptions\AmoCRMApiException;
 use AmoCRM\Models\CustomFieldsValues\MultitextCustomFieldValuesModel;
+use AmoCRM\Models\LeadModel;
 use App\Services\AmoCRM;
 use App\UseCase\Call\SendFromCrm\Contact;
 use DomainException;
@@ -21,17 +22,21 @@ class AmoCrmContactFetcher implements CrmContactFetcherInterface
         $this->client = $amoCRM->getClient();
     }
 
-    public function fetch(?int $contactId): Contact
+    public function fetch(int $leadId): Contact
     {
-        if (!$contactId) {
-            throw new DomainException('Не передан id контакта');
+
+        $lead = $this->client->leads()->getOne($leadId, [LeadModel::CONTACTS]);
+
+
+        if (!$lead->getMainContact()->getId()) {
+            throw new DomainException('Не указан контакт');
         }
 
         try {
-            $contact = $this->client->contacts()->getOne($contactId);
+            $contact = $this->client->contacts()->getOne($lead->getMainContact()->getId());
         } catch (AmoCRMApiException $e) {
             throw new DomainException(
-                'Не удалось получить контакт id' . $contactId . ' ' . $e->getMessage()
+                'Не удалось получить контакт id' . $lead->getMainContact()->getId() . ' ' . $e->getMessage()
             );
         }
 
