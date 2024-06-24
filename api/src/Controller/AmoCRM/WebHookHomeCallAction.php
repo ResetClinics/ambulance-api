@@ -81,6 +81,12 @@ class WebHookHomeCallAction extends AbstractController
             $this->handler->handle($command);
 
         } catch (Exception $e) {
+
+            file_put_contents(
+                dirname(__DIR__) . '/../../var/error-1.txt',
+                print_r($e->getMessage() , true).PHP_EOL,
+                FILE_APPEND);
+
             return $this->json(null, Response::HTTP_OK);
         }
 

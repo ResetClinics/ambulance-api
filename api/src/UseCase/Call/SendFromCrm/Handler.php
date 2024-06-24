@@ -56,7 +56,6 @@ class Handler
             $call->setFio($call->getOwner()?->getFio());
             $call->setAge($call->getOwner()?->getAge());
 
-
             $this->calls->add($call);
         }
 
@@ -97,7 +96,7 @@ class Handler
             $call->setDateTime(new DateTimeImmutable($lead->dateTime));
         }
 
-        $this->determinant->toDetermine($call);
+       $this->determinant->toDetermine($call);
 
         $this->flusher->flush();
 
