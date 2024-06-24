@@ -93,7 +93,7 @@ class Handler
         $call->setNoBusinessCards($lead->noBusinessCards);
 
         if ($lead->dateTime) {
-            $call->setDateTime(new DateTimeImmutable($lead->dateTime));
+            //$call->setDateTime(new DateTimeImmutable($lead->dateTime));
         }
 
        $this->determinant->toDetermine($call);
