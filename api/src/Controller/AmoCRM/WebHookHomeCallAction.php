@@ -45,7 +45,10 @@ class WebHookHomeCallAction extends AbstractController
 
         try {
             $lead = $this->leadDenormalizer->denormalize($data, Lead::class);
-
+            file_put_contents(
+                dirname(__DIR__) . '/../../var/hook-home-call-lead.txt',
+                print_r($lead, true).PHP_EOL,
+                FILE_APPEND);
             $violations = $this->validator->validate($lead);
             if (count($violations)) {
                 file_put_contents(
@@ -83,6 +86,11 @@ class WebHookHomeCallAction extends AbstractController
             $this->handler->handle($command);
 
         } catch (Exception $e) {
+            file_put_contents(
+                dirname(__DIR__) . '/../../var/hook-home-call-exception-' . date("Y-m-d H:i:s") . '.txt',
+                print_r($e->getMessage(), true).PHP_EOL,
+                FILE_APPEND);
+
             return $this->json(null, Response::HTTP_OK);
         }
 
