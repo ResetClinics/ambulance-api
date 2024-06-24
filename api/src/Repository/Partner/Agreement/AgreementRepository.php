@@ -22,8 +22,10 @@ class AgreementRepository extends ServiceEntityRepository
         parent::__construct($registry, Agreement::class);
     }
 
-
-
+    public function add(Agreement $entity): void
+    {
+        $this->getEntityManager()->persist($entity);
+    }
 
     public function save(Agreement $entity, bool $flush = false): void
     {

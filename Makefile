@@ -42,6 +42,9 @@ docker-build:
 api-clear:
 	docker run --rm -v ${PWD}/api:/app -w /app alpine sh -c 'rm -rf var/cache/* var/log/* var/test/* public/uploads/* || true'
 
+api-cache-clear:
+	docker-compose run --rm api-php-cli php -d memory_limit=-1 bin/console cache:clear
+
 api-init: api-permissions api-wait-db \
 	api-composer-install \
 	api-migrations \
