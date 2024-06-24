@@ -56,20 +56,22 @@ class Handler
             $call->setFio($call->getOwner()?->getFio());
             $call->setAge($call->getOwner()?->getAge());
 
-            if ($lead->getStatus() === 38307946) {
-                $call->setStatus(Status::waiting());
-            } elseif ($lead->getStatus() === 38874646) {
-                $call->setStatus(Status::assigned());
-            } elseif ($lead->getStatus() === 62358394) {
-                $call->setStatus(Status::accepted());
-            } elseif ($lead->getStatus() === 38187418) {
-                $call->setStatus(Status::dispatched());
-            } else {
-                throw new DomainException('Неизвестный статус');
-            }
 
             $this->calls->add($call);
         }
+
+        if ($lead->getStatus() === 38307946) {
+            $call->setStatus(Status::waiting());
+        } elseif ($lead->getStatus() === 38874646) {
+            $call->setStatus(Status::assigned());
+        } elseif ($lead->getStatus() === 62358394) {
+            $call->setStatus(Status::accepted());
+        } elseif ($lead->getStatus() === 38187418) {
+            $call->setStatus(Status::dispatched());
+        } else {
+            throw new DomainException('Неизвестный статус');
+        }
+
 
         $client = $this->clients->findByPhone($contact->getPhone());
         $call->setClient($client);
