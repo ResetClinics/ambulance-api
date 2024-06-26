@@ -396,7 +396,7 @@ class Handler
     private function createMessage(Calling $call): string
     {
         $message = '';
-        $message .= 'Заявка №: ' . $call->getNumberCalling() . PHP_EOL;
+        $message .= 'Заявка #: ' . $call->getNumberCalling() . PHP_EOL;
         $message .= 'Тип заявки: ' . $call->getLeadType() . PHP_EOL;
         $message .= 'Бригада №: ' . $call->getTeam()?->getPhone()?->getId() . PHP_EOL;
         $message .= 'Врач: ' . $call->getTeam()?->getDoctor()?->getName() . PHP_EOL;
