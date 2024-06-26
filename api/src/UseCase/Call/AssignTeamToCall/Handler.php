@@ -295,6 +295,7 @@ class Handler
                 $name
             );
             $this->partnerHandler->handle($partnerCommand);
+            $partner = $this->partners->findOneByExternalId($externalId);
         }
 
         $call->setPartner($partner);
