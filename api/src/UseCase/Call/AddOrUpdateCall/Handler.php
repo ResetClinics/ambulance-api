@@ -312,6 +312,7 @@ class Handler
                 $clientPhone,
             );
             $this->clientHandler->handle($clientCommand);
+            $client = $this->clients->findByPhone($clientPhone);
         }
 
         $call->setName($clientName);
