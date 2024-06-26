@@ -2,7 +2,6 @@
 
 namespace App\UseCase\Call\SendFromCrm;
 
-use App\Entity\Calling\Calling;
 use App\Entity\Calling\Status;
 use App\Flusher;
 use App\Repository\CallingRepository;
@@ -39,38 +38,14 @@ class Handler
         $call = $this->calls->findOneByNumber((string)$lead->getId());
 
         if (!$call) {
-            $call = new Calling(
-                (string)$lead->getId(),
-                $lead->getName(),
-                $contact->getName(),
-                $contact->getPhone(),
-                $lead->address,
-                $lead->description,
-                null,
-                null
-            );
-
-            $owner = $this->calls->findOneByOwnerExternalId((string)$lead->getId());
-            $call->setOwner($owner);
-
-            $call->setFio($call->getOwner()?->getFio());
-            $call->setAge($call->getOwner()?->getAge());
-
-            $this->calls->add($call);
+            throw new DomainException('Не найдена звонка ' . $lead->getId());
         }
 
         if ($lead->getStatus() === 38307946) {
             $call->setStatus(Status::waiting());
         } elseif ($lead->getStatus() === 38874646) {
             $call->setStatus(Status::assigned());
-        } elseif ($lead->getStatus() === 62358394) {
-            $call->setStatus(Status::accepted());
-        } elseif ($lead->getStatus() === 38187418) {
-            $call->setStatus(Status::dispatched());
-        } else {
-            throw new DomainException('Неизвестный статус');
         }
-
 
         $client = $this->clients->findByPhone($contact->getPhone());
         $call->setClient($client);

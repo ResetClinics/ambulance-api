@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller\AmoCRM;
 
+use App\Entity\Calling\Calling;
+use App\Flusher;
+use App\Repository\CallingRepository;
 use App\Repository\ClientRepository;
 use App\Repository\PartnerRepository;
 use App\Serializer\Call\CrmToAppDenormalizerInterface;
@@ -30,7 +33,9 @@ class WebHookHomeCallAction extends AbstractController
         private readonly ValidatorInterface $validator,
         private readonly Handler                             $handler,
         private readonly \App\UseCase\Partner\Create\Handler $partnerHandler,
-        private readonly \App\UseCase\Client\Create\Handler $clientHandler
+        private readonly \App\UseCase\Client\Create\Handler $clientHandler,
+        private readonly CallingRepository $calls,
+        private readonly Flusher $flusher,
     )
     {
     }
@@ -49,6 +54,30 @@ class WebHookHomeCallAction extends AbstractController
 
             if (!$lead->isPipelineHouseCall() || !$lead->isSuitableStatus()) {
                 return $this->json(null, Response::HTTP_OK);
+            }
+
+            $call = $this->calls->findOneByNumber((string)$lead->getId());
+
+            if (!$call) {
+                $call = new Calling(
+                    (string)$lead->getId(),
+                    $lead->getName(),
+                    '',
+                    '',
+                    $lead->address,
+                    $lead->description,
+                    null,
+                    null
+                );
+
+                $owner = $this->calls->findOneByOwnerExternalId((string)$lead->getId());
+                $call->setOwner($owner);
+
+                $call->setFio($call->getOwner()?->getFio());
+                $call->setAge($call->getOwner()?->getAge());
+
+                $this->calls->add($call);
+                $this->flusher->flush();
             }
 
             $partner = $this->partners->findOneByExternalId($lead->partnerExternalId);

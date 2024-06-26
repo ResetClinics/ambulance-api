@@ -380,10 +380,10 @@ class Calling
         string  $title,
         string  $name,
         string  $phone,
-        ?string $address,
-        ?string $description,
-        ?User    $admin,
-        ?User    $doctor
+        ?string $address = null,
+        ?string $description = null,
+        ?User    $admin = null,
+        ?User    $doctor = null
     )
     {
         $this->name = $name;
@@ -1219,7 +1219,13 @@ class Calling
 
     public function setTeam(?MedTeam $team): self
     {
+        if ($this->team === $team) {
+            return $this;
+        }
         $this->team = $team;
+
+        $this->admin = $team?->getAdmin();
+        $this->doctor = $team?->getDoctor();
 
         return $this;
     }
