@@ -116,7 +116,7 @@ class Handler
 
         $this->updateData($call, $lead);
 
-        $call->setStatus(Status::waiting());
+        $call->setStatus(Status::assigned());
 
         $this->setTeam($call, $lead);
 
