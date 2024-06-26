@@ -77,6 +77,8 @@ class Handler
             $this->calls->add($call);
         }
 
+        $call->setUpdatedAt(new DateTimeImmutable());
+
         try {
             $this->setClient($call, $clientName, $clientPhone);
         }catch (Exception) {
