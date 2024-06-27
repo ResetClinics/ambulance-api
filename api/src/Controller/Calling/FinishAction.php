@@ -98,14 +98,6 @@ class FinishAction extends AbstractController
                 $hospital .= $serviceRow->getPlannedPrice() ? 'Ориентировочная цена ' . $serviceRow->getPlannedPrice() . PHP_EOL : '';
                 $hospital .= $serviceRow->getPrice() ? 'Предоплата ' . $serviceRow->getPrice() . PHP_EOL : '';
                 $hospital .= $serviceRow->getPlannedAt() ? '*ПОВТОР* Дата ' . $serviceRow->getPlannedAt()->format('d.m.y H:m') . PHP_EOL : '';
-                //$this->hospitalization($calling, $serviceRow);
-//
-                //$this->sender->sendToAdmin(
-                //    $calling,
-                //    'Вызов N ' . $calling->getNumberCalling(),
-                //    'Создано назначение на стационар'
-                //);
-
             }
             if ($serviceRow->getService()->getType() === 'replay'){
                 $replay .=  'Повтор ' . PHP_EOL;
@@ -206,102 +198,6 @@ class FinishAction extends AbstractController
         $this->operatorReward->calculate($calling);
 
         $this->flusher->flush();
-    }
-
-    private function hospitalization(Calling $calling, Row $row): void
-    {
-        $lead = $this->client->leads()->getOne((int)$calling->getNumberCalling());
-
-        if (!$lead) {
-            throw new NotFoundHttpException('Не получен лид');
-        }
-
-        $linksService = $this->client->links(EntityTypesInterface::LEADS);
-
-        $filter = new EntitiesLinksFilter([(int)$calling->getNumberCalling()]);
-        $allLinks = $linksService->get($filter);
-
-
-        $contactId = null;
-        $companyId = null;
-        /** @var LinkModel $link */
-        foreach ($allLinks as $link) {
-            if (
-                $link->getMetadata()
-                && isset($link->getMetadata()['main_contact'])
-                && $link->getMetadata()['main_contact']
-            ) {
-                $contactId = $link->getToEntityId();
-            }
-
-            if ($link->getToEntityType() === 'companies'){
-                $companyId = $link->getToEntityId();
-            }
-        }
-        if (!$contactId) {
-            throw new NotFoundHttpException('Не найден контакт при создании стационара');
-        }
-
-        $customFieldsValues = new CustomFieldsValuesCollection();
-        foreach ($lead->getCustomFieldsValues() as $customFieldsValue){
-            //бригаду, админа и врача не переносим в повотор
-            if (
-                $customFieldsValue->getFieldId() === 875863 ||
-                $customFieldsValue->getFieldId() === 873879 ||
-                $customFieldsValue->getFieldId() === 873881
-            ){
-                continue;
-            }
-            $customFieldsValues->add($customFieldsValue);
-        }
-
-        $newLead = new LeadModel();
-        $newLead->setName($lead->getName())
-            ->setCreatedBy(0)
-            ->setPrice($calling->getCoastHospital())
-            ->setStatusId(38709310)
-            ->setPipelineId(4093174)
-            ->setResponsibleUserId($lead->getResponsibleUserId())
-            ->setCustomFieldsValues($customFieldsValues)
-            ->setContacts(
-                (new ContactsCollection())
-                    ->add(
-                        (new ContactModel())
-                            ->setId($contactId)
-                            ->setIsMain(true)
-                    )
-            );
-
-
-        if ($companyId){
-            $newLead ->setCompany(
-                (new CompanyModel())
-                    ->setId($companyId)
-            );
-        }
-
-        $leadsCollection = new LeadsCollection();
-        $leadsCollection->add($newLead);
-
-        $leadModel = $this->client->leads()->addOne($newLead);
-
-        if (!$this->hospitals->findOneByExternal((string)$leadModel->getId())){
-
-            $hospital = new Hospital();
-            $hospital->setExternal((string)$leadModel->getId());
-            $hospital->setStatus('assigned');
-            $hospital->setFio($calling->getFio());
-            $hospital->setPartner($calling->getPartner());
-            $hospital->setPhone($calling->getPhone());
-
-            $hospital->setOwner($calling);
-
-            $price = $row->getPrice() !== null ? (int)$row->getPrice() : null;
-
-            $hospital->setPrepayment($price);
-
-            $this->hospitals->save($hospital, true);
-        }
     }
 
     private function repeat(Calling $calling, Row $row): void
