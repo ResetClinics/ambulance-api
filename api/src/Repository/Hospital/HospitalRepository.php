@@ -77,7 +77,7 @@ class HospitalRepository extends ServiceEntityRepository
     ): ?Hospital
     {
         $data = $this->createQueryBuilder('c')
-            ->andWhere('c.external = :external')
+            ->andWhere('c.owner = :owner')
             ->setParameter(':owner', $ownerId)
             ->getQuery()
             ->getResult();
