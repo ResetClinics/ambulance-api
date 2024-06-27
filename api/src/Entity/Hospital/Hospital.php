@@ -15,6 +15,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Entity\Calling\Calling;
+use App\Entity\MediaObject;
 use App\Entity\Partner;
 use App\Entity\User\User;
 use App\Filter\Hospital\SearchByNameAndPhoneFilter;
@@ -22,6 +23,8 @@ use App\Repository\Hospital\HospitalRepository;
 use App\State\HospitalProcessor;
 use DateTime;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -185,6 +188,18 @@ class Hospital
     #[ORM\ManyToOne]
     #[Groups(['hospital:read'])]
     private ?User $dischargedBy = null;
+
+    #[ORM\ManyToMany(targetEntity: MediaObject::class, cascade: ['persist'])]
+    #[ORM\JoinTable(name: 'hospital_images')]
+    #[ORM\JoinColumn(name: 'hospital_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'media_object_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[Groups(['hospital:read', 'hospital:write', 'hospital:detail:read'])]
+    private Collection $images;
+
+    public function __construct()
+    {
+        $this->images = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -454,4 +469,28 @@ class Hospital
 
         return $this;
     }
+
+
+
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(MediaObject $mediaObject): self
+    {
+        if (!$this->images->contains($mediaObject)) {
+            $this->images->add($mediaObject);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(MediaObject $mediaObject): self
+    {
+        $this->images->removeElement($mediaObject);
+
+        return $this;
+    }
 }
+

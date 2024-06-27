@@ -55,7 +55,7 @@ class HospitalRepository extends ServiceEntityRepository
     }
 
     public function findByPartnerAndDischargedAt(
-        int $partnerId,
+        int               $partnerId,
         DateTimeImmutable $dischargedAtAfter,
         DateTimeImmutable $dischargedAtBefore
     )
@@ -72,9 +72,24 @@ class HospitalRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findOneByOwnerId(
+        int $ownerId,
+    ): ?Hospital
+    {
+        $data = $this->createQueryBuilder('c')
+            ->andWhere('c.external = :external')
+            ->setParameter(':owner', $ownerId)
+            ->getQuery()
+            ->getResult();
+
+        $data = $data === null ? [] : $data;
+
+        return array_shift($data);
+    }
+
 
     public function findByPartnerAndHospitalizedAt(
-        int $partnerId,
+        int               $partnerId,
         DateTimeImmutable $hospitalizedAtAfter,
         DateTimeImmutable $hospitalizedAtBefore
     )
@@ -104,7 +119,6 @@ class HospitalRepository extends ServiceEntityRepository
             ->setParameter('start', $period->getStartDate())
             ->setParameter('end', $period->getEndDate())
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 }

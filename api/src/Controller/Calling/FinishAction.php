@@ -98,13 +98,13 @@ class FinishAction extends AbstractController
                 $hospital .= $serviceRow->getPlannedPrice() ? 'Ориентировочная цена ' . $serviceRow->getPlannedPrice() . PHP_EOL : '';
                 $hospital .= $serviceRow->getPrice() ? 'Предоплата ' . $serviceRow->getPrice() . PHP_EOL : '';
                 $hospital .= $serviceRow->getPlannedAt() ? '*ПОВТОР* Дата ' . $serviceRow->getPlannedAt()->format('d.m.y H:m') . PHP_EOL : '';
-                $this->hospitalization($calling, $serviceRow);
-
-                $this->sender->sendToAdmin(
-                    $calling,
-                    'Вызов N ' . $calling->getNumberCalling(),
-                    'Создано назначение на стационар'
-                );
+                //$this->hospitalization($calling, $serviceRow);
+//
+                //$this->sender->sendToAdmin(
+                //    $calling,
+                //    'Вызов N ' . $calling->getNumberCalling(),
+                //    'Создано назначение на стационар'
+                //);
 
             }
             if ($serviceRow->getService()->getType() === 'replay'){
