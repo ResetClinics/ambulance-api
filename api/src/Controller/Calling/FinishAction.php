@@ -93,11 +93,11 @@ class FinishAction extends AbstractController
 
         /** @var Row $serviceRow */
         foreach ($calling->getServices() as $serviceRow){
-            if ($serviceRow->getService()->getType() === 'hospital'){
-                $hospital .=  'Госпитализация ' . PHP_EOL;
+            if ($serviceRow->isStationary()){
+                $hospital .=  'Стационар ' . PHP_EOL;
                 $hospital .= $serviceRow->getPlannedPrice() ? 'Ориентировочная цена ' . $serviceRow->getPlannedPrice() . PHP_EOL : '';
                 $hospital .= $serviceRow->getPrice() ? 'Предоплата ' . $serviceRow->getPrice() . PHP_EOL : '';
-                $hospital .= $serviceRow->getPlannedAt() ? '*ПОВТОР* Дата ' . $serviceRow->getPlannedAt()->format('d.m.y H:m') . PHP_EOL : '';
+                $hospital .= $serviceRow->getPlannedAt() ? 'Дата ' . $serviceRow->getPlannedAt()->format('d.m.y H:m') . PHP_EOL : '';
             }
             if ($serviceRow->getService()->getType() === 'replay'){
                 $replay .=  'Повтор ' . PHP_EOL;
