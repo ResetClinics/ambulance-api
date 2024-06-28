@@ -22,6 +22,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Calling\Calling;
 use App\Entity\Calling\Row;
+use App\Entity\Hospital\Clinic;
 use App\Entity\Hospital\Hospital;
 use App\Entity\MediaObject;
 use App\Repository\Hospital\HospitalRepository;
@@ -84,12 +85,14 @@ class PostProcessor implements ProcessorInterface
 
                     $this->createStationary(
                         $data,
+                        $row->getClinic(),
                         $price,
                         (string)$leadModel->getId()
                     );
                 } else {
                     $this->updateStationary(
                         $data,
+                        $row->getClinic(),
                         $hospital,
                         $price,
                     );
@@ -111,7 +114,7 @@ class PostProcessor implements ProcessorInterface
      * @throws NonUniqueResultException
      * @throws AmoCRMoAuthApiException
      */
-    private function createStationary(Calling $calling, ?int $price, ?string $externalId): void
+    private function createStationary(Calling $calling, Clinic $clinic, ?int $price, ?string $externalId): void
     {
         $leadModel = $this->createStationaryLead($calling);
 
@@ -125,6 +128,8 @@ class PostProcessor implements ProcessorInterface
             $hospital->setPhone($calling->getPhone());
             $hospital->setOwner($calling);
             $hospital->setPrepayment($price);
+
+            $hospital->setClinic($clinic);
 
             foreach ($calling->getImages() as $image) {
                 $hospital->addImage($image);
@@ -223,7 +228,7 @@ class PostProcessor implements ProcessorInterface
         return $this->client->leads()->addOne($newLead);
     }
 
-    private function updateStationary(Calling $call, Hospital $hospital, ?int $price): void
+    private function updateStationary(Calling $call, Clinic $clinic, Hospital $hospital, ?int $price): void
     {
         if ($hospital->getStatus() !== 'assigned' && $hospital->getStatus() !== 'cancelled') {
             return;
@@ -247,6 +252,7 @@ class PostProcessor implements ProcessorInterface
             $hospital->getPhone() === $call->getPhone() &&
             $hospital->getFio() === $call->getFio() &&
             $hospital->getPrepayment() === $price &&
+            $hospital->getClinic()->getId() === $clinic->getId() &&
             !$changedImages
         ) {
             return;
@@ -256,6 +262,7 @@ class PostProcessor implements ProcessorInterface
         $hospital->setPhone($call->getPhone());
         $hospital->setPrepayment($price);
         $hospital->setStatus('assigned');
+        $hospital->setClinic($clinic);
 
         if ($changedImages) {
             $hospital->getImages()->clear();

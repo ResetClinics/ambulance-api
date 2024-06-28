@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ClinicRepository::class)]
-#[ApiResource]
 #[ApiResource(
     normalizationContext: ['groups' => ['clinic:read',  'clinic:item:read']],
     denormalizationContext: ['groups' => ['clinic:write']],

@@ -470,8 +470,6 @@ class Hospital
         return $this;
     }
 
-
-
     public function getImages(): Collection
     {
         return $this->images;
@@ -491,6 +489,39 @@ class Hospital
         $this->images->removeElement($mediaObject);
 
         return $this;
+    }
+
+
+    #[Groups(['hospital:detail:read'])]
+    public function getOwnerData(): array
+    {
+        return [
+            'id' => $this->owner?->getId(),
+            'name' => $this->owner?->getName(),
+            'phone' => $this->owner?->getPhone(),
+            'stationary' => $this->getOwnerStationary(),
+        ];
+    }
+
+    private function getOwnerStationary(): ?array
+    {
+        if (!$this->owner){
+            return null;
+        }
+
+        foreach ($this->owner->getServices() as $row){
+            if ($row->isStationary()){
+                return [
+                    'id' => $row->getService()->getId(),
+                    'name' => $row->getService()->getName(),
+                    'price' => $row->getPrice(),
+                    'plannedPrice' => $row->getPlannedPrice(),
+                    'description' => $row->getDescription(),
+                ];
+            }
+        }
+
+        return null;
     }
 }
 

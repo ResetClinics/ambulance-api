@@ -3,10 +3,10 @@
 namespace App\Entity\Calling;
 
 use ApiPlatform\Metadata\ApiResource;
+use App\Entity\Hospital\Clinic;
 use App\Entity\Service\Service;
 use App\Repository\Calling\RowRepository;
 use Doctrine\ORM\Mapping as ORM;
-use phpDocumentor\Reflection\Types\This;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: RowRepository::class)]
@@ -56,6 +56,10 @@ class Row
     #[ORM\Column(nullable: true)]
     #[Groups(['calling:read', 'calling:write'])]
     private ?int $percent = null;
+
+    #[ORM\ManyToOne]
+    #[Groups(['calling:read', 'calling:write'])]
+    private ?Clinic $clinic = null;
 
 
     public function getId(): ?int
@@ -199,5 +203,17 @@ class Row
     public function isHospital(): bool
     {
         return $this->getService()?->getId() === 12;
+    }
+
+    public function getClinic(): ?Clinic
+    {
+        return $this->clinic;
+    }
+
+    public function setClinic(?Clinic $clinic): self
+    {
+        $this->clinic = $clinic;
+
+        return $this;
     }
 }
