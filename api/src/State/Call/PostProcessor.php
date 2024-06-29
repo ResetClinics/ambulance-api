@@ -114,7 +114,7 @@ class PostProcessor implements ProcessorInterface
      * @throws NonUniqueResultException
      * @throws AmoCRMoAuthApiException
      */
-    private function createStationary(Calling $calling, Clinic $clinic, ?int $price, ?string $externalId): void
+    private function createStationary(Calling $calling, ?Clinic $clinic, ?int $price, ?string $externalId): void
     {
         $leadModel = $this->createStationaryLead($calling);
 
@@ -228,7 +228,7 @@ class PostProcessor implements ProcessorInterface
         return $this->client->leads()->addOne($newLead);
     }
 
-    private function updateStationary(Calling $call, Clinic $clinic, Hospital $hospital, ?int $price): void
+    private function updateStationary(Calling $call, ?Clinic $clinic, Hospital $hospital, ?int $price): void
     {
         if ($hospital->getStatus() !== 'assigned' && $hospital->getStatus() !== 'cancelled') {
             return;
@@ -252,7 +252,7 @@ class PostProcessor implements ProcessorInterface
             $hospital->getPhone() === $call->getPhone() &&
             $hospital->getFio() === $call->getFio() &&
             $hospital->getPrepayment() === $price &&
-            $hospital->getClinic()->getId() === $clinic->getId() &&
+            $hospital->getClinic()->getId() === $clinic?->getId() &&
             !$changedImages
         ) {
             return;
