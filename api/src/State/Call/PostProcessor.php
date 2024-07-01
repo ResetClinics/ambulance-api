@@ -21,7 +21,6 @@ use AmoCRM\Models\LinkModel;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Calling\Calling;
-use App\Entity\Calling\Row;
 use App\Entity\Hospital\Clinic;
 use App\Entity\Hospital\Hospital;
 use App\Entity\MediaObject;
@@ -71,54 +70,66 @@ class PostProcessor implements ProcessorInterface
             }
         }
 
-        $hasStationary = false;
-
         $hospital = $this->hospitals->findOneByOwnerId($data->getId());
 
-        /** @var Row $serviceRow */
-        foreach ($data->getServices() as $row) {
+        $this->checkStationary($data, $hospital);
+
+        return $this->processor->process($data, $operation, $uriVariables, $context);
+    }
+
+    /**
+     * @throws AmoCRMoAuthApiException
+     * @throws InvalidArgumentException
+     * @throws AmoCRMApiException
+     * @throws AmoCRMMissedTokenException
+     * @throws NonUniqueResultException
+     */
+    private function checkStationary(Calling $call, ?Hospital $hospital): void
+    {
+        foreach ($call->getServices() as $row) {
             if ($row->isStationary()) {
-                $hasStationary = true;
                 $price = $row->getPrice() !== null ? (int)$row->getPrice() : null;
                 if (!$hospital) {
-                    $leadModel = $this->createStationaryLead($data);
+                    $leadModel = $this->createStationaryLead($call);
 
                     $this->createStationary(
-                        $data,
+                        $call,
                         $row->getClinic(),
                         $price,
                         (string)$leadModel->getId()
                     );
                 } else {
                     $this->updateStationary(
-                        $data,
+                        $call,
                         $row->getClinic(),
                         $hospital,
                         $price,
                     );
                 }
+                return;
             }
         }
 
-        if (!$hasStationary && $hospital) {
-            $this->cancelStationary($data, $hospital);
+        if ($hospital) {
+            $this->cancelStationary($call, $hospital);
         }
-
-        return $this->processor->process($data, $operation, $uriVariables, $context);
     }
 
+
     /**
-     * @throws InvalidArgumentException
-     * @throws AmoCRMApiException
-     * @throws AmoCRMMissedTokenException
+     * @param Calling $calling
+     * @param Clinic|null $clinic
+     * @param int|null $price
+     * @param string|null $externalId
      * @throws NonUniqueResultException
-     * @throws AmoCRMoAuthApiException
      */
     private function createStationary(Calling $calling, ?Clinic $clinic, ?int $price, ?string $externalId): void
     {
-        $leadModel = $this->createStationaryLead($calling);
+        if (!$externalId){
+            return;
+        }
 
-        if (!$this->hospitals->findOneByExternal((string)$leadModel->getId())) {
+        if (!$this->hospitals->findOneByExternal($externalId)) {
 
             $hospital = new Hospital();
             $hospital->setExternal($externalId);
