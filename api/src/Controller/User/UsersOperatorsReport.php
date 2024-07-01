@@ -27,6 +27,7 @@ class UsersOperatorsReport extends AbstractController
     #[Route(path: '/api/users/report', name: 'users_report', methods: 'GET', priority: 10)]
     public function __invoke(Request $request): JsonResponse
     {
+        ini_set('memory_limit', '-1');
         $query = $this->denormalizer->denormalize($request->query->all(), Query::class);
 
         $result = $this->fetcher->fetch($query);
