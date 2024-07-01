@@ -93,10 +93,10 @@ class Fetcher
 
         /** @var Calling $call */
         foreach ($calls as $call) {
-            $adminId = $call->getAdmin()->getId();
+            $adminId = $call?->getAdmin()?->getId();
             $result = $this->getArr($result, $adminId, $call);
 
-            $doctorId = $call->getDoctor()->getId();
+            $doctorId = $call?->getDoctor()?->getId();
             if ($doctorId !== $adminId) {
                 $result = $this->getArr($result, $doctorId, $call);
             }
