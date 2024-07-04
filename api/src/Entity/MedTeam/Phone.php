@@ -20,7 +20,7 @@ class Phone
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['phone:read', 'phone:write'])]
+    #[Groups(['phone:read', 'phone:write', 'calling:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]

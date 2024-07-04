@@ -66,7 +66,7 @@ class MedTeam
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['med-team:read', 'administrator_report:read'])]
+    #[Groups(['med-team:read', 'administrator_report:read', 'calling:read'])]
     private ?int $id = null;
 
     #[ORM\Column]
@@ -83,7 +83,7 @@ class MedTeam
     private ?DateTimeImmutable $completedAt = null;
 
     #[ORM\Column(length: 32)]
-    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read'])]
+    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read', 'calling:read'])]
     #[Assert\Choice(choices: [
         'draft',
         'scheduled',
@@ -105,7 +105,7 @@ class MedTeam
     private ?User $doctor = null;
 
     #[ORM\ManyToOne]
-    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read'])]
+    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read', 'calling:read'])]
     private ?Phone $phone = null;
 
     #[ORM\Column(nullable: true)]

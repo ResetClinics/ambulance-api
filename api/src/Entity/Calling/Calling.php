@@ -374,6 +374,7 @@ class Calling
     private ?string $addressInfo = null;
 
     #[ORM\ManyToOne(inversedBy: 'callings')]
+    #[Groups(['calling:read', 'calling:write'])]
     private ?MedTeam $team = null;
 
     public function __construct(
