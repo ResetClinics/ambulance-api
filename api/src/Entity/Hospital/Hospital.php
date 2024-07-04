@@ -499,6 +499,7 @@ class Hospital
             'id' => $this->owner?->getId(),
             'name' => $this->owner?->getName(),
             'phone' => $this->owner?->getPhone(),
+            'age' => $this->owner?->getAge(),
             'stationary' => $this->getOwnerStationary(),
         ];
     }
