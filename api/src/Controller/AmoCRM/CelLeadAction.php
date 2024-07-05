@@ -96,7 +96,7 @@ class CelLeadAction extends AbstractController
         switch ($customerRequest) {
             case 'Выезд на дом':
             case 'Психиатр на дом':
-                $newStatus = 38307946;
+                $newStatus = 68082646;
                 break;
             case 'Стационар НД':
             case 'Стационар Грай':
