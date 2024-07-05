@@ -392,6 +392,16 @@ class InitCommand extends Command
             'id' => 'administrator_reports-delete',
             'description' => 'Отчеты администратора: удаление'
         ],
+
+        //Страница логиста
+        [
+            'id' => 'logistics-index',
+            'description' => 'Интерфейс логиста: просмотр'
+        ],
+        [
+            'id' => 'logistics-set_team',
+            'description' => 'Интерфейс логиста: назначение бригады'
+        ],
     ];
 
     public function __construct(
