@@ -152,4 +152,17 @@ class CallingRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    public function getAllCoords(): array
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        return $qb
+            ->select('c.lat, c.lon')
+            ->andWhere('c.lat IS NOT NULL')
+            ->andWhere('c.lon IS NOT NULL')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 }
