@@ -161,6 +161,8 @@ class CallingRepository extends ServiceEntityRepository
             ->select('c.lat, c.lon')
             ->andWhere('c.lat IS NOT NULL')
             ->andWhere('c.lon IS NOT NULL')
+            ->andWhere('c.status = :status')
+            ->setParameter('status', Status::COMPLETED)
             ->getQuery()
             ->getResult()
             ;
