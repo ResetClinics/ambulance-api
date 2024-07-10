@@ -118,7 +118,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[ApiFilter(
     DateFilter::class,
     properties: [
-        'dateTime' => DateFilterInterface::EXCLUDE_NULL,
         'createdAt' => DateFilterInterface::EXCLUDE_NULL,
         'updatedAt' => DateFilterInterface::EXCLUDE_NULL,
         'completedAt' => DateFilterInterface::EXCLUDE_NULL,
