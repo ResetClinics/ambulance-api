@@ -291,8 +291,8 @@ class Handler
         $partner = $this->partners->findOneByExternalId($externalId);
         if (!$partner) {
             $partnerCommand = new \App\UseCase\Partner\Create\Command(
-                $externalId,
-                $name
+                $name,
+                $externalId
             );
             $this->partnerHandler->handle($partnerCommand);
             $partner = $this->partners->findOneByExternalId($externalId);
