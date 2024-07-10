@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Exception;
 use WebSocket\Client;
 
 class WSClient
@@ -18,5 +19,25 @@ class WSClient
         $client->text($message);
 
         $client->close();
+    }
+
+    public function sendUpdateOffer(?int $id): void
+    {
+        try {
+            $this->send(
+                json_encode(['call' => ['update' => $id]])
+            );
+        } catch (Exception) {
+        }
+    }
+
+    public function sendUpdateTeam(?int $id): void
+    {
+        try {
+            $this->send(
+                json_encode(['team' => ['update' => $id]])
+            );
+        } catch (Exception) {
+        }
     }
 }

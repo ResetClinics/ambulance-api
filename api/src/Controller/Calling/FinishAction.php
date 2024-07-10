@@ -28,6 +28,7 @@ use App\Services\AmoCRM;
 use App\Services\Call\OperatorReward;
 use App\Services\Call\PartnerReward;
 use App\Services\CallingSender;
+use App\Services\WSClient;
 use DateTimeImmutable;
 use DateTimeZone;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -54,7 +55,8 @@ class FinishAction extends AbstractController
         HospitalRepository $hospitals,
         PartnerReward $partnerReward,
         OperatorReward $operatorReward,
-        Flusher $flusher
+        Flusher $flusher,
+        private readonly WSClient $wsClient,
     )
     {
         $this->client = $amoCRM->getClient();
@@ -121,6 +123,8 @@ class FinishAction extends AbstractController
             'Вызов N ' . $calling->getNumberCalling() . ' завершен',
             'Спасибо за работу!'
         );
+
+        $this->wsClient->sendUpdateOffer($calling->getId());
 
         return $this->json($calling, Response::HTTP_ACCEPTED);
     }

@@ -13,6 +13,7 @@ use App\Flusher;
 use App\Repository\CallingRepository;
 use App\Repository\TeamRepository;
 use App\Services\AmoCRM;
+use App\Services\WSClient;
 use DateTimeImmutable;
 use DomainException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,8 +26,10 @@ class AcceptAction extends AbstractController
 {
 
     private AmoCRMApiClient $client;
+
     public function __construct(
-        AmoCRM                             $amoCRM
+        AmoCRM                    $amoCRM,
+        private readonly WSClient $wsClient,
     )
     {
         $this->client = $amoCRM->getClient();
@@ -37,8 +40,7 @@ class AcceptAction extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        if ($calling->getAdmin()?->getId() !== $user->getId())
-        {
+        if ($calling->getAdmin()?->getId() !== $user->getId()) {
             throw new DomainException('Принять вызов может только администратор');
         }
 
@@ -58,6 +60,9 @@ class AcceptAction extends AbstractController
         $calling->setAccepted(new DateTimeImmutable());
 
         $flusher->flush();
+
+        $this->wsClient->sendUpdateOffer($calling->getId());
+
         return $this->json($calling, Response::HTTP_ACCEPTED);
     }
 }

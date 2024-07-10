@@ -15,6 +15,7 @@ use App\Repository\ClientRepository;
 use App\Repository\PartnerRepository;
 use App\Services\AmoCRM;
 use App\Services\TrackerToMkad;
+use App\Services\WSClient;
 use App\Services\YaGeolocation\Api;
 use DateTimeImmutable;
 use Doctrine\ORM\NonUniqueResultException;
@@ -40,6 +41,7 @@ class Handler
         private readonly \App\UseCase\Partner\Create\Handler $partnerHandler,
         private readonly ClientRepository                    $clients,
         private readonly \App\UseCase\Client\Create\Handler $clientHandler,
+        private readonly WSClient                            $wsClient,
     )
     {
         $this->client = $amoCRM->getClient();
@@ -103,6 +105,7 @@ class Handler
             throw new DomainException('Не заполнены поля');
         }
 
+        $this->wsClient->sendUpdateOffer($call->getId());
     }
 
     private function getContactData(LeadModel $lead): array

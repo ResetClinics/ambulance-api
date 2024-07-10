@@ -18,6 +18,7 @@ use App\Repository\CallingRepository;
 use App\Repository\TeamRepository;
 use App\Services\AmoCRM;
 use App\Services\CallingSender;
+use App\Services\WSClient;
 use DateTimeImmutable;
 use DateTimeZone;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,6 +33,7 @@ class RejectAction extends AbstractController
     public function __construct(
         AmoCRM        $amoCRM,
         CallingSender $sender,
+        private readonly WSClient $wsClient,
     )
     {
         $this->client = $amoCRM->getClient();
@@ -96,6 +98,8 @@ class RejectAction extends AbstractController
             'Вызов N ' . $calling->getNumberCalling() . ' отменен',
             'Спасибо за информацию!'
         );
+
+        $this->wsClient->sendUpdateOffer($calling->getId());
 
         return $this->json($calling, Response::HTTP_ACCEPTED);
     }

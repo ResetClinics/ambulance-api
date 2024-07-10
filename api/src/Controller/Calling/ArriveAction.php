@@ -13,6 +13,7 @@ use App\Flusher;
 use App\Repository\CallingRepository;
 use App\Repository\TeamRepository;
 use App\Services\AmoCRM;
+use App\Services\WSClient;
 use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,19 +24,21 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 class ArriveAction extends AbstractController
 {
     private AmoCRMApiClient $client;
+
     public function __construct(
-        AmoCRM                             $amoCRM
+        AmoCRM                    $amoCRM,
+        private readonly WSClient $wsClient,
     )
     {
         $this->client = $amoCRM->getClient();
     }
 
     public function __invoke(
-        Calling $calling,
-        CallingArriveDto $dto,
-        TeamRepository $teams,
+        Calling           $calling,
+        CallingArriveDto  $dto,
+        TeamRepository    $teams,
         CallingRepository $callings,
-        Flusher $flusher): JsonResponse
+        Flusher           $flusher): JsonResponse
     {
 
         $filter = new LeadsFilter();
@@ -53,6 +56,9 @@ class ArriveAction extends AbstractController
         $calling->setArrived(new DateTimeImmutable());
 
         $flusher->flush();
+
+        $this->wsClient->sendUpdateOffer($calling->getId());
+
         return $this->json($calling, Response::HTTP_ACCEPTED);
     }
 }

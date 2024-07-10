@@ -10,6 +10,7 @@ use App\Entity\AdministratorReport;
 use App\Entity\MediaObject;
 use App\Repository\AdministratorReportRepository;
 use App\Services\File\UploadedBase64File;
+use App\Services\WSClient;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class PostProcessor implements ProcessorInterface
@@ -17,7 +18,8 @@ class PostProcessor implements ProcessorInterface
     public function __construct(
         private readonly ProcessorInterface $processor,
         private readonly RequestStack       $requestStack,
-        private readonly AdministratorReportRepository  $reports
+        private readonly AdministratorReportRepository  $reports,
+        private readonly WSClient $wsClient,
     )
     {
     }
@@ -25,7 +27,7 @@ class PostProcessor implements ProcessorInterface
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
     {
 
-
+        $this->wsClient->sendUpdateTeam($data->getId());
 
        if ($data->getStatus() !== 'completed' && $data->getCompletedAt() !== null) {
            return $this->processor->process($data, $operation, $uriVariables, $context);

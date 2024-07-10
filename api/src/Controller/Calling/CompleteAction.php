@@ -16,6 +16,7 @@ use App\Flusher;
 use App\Repository\CallingRepository;
 use App\Services\AmoCRM;
 use App\Services\CallingSender;
+use App\Services\WSClient;
 use DateTimeImmutable;
 use DateTimeZone;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -31,7 +32,8 @@ class CompleteAction extends AbstractController
 
     public function __construct(
         AmoCRM        $amoCRM,
-        CallingSender $sender
+        CallingSender $sender,
+        private readonly WSClient $wsClient,
     )
     {
         $this->client = $amoCRM->getClient();
@@ -87,6 +89,8 @@ class CompleteAction extends AbstractController
             'Вызов N ' . $calling->getNumberCalling() . ' завершен',
             'Спасибо за работу!'
         );
+
+        $this->wsClient->sendUpdateOffer($calling->getId());
 
         return $this->json($calling, Response::HTTP_ACCEPTED);
     }

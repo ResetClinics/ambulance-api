@@ -25,6 +25,7 @@ use App\Repository\PartnerRepository;
 use App\Services\AmoCRM;
 use App\Services\CallingSender;
 use App\Services\TrackerToMkad;
+use App\Services\WSClient;
 use App\Services\YaGeolocation\Api;
 use DateTimeImmutable;
 use Doctrine\ORM\NonUniqueResultException;
@@ -52,6 +53,7 @@ class Handler
         private readonly \App\UseCase\Client\Create\Handler  $clientHandler,
         private readonly MedTeamRepository                   $medTeamRepository,
         private readonly CallingSender                       $sender,
+        private readonly WSClient                            $wsClient,
     )
     {
         $this->client = $amoCRM->getClient();
@@ -135,6 +137,8 @@ class Handler
             'Внимание новый заказ',
             $call->getAddress()
         );
+
+        $this->wsClient->sendUpdateOffer($call->getId());
     }
 
     private function getContactData(LeadModel $lead): array
