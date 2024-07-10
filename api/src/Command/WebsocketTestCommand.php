@@ -2,11 +2,10 @@
 
 namespace App\Command;
 
+use App\Services\WSClient;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use WebSocket\Client;
@@ -17,21 +16,20 @@ use WebSocket\Client;
 )]
 class WebsocketTestCommand extends Command
 {
+    public function __construct(
+        private readonly WSClient $client
+    )
+    {
+        parent::__construct();
+    }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
-        $client = new Client("ws://31.129.99.100:3001");
+        $this->client->send(json_encode( ['type' => 'test'] ));
 
-        dd($client->isConnected());
-
-        $client->text("Hello WebSocket.org!");
-        echo $client->receive();
-
-        $client->close();
-
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
+        $io->success('Success.');
 
         return Command::SUCCESS;
     }

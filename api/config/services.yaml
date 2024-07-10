@@ -34,6 +34,10 @@ services:
         arguments:
             $token : "%env(YA_GEOLOCATION_TOKEN)%"
 
+    App\Services\WSClient:
+        arguments:
+            $url : "%env(WEBSOCKET_URL)%"
+
     App\Services\CallingSender:
         arguments:
             $token : "%env(FIREBASE_SERVER_TOKEN)%"
