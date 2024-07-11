@@ -33,6 +33,7 @@ class Phone
     private ?string $value = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['phone:read', 'phone:write', 'calling:read'])]
     private ?string $externalId = null;
 
     public function getId(): ?int
