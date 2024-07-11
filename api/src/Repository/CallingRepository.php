@@ -52,6 +52,16 @@ class CallingRepository extends ServiceEntityRepository
         }
     }
 
+    public function getById($id): Calling
+    {
+        $result = $this->find($id);
+
+        if (!$result){
+            throw new NotFoundHttpException('Вызов id: '.$id.' не найден');
+        }
+        return $result;
+    }
+
     public function findActiveByAdministrator(User $user): ?Calling
     {
         $statuses = [
