@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api/call/{id}/set-team/{teamId}', name: 'call.set-team', methods: ["POST"])]
+#[Route('/api/calls/{id}/set-team/{teamId}', name: 'call.set-team', methods: ["POST"])]
 class SetTeamAction extends AbstractController
 {
     private AmoCRMApiClient $client;
