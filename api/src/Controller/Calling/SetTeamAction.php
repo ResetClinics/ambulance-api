@@ -47,16 +47,16 @@ class SetTeamAction extends AbstractController
 
             /** @var LeadModel $lead */
             foreach ($leads as $lead) {
-                $leadCustomFieldsValues = new CustomFieldsValuesCollection();
-
-                $textCustomFieldValueModel = new TextCustomFieldValuesModel();
-                $textCustomFieldValueModel->setFieldId(875863);
-                $textCustomFieldValueModel->setValues(
-                    (new TextCustomFieldValueCollection())
-                        ->add((new TextCustomFieldValueModel())->setValue($team->getPhone()?->getId()))
-                );
-                $leadCustomFieldsValues->add($textCustomFieldValueModel);
-                $lead->setCustomFieldsValues($leadCustomFieldsValues);
+                //$leadCustomFieldsValues = new CustomFieldsValuesCollection();
+//
+                //$textCustomFieldValueModel = new TextCustomFieldValuesModel();
+                //$textCustomFieldValueModel->setFieldId(875863);
+                //$textCustomFieldValueModel->setValues(
+                //    (new TextCustomFieldValueCollection())
+                //        ->add((new TextCustomFieldValueModel())->setValue($team->getPhone()?->getId()))
+                //);
+                //$leadCustomFieldsValues->add($textCustomFieldValueModel);
+                //$lead->setCustomFieldsValues($leadCustomFieldsValues);
                 $lead->setStatusId(62358394);
             }
 
