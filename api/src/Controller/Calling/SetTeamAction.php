@@ -54,7 +54,11 @@ class SetTeamAction extends AbstractController
 
                 foreach ($lead->getCustomFieldsValues() as $field) {
                     if ($field->getFieldId() === 875863) {
-                        return $this->json(['values' => gettype($field)], Response::HTTP_ACCEPTED);
+                        return $this->json([
+                            'fieldType' => gettype($field),
+                            'values' => $field->getValues(),
+                            'value' => $field->getValues()?->first()->getValue(),
+                        ], Response::HTTP_ACCEPTED);
                     }
                 }
 
