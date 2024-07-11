@@ -57,7 +57,7 @@ class SetTeamAction extends AbstractController
                 $teamSelectCustomValueModel->setFieldId(875863);
                 $teamSelectCustomValueModel->setValues(
                     (new SelectCustomFieldValueCollection())
-                        ->add((new SelectCustomFieldValueModel())->setValue('0'))
+                        ->add((new SelectCustomFieldValueModel())->setValue('0')->setEnumId(660461))
                 );
                 $leadCustomFieldsValues->add($teamSelectCustomValueModel);
 
@@ -83,7 +83,7 @@ class SetTeamAction extends AbstractController
 
             $this->client->leads()->update($leads);
         } catch (Exception $exception) {
-            return $this->json(['error' => $exception->getMessage()], Response::HTTP_ACCEPTED);
+            return $this->json(['error' => $exception->getMessage(), $exception], Response::HTTP_ACCEPTED);
         }
 
         return $this->json([], Response::HTTP_ACCEPTED);
