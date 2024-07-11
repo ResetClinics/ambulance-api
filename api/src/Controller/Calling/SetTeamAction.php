@@ -57,7 +57,7 @@ class SetTeamAction extends AbstractController
                 $teamSelectCustomValueModel->setFieldId(875863);
                 $teamSelectCustomValueModel->setValues(
                     (new SelectCustomFieldValueCollection())
-                        ->add((new SelectCustomFieldValueModel())->setValue('0')/*->setEnumId(660461)*/)
+                        ->add((new SelectCustomFieldValueModel())->setValue('0')->setEnumId(660461))
                 );
                 $leadCustomFieldsValues->add($teamSelectCustomValueModel);
 
