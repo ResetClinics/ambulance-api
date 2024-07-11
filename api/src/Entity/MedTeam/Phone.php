@@ -64,4 +64,9 @@ class Phone
 
         return $this;
     }
+
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
+    }
 }
