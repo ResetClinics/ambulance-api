@@ -32,6 +32,9 @@ class Phone
     )]
     private ?string $value = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?string $externalId = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -45,6 +48,18 @@ class Phone
     public function setValue(string $value): self
     {
         $this->value = $value;
+
+        return $this;
+    }
+
+    public function getExternalId(): ?string
+    {
+        return $this->externalId;
+    }
+
+    public function setExternalId(?string $externalId): self
+    {
+        $this->externalId = $externalId;
 
         return $this;
     }
