@@ -58,6 +58,8 @@ class SetTeamAction extends AbstractController
                     }
                 }
 
+                return $this->json(['values' => false], Response::HTTP_ACCEPTED);
+
                 //$leadCustomFieldsValues = new CustomFieldsValuesCollection();
 //
                 //$textCustomFieldValueModel = new TextCustomFieldValuesModel();
