@@ -28,6 +28,7 @@ use App\Controller\Calling\HospitalizationWithTherapyAction;
 use App\Controller\Calling\RecalculateOperatorReward;
 use App\Controller\Calling\RejectAction;
 use App\Controller\Calling\RepeatAction;
+use App\Controller\Calling\SetTeamAction;
 use App\Entity\Client;
 use App\Entity\MedTeam\MedTeam;
 use App\Entity\MediaObject;
@@ -114,6 +115,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[Post(uriTemplate: '/callings/{id}/hospitalization-without-therapy', controller: HospitalizationWithoutTherapyAction::class)]
 #[Post(uriTemplate: '/callings/{id}/repeat', controller: RepeatAction::class)]
 #[Post(uriTemplate: '/callings/{id}/reject',controller: RejectAction::class)]
+#[Post(uriTemplate: '/callings/{id}/set-team',controller: SetTeamAction::class)]
 #[ApiFilter(OrderFilter::class, properties: ['createdAt', 'updatedAt', 'completedAt'], arguments: ['orderParameterName' => 'order'])]
 #[ApiFilter(
     DateFilter::class,
