@@ -14,6 +14,7 @@ use AmoCRM\Models\LeadModel;
 use App\Repository\CallingRepository;
 use App\Repository\MedTeam\MedTeamRepository;
 use App\Services\AmoCRM;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,7 +28,7 @@ class SetTeamAction extends AbstractController
     public function __construct(
         private readonly CallingRepository $calls,
         private readonly MedTeamRepository $teams,
-        AmoCRM                    $amoCRM,
+        AmoCRM                             $amoCRM,
     )
     {
         $this->client = $amoCRM->getClient();
@@ -35,32 +36,34 @@ class SetTeamAction extends AbstractController
 
     public function __invoke($id, $teamId): JsonResponse
     {
+        try {
+            $call = $this->calls->getById($id);
+            $team = $this->teams->getById($teamId);
 
-        $call = $this->calls->getById($id);
-        $team = $this->teams->getById($teamId);
+            $filter = new LeadsFilter();
+            $filter->setIds([$call->getNumberCalling()]);
 
-        $filter = new LeadsFilter();
-        $filter->setIds([$call->getNumberCalling()]);
+            $leads = $this->client->leads()->get($filter);
 
-        $leads = $this->client->leads()->get($filter);
+            /** @var LeadModel $lead */
+            foreach ($leads as $lead) {
+                $leadCustomFieldsValues = new CustomFieldsValuesCollection();
 
-        /** @var LeadModel $lead */
-        foreach ($leads as $lead) {
-            $leadCustomFieldsValues = new CustomFieldsValuesCollection();
+                $textCustomFieldValueModel = new TextCustomFieldValuesModel();
+                $textCustomFieldValueModel->setFieldId(875863);
+                $textCustomFieldValueModel->setValues(
+                    (new TextCustomFieldValueCollection())
+                        ->add((new TextCustomFieldValueModel())->setValue($team->getPhone()?->getId()))
+                );
+                $leadCustomFieldsValues->add($textCustomFieldValueModel);
+                $lead->setCustomFieldsValues($leadCustomFieldsValues);
+                $lead->setStatusId(62358394);
+            }
 
-            $textCustomFieldValueModel = new TextCustomFieldValuesModel();
-            $textCustomFieldValueModel->setFieldId(875863);
-            $textCustomFieldValueModel->setValues(
-                (new TextCustomFieldValueCollection())
-                    ->add((new TextCustomFieldValueModel())->setValue($team->getPhone()?->getId()))
-            );
-            $leadCustomFieldsValues->add($textCustomFieldValueModel);
-            $lead->setCustomFieldsValues($leadCustomFieldsValues);
-            $lead->setStatusId(62358394);
+            $this->client->leads()->update($leads);
+        } catch (Exception $exception) {
+            return $this->json(['error' => $exception->getMessage()], Response::HTTP_ACCEPTED);
         }
-
-        $this->client->leads()->update($leads);
-
 
         return $this->json([], Response::HTTP_ACCEPTED);
     }
