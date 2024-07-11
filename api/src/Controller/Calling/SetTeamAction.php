@@ -8,11 +8,8 @@ use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Collections\CustomFieldsValuesCollection;
 use AmoCRM\Filters\LeadsFilter;
 use AmoCRM\Models\CustomFieldsValues\SelectCustomFieldValuesModel;
-use AmoCRM\Models\CustomFieldsValues\TextCustomFieldValuesModel;
 use AmoCRM\Models\CustomFieldsValues\ValueCollections\SelectCustomFieldValueCollection;
-use AmoCRM\Models\CustomFieldsValues\ValueCollections\TextCustomFieldValueCollection;
 use AmoCRM\Models\CustomFieldsValues\ValueModels\SelectCustomFieldValueModel;
-use AmoCRM\Models\CustomFieldsValues\ValueModels\TextCustomFieldValueModel;
 use AmoCRM\Models\LeadModel;
 use App\Repository\CallingRepository;
 use App\Repository\MedTeam\MedTeamRepository;
@@ -50,8 +47,6 @@ class SetTeamAction extends AbstractController
 
             /** @var LeadModel $lead */
             foreach ($leads as $lead) {
-
-
                 $leadCustomFieldsValues = new CustomFieldsValuesCollection();
                 $teamSelectCustomValueModel = new SelectCustomFieldValuesModel();
                 $teamSelectCustomValueModel->setFieldId(875863);
@@ -60,23 +55,6 @@ class SetTeamAction extends AbstractController
                         ->add((new SelectCustomFieldValueModel())->setValue('0')->setEnumId(660461))
                 );
                 $leadCustomFieldsValues->add($teamSelectCustomValueModel);
-
-//               //$leadCustomFieldsValues = new CustomFieldsValuesCollection();
-///
-//               $selectCustomFieldValueModel = new SelectCustomFieldValueModel();
-//               $selectCustomFieldValueModel->setValue('0');
-//               $selectCustomFieldValueModel->setEnumId(660461);
-
-//               $fff = new SelectCustomFieldValueCollection();
-
-//               $fff->add($textCustomFieldValueModel);
-
-//               //$textCustomFieldValueModel->setFieldId(875863);
-//               //$textCustomFieldValueModel->setValues(
-//               //    (new TextCustomFieldValueCollection())
-//               //        ->add((new TextCustomFieldValueModel())->setValue($team->getPhone()?->getId()))
-//               //);
-//               //$leadCustomFieldsValues->add($textCustomFieldValueModel);
                 $lead->setCustomFieldsValues($leadCustomFieldsValues);
                 $lead->setStatusId(38874646);
             }
