@@ -57,7 +57,7 @@ class SetTeamAction extends AbstractController
                 //);
                 //$leadCustomFieldsValues->add($textCustomFieldValueModel);
                 //$lead->setCustomFieldsValues($leadCustomFieldsValues);
-                $lead->setStatusId(62358394);
+                $lead->setStatusId(38874646);
             }
 
             $this->client->leads()->update($leads);
