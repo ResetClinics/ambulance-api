@@ -39,6 +39,8 @@ class SetTeamAction extends AbstractController
         try {
             $call = $this->calls->getById($id);
             $team = $this->teams->getById($teamId);
+            $value = $team->getPhone()?->getId();
+            $enumId = $team->getPhone()?->getExternalId();
 
             $filter = new LeadsFilter();
             $filter->setIds([$call->getNumberCalling()]);
@@ -47,16 +49,22 @@ class SetTeamAction extends AbstractController
 
             /** @var LeadModel $lead */
             foreach ($leads as $lead) {
-                $leadCustomFieldsValues = new CustomFieldsValuesCollection();
-                $teamSelectCustomValueModel = new SelectCustomFieldValuesModel();
-                $teamSelectCustomValueModel->setFieldId(875863);
-                $teamSelectCustomValueModel->setValues(
-                    (new SelectCustomFieldValueCollection())
-                        ->add((new SelectCustomFieldValueModel())->setValue('0')->setEnumId(660461))
-                );
-                $leadCustomFieldsValues->add($teamSelectCustomValueModel);
-                $lead->setCustomFieldsValues($leadCustomFieldsValues);
-                $lead->setStatusId(38874646);
+                if ($value !== null && $enumId !== null) {
+                    $leadCustomFieldsValues = new CustomFieldsValuesCollection();
+                    $teamSelectCustomValueModel = new SelectCustomFieldValuesModel();
+                    $teamSelectCustomValueModel->setFieldId(875863);
+                    $teamSelectCustomValueModel->setValues(
+                        (new SelectCustomFieldValueCollection())
+                            ->add(
+                                (new SelectCustomFieldValueModel())
+                                    ->setValue((string)$value)
+                                    ->setEnumId((int)$enumId)
+                            )
+                    );
+                    $leadCustomFieldsValues->add($teamSelectCustomValueModel);
+                    $lead->setCustomFieldsValues($leadCustomFieldsValues);
+                    $lead->setStatusId(38874646);
+                }
             }
 
             $this->client->leads()->update($leads);
