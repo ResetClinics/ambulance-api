@@ -36,7 +36,7 @@ class SetTeamAction extends AbstractController
     public function __invoke($id, $teamId): JsonResponse
     {
 
-        $call = $this->calls->getOneByNumber($id);
+        $call = $this->calls->getById($id);
         $team = $this->teams->getById($teamId);
 
         $filter = new LeadsFilter();
