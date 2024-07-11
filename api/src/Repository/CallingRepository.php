@@ -107,6 +107,20 @@ class CallingRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    public function getOneByNumber(string $numberCalling): Calling
+    {
+        $result = $this->createQueryBuilder('c')
+            ->andWhere('c.numberCalling = :numberCalling')
+            ->setParameter(':numberCalling', $numberCalling)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if (!$result){
+            throw new NotFoundHttpException('Вызов #'.$numberCalling.' не найден');
+        }
+        return $result;
+    }
+
     public function findOneByOwnerExternalId(string $ownerExternalId): ?Calling
     {
         $result = $this->createQueryBuilder('c')

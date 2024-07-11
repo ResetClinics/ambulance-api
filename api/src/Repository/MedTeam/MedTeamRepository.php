@@ -2,11 +2,13 @@
 
 namespace App\Repository\MedTeam;
 
+use App\Entity\Calling\Calling;
 use App\Entity\MedTeam\MedTeam;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @extends ServiceEntityRepository<MedTeam>
@@ -39,6 +41,16 @@ class MedTeamRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function getById($id): MedTeam
+    {
+        $result = $this->find($id);
+
+        if (!$result){
+            throw new NotFoundHttpException('Команда #'.$id.' не найдена');
+        }
+        return $result;
     }
 
     public function getLastWorkByNumber(mixed $team): ?MedTeam
