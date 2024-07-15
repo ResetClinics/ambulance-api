@@ -8,6 +8,7 @@ use Webmozart\Assert\Assert;
 
 class Status
 {
+    public const NOT_READY = 'not_ready';
     public const WAITING = 'waiting';
 
     public const ASSIGNED = 'assigned';
@@ -24,6 +25,7 @@ class Status
     public function __construct(string $name)
     {
         Assert::oneOf($name, [
+            self::NOT_READY,
             self::WAITING,
             self::ASSIGNED,
             self::ACCEPTED,
@@ -34,6 +36,11 @@ class Status
         ]);
 
         $this->name = $name;
+    }
+
+    public static function notReady(): self
+    {
+        return new self(self::NOT_READY);
     }
 
     public static function waiting(): self
@@ -79,6 +86,11 @@ class Status
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function isNotReady(): bool
+    {
+        return $this->name === self::NOT_READY;
     }
 
     public function isWaiting(): bool
