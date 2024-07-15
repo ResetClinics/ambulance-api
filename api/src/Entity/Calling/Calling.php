@@ -97,11 +97,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
 )]
-#[ApiFilter(
-    SearchFilter::class,
-    properties: [
-        'team' => 'exact',
-    ])]
+#[ApiFilter(SearchFilter::class, properties: ['team.id' => 'exact'])]
 #[Post(uriTemplate: '/callings/recalculate-operators-rewards', controller: RecalculateOperatorReward::class)]
 #[Post(uriTemplate: '/callings/current', controller: CurrentAction::class, input: CallingDto::class, read: false)]
 #[Post(uriTemplate: '/callings/{id}/accept', controller: AcceptAction::class, input: CallingDto::class, read: false)]
