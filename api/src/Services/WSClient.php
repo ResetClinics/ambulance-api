@@ -10,7 +10,8 @@ class WSClient
     public function __construct(
         private readonly string $url
     )
-    {}
+    {
+    }
 
     public function send(string $message): void
     {
@@ -26,6 +27,21 @@ class WSClient
         try {
             $this->send(
                 json_encode(['call' => ['update' => $id]])
+            );
+        } catch (Exception) {
+        }
+    }
+
+    public function sendAddedToQueue(?int $id): void
+    {
+        try {
+            $this->send(
+                json_encode([
+                    'event' => 'added_to_queue',
+                    'data' => [
+                        'call' => $id
+                    ]
+                ])
             );
         } catch (Exception) {
         }

@@ -105,7 +105,7 @@ class Handler
             throw new DomainException('Не заполнены поля');
         }
 
-        $this->wsClient->sendUpdateOffer($call->getId());
+        $this->wsClient->sendAddedToQueue($call->getId());
     }
 
     private function getContactData(LeadModel $lead): array
