@@ -26,7 +26,12 @@ class WSClient
     {
         try {
             $this->send(
-                json_encode(['call' => ['update' => $id]])
+                json_encode([
+                    'event' => 'calls_updated',
+                    'data' => [
+                        'id' => $id
+                    ]
+                ])
             );
         } catch (Exception) {
         }
@@ -37,9 +42,9 @@ class WSClient
         try {
             $this->send(
                 json_encode([
-                    'event' => 'added_to_queue',
+                    'event' => 'queue_calls_added',
                     'data' => [
-                        'call' => $id
+                        'id' => $id
                     ]
                 ])
             );
@@ -51,7 +56,12 @@ class WSClient
     {
         try {
             $this->send(
-                json_encode(['team' => ['update' => $id]])
+                json_encode([
+                    'event' => 'teams_updated',
+                    'data' => [
+                        'id' => $id
+                    ]
+                ])
             );
         } catch (Exception) {
         }
