@@ -112,7 +112,6 @@
         "test": "phpunit",
         "test-coverage": "XDEBUG_MODE=coverage phpunit --coverage-html var/test/coverage",
         "auto-scripts": {
-            "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
         "post-install-cmd": [
