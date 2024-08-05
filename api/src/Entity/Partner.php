@@ -41,11 +41,11 @@ class Partner
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['partner:item:read'])]
+    #[Groups(['partner:item:read', 'partner_user:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['partner:item:read', 'partner:write'])]
+    #[Groups(['partner:item:read', 'partner:write', 'partner_user:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -296,4 +296,5 @@ class Partner
 
         return $this;
     }
+
 }

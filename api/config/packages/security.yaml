@@ -7,10 +7,13 @@ security:
         ROLE_SUPER_ADMIN:     [ROLE_ADMIN, ROLE_DOCTOR, ROLE_APP]
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
-        # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
             entity:
                 class: App\Entity\User\User
+                property: phone
+        app_partner_user_provider:
+            entity:
+                class: App\Entity\Partner\PartnerUser
                 property: phone
     firewalls:
         login:
@@ -22,20 +25,31 @@ security:
                 check_path: /api/login_check
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
+        partner_login:
+            pattern: ^/partner/login
+            stateless: true
+            provider: app_partner_user_provider
+            json_login:
+                username_path: phone
+                check_path: /partner/login_check
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
         api:
             pattern:   ^/api
             stateless: true
-            jwt: ~
-
+            jwt:
+                provider: app_user_provider
+        partner:
+            pattern:   ^/partner
+            stateless: true
+            jwt:
+                provider: app_partner_user_provider
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             lazy: true
             provider: app_user_provider
-            custom_authenticator: App\Security\AppAuthenticator
-            logout:
-                path: security_logout
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -46,6 +60,8 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        - { path: ^/partner/login, roles: PUBLIC_ACCESS }
+        - { path: ^/partner, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/sing-in, roles: PUBLIC_ACCESS }
         - { path: ^/app, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
