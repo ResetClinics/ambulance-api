@@ -109,6 +109,28 @@ class InitCommand extends Command
             'id' => 'partners-agreements-delete',
             'description' => 'Партнеры/Соглашения: удаление'
         ],
+
+        [
+            'id' => 'partners-users_access-index',
+            'description' => 'Партнеры/Пользователи партнеров: просмотр списка'
+        ],
+        [
+            'id' => 'partners-users_access-create',
+            'description' => 'Партнеры/Пользователи партнеров: добавление'
+        ],
+        [
+            'id' => 'partners-users_access-view',
+            'description' => 'Партнеры/Пользователи партнеров: просмотр детально'
+        ],
+        [
+            'id' => 'partners-users_access-update',
+            'description' => 'Партнеры/Пользователи партнеров: изменение'
+        ],
+        [
+            'id' => 'partners-users_access-delete',
+            'description' => 'Партнеры/Пользователи партнеров: удаление'
+        ],
+
         //Пользователи
         [
             'id' => 'users-index',
