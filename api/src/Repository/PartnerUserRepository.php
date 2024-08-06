@@ -9,6 +9,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
@@ -71,5 +72,20 @@ class PartnerUserRepository extends ServiceEntityRepository implements PasswordU
         $user->setPassword($newHashedPassword);
 
         $this->save($user, true);
+    }
+
+    public function getByPhone(string $phone)
+    {
+        $user = $this->createQueryBuilder('pu')
+            ->select('pu')
+            ->andWhere('pu.phone = :phone')
+            ->setParameter('phone', $phone)
+            ->getQuery()->getOneOrNullResult();
+
+        if (!$user) {
+            throw new UserNotFoundException();
+        }
+
+        return $user;
     }
 }
