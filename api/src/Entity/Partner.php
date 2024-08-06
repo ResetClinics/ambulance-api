@@ -30,6 +30,8 @@ use Symfony\Component\Validator\Constraints as Assert;
     ],
     normalizationContext: ['groups' => ['partner:read', 'partner:item:read']],
     denormalizationContext: ['groups' => ['partner:write']],
+    paginationClientEnabled: true,
+    paginationClientItemsPerPage: true
 )]
 #[ApiFilter(PartnerCallingCompletedAtFilter::class, properties: ['name' => 'completedAt'])]
 #[ApiFilter(
