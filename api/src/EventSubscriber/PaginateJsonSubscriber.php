@@ -52,6 +52,7 @@ class PaginateJsonSubscriber implements EventSubscriberInterface
 
         if (
             $apiResourceClass !== Partner::class &&
+            $apiResourceClass !== Partner\PartnerUser::class &&
             $apiResourceClass !== Partner\Agreement\Agreement::class &&
             $apiResourceClass !== User::class &&
             $apiResourceClass !== Calling::class &&
