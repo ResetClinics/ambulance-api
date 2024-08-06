@@ -25,6 +25,6 @@ class PartnerCallsAction extends AbstractController
     {
         $user = $this->security->getUser();
 
-        return $this->json([]);
+        return $this->json($user);
     }
 }
