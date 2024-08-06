@@ -128,7 +128,7 @@ class HospitalRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('c');
 
         $qb
-            ->andWhere('h.partner_id = :partner')
+            ->andWhere('h.partner = :partner')
             ->setParameter('partner', $partner->getId());
 
         if ($sort) {
