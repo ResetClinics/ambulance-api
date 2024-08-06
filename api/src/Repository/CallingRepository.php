@@ -198,7 +198,7 @@ class CallingRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('c');
 
         $qb
-            ->andWhere('c.partner_id = :partner')
+            ->andWhere('c.partner = :partner')
             ->setParameter('partner', $partner->getId());
 
         if ($sort) {
