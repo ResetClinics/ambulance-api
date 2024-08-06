@@ -3,6 +3,7 @@
 namespace App\Repository\Hospital;
 
 use App\Entity\Hospital\Hospital;
+use App\Entity\Partner;
 use DatePeriod;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -118,6 +119,23 @@ class HospitalRepository extends ServiceEntityRepository
             ->andWhere('c.dischargedAt < :end')
             ->setParameter('start', $period->getStartDate())
             ->setParameter('end', $period->getEndDate())
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findAllForPartnerApi(Partner $partner, string $sort, string $direction)
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        $qb
+            ->andWhere('h.partner_id = :partner')
+            ->setParameter('partner', $partner->getId());
+
+        if ($sort) {
+            $qb->orderBy('h.' . $sort, $direction);
+        }
+
+        return $qb
             ->getQuery()
             ->getResult();
     }

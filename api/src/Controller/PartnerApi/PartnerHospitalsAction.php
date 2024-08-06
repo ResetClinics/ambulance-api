@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Controller\PartnerApi;
 
 use App\Controller\PaginationSerializer;
-use App\Entity\Calling\Calling;
+use App\Entity\Hospital\Hospital;
 use App\Entity\Partner\PartnerUser;
-use App\Repository\CallingRepository;
+use App\Repository\Hospital\HospitalRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,20 +15,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 
-class PartnerCallsAction extends AbstractController
+class PartnerHospitalsAction extends AbstractController
 {
     private const PER_PAGE = 50;
 
     public function __construct(
         private readonly Security           $security,
-        private readonly CallingRepository  $calls,
+        private readonly HospitalRepository  $hospitals,
         private readonly PaginatorInterface $paginator,
     )
     {
     }
 
-    #[Route('/partner/calls', name: 'partner-api.calls.index', methods: ["GET"])]
-    public function calls(Request $request): JsonResponse
+    #[Route('/partner/hospitals', name: 'partner-api.hospitals.index', methods: ["GET"])]
+    public function hospitals(Request $request): JsonResponse
     {
         /** @var PartnerUser $user */
         $user = $this->security->getUser();
@@ -41,22 +41,20 @@ class PartnerCallsAction extends AbstractController
         /** @var string $direction */
         $direction = $request->query->get('direction', 'desc');
 
+        $hospitals = $this->hospitals->findAllForPartnerApi($user->getPartner(), $sort, $direction);
 
-        $calls = $this->calls->findAllForPartnerApi($user->getPartner(), $sort, $direction);
-
-        $pagination = $this->paginator->paginate($calls, $page, $perPage);
+        $pagination = $this->paginator->paginate($hospitals, $page, $perPage);
 
         return $this->json([
-                'items' => array_map(static function (Calling $call) {
+                'items' => array_map(static function (Hospital $hospital) {
                     return [
-                        'id' => $call->getId(),
-                        'address' => $call->getAddress(),
-                        'price' => $call->getPrice(),
-                        'reward' => $call->getPartnerReward(),
-                        'status' => $call->getStatus(),
-                        'dateTime' => $call->getDateTime()?->format('d.m.Y H:i'),
-                        'createdAt' => $call->getCreatedAt()?->format('d.m.Y H:i'),
-                        'completedAt' => $call->getCompletedAt()?->format('d.m.Y H:i'),
+                        'id' => $hospital->getId(),
+                        'amount' => $hospital->getAmount(),
+                        'price' => $hospital->get(),
+                        'fio' => $hospital->getFio(),
+                        'status' => $hospital->getStatus(),
+                        'hospitalizedAt' => $hospital->getHospitalized()?->format('d.m.Y H:i'),
+                        'dischargedAt' => $hospital->getDischarged()?->format('d.m.Y H:i'),
                     ];
                 }, $pagination->getItems()),
                 'pagination' => PaginationSerializer::toArray($pagination),

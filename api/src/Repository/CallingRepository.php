@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\Calling\Calling;
 use App\Entity\Calling\Status;
+use App\Entity\Partner;
 use App\Entity\Team\Team;
 use App\Entity\User\User;
 use DatePeriod;
@@ -190,5 +191,22 @@ class CallingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
             ;
+    }
+
+    public function findAllForPartnerApi(Partner $partner, ?string $sort, ?string $direction): array
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        $qb
+            ->andWhere('c.partner_id = :partner')
+            ->setParameter('partner', $partner->getId());
+
+        if ($sort) {
+            $qb->orderBy('c.' . $sort, $direction);
+        }
+
+        return $qb
+            ->getQuery()
+            ->getResult();
     }
 }
