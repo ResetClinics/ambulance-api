@@ -41,8 +41,10 @@ class PartnerCallsAction extends AbstractController
         /** @var string $direction */
         $direction = $request->query->get('direction', 'desc');
 
+        $search = $request->query->get('search');
 
-        $calls = $this->calls->findAllForPartnerApi($user->getPartner(), $sort, $direction);
+
+        $calls = $this->calls->findAllForPartnerApi($user->getPartner(), $sort, $direction, $search);
 
         $pagination = $this->paginator->paginate($calls, $page, $perPage);
 

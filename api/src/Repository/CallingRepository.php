@@ -193,9 +193,14 @@ class CallingRepository extends ServiceEntityRepository
             ;
     }
 
-    public function findAllForPartnerApi(Partner $partner, ?string $sort, ?string $direction): array
+    public function findAllForPartnerApi(Partner $partner, ?string $sort, ?string $direction, ?string $search): array
     {
         $qb = $this->createQueryBuilder('c');
+
+        if ($search){
+            $qb->where($qb->expr()->like('LOWER(c.name_en)', ':search'))
+                ->setParameter('search', strtolower($search));
+        }
 
         $qb
             ->andWhere('c.partner = :partner')
