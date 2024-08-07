@@ -49,6 +49,7 @@ class PartnerHospitalsAction extends AbstractController
                 'items' => array_map(static function (Hospital $hospital) {
                     return [
                         'id' => $hospital->getId(),
+                        'number' => $hospital->getExternal(),
                         'amount' => $hospital->getAmount(),
                         'price' => $hospital->get(),
                         'fio' => $hospital->getFio(),

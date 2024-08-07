@@ -50,6 +50,7 @@ class PartnerCallsAction extends AbstractController
                 'items' => array_map(static function (Calling $call) {
                     return [
                         'id' => $call->getId(),
+                        'number' => $call->getNumberCalling(),
                         'address' => $call->getAddress(),
                         'price' => $call->getPrice(),
                         'reward' => $call->getPartnerReward(),
