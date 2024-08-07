@@ -204,7 +204,7 @@ class CallingRepository extends ServiceEntityRepository
 
         $qb
             ->andWhere('c.partner = :partner')
-            ->setParameter('partner', 8);
+            ->setParameter('partner', $partner->getId());
 
         if ($sort) {
             $qb->orderBy('c.' . $sort, $direction);
