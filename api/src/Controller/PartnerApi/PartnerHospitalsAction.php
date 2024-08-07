@@ -40,8 +40,8 @@ class PartnerHospitalsAction extends AbstractController
         $sort = $request->query->get('sort', 'dateTime');
         /** @var string $direction */
         $direction = $request->query->get('direction', 'desc');
-
-        $hospitals = $this->hospitals->findAllForPartnerApi($user->getPartner(), $sort, $direction);
+        $search = $request->query->get('search');
+        $hospitals = $this->hospitals->findAllForPartnerApi($user->getPartner(), $sort, $direction, $search);
 
         $pagination = $this->paginator->paginate($hospitals, $page, $perPage);
 

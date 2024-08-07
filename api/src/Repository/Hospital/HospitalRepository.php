@@ -123,13 +123,18 @@ class HospitalRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findAllForPartnerApi(Partner $partner, string $sort, string $direction)
+    public function findAllForPartnerApi(Partner $partner, ?string $sort, ?string $direction, ?string $search)
     {
-        $qb = $this->createQueryBuilder('c');
+        $qb = $this->createQueryBuilder('h');
+
+        if ($search){
+            $qb->where($qb->expr()->like('LOWER(h.fio)', ':search'))
+                ->setParameter('search', '%' . $search . '%');
+        }
 
         $qb
             ->andWhere('h.partner = :partner')
-            ->setParameter('partner', $partner->getId());
+            ->setParameter('partner', 8);
 
         if ($sort) {
             $qb->orderBy('h.' . $sort, $direction);
