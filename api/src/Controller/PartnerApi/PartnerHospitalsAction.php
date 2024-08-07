@@ -37,7 +37,7 @@ class PartnerHospitalsAction extends AbstractController
         $perPage = $request->query->getInt('per_page', self::PER_PAGE);
 
         /** @var string $sort */
-        $sort = $request->query->get('sort', 'hospitalizedAt');
+        $sort = $request->query->get('sort', 'createdAt');
         /** @var string $direction */
         $direction = $request->query->get('direction', 'desc');
         $search = $request->query->get('search');
