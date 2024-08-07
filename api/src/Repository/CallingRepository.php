@@ -198,7 +198,7 @@ class CallingRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('c');
 
         if ($search){
-            $qb->where($qb->expr()->like('LOWER(c.name_en)', ':search'))
+            $qb->where($qb->expr()->like('LOWER(c.address)', ':search'))
                 ->setParameter('search', strtolower($search));
         }
 
