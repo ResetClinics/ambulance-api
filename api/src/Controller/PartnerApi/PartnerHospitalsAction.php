@@ -51,7 +51,6 @@ class PartnerHospitalsAction extends AbstractController
                         'id' => $hospital->getId(),
                         'number' => $hospital->getExternal(),
                         'amount' => $hospital->getAmount(),
-                        'price' => $hospital->get(),
                         'fio' => $hospital->getFio(),
                         'status' => $hospital->getStatus(),
                         'hospitalizedAt' => $hospital->getHospitalized()?->format('d.m.Y H:i'),
