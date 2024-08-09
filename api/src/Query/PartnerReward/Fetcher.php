@@ -19,6 +19,7 @@ class Fetcher
      */
     public function fetch(Query $query): int
     {
+
         $agreement = $this->agreements->findCurrentByPartnerId(
             $query->partnerId,
             $query->time
@@ -41,6 +42,8 @@ class Fetcher
             $distance = $this->getMinDistance($agreement, $query);
         }
 
+
+
         return $this->getPercent($agreement, $distance, $query);
     }
 
@@ -50,9 +53,10 @@ class Fetcher
      */
     private function getEqualDistance(Agreement $agreement, Query $query): ?int
     {
+
         $qb = $this->connection->createQueryBuilder()
             ->select('r.distance as value')
-            ->from('row', 'r')
+            ->from('`row`', 'r')
             ->andWhere('r.agreement_id = :agreementId')
             ->setParameter('agreementId', $agreement->getId())
             ->andWhere('r.service_id = :service')
@@ -74,7 +78,7 @@ class Fetcher
     {
         $qb = $this->connection->createQueryBuilder()
             ->select('r.distance as value')
-            ->from('row', 'r')
+            ->from('`row`', 'r')
             ->andWhere('r.agreement_id = :agreementId')
             ->setParameter('agreementId', $agreement->getId())
            ->andWhere('r.service_id = :service')
@@ -97,7 +101,7 @@ class Fetcher
     {
         $qb = $this->connection->createQueryBuilder()
             ->select('r.distance as value')
-            ->from('row', 'r')
+            ->from('`row`', 'r')
             ->andWhere('r.agreement_id = :agreementId')
             ->setParameter('agreementId', $agreement->getId())
             ->andWhere('r.service_id = :service')
@@ -120,7 +124,7 @@ class Fetcher
     {
         $qb = $this->connection->createQueryBuilder()
             ->select('r.percent as value')
-            ->from('row', 'r')
+            ->from('`row`', 'r')
             ->leftJoin('r', 'agreement', 'a' , 'a.id = r.agreement_id')
             ->andWhere('a.id = :agreementId')
             ->setParameter('agreementId', $agreement->getId())

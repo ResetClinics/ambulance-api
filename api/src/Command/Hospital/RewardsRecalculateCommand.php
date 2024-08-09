@@ -39,6 +39,7 @@ class RewardsRecalculateCommand extends Command
 
 
         foreach ($this->hospitals->findAll() as $hospital) {
+            $io->note('Пересчитываю награды партнеров за стационар: ' . $hospital->getId());
             $this->partnerRewards->calculate($hospital);
             $this->flusher->flush();
         }

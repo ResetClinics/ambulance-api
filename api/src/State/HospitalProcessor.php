@@ -40,7 +40,7 @@ class HospitalProcessor implements ProcessorInterface
         if ($data->getStatus() === 'completed' && $data->getDischargedAt() === null){
             $data->setDischargedAt(new DateTimeImmutable());
             $data->setDischargedBy($this->security->getUser());
-            //$this->partnerReward->calculate($data);
+            $this->partnerReward->calculate($data);
         }
 
         $this->persistProcessor->process($data, $operation, $uriVariables, $context);
