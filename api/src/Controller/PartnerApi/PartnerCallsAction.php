@@ -60,7 +60,7 @@ class PartnerCallsAction extends AbstractController
                         'dateTime' => $call->getDateTime()?->format('d.m.Y H:i'),
                         'createdAt' => $call->getCreatedAt()?->format('d.m.Y H:i'),
                         'completedAt' => $call->getCompletedAt()?->format('d.m.Y H:i'),
-                        'coors' => $call->getLon() && $call->getLat() ? [$call->getLat(), $call->getLon()] : null,                                            ];
+                        'coordinates' => $call->getLon() && $call->getLat() ? [$call->getLat(), $call->getLon()] : null,                                            ];
                 }, $pagination->getItems()),
                 'pagination' => PaginationSerializer::toArray($pagination),
             ]
