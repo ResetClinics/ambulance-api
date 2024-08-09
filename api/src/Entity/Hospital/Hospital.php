@@ -196,6 +196,10 @@ class Hospital
     #[Groups(['hospital:read', 'hospital:write', 'hospital:detail:read'])]
     private Collection $images;
 
+    #[ORM\Column(nullable: true, options: ["default" => 0])]
+    #[Groups(['hospital:read', 'hospital:write', 'hospital:detail:read'])]
+    private int $partnerReward = 0;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
@@ -523,6 +527,18 @@ class Hospital
         }
 
         return null;
+    }
+
+    public function getPartnerReward(): int
+    {
+        return $this->partnerReward;
+    }
+
+    public function setPartnerReward(int $partnerReward): self
+    {
+        $this->partnerReward = $partnerReward;
+
+        return $this;
     }
 }
 
