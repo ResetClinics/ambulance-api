@@ -58,7 +58,7 @@ class Handler
         $call->setDateTime(new DateTimeImmutable());
         $call->setUpdatedAt(new DateTimeImmutable());
         $call->setPartner($partner);
-        $call->setStatus(Status::waiting());
+        $call->setStatus(Status::notReady());
 
         $this->calls->add($call);
 
