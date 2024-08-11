@@ -36,7 +36,7 @@ class PartnerCallsCreateAction extends AbstractController
         /** @var PartnerUser $user */
         $user = $this->security->getUser();
 
-        $command = new Command(8);
+        $command = new Command($user->getPartner()->getId());
 
         $this->serializer->deserialize(
             $request->getContent(),
