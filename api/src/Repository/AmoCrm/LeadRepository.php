@@ -30,7 +30,7 @@ class LeadRepository
     public function create(string $partnerId, string $partnerName, int $contactId, string $description): LeadModel
     {
           $lead = new LeadModel();
-        $lead->setName('ТЕСТОВАЯ СДЕЛКА РАЗРАБОТКА')
+        $lead->setName('Сделка создана из ЛК партнера ' . $partnerName)
             ->setContacts(
                 (new ContactsCollection())
                     ->add(
