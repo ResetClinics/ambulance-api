@@ -6,6 +6,7 @@ use App\Entity\Partner;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
+use DomainException;
 
 /**
  * @extends ServiceEntityRepository<Partner>
@@ -55,6 +56,21 @@ class PartnerRepository extends ServiceEntityRepository
             ->setParameter(':externalId', $externalId)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function getById(int $id): Partner
+    {
+        $entity = $this->createQueryBuilder('p')
+            ->andWhere('p.id = :id')
+            ->setParameter(':id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if (!$entity) {
+            throw new DomainException(sprintf('Партнер id: %s не найден.', $id));
+        }
+
+        return $entity;
     }
 
 }
