@@ -138,12 +138,33 @@ class FinishAction extends AbstractController
         $message .= $calling->getAddress() ? 'Адрес: ' . $calling->getAddress() . PHP_EOL : '';
         $message .= $calling->getMkadDistance() ? 'Расстояние до МКАД: ' . $calling->getMkadDistance() . PHP_EOL : '';
 
-        $message .= $hospital;
+        //$message .= $hospital;
 
         /** @var Row $serviceRow */
         foreach ($calling->getServices() as $serviceRow) {
-            if ($serviceRow->isHospital()) {
+
+            if ($serviceRow->isStationary()) {
+                $message .= 'Стационар ' . PHP_EOL;
+                $message .= $serviceRow->getPlannedPrice() ? 'Ориентировочная цена ' . $serviceRow->getPlannedPrice() . PHP_EOL : '';
+                $message .= $serviceRow->getPrice() ? 'Предоплата ' . $serviceRow->getPrice() . PHP_EOL : '';
+                $message .= $serviceRow->getPlannedAt() ? 'Дата ' . $serviceRow->getPlannedAt()->format('d.m.y H:m') . PHP_EOL : '';
+                $message .= $serviceRow->getDescription() ?
+                    'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
+            }elseif ($serviceRow->isHospital()) {
                 $message .= 'Госпитализация ' . PHP_EOL;
+                $message .= $serviceRow->getPrice() ?
+                    'Стоимость ' . $serviceRow->getPrice() . PHP_EOL : '';
+                $message .= $serviceRow->getDescription() ?
+                    'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
+            }elseif ($serviceRow->getService()->getType() === 'replay') {
+                $message .= 'Повтор ' . PHP_EOL;
+                $message .= $serviceRow->getPlannedPrice() ? 'Ориентировочная цена ' . $serviceRow->getPlannedPrice() . PHP_EOL : '';
+                $message .= $serviceRow->getPrice() ? 'Предоплата ' . $serviceRow->getPrice() . PHP_EOL : '';
+                $message .= $serviceRow->getPlannedAt() ? '*ПОВТОР* Дата ' . $serviceRow->getPlannedAt()->format('d.m.y H:m') . PHP_EOL : '';
+                $message .= $serviceRow->getDescription() ?
+                    'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
+            }else{
+                $message .= $serviceRow->getService()->getName() . PHP_EOL;
                 $message .= $serviceRow->getPrice() ?
                     'Стоимость ' . $serviceRow->getPrice() . PHP_EOL : '';
                 $message .= $serviceRow->getDescription() ?
@@ -151,7 +172,7 @@ class FinishAction extends AbstractController
             }
         }
 
-        $message .= $replay;
+        //$message .= $replay;
 
         $message .= $calling->getNote() ? 'Примечание ' . $calling->getNote() . PHP_EOL : '';
 
