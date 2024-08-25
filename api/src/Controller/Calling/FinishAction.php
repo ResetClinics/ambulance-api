@@ -20,10 +20,8 @@ use AmoCRM\Models\LinkModel;
 use AmoCRM\Models\NoteType\CommonNote;
 use App\Entity\Calling\Calling;
 use App\Entity\Calling\Row;
-use App\Entity\Hospital\Hospital;
 use App\Flusher;
 use App\Repository\CallingRepository;
-use App\Repository\Hospital\HospitalRepository;
 use App\Services\AmoCRM;
 use App\Services\Call\OperatorReward;
 use App\Services\Call\PartnerReward;
@@ -41,31 +39,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class FinishAction extends AbstractController
 {
     private AmoCRMApiClient $client;
-    private CallingSender $sender;
-    private Flusher $flusher;
-    private CallingRepository $callings;
-    private HospitalRepository $hospitals;
-    private PartnerReward $partnerReward;
-    private OperatorReward $operatorReward;
 
     public function __construct(
-        AmoCRM        $amoCRM,
-        CallingSender $sender,
-        CallingRepository $callings,
-        HospitalRepository $hospitals,
-        PartnerReward $partnerReward,
-        OperatorReward $operatorReward,
-        Flusher $flusher,
+        AmoCRM                    $amoCRM,
+        private readonly CallingSender             $sender,
+        private readonly PartnerReward             $partnerReward,
+        private readonly OperatorReward            $operatorReward,
+        private readonly Flusher                   $flusher,
         private readonly WSClient $wsClient,
     )
     {
         $this->client = $amoCRM->getClient();
-        $this->sender = $sender;
-        $this->flusher = $flusher;
-        $this->callings = $callings;
-        $this->hospitals = $hospitals;
-        $this->partnerReward = $partnerReward;
-        $this->operatorReward = $operatorReward;
     }
 
     public function __invoke(Calling $calling, CallingRepository $callings, Flusher $flusher): JsonResponse
@@ -76,13 +60,13 @@ class FinishAction extends AbstractController
         $paymentHospitalization = 0;
 
         /** @var Row $serviceRow */
-        foreach ($calling->getServices() as $serviceRow){
-            if ($serviceRow->getService()->getType() === 'default'){
-                $price  += $serviceRow->getPrice() !== null ? (int) $serviceRow->getPrice() : 0;
-            }elseif ($serviceRow->getService()->getType() === 'hospital') {
-                $paymentHospitalization  += $serviceRow->getPrice() !== null ? (int) $serviceRow->getPrice() : 0;
-            }else{
-                $paymentNextOrder  += $serviceRow->getPrice() !== null ? (int) $serviceRow->getPrice() : 0;
+        foreach ($calling->getServices() as $serviceRow) {
+            if ($serviceRow->getService()->getType() === 'default') {
+                $price += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
+            } elseif ($serviceRow->getService()->getType() === 'hospital') {
+                $paymentHospitalization += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
+            } else {
+                $paymentNextOrder += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
             }
         }
 
@@ -94,18 +78,22 @@ class FinishAction extends AbstractController
         $hospital = '';
 
         /** @var Row $serviceRow */
-        foreach ($calling->getServices() as $serviceRow){
-            if ($serviceRow->isStationary()){
-                $hospital .=  'Стационар ' . PHP_EOL;
+        foreach ($calling->getServices() as $serviceRow) {
+            if ($serviceRow->isStationary()) {
+                $hospital .= 'Стационар ' . PHP_EOL;
                 $hospital .= $serviceRow->getPlannedPrice() ? 'Ориентировочная цена ' . $serviceRow->getPlannedPrice() . PHP_EOL : '';
                 $hospital .= $serviceRow->getPrice() ? 'Предоплата ' . $serviceRow->getPrice() . PHP_EOL : '';
                 $hospital .= $serviceRow->getPlannedAt() ? 'Дата ' . $serviceRow->getPlannedAt()->format('d.m.y H:m') . PHP_EOL : '';
+                $hospital .= $serviceRow->getDescription() ?
+                    'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
             }
-            if ($serviceRow->getService()->getType() === 'replay'){
-                $replay .=  'Повтор ' . PHP_EOL;
+            if ($serviceRow->getService()->getType() === 'replay') {
+                $replay .= 'Повтор ' . PHP_EOL;
                 $replay .= $serviceRow->getPlannedPrice() ? 'Ориентировочная цена ' . $serviceRow->getPlannedPrice() . PHP_EOL : '';
                 $replay .= $serviceRow->getPrice() ? 'Предоплата ' . $serviceRow->getPrice() . PHP_EOL : '';
                 $replay .= $serviceRow->getPlannedAt() ? '*ПОВТОР* Дата ' . $serviceRow->getPlannedAt()->format('d.m.y H:m') . PHP_EOL : '';
+                $replay .= $serviceRow->getDescription() ?
+                    'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
                 $this->repeat($calling, $serviceRow);
 
                 $this->sender->sendToAdmin(
@@ -143,7 +131,7 @@ class FinishAction extends AbstractController
 
         $message = 'Информация от бригады:' . PHP_EOL;
 
-        $message .= $calling->getPrice() ? 'Итоговая цена: ' . $calling->getPrice() . PHP_EOL : '';
+        $message .= $calling->getPrice() ? 'Итого: ' . $calling->getTotalAmount() . PHP_EOL : '';
         $message .= $calling->getPhone() ? 'Номер телефона заказчика: ' . $calling->getPhone() . PHP_EOL : '';
         $message .= $calling->getFio() ? 'ФИО пациента: ' . $calling->getFio() . PHP_EOL : '';
         $message .= $calling->getAge() ? 'Возраст пациента: ' . $calling->getAge() . PHP_EOL : '';
@@ -151,20 +139,25 @@ class FinishAction extends AbstractController
         $message .= $calling->getMkadDistance() ? 'Расстояние до МКАД: ' . $calling->getMkadDistance() . PHP_EOL : '';
 
         $message .= $hospital;
+
+        /** @var Row $serviceRow */
+        foreach ($calling->getServices() as $serviceRow) {
+            if ($serviceRow->isHospital()) {
+                $message .= 'Госпитализация ' . PHP_EOL;
+                $message .= $serviceRow->getPrice() ?
+                    'Стоимость ' . $serviceRow->getPrice() . PHP_EOL : '';
+                $message .= $serviceRow->getDescription() ?
+                    'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
+            }
+        }
+
         $message .= $replay;
 
         $message .= $calling->getNote() ? 'Примечание ' . $calling->getNote() . PHP_EOL : '';
 
-        $description = '';
+        $message .= $calling->getDescription() ? 'Комментарий ' . $calling->getDescription() . PHP_EOL : '';
 
-        /** @var Row $row */
-        foreach ($calling->getServices()->toArray() as $row){
-            $description .= $row->getDescription() ? $row->getDescription() . PHP_EOL : '';
-        }
-
-        $message .= $description ? 'Комментарий ' . $description . PHP_EOL : '';
-
-        $message .=  PHP_EOL;
+        $message .= PHP_EOL;
 
         $message .= 'Заявка №' . $calling->getNumberCalling() . PHP_EOL;
 
@@ -230,7 +223,7 @@ class FinishAction extends AbstractController
                 $contactId = $link->getToEntityId();
             }
 
-            if ($link->getToEntityType() === 'companies'){
+            if ($link->getToEntityType() === 'companies') {
                 $companyId = $link->getToEntityId();
             }
         }
@@ -243,13 +236,13 @@ class FinishAction extends AbstractController
         $name = $row->getPlannedAt()->format('d.m.y ') . ' ПОВТОР в ' . $row->getPlannedAt()->format('H:s ') . ' ' . $calling->getFio();
 
         $customFieldsValues = new CustomFieldsValuesCollection();
-        foreach ($lead->getCustomFieldsValues() as $customFieldsValue){
+        foreach ($lead->getCustomFieldsValues() as $customFieldsValue) {
             //бригаду, админа и врача не переносим в повотор
             if (
                 $customFieldsValue->getFieldId() === 875863 ||
                 $customFieldsValue->getFieldId() === 873879 ||
                 $customFieldsValue->getFieldId() === 873881
-            ){
+            ) {
                 continue;
             }
             $customFieldsValues->add($customFieldsValue);
@@ -273,8 +266,8 @@ class FinishAction extends AbstractController
             );
 
 
-        if ($companyId){
-            $newLead ->setCompany(
+        if ($companyId) {
+            $newLead->setCompany(
                 (new CompanyModel())
                     ->setId($companyId)
             );
@@ -288,26 +281,5 @@ class FinishAction extends AbstractController
         $calling->setOwnerExternalId((string)$leadModel->getId());
 
         $this->flusher->flush();
-
-       /* if (!$this->callings->findOneByNumber((string)$leadModel->getId())){
-            $repeat = new Calling(
-                (string)$leadModel->getId(),
-                $name,
-                $calling->getName(),
-                $calling->getPhone(),
-                $calling->getAddress(),
-                null,
-                null,
-                null
-            );
-
-            $repeat->setOwner($calling);
-
-            $price = $row->getPrice() !== null ? (int)$row->getPrice() : null;
-
-            $repeat->setPrepayment($price);
-
-            $this->callings->save($repeat, true);
-        }*/
     }
 }
