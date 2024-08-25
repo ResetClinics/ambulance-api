@@ -148,12 +148,16 @@ class FinishAction extends AbstractController
                 $message .= $serviceRow->getPlannedPrice() ? 'Ориентировочная цена ' . $serviceRow->getPlannedPrice() . PHP_EOL : '';
                 $message .= $serviceRow->getPrice() ? 'Предоплата ' . $serviceRow->getPrice() . PHP_EOL : '';
                 $message .= $serviceRow->getPlannedAt() ? 'Дата ' . $serviceRow->getPlannedAt()->format('d.m.y H:m') . PHP_EOL : '';
+                $message .= ($serviceRow->getPercent() && $serviceRow->getPartnerReward() )?
+                    'Вознаграждение ' . $serviceRow->getPercent() . '% - ' . $serviceRow->getPartnerReward() . PHP_EOL : '';
                 $message .= $serviceRow->getDescription() ?
                     'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
             }elseif ($serviceRow->isHospital()) {
                 $message .= 'Госпитализация ' . PHP_EOL;
                 $message .= $serviceRow->getPrice() ?
                     'Стоимость ' . $serviceRow->getPrice() . PHP_EOL : '';
+                $message .= ($serviceRow->getPercent() && $serviceRow->getPartnerReward() )?
+                    'Вознаграждение ' . $serviceRow->getPercent() . '% - ' . $serviceRow->getPartnerReward() . PHP_EOL : '';
                 $message .= $serviceRow->getDescription() ?
                     'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
             }elseif ($serviceRow->getService()->getType() === 'replay') {
@@ -167,6 +171,8 @@ class FinishAction extends AbstractController
                 $message .= $serviceRow->getService()->getName() . PHP_EOL;
                 $message .= $serviceRow->getPrice() ?
                     'Стоимость ' . $serviceRow->getPrice() . PHP_EOL : '';
+                $message .= ($serviceRow->getPercent() && $serviceRow->getPartnerReward() )?
+                    'Вознаграждение ' . $serviceRow->getPercent() . '% - ' . $serviceRow->getPartnerReward() . PHP_EOL : '';
                 $message .= $serviceRow->getDescription() ?
                     'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
             }
