@@ -188,7 +188,7 @@ class Handler
             }
 
             if ($field->getFieldId() === 968867) {
-                $call->setPartnerHospitalization($field->getValues()?->first()->getValue());
+                $call->setNoBusinessCards($field->getValues()?->first()->getValue());
             }
         }
     }
