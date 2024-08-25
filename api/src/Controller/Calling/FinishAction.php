@@ -137,7 +137,7 @@ class FinishAction extends AbstractController
         $message .= $calling->getAge() ? 'Возраст пациента: ' . $calling->getAge() . PHP_EOL : '';
         $message .= $calling->getAddress() ? 'Адрес: ' . $calling->getAddress() . PHP_EOL : '';
         $message .= $calling->getMkadDistance() ? 'Расстояние до МКАД: ' . $calling->getMkadDistance() . PHP_EOL : '';
-
+        $message .= PHP_EOL;
         //$message .= $hospital;
 
         /** @var Row $serviceRow */
@@ -152,6 +152,7 @@ class FinishAction extends AbstractController
                     'Вознаграждение ' . $serviceRow->getPercent() . '% - ' . $serviceRow->getPartnerReward() . PHP_EOL : '';
                 $message .= $serviceRow->getDescription() ?
                     'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
+                $message .= PHP_EOL;
             }elseif ($serviceRow->isHospital()) {
                 $message .= 'Госпитализация ' . PHP_EOL;
                 $message .= $serviceRow->getPrice() ?
@@ -160,6 +161,7 @@ class FinishAction extends AbstractController
                     'Вознаграждение ' . $serviceRow->getPercent() . '% - ' . $serviceRow->getPartnerReward() . PHP_EOL : '';
                 $message .= $serviceRow->getDescription() ?
                     'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
+                $message .= PHP_EOL;
             }elseif ($serviceRow->getService()->getType() === 'replay') {
                 $message .= 'Повтор ' . PHP_EOL;
                 $message .= $serviceRow->getPlannedPrice() ? 'Ориентировочная цена ' . $serviceRow->getPlannedPrice() . PHP_EOL : '';
@@ -167,6 +169,7 @@ class FinishAction extends AbstractController
                 $message .= $serviceRow->getPlannedAt() ? '*ПОВТОР* Дата ' . $serviceRow->getPlannedAt()->format('d.m.y H:m') . PHP_EOL : '';
                 $message .= $serviceRow->getDescription() ?
                     'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
+                $message .= PHP_EOL;
             }else{
                 $message .= $serviceRow->getService()->getName() . PHP_EOL;
                 $message .= $serviceRow->getPrice() ?
@@ -175,6 +178,7 @@ class FinishAction extends AbstractController
                     'Вознаграждение ' . $serviceRow->getPercent() . '% - ' . $serviceRow->getPartnerReward() . PHP_EOL : '';
                 $message .= $serviceRow->getDescription() ?
                     'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
+                $message .= PHP_EOL;
             }
         }
 
