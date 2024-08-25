@@ -353,10 +353,12 @@ class Calling
 
     #[ORM\Column(nullable: false, options: ['default' => 0])]
     #[Groups(['calling:read', 'calling:write'])]
+    #[ApiFilter(BooleanFilter::class)]
     private bool $noBusinessCards;
 
     #[ORM\Column(nullable: false, options: ['default' => 0])]
     #[Groups(['calling:read', 'calling:write'])]
+    #[ApiFilter(BooleanFilter::class)]
     private bool $partnerHospitalization;
 
 
