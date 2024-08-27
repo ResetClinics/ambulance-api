@@ -131,62 +131,59 @@ class FinishAction extends AbstractController
 
         $message = 'Информация от бригады:' . PHP_EOL;
 
-        $message .= $calling->getPrice() ? 'Итого: ' . $calling->getTotalAmount() . PHP_EOL : '';
+        $message .= $calling->getPrice() ? 'Итого: ' . $calling->getPrice() . PHP_EOL : '';
         $message .= $calling->getPhone() ? 'Номер телефона заказчика: ' . $calling->getPhone() . PHP_EOL : '';
         $message .= $calling->getFio() ? 'ФИО пациента: ' . $calling->getFio() . PHP_EOL : '';
         $message .= $calling->getAge() ? 'Возраст пациента: ' . $calling->getAge() . PHP_EOL : '';
-        $message .= $calling->getAddress() ? 'Адрес: ' . $calling->getAddress() . PHP_EOL : '';
         $message .= $calling->getMkadDistance() ? 'Расстояние до МКАД: ' . $calling->getMkadDistance() . PHP_EOL : '';
+        $message .= $calling->getAddress() ? 'Адрес: ' . $calling->getAddress() . PHP_EOL : '';
         $message .= PHP_EOL;
         //$message .= $hospital;
 
         /** @var Row $serviceRow */
         foreach ($calling->getServices() as $serviceRow) {
 
-            if ($serviceRow->isStationary()) {
-                $message .= 'Стационар ' . PHP_EOL;
-                $message .= $serviceRow->getPlannedPrice() ? 'Ориентировочная цена ' . $serviceRow->getPlannedPrice() . PHP_EOL : '';
+            if ($serviceRow->getService()->getType() === 'replay') {
+                $message .= 'Повтор' . ($serviceRow->getPlannedAt() ? ' - ' . $serviceRow->getPlannedAt()->format('d.m.y H:m') : '') . PHP_EOL;
                 $message .= $serviceRow->getPrice() ? 'Предоплата ' . $serviceRow->getPrice() . PHP_EOL : '';
-                $message .= $serviceRow->getPlannedAt() ? 'Дата ' . $serviceRow->getPlannedAt()->format('d.m.y H:m') . PHP_EOL : '';
-                $message .= ($serviceRow->getPercent() && $serviceRow->getPartnerReward() )?
-                    'Вознаграждение ' . $serviceRow->getPercent() . '% - ' . $serviceRow->getPartnerReward() . PHP_EOL : '';
-                $message .= $serviceRow->getDescription() ?
-                    'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
-                $message .= PHP_EOL;
-            }elseif ($serviceRow->isHospital()) {
-                $message .= 'Госпитализация ' . PHP_EOL;
-                $message .= $serviceRow->getPrice() ?
-                    'Стоимость ' . $serviceRow->getPrice() . PHP_EOL : '';
-                $message .= ($serviceRow->getPercent() && $serviceRow->getPartnerReward() )?
-                    'Вознаграждение ' . $serviceRow->getPercent() . '% - ' . $serviceRow->getPartnerReward() . PHP_EOL : '';
-                $message .= $serviceRow->getDescription() ?
-                    'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
-                $message .= PHP_EOL;
-            }elseif ($serviceRow->getService()->getType() === 'replay') {
-                $message .= 'Повтор ' . PHP_EOL;
-                $message .= $serviceRow->getPlannedPrice() ? 'Ориентировочная цена ' . $serviceRow->getPlannedPrice() . PHP_EOL : '';
-                $message .= $serviceRow->getPrice() ? 'Предоплата ' . $serviceRow->getPrice() . PHP_EOL : '';
-                $message .= $serviceRow->getPlannedAt() ? '*ПОВТОР* Дата ' . $serviceRow->getPlannedAt()->format('d.m.y H:m') . PHP_EOL : '';
-                $message .= $serviceRow->getDescription() ?
-                    'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
-                $message .= PHP_EOL;
-            }else{
-                $message .= $serviceRow->getService()->getName() . PHP_EOL;
-                $message .= $serviceRow->getPrice() ?
-                    'Стоимость ' . $serviceRow->getPrice() . PHP_EOL : '';
-                $message .= ($serviceRow->getPercent() && $serviceRow->getPartnerReward() )?
-                    'Вознаграждение ' . $serviceRow->getPercent() . '% - ' . $serviceRow->getPartnerReward() . PHP_EOL : '';
                 $message .= $serviceRow->getDescription() ?
                     'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
                 $message .= PHP_EOL;
             }
         }
 
-        //$message .= $replay;
+        /** @var Row $serviceRow */
+        foreach ($calling->getServices() as $serviceRow) {
 
-        $message .= $calling->getNote() ? 'Примечание ' . $calling->getNote() . PHP_EOL : '';
+            if ($serviceRow->isStationary()) {
+                continue;
+            }elseif ($serviceRow->isHospital()) {
+                $message .= 'Госпитализация' . ($serviceRow->getPrice() ? ' - ' . $serviceRow->getPrice() : ''). PHP_EOL;
+                $message .= $serviceRow->getDescription() ?
+                    'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
+                $message .= PHP_EOL;
+            }elseif ($serviceRow->getService()->getType() === 'replay') {
+                continue;
+            }else{
+                $message .= $serviceRow->getService()->getName() . ($serviceRow->getPrice() ? '- ' . $serviceRow->getPrice() : ''). PHP_EOL;
+                $message .= $serviceRow->getDescription() ?
+                    'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
+                $message .= PHP_EOL;
+            }
+        }
 
-        $message .= $calling->getDescription() ? 'Комментарий ' . $calling->getDescription() . PHP_EOL : '';
+        /** @var Row $serviceRow */
+        foreach ($calling->getServices() as $serviceRow) {
+            if ($serviceRow->isStationary()) {
+                $message .= 'Стационар' . ($serviceRow->getPrice() ? ' - ' . $serviceRow->getPrice() : ''). PHP_EOL;
+                $message .= $serviceRow->getClinic() ? $serviceRow->getClinic()->getName() . PHP_EOL : '';
+                $message .= $serviceRow->getDescription() ?
+                    'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
+                $message .= PHP_EOL;
+               }
+        }
+
+        $message .= 'ВСЕГО:' . $calling->getTotalAmount() . PHP_EOL;
 
         $message .= PHP_EOL;
 
