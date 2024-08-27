@@ -165,7 +165,7 @@ class FinishAction extends AbstractController
             }elseif ($serviceRow->getService()->getType() === 'replay') {
                 continue;
             }else{
-                $message .= $serviceRow->getService()->getName() . ($serviceRow->getPrice() ? '- ' . $serviceRow->getPrice() : ''). PHP_EOL;
+                $message .= $serviceRow->getService()->getName() . ($serviceRow->getPrice() ? ' - ' . $serviceRow->getPrice() : ''). PHP_EOL;
                 $message .= $serviceRow->getDescription() ?
                     'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
                 $message .= PHP_EOL;
