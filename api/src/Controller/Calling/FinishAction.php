@@ -129,16 +129,23 @@ class FinishAction extends AbstractController
             throw new NotFoundHttpException('Не найден лид №' . $calling->getNumberCalling() . ' в AmoCRM');
         }
 
+        $price = 0;
+        /** @var Row $serviceRow */
+        foreach ($calling->getServices() as $serviceRow) {
+            if ($serviceRow->getService()->getType() === 'default' && !$serviceRow->isHospital()) {
+                $price += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
+            }
+        }
+
         $message = 'Информация от бригады:' . PHP_EOL;
 
-        $message .= $calling->getPrice() ? 'Итого: ' . $calling->getPrice() . PHP_EOL : '';
+        $message .= $calling->getPrice() ? 'Итого: ' . $price . PHP_EOL : '';
         $message .= $calling->getPhone() ? 'Номер телефона заказчика: ' . $calling->getPhone() . PHP_EOL : '';
         $message .= $calling->getFio() ? 'ФИО пациента: ' . $calling->getFio() . PHP_EOL : '';
         $message .= $calling->getAge() ? 'Возраст пациента: ' . $calling->getAge() . PHP_EOL : '';
         $message .= $calling->getMkadDistance() ? 'Расстояние до МКАД: ' . $calling->getMkadDistance() . PHP_EOL : '';
         $message .= $calling->getAddress() ? 'Адрес: ' . $calling->getAddress() . PHP_EOL : '';
         $message .= PHP_EOL;
-        //$message .= $hospital;
 
         /** @var Row $serviceRow */
         foreach ($calling->getServices() as $serviceRow) {
@@ -147,7 +154,7 @@ class FinishAction extends AbstractController
                 $message .= 'Повтор' . ($serviceRow->getPlannedAt() ? ' - ' . $serviceRow->getPlannedAt()->format('d.m.y H:m') : '') . PHP_EOL;
                 $message .= $serviceRow->getPrice() ? 'Предоплата ' . $serviceRow->getPrice() . PHP_EOL : '';
                 $message .= $serviceRow->getDescription() ?
-                    'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
+                    'Комментарий: ' . $serviceRow->getDescription() . PHP_EOL : '';
                 $message .= PHP_EOL;
             }
         }
@@ -160,14 +167,14 @@ class FinishAction extends AbstractController
             }elseif ($serviceRow->isHospital()) {
                 $message .= 'Госпитализация' . ($serviceRow->getPrice() ? ' - ' . $serviceRow->getPrice() : ''). PHP_EOL;
                 $message .= $serviceRow->getDescription() ?
-                    'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
+                    'Комментарий: ' . $serviceRow->getDescription() . PHP_EOL : '';
                 $message .= PHP_EOL;
             }elseif ($serviceRow->getService()->getType() === 'replay') {
                 continue;
             }else{
                 $message .= $serviceRow->getService()->getName() . ($serviceRow->getPrice() ? ' - ' . $serviceRow->getPrice() : ''). PHP_EOL;
                 $message .= $serviceRow->getDescription() ?
-                    'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
+                    'Комментарий: ' . $serviceRow->getDescription() . PHP_EOL : '';
                 $message .= PHP_EOL;
             }
         }
@@ -178,7 +185,7 @@ class FinishAction extends AbstractController
                 $message .= 'Стационар' . ($serviceRow->getPrice() ? ' - ' . $serviceRow->getPrice() : ''). PHP_EOL;
                 $message .= $serviceRow->getClinic() ? $serviceRow->getClinic()->getName() . PHP_EOL : '';
                 $message .= $serviceRow->getDescription() ?
-                    'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
+                    'Комментарий: ' . $serviceRow->getDescription() . PHP_EOL : '';
                 $message .= PHP_EOL;
                }
         }
