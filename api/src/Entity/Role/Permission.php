@@ -17,6 +17,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     ],
     routePrefix: '/api',
     normalizationContext: ['groups' => ['permission:read']],
+    openapi: false,
     paginationEnabled: false,
 )]
 #[ApiFilter(OrderFilter::class, properties: ['id', 'description'], arguments: ['orderParameterName' => 'order'])]
