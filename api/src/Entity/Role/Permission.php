@@ -25,7 +25,7 @@ class Permission
 {
     #[ORM\Id]
     #[ORM\Column]
-    #[Groups(['permission:read', 'role:read'])]
+    #[Groups(['permission:read', 'role:read', 'role:write'])]
     private string $id;
 
     #[ORM\Column(length: 255)]
