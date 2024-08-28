@@ -17,7 +17,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
     ],
     routePrefix: '/api',
     normalizationContext: ['groups' => ['permission:read']],
-    openapi: false,
     paginationEnabled: false,
 )]
 #[ApiFilter(OrderFilter::class, properties: ['id', 'description'], arguments: ['orderParameterName' => 'order'])]
@@ -25,7 +24,7 @@ class Permission
 {
     #[ORM\Id]
     #[ORM\Column]
-    #[Groups(['permission:read', 'role:read', 'role:write'])]
+    #[Groups(['permission:read', 'role:read'])]
     private string $id;
 
     #[ORM\Column(length: 255)]
