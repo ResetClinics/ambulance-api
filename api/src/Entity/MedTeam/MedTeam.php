@@ -44,7 +44,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             processor: PostProcessor::class
         ),
         new Post(
-            uriTemplate: 'med_teams/{id}/send-sms',
+            uriTemplate: '/med_teams/{id}/send-sms',
             routePrefix: '/api',
             controller: SendSms::class,
             openapi: false,
