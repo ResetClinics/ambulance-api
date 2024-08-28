@@ -15,6 +15,10 @@ security:
             entity:
                 class: App\Entity\Partner\PartnerUser
                 property: phone
+        app_exchange_user_provider:
+            entity:
+                class: App\Entity\ApiUser
+                property: phone
     firewalls:
         login:
             pattern: ^/api/login
@@ -34,6 +38,15 @@ security:
                 check_path: /partner/login_check
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
+        exchange_login:
+            pattern: ^/exchange/login
+            stateless: true
+            provider: app_exchange_user_provider
+            json_login:
+                username_path: phone
+                check_path: /exchange/login_check
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
         api:
             pattern:   ^/api
             stateless: true
@@ -44,6 +57,11 @@ security:
             stateless: true
             jwt:
                 provider: app_partner_user_provider
+        exchange:
+            pattern:   ^/exchange
+            stateless: true
+            jwt:
+                provider: app_exchange_user_provider
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
@@ -62,6 +80,8 @@ security:
     access_control:
         - { path: ^/partner/login, roles: PUBLIC_ACCESS }
         - { path: ^/partner, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/exchange/login, roles: PUBLIC_ACCESS }
+        - { path: ^/exchange, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/sing-in, roles: PUBLIC_ACCESS }
         - { path: ^/app, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
@@ -79,7 +99,7 @@ security:
         - { path: ^/api/administrator_reports, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/amo-crm, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: PUBLIC_ACCESS }
-        - { path: ^/, roles: ROLE_APP }
+        #- { path: ^/, roles: ROLE_APP }
 
 when@test:
     security:

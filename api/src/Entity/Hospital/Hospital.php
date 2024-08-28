@@ -52,8 +52,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
         new Delete(),
         new Patch(),
     ],
+    routePrefix: '/api',
     normalizationContext: ['groups' => ['hospital:read', 'partner:item:read']],
     denormalizationContext: ['groups' => ['hospital:write']],
+    openapi: false,
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true,
     processor: HospitalProcessor::class

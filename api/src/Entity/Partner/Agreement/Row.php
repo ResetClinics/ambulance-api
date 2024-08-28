@@ -11,6 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RowRepository::class)]
 #[ApiResource(
+    routePrefix: '/api',
     openapi: false
 )]
 class Row

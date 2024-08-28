@@ -34,8 +34,10 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Delete(),
         new Patch(),
     ],
+    routePrefix: '/api',
     normalizationContext: ['groups' => ['work-schedule:read']],
     denormalizationContext: ['groups' => ['work-schedule:write']],
+    openapi: false,
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
 )]

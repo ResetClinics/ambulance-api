@@ -11,6 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AgreementTemplateRepository::class)]
 #[ApiResource(
+    routePrefix: '/api',
     normalizationContext: [
         'groups' => [
             'agreement:read',
@@ -18,6 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             'service-category:item:read'
         ]],
     denormalizationContext: ['groups' => ['agreement:write']],
+    openapi: false,
     order: ['service', 'distance'],
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true,

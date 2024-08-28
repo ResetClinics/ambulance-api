@@ -24,8 +24,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Put(),
         new Patch(),
     ],
+    routePrefix: '/api',
     normalizationContext: ['groups' => ['payment-setting:read']],
     denormalizationContext: ['groups' => ['payment-setting:write']],
+    openapi: false,
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
 )]

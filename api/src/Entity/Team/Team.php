@@ -33,8 +33,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ),
         new Put(),
     ],
+    routePrefix: '/api',
     normalizationContext: ['groups' => ['team:read']],
-    denormalizationContext: ['groups' => ['team:write']]
+    denormalizationContext: ['groups' => ['team:write']],
+    openapi: false
 )]
 #[Post(uriTemplate: '/teams/my', controller: AdministratorAction::class, input: TeamDto::class, read: false)]
 #[Post(uriTemplate: '/teams/accept', controller: AcceptAction::class, input: TeamDto::class, read: false)]

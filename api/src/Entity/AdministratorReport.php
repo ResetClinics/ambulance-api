@@ -50,8 +50,10 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
         ),
         new Delete(),
     ],
+    routePrefix: '/api',
     normalizationContext: ['groups' => ['administrator_report:read', 'media_object:read', 'user:item:read']],
     denormalizationContext: ['groups' => ['administrator_report:write', 'media_object:write']],
+    openapi: false,
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
 )]

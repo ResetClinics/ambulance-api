@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Partner;
+namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
@@ -10,8 +10,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use App\Entity\Partner;
-use App\Repository\PartnerUserRepository;
+use App\Repository\ApiUserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -20,8 +19,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: PartnerUserRepository::class)]
-#[ORM\Table(name: 'partner_users')]
+#[ORM\Entity(repositoryClass: ApiUserRepository::class)]
+#[ORM\Table(name: 'api_users')]
 #[ApiResource(
     operations: [
         new GetCollection(),
@@ -30,30 +29,27 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Put(),
         new Patch(),
     ],
-    routePrefix: '/api',
-    normalizationContext: ['groups' => ['partner_user:read']],
-    denormalizationContext: ['groups' => ['partner_user:write']],
+    normalizationContext: ['groups' => ['api_user:read']],
+    denormalizationContext: ['groups' => ['api_user:write']],
     openapi: false,
 )]
 #[UniqueEntity(fields: ['phone'], message: 'Этот номер телефона уже используется.')]
-class PartnerUser implements UserInterface, PasswordAuthenticatedUserInterface
+class ApiUser implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    public const ROLE_PARTNER_USER = 'ROLE_PARTNER_USER';
-    public const ROLE_PARTNER_OWNER = 'ROLE_PARTNER_OWNER';
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Groups([
-        'partner_user:read',
+        'api_user:read',
     ])]
     private ?int $id = null;
 
 
     #[ORM\Column(length: 11, unique: true)]
     #[Groups([
-        'partner_user:read',
-        'partner_user:write',
+        'api_user:read',
+        'api_user:write',
     ])]
     #[Assert\NotBlank(message: "Телефон обязателен для заполнения.")]
     #[Assert\Regex(
@@ -64,16 +60,16 @@ class PartnerUser implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     #[Groups([
-        'partner_user:read',
-        'partner_user:write',
+        'api_user:read',
+        'api_user:write',
     ])]
     #[Assert\NotBlank]
     private ?string $name = null;
 
     #[ORM\Column]
     #[Groups([
-        'partner_user:read',
-        'partner_user:write'
+        'api_user:read',
+        'api_user:write'
     ])]
     private array $roles = [];
 
@@ -82,18 +78,10 @@ class PartnerUser implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Assert\Length(min: 4)]
     #[Groups([
-        'partner_user:write'
+        'api_user:write'
     ])]
     #[SerializedName('password')]
     private ?string $plainPassword = null;
-
-    #[ORM\ManyToOne]
-    #[Assert\NotBlank]
-    #[Groups([
-        'partner_user:read',
-        'partner_user:write'
-    ])]
-    private ?Partner $partner = null;
 
     public function getId(): ?int
     {
@@ -136,7 +124,7 @@ class PartnerUser implements UserInterface, PasswordAuthenticatedUserInterface
     {
         /** @var array<array-key, string> $roles */
         $roles = $this->roles;
-
+        $roles[] = 'ROLE_API_USER';
         return array_unique($roles);
     }
 
@@ -196,17 +184,4 @@ class PartnerUser implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->name;
     }
-
-    public function getPartner(): ?Partner
-    {
-        return $this->partner;
-    }
-
-    public function setPartner(?Partner $partner): self
-    {
-        $this->partner = $partner;
-
-        return $this;
-    }
-
 }

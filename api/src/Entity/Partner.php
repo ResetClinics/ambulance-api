@@ -28,8 +28,10 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Get(),
         new Put(),
     ],
+    routePrefix: '/api',
     normalizationContext: ['groups' => ['partner:read', 'partner:item:read']],
     denormalizationContext: ['groups' => ['partner:write']],
+    openapi: false,
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
 )]

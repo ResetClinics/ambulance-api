@@ -11,8 +11,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ClinicRepository::class)]
 #[ApiResource(
+    routePrefix: '/api',
     normalizationContext: ['groups' => ['clinic:read',  'clinic:item:read']],
     denormalizationContext: ['groups' => ['clinic:write']],
+    openapi: false,
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
 )]

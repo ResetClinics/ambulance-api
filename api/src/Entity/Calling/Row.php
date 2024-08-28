@@ -12,6 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: RowRepository::class)]
 #[ORM\Table(name: 'calling_rows')]
 #[ApiResource(
+    routePrefix: '/api',
     openapi: false
 )]
 class Row

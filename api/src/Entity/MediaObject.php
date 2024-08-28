@@ -24,27 +24,12 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         new GetCollection(),
         new Post(
             inputFormats: ['multipart' => ['multipart/form-data']],
-            openapi: new Model\Operation(
-                requestBody: new Model\RequestBody(
-                    content: new ArrayObject([
-                        'multipart/form-data' => [
-                            'schema' => [
-                                'type' => 'object',
-                                'properties' => [
-                                    'file' => [
-                                        'type' => 'string',
-                                        'format' => 'binary'
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ])
-                )
-            )
         )
     ],
     outputFormats: ['jsonld' => ['application/ld+json']],
-    normalizationContext: ['groups' => ['media_object:read']]
+    routePrefix: '/api',
+    normalizationContext: ['groups' => ['media_object:read']],
+    openapi: false,
 )]
 class MediaObject
 {

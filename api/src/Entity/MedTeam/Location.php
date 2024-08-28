@@ -11,13 +11,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ApiResource(
     uriTemplate: '/team-locations',
+    routePrefix: '/api',
     normalizationContext: ['groups' => ['med-team-location:read']],
     denormalizationContext: ['groups' => ['med-team-location:write']],
+    openapi: false,
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
 )]
 #[ORM\Entity(repositoryClass: LocationRepository::class)]
-#[ApiResource]
 class Location
 {
     #[ORM\Id]

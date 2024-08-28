@@ -31,6 +31,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Post(),
         new Get(),
     ],
+    routePrefix: '/api',
     normalizationContext: [
         'groups' => [
             'agreement:read',
@@ -39,6 +40,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             'service-category:item:read'
         ]],
     denormalizationContext: ['groups' => ['agreement:write']],
+    openapi: false,
 )]
 #[ApiFilter(OrderFilter::class, properties: ['startsAt'], arguments: ['orderParameterName' => 'order'])]
 #[ApiFilter(

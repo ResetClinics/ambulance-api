@@ -32,20 +32,26 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: MedTeamRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(),
-        new Post(),
-        new Get(),
-        new Put(),
-        new Delete(),
+        new GetCollection(routePrefix: '/api', openapi: false,),
+        new GetCollection(uriTemplate: '/exchange/med_teams'),
+        new Post(routePrefix: '/api', openapi: false,),
+        new Get(routePrefix: '/api', openapi: false,),
+        new Put(routePrefix: '/api', openapi: false,),
+        new Delete(routePrefix: '/api', openapi: false,),
         new Patch(
+            routePrefix: '/api',
+            openapi: false,
             processor: PostProcessor::class
         ),
         new Post(
             uriTemplate: 'med_teams/{id}/send-sms',
+            routePrefix: '/api',
             controller: SendSms::class,
+            openapi: false,
             name: 'med_teams-send_sms'
         )
     ],
+
     normalizationContext: ['groups' => ['med-team:read', 'user:item:read', 'phone:read', 'car:read', 'base:read']],
     denormalizationContext: ['groups' => ['med-team:write']],
     paginationClientEnabled: true,
@@ -66,7 +72,7 @@ class MedTeam
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['med-team:read', 'administrator_report:read', 'calling:read'])]
+    #[Groups(['med-team:read', 'administrator_report:read', 'calling:read','exchange_calling:read'])]
     private ?int $id = null;
 
     #[ORM\Column]
@@ -75,15 +81,15 @@ class MedTeam
     private ?DateTimeImmutable $plannedStartAt = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read'])]
+    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read','exchange_calling:read'])]
     private ?DateTimeImmutable $startedAt = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read'])]
+    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read', 'exchange_calling:read'])]
     private ?DateTimeImmutable $completedAt = null;
 
     #[ORM\Column(length: 32)]
-    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read', 'calling:read'])]
+    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read', 'calling:read', 'exchange_calling:read'])]
     #[Assert\Choice(choices: [
         'draft',
         'scheduled',
@@ -176,8 +182,9 @@ class MedTeam
 
     public function getDay(): int
     {
-        return  (int)$this->plannedStartAt->format('d');
+        return (int)$this->plannedStartAt->format('d');
     }
+
     public function setPlannedStartAt(DateTimeImmutable $plannedStartAt): self
     {
         $this->plannedStartAt = $plannedStartAt;
@@ -369,7 +376,7 @@ class MedTeam
 
     public function getDutyHours(): int
     {
-        if (!$this->plannedDutyStartAt || !$this->plannedDutyFinishAt){
+        if (!$this->plannedDutyStartAt || !$this->plannedDutyFinishAt) {
             return 0;
         }
         $interval = $this->plannedDutyStartAt->diff($this->plannedDutyFinishAt);

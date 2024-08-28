@@ -10,8 +10,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CarRepository::class)]
 #[ApiResource(
+    routePrefix: '/api',
     normalizationContext: ['groups' => ['car:read']],
     denormalizationContext: ['groups' => ['car:write']],
+    openapi: false,
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
 )]

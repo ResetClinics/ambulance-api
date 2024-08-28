@@ -10,10 +10,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BaseRepository::class)]
 #[ApiResource(
+    routePrefix: '/api',
     normalizationContext: ['groups' => ['base:read']],
     denormalizationContext: ['groups' => ['base:write']],
+    openapi: false,
     paginationClientEnabled: true,
-    paginationClientItemsPerPage: true
+    paginationClientItemsPerPage: true,
 )]
 class Base
 {

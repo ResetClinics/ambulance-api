@@ -23,8 +23,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Get(),
         new Put(),
     ],
+    routePrefix: '/api',
     normalizationContext: ['groups' => ['service-category:read', 'service-category:item:read']],
     denormalizationContext: ['groups' => ['service-category:write']],
+    openapi: false,
 )]
 class Category
 {

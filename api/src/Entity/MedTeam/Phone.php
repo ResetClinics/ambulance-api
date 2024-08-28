@@ -10,8 +10,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PhoneRepository::class)]
 #[ApiResource(
+    routePrefix: '/api',
     normalizationContext: ['groups' => ['phone:read']],
     denormalizationContext: ['groups' => ['phone:write']],
+    openapi: false,
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
 )]

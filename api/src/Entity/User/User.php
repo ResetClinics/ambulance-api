@@ -33,16 +33,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(),
-        new Post(),
-        new Get(),
-        new Put(),
+        new GetCollection(routePrefix: '/api', openapi: false,),
+        new GetCollection(uriTemplate: '/exchange/users'),
+        new Post(routePrefix: '/api', openapi: false,),
+        new Get(routePrefix: '/api', openapi: false,),
+        new Put(routePrefix: '/api', openapi: false,),
     ],
     normalizationContext: ['groups' => ['user:read']],
     denormalizationContext: ['groups' => ['user:write']],
 )]
 #[UniqueEntity(fields: ['phone'], message: 'Этот номер телефона уже используется.')]
-#[Post(uriTemplate: '/users/my', controller: MyAction::class, input: UserDto::class, read: false)]
+#[Post(uriTemplate: '/users/my', routePrefix: '/api', controller: MyAction::class, openapi: false, input: UserDto::class, read: false)]
 #[ApiFilter(
     SearchByNameAndPhoneAndEmailFilter::class,
     properties: ['search']
@@ -186,7 +187,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        if (!$this->active){
+        if (!$this->active) {
             return [];
         }
         /** @var array<array-key, string> $roles */
@@ -324,8 +325,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (new self())
             ->setId($username)
             ->setRoles($payload['roles'])
-            ->setPhone($payload['phone'])
-            ;
+            ->setPhone($payload['phone']);
     }
 
     public function __toString(): string
@@ -410,9 +410,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $permissions = [];
         /** @var Role $role */
-        foreach ($this->accessRoles as $role){
+        foreach ($this->accessRoles as $role) {
             /** @var Permission $permission */
-            foreach ($role->getPermissions() as $permission){
+            foreach ($role->getPermissions() as $permission) {
                 $permissions[] = $permission->getId();
             }
         }

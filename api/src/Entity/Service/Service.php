@@ -14,8 +14,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ServiceRepository::class)]
 #[ORM\Table(name: 'service_services')]
 #[ApiResource(
+    routePrefix: '/api',
     normalizationContext: ['groups' => ['service:read', 'service:item:read', 'service-category:item:read']],
     denormalizationContext: ['groups' => ['service:write']],
+    openapi: false,
     order: ['sort' => 'ASC'],
 )]
 class Service

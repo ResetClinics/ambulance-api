@@ -28,8 +28,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
             input: AddLocation::class,
         )
     ],
+    routePrefix: '/api',
     normalizationContext: ['groups' => ['team:read']],
     denormalizationContext: ['groups' => ['team:write']],
+    openapi: false,
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
 )]

@@ -9,7 +9,10 @@ use App\Repository\MedicineRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MedicineRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    routePrefix: '/api',
+    openapi: false,
+)]
 class Medicine
 {
     #[ORM\Id]
