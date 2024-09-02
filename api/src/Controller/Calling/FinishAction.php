@@ -15,6 +15,9 @@ use AmoCRM\Filters\LeadsFilter;
 use AmoCRM\Helpers\EntityTypesInterface;
 use AmoCRM\Models\CompanyModel;
 use AmoCRM\Models\ContactModel;
+use AmoCRM\Models\CustomFieldsValues\DateTimeCustomFieldValuesModel;
+use AmoCRM\Models\CustomFieldsValues\ValueCollections\DateTimeCustomFieldValueCollection;
+use AmoCRM\Models\CustomFieldsValues\ValueModels\DateTimeCustomFieldValueModel;
 use AmoCRM\Models\LeadModel;
 use AmoCRM\Models\LinkModel;
 use AmoCRM\Models\NoteType\CommonNote;
@@ -41,12 +44,12 @@ class FinishAction extends AbstractController
     private AmoCRMApiClient $client;
 
     public function __construct(
-        AmoCRM                    $amoCRM,
-        private readonly CallingSender             $sender,
-        private readonly PartnerReward             $partnerReward,
-        private readonly OperatorReward            $operatorReward,
-        private readonly Flusher                   $flusher,
-        private readonly WSClient $wsClient,
+        AmoCRM                          $amoCRM,
+        private readonly CallingSender  $sender,
+        private readonly PartnerReward  $partnerReward,
+        private readonly OperatorReward $operatorReward,
+        private readonly Flusher        $flusher,
+        private readonly WSClient       $wsClient,
     )
     {
         $this->client = $amoCRM->getClient();
@@ -164,15 +167,15 @@ class FinishAction extends AbstractController
 
             if ($serviceRow->isStationary()) {
                 continue;
-            }elseif ($serviceRow->isHospital()) {
-                $message .= 'Госпитализация' . ($serviceRow->getPrice() ? ' - ' . $serviceRow->getPrice() : ''). PHP_EOL;
+            } elseif ($serviceRow->isHospital()) {
+                $message .= 'Госпитализация' . ($serviceRow->getPrice() ? ' - ' . $serviceRow->getPrice() : '') . PHP_EOL;
                 $message .= $serviceRow->getDescription() ?
                     'Комментарий: ' . $serviceRow->getDescription() . PHP_EOL : '';
                 $message .= PHP_EOL;
-            }elseif ($serviceRow->getService()->getType() === 'replay') {
+            } elseif ($serviceRow->getService()->getType() === 'replay') {
                 continue;
-            }else{
-                $message .= $serviceRow->getService()->getName() . ($serviceRow->getPrice() ? ' - ' . $serviceRow->getPrice() : ''). PHP_EOL;
+            } else {
+                $message .= $serviceRow->getService()->getName() . ($serviceRow->getPrice() ? ' - ' . $serviceRow->getPrice() : '') . PHP_EOL;
                 $message .= $serviceRow->getDescription() ?
                     'Комментарий: ' . $serviceRow->getDescription() . PHP_EOL : '';
                 $message .= PHP_EOL;
@@ -182,12 +185,12 @@ class FinishAction extends AbstractController
         /** @var Row $serviceRow */
         foreach ($calling->getServices() as $serviceRow) {
             if ($serviceRow->isStationary()) {
-                $message .= 'Стационар' . ($serviceRow->getPrice() ? ' - ' . $serviceRow->getPrice() : ''). PHP_EOL;
+                $message .= 'Стационар' . ($serviceRow->getPrice() ? ' - ' . $serviceRow->getPrice() : '') . PHP_EOL;
                 $message .= $serviceRow->getClinic() ? $serviceRow->getClinic()->getName() . PHP_EOL : '';
                 $message .= $serviceRow->getDescription() ?
                     'Комментарий: ' . $serviceRow->getDescription() . PHP_EOL : '';
                 $message .= PHP_EOL;
-               }
+            }
         }
 
         $message .= 'ВСЕГО:' . $calling->getTotalAmount() . PHP_EOL;
@@ -268,12 +271,13 @@ class FinishAction extends AbstractController
             throw new NotFoundHttpException('Не найден контакт при создании повтора');
         }
 
-        $name = $row->getPlannedAt()->format('d.m.y ') . ' ПОВТОР в ' . $row->getPlannedAt()->format('H:s ') . ' ' . $calling->getFio();
+        $name = $row->getPlannedAt()->format('d.m.y ') . ' ПОВТОР в ' . $row->getPlannedAt()->format('H:i ') . ' ' . $calling->getFio();
 
         $customFieldsValues = new CustomFieldsValuesCollection();
         foreach ($lead->getCustomFieldsValues() as $customFieldsValue) {
-            //бригаду, админа и врача не переносим в повотор
+            //Время прибытия, бригаду, админа и врача не переносим в повотор
             if (
+                $customFieldsValue->getFieldId() === 880453 ||
                 $customFieldsValue->getFieldId() === 875863 ||
                 $customFieldsValue->getFieldId() === 873879 ||
                 $customFieldsValue->getFieldId() === 873881
@@ -281,6 +285,20 @@ class FinishAction extends AbstractController
                 continue;
             }
             $customFieldsValues->add($customFieldsValue);
+        }
+
+        if ($row->getPlannedAt()) {
+            $textCustomFieldValueModel = new DateTimeCustomFieldValuesModel();
+            $textCustomFieldValueModel->setFieldId(880453);
+            $textCustomFieldValueModel->setValues(
+                (
+                new DateTimeCustomFieldValueCollection())
+                    ->add(
+                        (new DateTimeCustomFieldValueModel())
+                            ->setValue($row->getPlannedAt()->getTimestamp())
+                    )
+            );
+            $customFieldsValues->add($textCustomFieldValueModel);
         }
 
         $newLead = new LeadModel();
