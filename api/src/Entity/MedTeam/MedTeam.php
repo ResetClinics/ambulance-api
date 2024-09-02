@@ -7,6 +7,7 @@ use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -82,10 +83,20 @@ class MedTeam
 
     #[ORM\Column(nullable: true)]
     #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read','exchange_calling:read'])]
+    #[ApiProperty(
+        openapiContext: [
+            'description' => 'Время начала смены.',
+        ]
+    )]
     private ?DateTimeImmutable $startedAt = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read', 'exchange_calling:read'])]
+    #[ApiProperty(
+        openapiContext: [
+            'description' => 'Время окончания смены.',
+        ]
+    )]
     private ?DateTimeImmutable $completedAt = null;
 
     #[ORM\Column(length: 32)]

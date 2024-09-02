@@ -361,7 +361,7 @@ class Handler
     private function setTeam(Calling $call, LeadModel $lead): void
     {
         $teamId = $this->getTeamId($lead);
-        if (!$teamId) {
+        if ($teamId === null) {
             throw new DomainException('Не определен № бригады');
         }
 
