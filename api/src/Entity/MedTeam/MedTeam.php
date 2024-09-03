@@ -425,4 +425,14 @@ class MedTeam
         return $this;
     }
 
+    #[Groups(['exchange_calling:read'])]
+    public function getCountHours(): ?int
+    {
+        if (!$this->startedAt || !$this->completedAt){
+            return null;
+        }
+        $diff = $this->completedAt->diff($this->startedAt);
+
+        return $diff->h;
+    }
 }
