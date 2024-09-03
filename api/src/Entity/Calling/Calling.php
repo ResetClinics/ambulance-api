@@ -1177,7 +1177,7 @@ class Calling
 
 
     #[SerializedName('repeat')]
-    #[Groups(['calling:read'])]
+    #[Groups(['calling:read', 'exchange_calling:read'])]
     public function getCountRepeat(): int
     {
         if ($this->owner){
