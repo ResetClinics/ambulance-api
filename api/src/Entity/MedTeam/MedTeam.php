@@ -425,7 +425,7 @@ class MedTeam
         return $this;
     }
 
-    #[Groups(['exchange_calling:read'])]
+    #[Groups(['med-team:read'])]
     public function getCountHours(): ?int
     {
         if (!$this->startedAt || !$this->completedAt){
