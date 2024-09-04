@@ -24,42 +24,42 @@ class Row
 
     #[ORM\ManyToOne(inversedBy: 'rows')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
     private ?Service $service = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
     private ?float $price = null;
 
     #[ORM\ManyToOne(inversedBy: 'rows')]
     private ?Calling $calling = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
     private ?int $plannedPrice = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
     private ?\DateTimeImmutable $plannedAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
     private ?int $partnerReward = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
     private ?int $coastPrice = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
     private ?int $percent = null;
 
     #[ORM\ManyToOne]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
     private ?Clinic $clinic = null;
 
 

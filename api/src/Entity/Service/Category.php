@@ -33,14 +33,14 @@ class Category
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['service-category:item:read'])]
+    #[Groups(['service-category:item:read', 'exchange_calling:read'])]
     private ?int $id = null;
 
     #[ORM\OneToMany(mappedBy: 'service', targetEntity: Row::class)]
     private Collection $rows;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['service-category:item:read', 'service-category:write'])]
+    #[Groups(['service-category:item:read', 'service-category:write', 'exchange_calling:read'])]
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Service::class)]

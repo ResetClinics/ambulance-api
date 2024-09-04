@@ -25,11 +25,11 @@ class Service
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['service:item:read'])]
+    #[Groups(['service:item:read', 'exchange_calling:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['service:item:read', 'service:write'])]
+    #[Groups(['service:item:read', 'service:write', 'exchange_calling:read'])]
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'service', targetEntity: Row::class)]
@@ -41,7 +41,7 @@ class Service
         'hospital',
         'default',
     ])]
-    #[Groups(['service:item:read', 'service:write'])]
+    #[Groups(['service:item:read', 'service:write', 'exchange_calling:read'])]
     private ?string $type = 'default';
 
     #[ORM\Column(nullable: true)]
@@ -49,11 +49,11 @@ class Service
     private ?int $sort = null;
 
     #[ORM\ManyToOne(inversedBy: 'services')]
-    #[Groups(['service:item:read', 'service:write'])]
+    #[Groups(['service:item:read', 'service:write', 'exchange_calling:read'])]
     private ?Category $category = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['service:item:read', 'service:write'])]
+    #[Groups(['service:item:read', 'service:write', 'exchange_calling:read'])]
     private ?int $coastPrice = 0;
 
     public function __construct()
