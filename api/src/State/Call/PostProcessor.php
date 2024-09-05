@@ -136,7 +136,7 @@ class PostProcessor implements ProcessorInterface
             $hospital->setStatus('assigned');
             $hospital->setFio($calling->getFio());
             $hospital->setPartner($calling->getPartner());
-            $hospital->setPhone($calling->getPhone());
+            $hospital->setPhone($calling->getOriginalPhone());
             $hospital->setOwner($calling);
             $hospital->setPrepayment($price);
 
@@ -260,7 +260,7 @@ class PostProcessor implements ProcessorInterface
 
 
         if (
-            $hospital->getPhone() === $call->getPhone() &&
+            $hospital->getPhone() === $call->getOriginalPhone() &&
             $hospital->getFio() === $call->getFio() &&
             $hospital->getPrepayment() === $price &&
             $hospital->getClinic()->getId() === $clinic?->getId() &&
@@ -270,7 +270,7 @@ class PostProcessor implements ProcessorInterface
         }
 
         $hospital->setFio($call->getFio());
-        $hospital->setPhone($call->getPhone());
+        $hospital->setPhone($call->getOriginalPhone());
         $hospital->setPrepayment($price);
         $hospital->setStatus('assigned');
         $hospital->setClinic($clinic);

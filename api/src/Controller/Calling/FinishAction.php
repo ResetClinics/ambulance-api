@@ -143,7 +143,7 @@ class FinishAction extends AbstractController
         $message = 'Информация от бригады:' . PHP_EOL;
 
         $message .= $calling->getPrice() ? 'Итого: ' . $price . PHP_EOL : '';
-        $message .= $calling->getPhone() ? 'Номер телефона заказчика: ' . $calling->getPhone() . PHP_EOL : '';
+        $message .= $calling->getOriginalPhone() ? 'Номер телефона заказчика: ' . $calling->getPhone() . PHP_EOL : '';
         $message .= $calling->getFio() ? 'ФИО пациента: ' . $calling->getFio() . PHP_EOL : '';
         $message .= $calling->getAge() ? 'Возраст пациента: ' . $calling->getAge() . PHP_EOL : '';
         $message .= $calling->getMkadDistance() ? 'Расстояние до МКАД: ' . $calling->getMkadDistance() . PHP_EOL : '';

@@ -504,7 +504,7 @@ class Hospital
         return [
             'id' => $this->owner?->getId(),
             'name' => $this->owner?->getName(),
-            'phone' => $this->owner?->getPhone(),
+            'phone' => $this->owner?->getOriginalPhone(),
             'age' => $this->owner?->getAge(),
             'stationary' => $this->getOwnerStationary(),
         ];
