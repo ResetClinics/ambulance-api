@@ -26,12 +26,30 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     operations: [
         new GetCollection(
+            uriTemplate: '/exchange/agreements',
+            normalizationContext: [
+                'groups' => [
+                    'exchange_agreements:read',
+                ]
+            ]
+        ),
+        new Get(
+            uriTemplate: '/exchange/agreements/{id}',
+        ),
+        new GetCollection(
+            routePrefix: '/api',
+            openapi: false,
             normalizationContext: ['groups' => ['agreement:item:read', 'partner:item:read']]
         ),
-        new Post(),
-        new Get(),
+        new Post(
+            routePrefix: '/api',
+            openapi: false,
+        ),
+        new Get(
+            routePrefix: '/api',
+            openapi: false,
+        ),
     ],
-    routePrefix: '/api',
     normalizationContext: [
         'groups' => [
             'agreement:read',
@@ -40,7 +58,6 @@ use Symfony\Component\Validator\Constraints as Assert;
             'service-category:item:read'
         ]],
     denormalizationContext: ['groups' => ['agreement:write']],
-    openapi: false,
 )]
 #[ApiFilter(OrderFilter::class, properties: ['startsAt'], arguments: ['orderParameterName' => 'order'])]
 #[ApiFilter(
@@ -54,18 +71,18 @@ class Agreement
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['agreement:item:read'])]
+    #[Groups(['agreement:item:read', 'exchange_partners:read', 'exchange_agreements:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'agreements')]
     #[ORM\JoinColumn(nullable: false)]
     #[ApiFilter(SearchFilter::class, properties: ['partner.id' => 'exact'])]
-    #[Groups(['agreement:item:read', 'agreement:write'])]
+    #[Groups(['agreement:item:read', 'agreement:write', 'exchange_agreements:read'])]
     #[Assert\NotBlank]
     private ?Partner $partner = null;
 
     #[ORM\Column]
-    #[Groups(['agreement:item:read', 'agreement:write'])]
+    #[Groups(['agreement:item:read', 'agreement:write', 'exchange_partners:read', 'exchange_agreements:read'])]
     #[Assert\NotBlank]
     #[Context(normalizationContext: [DateTimeNormalizer::FORMAT_KEY => 'd.m.Y'])]
     private ?DateTimeImmutable $startsAt = null;

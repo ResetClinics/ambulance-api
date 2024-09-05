@@ -23,15 +23,33 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: PartnerRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(),
-        new Post(),
-        new Get(),
-        new Put(),
+        new GetCollection(
+            uriTemplate: '/exchange/partners',
+            normalizationContext: [
+                'groups' => [
+                    'exchange_partners:read',
+                ]
+            ]
+        ),
+        new GetCollection(
+            routePrefix: '/api',
+            openapi: false,
+        ),
+        new Post(
+            routePrefix: '/api',
+            openapi: false,
+        ),
+        new Get(
+            routePrefix: '/api',
+            openapi: false,
+        ),
+        new Put(
+            routePrefix: '/api',
+            openapi: false,
+        ),
     ],
-    routePrefix: '/api',
     normalizationContext: ['groups' => ['partner:read', 'partner:item:read']],
     denormalizationContext: ['groups' => ['partner:write']],
-    openapi: false,
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
 )]
@@ -45,11 +63,11 @@ class Partner
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['partner:item:read', 'partner_user:read'])]
+    #[Groups(['partner:item:read', 'partner_user:read', 'exchange_partners:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['partner:item:read', 'partner:write', 'partner_user:read'])]
+    #[Groups(['partner:item:read', 'partner:write', 'partner_user:read', 'exchange_partners:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -60,6 +78,7 @@ class Partner
     private Collection $callings;
 
     #[ORM\OneToMany(mappedBy: 'partner', targetEntity: Agreement::class)]
+    #[Groups(['exchange_partners:read'])]
     private Collection $agreements;
 
     #[ORM\Column(length: 11, nullable: true)]
