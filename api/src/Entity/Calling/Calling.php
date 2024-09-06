@@ -615,8 +615,8 @@ class Calling
 
     public function getPhone(): string
     {
-        return '+70000000000';
-        //return $this->phone;
+        //return '+70000000000';
+        return $this->phone;
     }
 
     public function getOriginalPhone(): string
