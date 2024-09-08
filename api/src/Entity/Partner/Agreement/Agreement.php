@@ -58,6 +58,8 @@ use Symfony\Component\Validator\Constraints as Assert;
             'service-category:item:read'
         ]],
     denormalizationContext: ['groups' => ['agreement:write']],
+    paginationClientEnabled: true,
+    paginationClientItemsPerPage: true
 )]
 #[ApiFilter(OrderFilter::class, properties: ['startsAt'], arguments: ['orderParameterName' => 'order'])]
 #[ApiFilter(
