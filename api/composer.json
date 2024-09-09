@@ -63,7 +63,6 @@
         "overtrue/phplint": "^9.0",
         "phpunit/phpunit": "^9.5",
         "psalm/plugin-phpunit": "^0.18.4",
-        "roave/security-advisories": "dev-latest",
         "symfony/browser-kit": "6.1.*",
         "symfony/css-selector": "6.1.*",
         "symfony/debug-bundle": "6.1.*",

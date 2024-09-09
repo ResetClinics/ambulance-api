@@ -110,38 +110,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
             ],
             processor: PostProcessor::class
         ),
-        new Post(
-            uriTemplate: '/callings/recalculate-operators-rewards',
-            routePrefix: '/api',
-            controller: RecalculateOperatorReward::class,
-            openapi: false,
-        ),
-        new Post(
-            uriTemplate: '/callings/current',
-            routePrefix: '/api',
-            controller: CurrentAction::class,
-            openapi: false,
-            input: CallingDto::class,
-            read: false,
-        ),
-        new Post(
-            uriTemplate: '/callings/{id}/accept',
-            routePrefix: '/api',
-            controller: AcceptAction::class,
-            openapi: false,
-            normalizationContext: [
-                'groups' => [
-                    'calling:read',
-                    'exchange_calling:read',
-                    'partner:item:read',
-                    'user:item:read',
-                    'service:item:read',
-                    'client:item:read',
-                ]
-            ],
-            input: CallingDto::class,
-            read: false
-        )
     ],
     normalizationContext: ['groups' => ['calling:read',  'partner:item:read', 'service:item:read', 'user:item:read']],
     denormalizationContext: ['groups' => ['calling:write','media_object:write']],
@@ -150,183 +118,96 @@ use Gedmo\Mapping\Annotation as Gedmo;
 )]
 #[ApiFilter(SearchFilter::class, properties: ['team.id' => 'exact'])]
 #[Post(
+    uriTemplate: '/callings/recalculate-operators-rewards',
+    routePrefix: '/api',
+    controller: RecalculateOperatorReward::class,
+    openapi: false,
+)]
+#[Post(
+    uriTemplate: '/callings/current',
+    routePrefix: '/api',
+    controller: CurrentAction::class,
+    openapi: false,
+    input: CallingDto::class,
+    read: false,
+)]
+#[Post(
+    uriTemplate: '/callings/{id}/accept',
+    routePrefix: '/api',
+    controller: AcceptAction::class,
+    openapi: false,
+    input: CallingDto::class,
+    read: false,
+)]
+#[Post(
     uriTemplate: '/callings/{id}/dispatch',
     routePrefix: '/api',
     controller: DispatchAction::class,
     openapi: false,
-    normalizationContext: [
-        'groups' => [
-            'calling:read',
-            'exchange_calling:read',
-            'partner:item:read',
-            'user:item:read',
-            'service:item:read',
-            'client:item:read',
-        ]
-    ],
     input: CallingDto::class,
-    read: false
+    read: false,
 )]
 #[Post(
     uriTemplate: '/callings/{id}/arrive',
     routePrefix: '/api',
     controller: ArriveAction::class,
     openapi: false,
-    normalizationContext: [
-        'groups' => [
-            'calling:read',
-            'exchange_calling:read',
-            'partner:item:read',
-            'user:item:read',
-            'service:item:read',
-            'client:item:read',
-        ]
-    ],
     input: CallingArriveDto::class,
-    read: false
+    read: false,
 )]
 #[Post(
     uriTemplate: '/callings/{id}/complete',
     routePrefix: '/api',
     controller: CompleteAction::class,
     openapi: false,
-    normalizationContext: [
-        'groups' => [
-            'calling:read',
-            'exchange_calling:read',
-            'partner:item:read',
-            'user:item:read',
-            'service:item:read',
-            'client:item:read',
-        ]
-    ]
 )]
 #[Post(
     uriTemplate: '/callings/{id}/finish',
     routePrefix: '/api',
     controller: FinishAction::class,
     openapi: false,
-    normalizationContext: [
-        'groups' => [
-            'calling:read',
-            'exchange_calling:read',
-            'partner:item:read',
-            'user:item:read',
-            'service:item:read',
-            'client:item:read',
-        ]
-    ]
 )]
 #[Post(
     uriTemplate: '/callings/{id}/codding',
     routePrefix: '/api',
     controller: CoddingAction::class,
     openapi: false,
-    normalizationContext: [
-        'groups' => [
-            'calling:read',
-            'exchange_calling:read',
-            'partner:item:read',
-            'user:item:read',
-            'service:item:read',
-            'client:item:read',
-        ]
-    ]
 )]
 #[Post(
     uriTemplate: '/callings/{id}/hospitalization',
     routePrefix: '/api',
     controller: HospitalizationAction::class,
     openapi: false,
-    normalizationContext: [
-        'groups' => [
-            'calling:read',
-            'exchange_calling:read',
-            'partner:item:read',
-            'user:item:read',
-            'service:item:read',
-            'client:item:read',
-        ]
-    ]
 )]
 #[Post(
     uriTemplate: '/callings/{id}/hospitalization-with-therapy',
     routePrefix: '/api',
     controller: HospitalizationWithTherapyAction::class,
     openapi: false,
-    normalizationContext: [
-        'groups' => [
-            'calling:read',
-            'exchange_calling:read',
-            'partner:item:read',
-            'user:item:read',
-            'service:item:read',
-            'client:item:read',
-        ]
-    ]
 )]
 #[Post(
     uriTemplate: '/callings/{id}/hospitalization-without-therapy',
     routePrefix: '/api',
     controller: HospitalizationWithoutTherapyAction::class,
     openapi: false,
-    normalizationContext: [
-        'groups' => [
-            'calling:read',
-            'exchange_calling:read',
-            'partner:item:read',
-            'user:item:read',
-            'service:item:read',
-            'client:item:read',
-        ]
-    ]
 )]
 #[Post(
     uriTemplate: '/callings/{id}/repeat',
     routePrefix: '/api',
     controller: RepeatAction::class,
     openapi: false,
-    normalizationContext: [
-        'groups' => [
-            'exchange_calling:read',
-            'partner:item:read',
-            'user:item:read',
-            'service:item:read',
-            'client:item:read',
-        ]
-    ]
 )]
 #[Post(
     uriTemplate: '/callings/{id}/reject',
     routePrefix: '/api',
     controller: RejectAction::class,
     openapi: false,
-    normalizationContext: [
-        'groups' => [
-            'calling:read',
-            'exchange_calling:read',
-            'partner:item:read',
-            'user:item:read',
-            'service:item:read',
-            'client:item:read',
-        ]
-    ]
 )]
 #[Post(
     uriTemplate: '/calls/{id}/not-ready',
     routePrefix: '/api',
     controller: NotReadyAction::class,
     openapi: false,
-    normalizationContext: [
-        'groups' => [
-            'calling:read',
-            'exchange_calling:read',
-            'partner:item:read',
-            'user:item:read',
-            'service:item:read',
-            'client:item:read',
-        ]
-    ]
 )]
 #[ApiFilter(OrderFilter::class, properties: ['createdAt', 'updatedAt', 'completedAt'], arguments: ['orderParameterName' => 'order'])]
 #[ApiFilter(
