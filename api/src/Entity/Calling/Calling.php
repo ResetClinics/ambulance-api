@@ -110,6 +110,37 @@ use Gedmo\Mapping\Annotation as Gedmo;
             ],
             processor: PostProcessor::class
         ),
+        new Post(
+            uriTemplate: '/callings/recalculate-operators-rewards',
+            routePrefix: '/api',
+            controller: RecalculateOperatorReward::class,
+            openapi: false,
+        ),
+        new Post(
+            uriTemplate: '/callings/current',
+            routePrefix: '/api',
+            controller: CurrentAction::class,
+            openapi: false,
+            input: CallingDto::class,
+            read: false,
+        ),
+        new Post(
+            uriTemplate: '/callings/{id}/accept',
+            routePrefix: '/api',
+            controller: AcceptAction::class,
+            openapi: false,
+            normalizationContext: [
+                'groups' => [
+                    'exchange_calling:read',
+                    'partner:item:read',
+                    'user:item:read',
+                    'service:item:read',
+                    'client:item:read',
+                ]
+            ],
+            input: CallingDto::class,
+            read: false
+        )
     ],
     normalizationContext: ['groups' => ['calling:read',  'partner:item:read', 'service:item:read', 'user:item:read']],
     denormalizationContext: ['groups' => ['calling:write','media_object:write']],
@@ -117,37 +148,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
     paginationClientItemsPerPage: true
 )]
 #[ApiFilter(SearchFilter::class, properties: ['team.id' => 'exact'])]
-#[Post(
-    uriTemplate: '/callings/recalculate-operators-rewards',
-    routePrefix: '/api',
-    controller: RecalculateOperatorReward::class,
-    openapi: false,
-)]
-#[Post(
-    uriTemplate: '/callings/current',
-    routePrefix: '/api',
-    controller: CurrentAction::class,
-    openapi: false,
-    input: CallingDto::class,
-    read: false,
-)]
-#[Post(
-    uriTemplate: '/callings/{id}/accept',
-    routePrefix: '/api',
-    controller: AcceptAction::class,
-    openapi: false,
-    normalizationContext: [
-        'groups' => [
-            'exchange_calling:read',
-            'partner:item:read',
-            'user:item:read',
-            'service:item:read',
-            'client:item:read',
-        ]
-    ],
-    input: CallingDto::class,
-    read: false
-)]
 #[Post(
     uriTemplate: '/callings/{id}/dispatch',
     routePrefix: '/api',
