@@ -131,6 +131,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
             openapi: false,
             normalizationContext: [
                 'groups' => [
+                    'calling:read',
                     'exchange_calling:read',
                     'partner:item:read',
                     'user:item:read',
@@ -155,6 +156,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
     openapi: false,
     normalizationContext: [
         'groups' => [
+            'calling:read',
             'exchange_calling:read',
             'partner:item:read',
             'user:item:read',
@@ -172,6 +174,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
     openapi: false,
     normalizationContext: [
         'groups' => [
+            'calling:read',
             'exchange_calling:read',
             'partner:item:read',
             'user:item:read',
@@ -189,6 +192,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
     openapi: false,
     normalizationContext: [
         'groups' => [
+            'calling:read',
             'exchange_calling:read',
             'partner:item:read',
             'user:item:read',
@@ -204,6 +208,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
     openapi: false,
     normalizationContext: [
         'groups' => [
+            'calling:read',
             'exchange_calling:read',
             'partner:item:read',
             'user:item:read',
@@ -219,6 +224,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
     openapi: false,
     normalizationContext: [
         'groups' => [
+            'calling:read',
             'exchange_calling:read',
             'partner:item:read',
             'user:item:read',
@@ -234,6 +240,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
     openapi: false,
     normalizationContext: [
         'groups' => [
+            'calling:read',
             'exchange_calling:read',
             'partner:item:read',
             'user:item:read',
@@ -249,6 +256,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
     openapi: false,
     normalizationContext: [
         'groups' => [
+            'calling:read',
             'exchange_calling:read',
             'partner:item:read',
             'user:item:read',
@@ -264,6 +272,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
     openapi: false,
     normalizationContext: [
         'groups' => [
+            'calling:read',
             'exchange_calling:read',
             'partner:item:read',
             'user:item:read',
@@ -294,6 +303,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
     openapi: false,
     normalizationContext: [
         'groups' => [
+            'calling:read',
             'exchange_calling:read',
             'partner:item:read',
             'user:item:read',
@@ -309,6 +319,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
     openapi: false,
     normalizationContext: [
         'groups' => [
+            'calling:read',
             'exchange_calling:read',
             'partner:item:read',
             'user:item:read',
