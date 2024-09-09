@@ -136,6 +136,16 @@ use Gedmo\Mapping\Annotation as Gedmo;
     routePrefix: '/api',
     controller: AcceptAction::class,
     openapi: false,
+    normalizationContext: [
+        'groups' => [
+            //'calling:read',
+            //'calling:item:read',
+            //'calling:detail:read',
+            //'partner:item:read',
+            //'service:item:read',
+            'media_object:read',
+        ]
+    ],
     input: CallingDto::class,
     read: false,
 )]
