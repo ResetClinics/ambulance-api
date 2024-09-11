@@ -628,8 +628,7 @@ class Calling
 
     public function getPhone(): string
     {
-        return '+70000000000';
-        //return $this->phone;
+        return $this->phone;
     }
 
     public function getOriginalPhone(): string
@@ -640,7 +639,6 @@ class Calling
 
     public function setPhone(string $phone): void
     {
-        if ($phone === '+70000000000')
         $this->phone = $phone;
     }
 
