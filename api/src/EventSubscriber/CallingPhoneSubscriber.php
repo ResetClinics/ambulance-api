@@ -49,7 +49,7 @@ final class CallingPhoneSubscriber implements EventSubscriberInterface
 
         $isGranted = $this->isGranted($user, 'calls-phone-full');
 
-        if (!$isGranted) {
+        if ($isGranted) {
             return;
         }
 
