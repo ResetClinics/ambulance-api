@@ -96,7 +96,7 @@ class CompleteAction extends AbstractController
             "id" => $calling->getId(),
             "title" => $calling->getTitle(),
             "name" => $calling->getName(),
-            "phone" => $calling->getPhone(),
+            "phone" => '+70000000000',
             "fio" => $calling->getFio(),
             "numberCalling" => $calling->getNumberCalling(),
             "address" => $calling->getAddress(),
