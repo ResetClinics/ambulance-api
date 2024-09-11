@@ -31,7 +31,11 @@ final class CallingPhoneSubscriber implements EventSubscriberInterface
         $callings = $event->getControllerResult();
         $request = $event->getRequest();
 
-        if (!$callings instanceof \Traversable || !$request->attributes->get('_api_resource_class') === Calling::class || !$request->isMethod('GET')) {
+        if (!$callings instanceof \Traversable || !$request->isMethod('GET')) {
+            return;
+        }
+
+        if ($request->attributes->get('_api_resource_class') !== Calling::class){
             return;
         }
 
