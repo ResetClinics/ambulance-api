@@ -1,6 +1,6 @@
-FROM php:8.1-cli-alpine
+FROM php:8.3-cli-alpine
 
-RUN apk add --no-cache \
+RUN apk add --no-cache --update linux-headers $PHPIZE_DEPS \
     zlib-dev  \
     libxpm-dev \
     libzip-dev \
@@ -22,16 +22,18 @@ RUN apk add --no-cache \
     icu-dev \
     git \
     && docker-php-ext-configure gd \
-      --with-freetype=/usr/include/ \
-      --with-jpeg=/usr/include/ \
-      --with-webp=/usr/include/ \
+       --with-freetype=/usr/include/ \
+       --with-jpeg=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-enable gd \
+    && docker-php-ext-install pdo_mysql intl \
     && docker-php-ext-install \
-      intl \
-      pdo_mysql \
-      zip \
-      opcache
+     intl \
+     pdo_mysql \
+     zip \
+     opcache \
+    && apk del git \
+    && rm -rf /tmp/*
 
 RUN mv $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
 
