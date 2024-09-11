@@ -54,7 +54,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\Entity(repositoryClass: CallingRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(uriTemplate: '/calls', routePrefix: '/api', openapi: false,),
+        new GetCollection(
+            uriTemplate: '/calls',
+            routePrefix: '/api',
+            openapi: false,
+        ),
         new GetCollection(
             uriTemplate: '/exchange/calls',
             normalizationContext: [
@@ -65,7 +69,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
                     'service:item:read',
                     'client:item:read',
                 ]
-            ]
+            ],
         ),
         new Post(
             routePrefix: '/api',
@@ -93,7 +97,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
                     'media_object:read',
                 ]
             ],
-
+            security: 'is_granted("calls-index") or object.getAdmin() == user'
         ),
         new Put(
             routePrefix: '/api',

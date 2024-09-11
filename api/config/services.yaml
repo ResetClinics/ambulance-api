@@ -63,3 +63,7 @@ services:
 
     App\Services\Call\CrmContactFetcher\CrmContactFetcherInterface:
         class: App\Services\Call\CrmContactFetcher\AmoCrmContactFetcher
+
+    'App\Doctrine\CurrentUserExtension':
+        tags:
+            - { name: api_platform.doctrine.orm.query_extension.collection }
