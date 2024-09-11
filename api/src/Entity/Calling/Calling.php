@@ -97,7 +97,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
                     'media_object:read',
                 ]
             ],
-            security: 'is_granted("calls-index") or object.getAdmin() == user'
         ),
         new Put(
             routePrefix: '/api',
