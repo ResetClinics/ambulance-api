@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             openapi: false,
         ),
         new GetCollection(
-            uriTemplate: '/exchange/calls',
+            uriTemplate: '/exchange/cars',
         ),
         new Post(
             routePrefix: '/api',
