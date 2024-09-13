@@ -471,6 +471,10 @@ class Calling
     #[ApiFilter(BooleanFilter::class)]
     private bool $partnerHospitalization;
 
+    #[ORM\Column(nullable: false, options: ['default' => 0])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
+    #[ApiFilter(BooleanFilter::class)]
+    private bool $personal;
 
     #[ORM\ManyToMany(targetEntity: MediaObject::class, cascade: ['persist'])]
     #[ORM\JoinTable(name: 'calling_images')]
@@ -516,6 +520,7 @@ class Calling
         $this->operatorReward = new OperatorReward(0,0,0,0);
         $this->noBusinessCards = false;
         $this->partnerHospitalization = false;
+        $this->personal = false;
 
         $this->images = new ArrayCollection();
     }
@@ -1346,5 +1351,15 @@ class Calling
         $this->doctor = $team?->getDoctor();
 
         return $this;
+    }
+
+    public function isPersonal(): bool
+    {
+        return $this->personal;
+    }
+
+    public function setPersonal(bool $personal): void
+    {
+        $this->personal = $personal;
     }
 }

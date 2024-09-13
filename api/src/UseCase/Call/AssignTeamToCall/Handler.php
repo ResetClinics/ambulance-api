@@ -223,6 +223,10 @@ class Handler
             if ($field->getFieldId() === 968867) {
                 $call->setNoBusinessCards($field->getValues()?->first()->getValue());
             }
+
+            if ($field->getFieldId() === 966615) {
+                $call->setPersonal($field->getValues()?->first()->getValue());
+            }
         }
     }
 
