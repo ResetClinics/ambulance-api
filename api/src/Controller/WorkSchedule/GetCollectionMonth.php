@@ -22,7 +22,16 @@ class GetCollectionMonth extends AbstractController
     #[Route(path: '/api/work_schedules/month/{role}/{year}/{month}', name: 'work_schedule_month', methods: 'GET')]
     public function __invoke(string $role, int $year, int $month): JsonResponse
     {
-        $users = $this->users->findAllByRole($role);
+        $permission = $role;
+        if ($role === 'ROLE_ADMIN') {
+            $permission = 'can_be-admin';
+        } elseif ($role === 'ROLE_DOCTOR') {
+            $permission = 'can_be-doctor';
+        } elseif ($role === 'ROLE_DRIVER') {
+            $permission = 'can_be-driver';
+        }
+        $users = $this->users->findAllByPermission($permission);
+
         $workSchedules = $this->workSchedules->findAllByRole($role, $year, $month);
 
         $numDays = date('t', mktime(0, 0, 0, $month, 1, $year));
