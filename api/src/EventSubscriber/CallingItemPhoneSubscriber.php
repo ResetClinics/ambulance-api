@@ -53,7 +53,7 @@ final class CallingItemPhoneSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $call->setPhone('+70000000000');
+        $call->setPhone('+74951096650');
     }
 
     private function isGranted(User $user, string $role): bool
