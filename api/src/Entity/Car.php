@@ -3,6 +3,11 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\CarRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -10,10 +15,33 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CarRepository::class)]
 #[ApiResource(
-    routePrefix: '/api',
+    operations: [
+        new GetCollection(
+            routePrefix: '/api',
+            openapi: false,
+        ),
+        new GetCollection(
+            uriTemplate: '/exchange/calls',
+        ),
+        new Post(
+            routePrefix: '/api',
+            openapi: false,
+        ),
+        new Get(
+            routePrefix: '/api',
+            openapi: false,
+        ),
+        new Put(
+            routePrefix: '/api',
+            openapi: false,
+        ),
+        new Delete(
+            routePrefix: '/api',
+            openapi: false,
+        ),
+    ],
     normalizationContext: ['groups' => ['car:read']],
     denormalizationContext: ['groups' => ['car:write']],
-    openapi: false,
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
 )]
