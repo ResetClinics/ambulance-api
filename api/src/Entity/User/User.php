@@ -290,7 +290,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return int
      */
-    public function getExternalId(): int
+    public function getExternalId(): ?int
     {
         return $this->externalId;
     }
