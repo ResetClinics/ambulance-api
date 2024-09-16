@@ -491,6 +491,14 @@ class Calling
     #[Groups(['calling:read', 'calling:write', 'exchange_calling:read',])]
     private ?MedTeam $team = null;
 
+    #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read',])]
+    private ?int $responsibleUserId = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read',])]
+    private ?string $responsibleUserName = null;
+
     public function __construct(
         string  $numberCalling,
         string  $title,
@@ -1362,4 +1370,25 @@ class Calling
     {
         $this->personal = $personal;
     }
+
+    public function getResponsibleUserId(): ?int
+    {
+        return $this->responsibleUserId;
+    }
+
+    public function setResponsibleUserId(?int $responsibleUserId): void
+    {
+        $this->responsibleUserId = $responsibleUserId;
+    }
+
+    public function getResponsibleUserName(): ?string
+    {
+        return $this->responsibleUserName;
+    }
+
+    public function setResponsibleUserName(?string $responsibleUserName): void
+    {
+        $this->responsibleUserName = $responsibleUserName;
+    }
+
 }
