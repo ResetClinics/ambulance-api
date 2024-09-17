@@ -222,10 +222,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
     controller: NotReadyAction::class,
     openapi: false,
 )]
-#[ApiFilter(OrderFilter::class, properties: ['createdAt', 'updatedAt', 'completedAt'], arguments: ['orderParameterName' => 'order'])]
+#[ApiFilter(
+    OrderFilter::class,
+    properties: ['createdAt', 'updatedAt', 'completedAt', 'dateTime'],
+    arguments: ['orderParameterName' => 'order'])]
 #[ApiFilter(
     DateFilter::class,
     properties: [
+        'dateTime' => DateFilterInterface::EXCLUDE_NULL,
         'createdAt' => DateFilterInterface::EXCLUDE_NULL,
         'updatedAt' => DateFilterInterface::EXCLUDE_NULL,
         'completedAt' => DateFilterInterface::EXCLUDE_NULL,
