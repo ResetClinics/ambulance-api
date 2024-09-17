@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use AmoCRM\Client\AmoCRMApiClient;
+use AmoCRM\Filters\LeadsFilter;
 use AmoCRM\Models\LeadModel;
 use App\Services\AmoCRM;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -23,8 +24,9 @@ class TestCommand extends Command
     private AmoCRMApiClient $client;
 
     public function __construct(
-        AmoCRM                                               $amoCRM,
-    ) {
+        AmoCRM $amoCRM,
+    )
+    {
         $this->client = $amoCRM->getClient();
         parent::__construct();
     }
@@ -33,8 +35,19 @@ class TestCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $lead = $this->client->leads()->getOne(23935727, [LeadModel::CONTACTS]);
-        $user = $this->client->users()->getOne($lead->getResponsibleUserId());
+
+        $filter = new LeadsFilter();
+        $filter->setStatuses([
+            [
+                'status_id' => 38307805,
+                'pipeline_id' => 4018768
+            ]
+        ]);
+
+
+        $leads = $this->client->leads()->get($filter);
+        dd($leads->count());
+
 
         $io->success('Новый пользователь добавлен.');
 

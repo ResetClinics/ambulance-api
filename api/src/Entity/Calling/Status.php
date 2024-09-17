@@ -20,6 +20,8 @@ class Status
     public const COMPLETED = 'completed';
     public const REJECTED = 'rejected';
 
+    public const REPEAT = 'repeat';
+
     private string $name;
 
     public function __construct(string $name)
@@ -33,6 +35,7 @@ class Status
             self::REJECTED,
             self::ARRIVED,
             self::COMPLETED,
+            self::REPEAT,
         ]);
 
         $this->name = $name;
@@ -76,6 +79,11 @@ class Status
     public static function completed(): self
     {
         return new self(self::COMPLETED);
+    }
+
+    public static function repeat(): self
+    {
+        return new self(self::REPEAT);
     }
 
     public function isEqual(self $other): bool
@@ -126,5 +134,10 @@ class Status
     public function isCompleted(): bool
     {
         return $this->name === self::COMPLETED;
+    }
+
+    public function isRepeat(): bool
+    {
+        return $this->name === self::REPEAT;
     }
 }
