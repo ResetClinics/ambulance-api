@@ -144,4 +144,20 @@ class HospitalRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findAllCompletedByHospitalizedAtFromPeriod(DatePeriod $period): array
+    {
+        $qb = $this->createQueryBuilder('h');
+
+        return $qb
+            ->andWhere('h.hospitalizedAt >= :start')
+            ->andWhere('h.hospitalizedAt < :end')
+            ->andWhere('h.status = :status')
+            ->setParameter('start', $period->getStartDate())
+            ->setParameter('end', $period->getEndDate())
+            ->setParameter('status', 'completed')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 }

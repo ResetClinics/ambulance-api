@@ -4,8 +4,10 @@ namespace App\Query\User\UsersReport;
 
 use App\Entity\Calling\Calling;
 use App\Entity\Calling\Status;
+use App\Entity\Hospital\Hospital;
 use App\Entity\MedTeam\MedTeam;
 use App\Repository\CallingRepository;
+use App\Repository\Hospital\HospitalRepository;
 use App\Repository\MedTeam\MedTeamRepository;
 use App\Services\PeriodService\PeriodService;
 use DatePeriod;
@@ -20,6 +22,7 @@ class Fetcher
     public function __construct(
         public readonly PeriodService     $periodService,
         public readonly CallingRepository $calls,
+        public readonly HospitalRepository $hospitals,
         private readonly Connection       $connection,
         private readonly MedTeamRepository $teams,
     )
@@ -34,6 +37,7 @@ class Fetcher
     {
         $period = $this->periodService->createDatePeriodFromRequest($query->period);
         $calls = $this->calls->findAllByCompletedAtFromPeriod($period);
+        $hospitals = $this->hospitals->findAllCompletedByHospitalizedAtFromPeriod($period);
         $teams = $this->teams->findByPlanned($period->getStartDate(), $period->getEndDate());
 
         $roles = [
@@ -88,6 +92,7 @@ class Fetcher
                 'codingSalary' => 'n/a',            //Кодирование зарплата
 
                 'hospitalCount' => 0,            //Количество госпитализаций
+                'stationaryCount' => 0,            //Количество стационаров
             ];
         }
 
@@ -125,6 +130,27 @@ class Fetcher
                 }
             }
         }
+
+        /** @var Hospital $hospital */
+        foreach ($hospitals as $hospital){
+            if ($hospital->getOwner()){
+
+                $call = $hospital->getOwner();
+                $adminId = $call?->getAdmin()?->getId();
+
+                if (array_key_exists($adminId, $result)){
+                    $result[$adminId]['stationaryCount'] += 1;
+                }
+
+                $doctorId = $call?->getDoctor()?->getId();
+                if ($doctorId !== $adminId) {
+                    if (array_key_exists($doctorId, $result)){
+                        $result[$adminId]['stationaryCount'] += 1;
+                    }
+                }
+            }
+        }
+
 
         usort($result, function ($item1, $item2) use ($sort, $order) {
             if ($order === 'desc') {
