@@ -152,10 +152,9 @@ class HospitalRepository extends ServiceEntityRepository
         return $qb
             ->andWhere('h.hospitalizedAt >= :start')
             ->andWhere('h.hospitalizedAt < :end')
-            ->andWhere('h.status = :status')
+            ->andWhere($qb->expr()->in('h.status', ['inpatient', 'completed']))
             ->setParameter('start', $period->getStartDate())
             ->setParameter('end', $period->getEndDate())
-            ->setParameter('status', 'completed')
             ->getQuery()
             ->getResult()
             ;
