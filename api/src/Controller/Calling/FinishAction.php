@@ -30,6 +30,8 @@ use App\Services\Call\OperatorReward;
 use App\Services\Call\PartnerReward;
 use App\Services\CallingSender;
 use App\Services\WSClient;
+use App\UseCase\Call\AddOrUpdateRepeat\Command;
+use App\UseCase\Call\AddOrUpdateRepeat\Handler;
 use DateTimeImmutable;
 use DateTimeZone;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -50,6 +52,7 @@ class FinishAction extends AbstractController
         private readonly OperatorReward $operatorReward,
         private readonly Flusher        $flusher,
         private readonly WSClient       $wsClient,
+        private readonly Handler $handler,
     )
     {
         $this->client = $amoCRM->getClient();
@@ -413,5 +416,8 @@ class FinishAction extends AbstractController
         $calling->setOwnerExternalId((string)$leadModel->getId());
 
         $this->flusher->flush();
+
+        $command = new Command((string)$leadModel->getId());
+        $this->handler->handle($command);
     }
 }
