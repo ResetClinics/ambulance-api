@@ -96,4 +96,15 @@ class MedTeamRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findAllWorking(): array
+    {
+        $data = $this->createQueryBuilder('t')
+            ->andWhere('t.status = :work')
+            ->setParameter('work', 'work')
+            ->getQuery()
+            ->getResult();
+
+        return $data === null ? [] : $data;
+    }
 }
