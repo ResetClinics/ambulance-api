@@ -29,7 +29,7 @@ class SetTimeAction extends AbstractController
 
     public function __invoke($id, Request $request): JsonResponse
     {
-        $command = new Command($id);
+        $command = new Command((int)$id);
 
         $this->serializer->deserialize(
             $request->getContent(),
