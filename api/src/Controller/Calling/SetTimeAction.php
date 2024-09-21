@@ -45,7 +45,7 @@ class SetTimeAction extends AbstractController
         }
 
         try {
-            //$this->handler->handle($command);
+            $this->handler->handle($command);
         }catch (Exception $e) {
             return $this->json([
                 'error' =>  $e->getMessage(),
