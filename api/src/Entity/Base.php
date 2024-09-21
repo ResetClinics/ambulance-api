@@ -37,6 +37,10 @@ class Base
     #[Groups(['base:read', 'base:write'])]
     #[ORM\Column(length: 16, nullable: true)]
     private ?string $lat = null;
+
+    #[Groups(['base:read', 'base:write'])]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $shortName = null;
     public function getId(): ?int
     {
         return $this->id;
@@ -72,5 +76,17 @@ class Base
     public function setLon(?string $lon): void
     {
         $this->lon = $lon;
+    }
+
+    public function getShortName(): ?string
+    {
+        return $this->shortName;
+    }
+
+    public function setShortName(?string $shortName): static
+    {
+        $this->shortName = $shortName;
+
+        return $this;
     }
 }
