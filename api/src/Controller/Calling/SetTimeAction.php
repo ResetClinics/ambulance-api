@@ -16,7 +16,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use function count;
 
-#[Route('/api/calls/{id}/set-time/{time}', name: 'call.set-time', methods: ["POST"])]
+#[Route('/api/calls/{id}/set-time', name: 'call.set-time', methods: ["POST"])]
 class SetTimeAction extends AbstractController
 {
     public function __construct(
