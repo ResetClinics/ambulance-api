@@ -69,7 +69,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 11, unique: true)]
-    #[Groups(['user:read', 'user:write', 'team:item:get', 'calling:detail:read'])]
+    #[Groups(['user:read', 'user:write', 'team:item:get', 'calling:detail:read', 'med-team:read'])]
     #[Assert\NotBlank(message: "Телефон обязателен для заполнения.")]
     #[Assert\Regex(
         pattern: '/\d{11}/',
