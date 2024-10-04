@@ -122,6 +122,7 @@ class MedTeam
     private ?User $doctor = null;
 
     #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: true)]
     #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read', 'calling:read'])]
     private ?Phone $phone = null;
 
