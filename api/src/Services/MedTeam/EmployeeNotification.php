@@ -22,10 +22,6 @@ class EmployeeNotification
         $message = $medTeam->getPlannedStartAt()->format('d.m.Y') . '%0D%0A';
         $message .= $medTeam->getPlannedStartAt()->format('H:i') . ' - ' .  $medTeam->getPlannedFinishAt()->format('H:i') . '%0D%0A';
 
-        if ($medTeam->getPhone()){
-            $message .= 'Бригада № ' . $medTeam->getPhone()->getId() . '%0D%0A';
-        }
-
         if ($medTeam->getDoctor()){
             $message .= 'В: ' . $medTeam->getDoctor()->getName() . '%0D%0A';
         }
