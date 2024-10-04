@@ -15,8 +15,8 @@ class PhoneAdminController extends AbstractController
 {
 
     public function __construct(
-       private readonly SerializerInterface $serializer,
-        private readonly UserRepository $users,
+        private readonly SerializerInterface $serializer,
+        private readonly UserRepository      $users,
     )
     {
     }
@@ -26,10 +26,15 @@ class PhoneAdminController extends AbstractController
     {
         $users = $this->users->findAllByPermission('can_be-admin');
 
-        $data = [];
+        $data = [
+            'CiscoIPPhoneDirectory' => [
+                'DirectoryEntry' => [
+                ],
+            ],
+        ];
         /** @var User $user */
         foreach ($users as $user) {
-            $data[] = [
+            $data['CiscoIPPhoneDirectory']['DirectoryEntry'][] = [//
                 'Name' => $user->getName(),
                 'Telephone' => '+' . $user->getPhone(),
             ];
