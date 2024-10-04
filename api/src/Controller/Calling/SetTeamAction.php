@@ -5,12 +5,9 @@ declare(strict_types=1);
 namespace App\Controller\Calling;
 
 use AmoCRM\Client\AmoCRMApiClient;
-use AmoCRM\Collections\CustomFieldsValuesCollection;
 use AmoCRM\Filters\LeadsFilter;
-use AmoCRM\Models\CustomFieldsValues\SelectCustomFieldValuesModel;
-use AmoCRM\Models\CustomFieldsValues\ValueCollections\SelectCustomFieldValueCollection;
-use AmoCRM\Models\CustomFieldsValues\ValueModels\SelectCustomFieldValueModel;
 use AmoCRM\Models\LeadModel;
+use App\Flusher;
 use App\Repository\CallingRepository;
 use App\Repository\MedTeam\MedTeamRepository;
 use App\Services\AmoCRM;
@@ -28,6 +25,7 @@ class SetTeamAction extends AbstractController
     public function __construct(
         private readonly CallingRepository $calls,
         private readonly MedTeamRepository $teams,
+        private readonly Flusher           $flusher,
         AmoCRM                             $amoCRM,
     )
     {
@@ -39,8 +37,7 @@ class SetTeamAction extends AbstractController
         try {
             $call = $this->calls->getById($id);
             $team = $this->teams->getById($teamId);
-            $value = $team->getPhone()?->getId();
-            $enumId = $team->getPhone()?->getExternalId();
+            $call->setTeam($team);
 
             $filter = new LeadsFilter();
             $filter->setIds([$call->getNumberCalling()]);
@@ -49,25 +46,13 @@ class SetTeamAction extends AbstractController
 
             /** @var LeadModel $lead */
             foreach ($leads as $lead) {
-                if ($value !== null && $enumId !== null) {
-                    $leadCustomFieldsValues = new CustomFieldsValuesCollection();
-                    $teamSelectCustomValueModel = new SelectCustomFieldValuesModel();
-                    $teamSelectCustomValueModel->setFieldId(875863);
-                    $teamSelectCustomValueModel->setValues(
-                        (new SelectCustomFieldValueCollection())
-                            ->add(
-                                (new SelectCustomFieldValueModel())
-                                    ->setValue((string)$value)
-                                    ->setEnumId((int)$enumId)
-                            )
-                    );
-                    $leadCustomFieldsValues->add($teamSelectCustomValueModel);
-                    $lead->setCustomFieldsValues($leadCustomFieldsValues);
-                    $lead->setStatusId(38874646);
-                }
+                $lead->setStatusId(38874646);
             }
 
             $this->client->leads()->update($leads);
+
+            $this->flusher->flush();
+
         } catch (Exception $exception) {
             return $this->json(['error' => $exception->getMessage(), $exception], Response::HTTP_ACCEPTED);
         }

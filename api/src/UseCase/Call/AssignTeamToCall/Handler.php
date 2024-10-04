@@ -20,7 +20,6 @@ use App\Entity\Calling\Status;
 use App\Flusher;
 use App\Repository\CallingRepository;
 use App\Repository\ClientRepository;
-use App\Repository\MedTeam\MedTeamRepository;
 use App\Repository\PartnerRepository;
 use App\Services\AmoCRM;
 use App\Services\CallingSender;
@@ -51,7 +50,6 @@ class Handler
         private readonly \App\UseCase\Partner\Create\Handler $partnerHandler,
         private readonly ClientRepository                    $clients,
         private readonly \App\UseCase\Client\Create\Handler  $clientHandler,
-        private readonly MedTeamRepository                   $medTeamRepository,
         private readonly CallingSender                       $sender,
         private readonly WSClient                            $wsClient,
     )
@@ -73,23 +71,6 @@ class Handler
 
         $call = $this->calls->findOneByNumber($command->externalId);
         [$clientName, $clientPhone] = $this->getContactData($lead);
-
-        if (!$call) {
-            $call = new Calling(
-                (string)$lead->getId(),
-                $lead->getName(),
-                $clientName,
-                $clientPhone
-            );
-
-            $owner = $this->calls->findOneByOwnerExternalId((string)$lead->getId());
-            $call->setOwner($owner);
-
-            $call->setFio($call->getOwner()?->getFio());
-            $call->setAge($call->getOwner()?->getAge());
-
-            $this->calls->add($call);
-        }
 
         $call->setUpdatedAt(new DateTimeImmutable());
 
@@ -121,8 +102,6 @@ class Handler
         $this->updateData($call, $lead);
 
         $call->setStatus(Status::assigned());
-
-        $this->setTeam($call, $lead);
 
         $this->flusher->flush();
 
@@ -362,34 +341,6 @@ class Handler
         $call->setClient($client);
     }
 
-    private function setTeam(Calling $call, LeadModel $lead): void
-    {
-        $teamId = $this->getTeamId($lead);
-        if ($teamId === null) {
-            throw new DomainException('Не определен № бригады');
-        }
-
-        try {
-            $medTeam = $this->medTeamRepository->getLastWorkByNumber($teamId);
-        } catch (Exception) {
-            throw new DomainException('Ошибка определения бригады ' . $teamId . ' Обратитесь к администратору!');
-        }
-
-        if (!$medTeam) {
-            throw new DomainException('Не найдена бригада ' . $teamId . ' в текущей смене');
-        }
-
-        if (!$medTeam->getAdmin()) {
-            throw new DomainException('У бригады ' . $teamId . ' не назначен админ');
-        }
-
-        if (!$medTeam->getDoctor()) {
-            throw new DomainException('У бригады ' . $teamId . ' не назначен врач');
-        }
-
-        $call->setTeam($medTeam);
-    }
-
     private function getTeamId(LeadModel $lead): ?string
     {
         if (!$lead->getCustomFieldsValues()) {
@@ -410,7 +361,6 @@ class Handler
         $message = '';
         $message .= 'Заявка #: ' . $call->getNumberCalling() . PHP_EOL;
         $message .= 'Тип заявки: ' . $call->getLeadType() . PHP_EOL;
-        $message .= 'Бригада №: ' . $call->getTeam()?->getPhone()?->getId() . PHP_EOL;
         $message .= 'Врач: ' . $call->getTeam()?->getDoctor()?->getName() . PHP_EOL;
         $message .= 'Администратор: ' . $call->getTeam()?->getAdmin()?->getName() . PHP_EOL;
         $message .= 'Время прибытия: ' . $call->getDateTime()?->format('d.m.Y H:i') . PHP_EOL . PHP_EOL;
