@@ -21,7 +21,7 @@ class PhoneAdminController extends AbstractController
     {
     }
 
-    #[Route('/api/phone/admins.xml', name: 'version')]
+    #[Route('/api/phone/admins.xml', name: 'phone.admin', methods: ["GET"])]
     public function phoneAdmin(): Response
     {
         $users = $this->users->findAllByPermission('can_be-admin');
