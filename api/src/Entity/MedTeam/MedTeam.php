@@ -25,7 +25,6 @@ use App\State\MedTeam\PostProcessor;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -266,6 +265,14 @@ class MedTeam
 
     public function getPhone(): ?Phone
     {
+        if (!$this->phone) {
+            $phone = new Phone();
+            $phone->setId(0);
+            $phone->setValue('79000000000');
+            $phone->setExternalId('0');
+            return $phone;
+        }
+
         return $this->phone;
     }
 
