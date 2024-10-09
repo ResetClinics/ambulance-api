@@ -139,6 +139,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read', 'user:write'])]
     private Collection $accessRoles;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    private ?string $telegram = null;
+
 
     public function __construct($externalId = null)
     {
@@ -418,5 +422,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return array_unique($permissions);
+    }
+
+    public function getTelegram(): ?string
+    {
+        return $this->telegram;
+    }
+
+    public function setTelegram(?string $telegram): static
+    {
+        $this->telegram = $telegram;
+
+        return $this;
     }
 }
