@@ -27,7 +27,7 @@ class HelloCommand extends AbstractCommand implements PublicCommandInterface
         $who = !empty($matches[3]) ? $matches[3] : 'World';
 
         $buttons = [];
-        $buttons[] = ['text' => 'Prev', 'callback_data' => '/start'];
+        $buttons[] =  ['text' => 'Send contact', 'request_contact' => true];
 
 
         $text = sprintf('Hello *%s*', $who);
