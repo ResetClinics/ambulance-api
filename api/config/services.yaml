@@ -6,6 +6,7 @@
 parameters:
     app.min_version: '%env(MIN_VERSION)%'
     app.target_version: '%env(TARGET_VERSION)%'
+    telegram_route_secret: '%env(TELEGRAM_BOT_TOKEN)%'
 
 services:
     # default configuration for services in *this* file
