@@ -36,9 +36,9 @@ class HelloCommand extends AbstractCommand implements PublicCommandInterface
             $update->getMessage()->getChat()->getId(),
             $text,
             'markdown',
-            false,
-            null,
-            new InlineKeyboardMarkup([$buttons])
+            //false,
+            //null,
+            //new InlineKeyboardMarkup([$buttons])
         );
 
         //$api->sendMessage($update->getMessage()->getChat()->getId(), $text, 'markdown');
