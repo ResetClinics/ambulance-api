@@ -68,3 +68,10 @@ services:
     'App\Doctrine\CurrentUserExtension':
         tags:
             - { name: api_platform.doctrine.orm.query_extension.collection }
+
+
+    BoShurik\TelegramBotBundle\Telegram\Command\Registry\CommandRegistry:
+
+    App\Help\Telegram\Command\HelpCommand:
+        tags:
+            - { name: boshurik_telegram_bot.command, priority: -1024 }
