@@ -25,9 +25,9 @@ class HelloCommand extends AbstractCommand implements PublicCommandInterface
         preg_match(self::REGEXP, $update->getMessage()->getText(), $matches);
         $who = !empty($matches[3]) ? $matches[3] : 'World';
 
-        $buttons = [
-            ['text' => 'Send contact', 'request_contact' => true],
-        ];
+        $buttons = [];
+        $buttons[] = ['text' => 'Prev', 'callback_data' => '/post'];
+
 
 
         $text = sprintf('Hello *%s*', $who);
