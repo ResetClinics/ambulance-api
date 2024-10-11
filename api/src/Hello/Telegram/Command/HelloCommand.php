@@ -5,6 +5,7 @@ namespace App\Hello\Telegram\Command;
 use BoShurik\TelegramBotBundle\Telegram\Command\AbstractCommand;
 use BoShurik\TelegramBotBundle\Telegram\Command\PublicCommandInterface;
 use TelegramBot\Api\BotApi;
+use TelegramBot\Api\Types\ReplyKeyboardMarkup;
 use TelegramBot\Api\Types\Update;
 
 class HelloCommand extends AbstractCommand implements PublicCommandInterface
@@ -24,7 +25,21 @@ class HelloCommand extends AbstractCommand implements PublicCommandInterface
         preg_match(self::REGEXP, $update->getMessage()->getText(), $matches);
         $who = !empty($matches[3]) ? $matches[3] : 'World';
 
+        $buttons = [
+            ['text' => 'Send contact', 'request_contact' => true],
+        ];
+
         $text = sprintf('Hello *%s*', $who);
-        $api->sendMessage($update->getMessage()->getChat()->getId(), $text, 'markdown');
+
+        $api->sendMessage(
+            $update->getMessage()->getChat()->getId(),
+            $text,
+            'markdown',
+            false,
+            null,
+            new ReplyKeyboardMarkup($buttons)
+        );
+
+        //$api->sendMessage($update->getMessage()->getChat()->getId(), $text, 'markdown');
     }
 }
