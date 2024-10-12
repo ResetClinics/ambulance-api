@@ -43,12 +43,10 @@ class StartCommand extends AbstractCommand implements PublicCommandInterface
                 'one_time_keyboard' => true,
             ]];
 
-            $text = "Привет!\r\n
+            $text = "Привет!\n
 Я виртуальный помощник клиники Ресет\r\n
 Можешь в этом убедиться и позвонить Андрею Седову\r\n
-\r\n
 Сейчас мы подключим твой телеграмм к рассылке уведомлений о рабочих сменах (вместо СМС)\r\n
-\r\n
 Чтобы начать нажми на кнопку «Отправить контакт»\r\n
 🔻Она сейчас внизу экрана🔻";
 
@@ -63,11 +61,10 @@ class StartCommand extends AbstractCommand implements PublicCommandInterface
         }else {
 
             $user = $chat->getUser();
-
             if (!$user || !$user->isActive()) {
                 $message = $chat->getUser()->getName() . ', ваш пользователь деактивирован. Свяжитесь с администратором';
             }else {
-                $message = $chat->getUser()->getName() . ', сюда вам будут приходить оповещения';
+                $message = 'Привет, ' . $chat->getUser()->getName() . ', сюда вам будут приходить оповещения';
             }
 
             $api->sendMessage(
