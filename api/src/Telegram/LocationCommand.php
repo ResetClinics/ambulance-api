@@ -16,10 +16,10 @@ class LocationCommand implements CommandInterface
 
         $buttons = [];
 
-        $buttons[] = [
-            'text' => 'Локация',
-            'request_location' => true
-        ];
+        //$buttons[] = [
+        //    'text' => 'Локация',
+        //    'request_location' => true
+        //];
 
 
         $api->sendMessage(
