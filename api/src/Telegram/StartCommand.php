@@ -1,9 +1,7 @@
 <?php
 
-
 namespace App\Telegram;
 
-use App\Entity\TgChat;
 use App\Repository\TgChatRepository;
 use BoShurik\TelegramBotBundle\Telegram\Command\AbstractCommand;
 use BoShurik\TelegramBotBundle\Telegram\Command\PublicCommandInterface;
@@ -40,12 +38,19 @@ class StartCommand extends AbstractCommand implements PublicCommandInterface
 
         if (!$chat) {
             $buttons = [[
-                'text' => 'Отправить контакт',
+                'text' => '❗Отправить контакт❗',
                 'request_contact' => true,
                 'one_time_keyboard' => true,
             ]];
 
-            $text = "Для начала работы отправьте пожалуйста свой контакт";
+            $text = "Привет!\r\n
+Я виртуальный помощник клиники Ресет\r\n
+Можешь в этом убедиться и позвонить Андрею Седову\r\n
+\r\n
+Сейчас мы подключим твой телеграмм к рассылке уведомлений о рабочих сменах (вместо СМС)\r\n
+\r\n
+Чтобы начать нажми на кнопку «Отправить контакт»\r\n
+🔻Она сейчас внизу экрана🔻";
 
             $api->sendMessage(
                 $update->getMessage()->getChat()->getId(),
@@ -74,7 +79,5 @@ class StartCommand extends AbstractCommand implements PublicCommandInterface
                 new ReplyKeyboardRemove()
             );
         }
-
-
     }
 }
