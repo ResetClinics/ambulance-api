@@ -13,13 +13,22 @@ class LocationCommand implements CommandInterface
     public function execute(BotApi $api, Update $update): void
     {
         $text = 'бала бала бла бла ' . $update->getMessage()->getContact()->getPhoneNumber();;
+
+        $buttons = [];
+
+        $buttons[] = [
+            'text' => 'Локация',
+            'request_location' => true
+        ];
+
+
         $api->sendMessage(
             $update->getMessage()->getChat()->getId(),
             $text,
             'markdown',
             false,
             null,
-           // new ReplyKeyboardMarkup([])
+            new ReplyKeyboardMarkup([$buttons])
         );
     }
 
