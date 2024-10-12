@@ -48,18 +48,7 @@ class HelloCommand extends AbstractCommand implements PublicCommandInterface
 
     public function handleCallbackQuery(BotApi $api, Update $update): void
     {
-        $callbackQuery = $update->getCallbackQuery();
-        if ($callbackQuery->getData() === 'contact') {
-            $chatId = $callbackQuery->getMessage()->getChat()->getId();
-            $contact = $callbackQuery->getMessage()->getContact();
-            $name = $contact->getFirstName() . ' ' . $contact->getLastName();
-            $phoneNumber = $contact->getPhoneNumber();
-            $api->sendMessage(
-                $chatId,
-                "Name: $name\nPhone Number: $phoneNumber",
-                'markdown',
-            );
-        }
+      throw new \DomainException('Not implemented');
     }
 
     protected function configureCallbackQueryHandlers(BotApi $api): array
