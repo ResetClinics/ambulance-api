@@ -30,7 +30,7 @@ readonly class GetContactCommand implements CommandInterface
         if (!$user) {
             $api->sendMessage(
                 $update->getMessage()->getChat()->getId(),
-                'Пользователь с таким контактом не найден, обратитесь к администратору',
+                "Пользователь с таким контактом не найден, обратитесь к администратору\n‼️Внимание Запускайте бота со служебного номера телефона",
                 'markdown',
                 false,
                 null,
