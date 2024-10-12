@@ -33,7 +33,10 @@ class HelloCommand extends AbstractCommand implements PublicCommandInterface
             'text' => 'Контакт',
             'request_contact' => true
         ];
-
+        $buttons[] = [
+            'text' => 'Локация',
+            'request_location' => true
+        ];
 
         $text = sprintf('Hello *%s*', $who);
         $api->sendMessage(
