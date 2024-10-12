@@ -14,8 +14,6 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use App\Controller\MedTeam\SendSms;
-use App\Controller\WorkSchedule\GetCollectionMonth;
 use App\Entity\User\User;
 use App\Repository\WorkScheduleRepository;
 use DateTimeImmutable;
