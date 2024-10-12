@@ -7,6 +7,7 @@ use BoShurik\TelegramBotBundle\Telegram\Command\AbstractCommand;
 use BoShurik\TelegramBotBundle\Telegram\Command\PublicCommandInterface;
 use TelegramBot\Api\BotApi;
 use TelegramBot\Api\Types\Inline\InlineKeyboardMarkup;
+use TelegramBot\Api\Types\ReplyKeyboardMarkup;
 use TelegramBot\Api\Types\Update;
 
 class HelloCommand extends AbstractCommand implements PublicCommandInterface
@@ -27,7 +28,11 @@ class HelloCommand extends AbstractCommand implements PublicCommandInterface
         $who = !empty($matches[3]) ? $matches[3] : 'World';
 
         $buttons = [];
-        $buttons[] = ['text' => 'Prev', 'callback_data' => '/start', 'request_contact' => true];
+
+        $buttons[] = [
+            'text' => 'Контакт',
+            'request_contact' => true
+        ];
 
 
         $text = sprintf('Hello *%s*', $who);
@@ -37,7 +42,7 @@ class HelloCommand extends AbstractCommand implements PublicCommandInterface
             'markdown',
             false,
             null,
-            new InlineKeyboardMarkup([$buttons])
+            new ReplyKeyboardMarkup([$buttons])
         );
     }
 }
