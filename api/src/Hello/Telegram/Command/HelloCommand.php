@@ -30,7 +30,8 @@ class HelloCommand extends AbstractCommand implements PublicCommandInterface
 
         $buttons[] = [
             'text' => 'Контакт',
-            'request_contact' => true
+            'request_contact' => true,
+            'one_time_keyboard' => true,
         ];
 
         $text = sprintf('Hello *%s*', $who);

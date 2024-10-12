@@ -28,7 +28,7 @@ class LocationCommand implements CommandInterface
             'markdown',
             false,
             null,
-            new ReplyKeyboardMarkup([$buttons])
+            //new ReplyKeyboardMarkup([$buttons])
         );
     }
 
