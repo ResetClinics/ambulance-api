@@ -50,11 +50,13 @@ class HelloCommand extends AbstractCommand implements PublicCommandInterface
     {
         $callbackQuery = $update->getCallbackQuery();
         if ($callbackQuery->getData() === 'contact') {
-            $text = 'asdfasdfasdf';
             $chatId = $callbackQuery->getMessage()->getChat()->getId();
+            $contact = $callbackQuery->getMessage()->getContact();
+            $name = $contact->getFirstName() . ' ' . $contact->getLastName();
+            $phoneNumber = $contact->getPhoneNumber();
             $api->sendMessage(
                 $chatId,
-                $text,
+                "Name: $name\nPhone Number: $phoneNumber",
                 'markdown',
             );
         }
