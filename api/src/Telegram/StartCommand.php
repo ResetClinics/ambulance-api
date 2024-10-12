@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Hello\Telegram\Command;
+namespace App\Telegram;
 
 use BoShurik\TelegramBotBundle\Telegram\Command\AbstractCommand;
 use BoShurik\TelegramBotBundle\Telegram\Command\PublicCommandInterface;
@@ -9,32 +9,30 @@ use TelegramBot\Api\BotApi;
 use TelegramBot\Api\Types\ReplyKeyboardMarkup;
 use TelegramBot\Api\Types\Update;
 
-class HelloCommand extends AbstractCommand implements PublicCommandInterface
+class StartCommand extends AbstractCommand implements PublicCommandInterface
 {
     public function getName(): string
     {
-        return '/hello';
+        return '/start';
     }
 
     public function getDescription(): string
     {
-        return 'Example command';
+        return 'Команда запуска бота';
     }
 
     public function execute(BotApi $api, Update $update): void
     {
-        preg_match(self::REGEXP, $update->getMessage()->getText(), $matches);
-        $who = !empty($matches[3]) ? $matches[3] : 'World';
 
         $buttons = [];
 
         $buttons[] = [
-            'text' => 'Контакт',
+            'text' => 'Отправить контакт',
             'request_contact' => true,
             'one_time_keyboard' => true,
         ];
 
-        $text = sprintf('Hello *%s*', $who);
+        $text = "Для начала работы отправьте пожалуйста свой контакт";
         $api->sendMessage(
             $update->getMessage()->getChat()->getId(),
             $text,

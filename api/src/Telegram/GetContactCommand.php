@@ -4,24 +4,15 @@ namespace App\Telegram;
 
 use BoShurik\TelegramBotBundle\Telegram\Command\CommandInterface;
 use TelegramBot\Api\BotApi;
-use TelegramBot\Api\Types\ReplyKeyboardMarkup;
 use TelegramBot\Api\Types\ReplyKeyboardRemove;
 use TelegramBot\Api\Types\Update;
 
-class LocationCommand implements CommandInterface
+class GetContactCommand implements CommandInterface
 {
 
     public function execute(BotApi $api, Update $update): void
     {
-        $text = 'бала бала бла бла ' . $update->getMessage()->getContact()->getPhoneNumber();;
-
-        $buttons = [];
-
-        //$buttons[] = [
-        //    'text' => 'Локация',
-        //    'request_location' => true
-        //];
-
+        $text = 'Получен телефон ' . $update->getMessage()->getContact()->getPhoneNumber();;
 
         $api->sendMessage(
             $update->getMessage()->getChat()->getId(),
