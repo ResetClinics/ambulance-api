@@ -49,8 +49,7 @@ readonly class GetContactCommand implements CommandInterface
 
             $this->flusher->flush();
 
-            $message = "Привет, " . $chat->getUser()->getName() . ". Все получилось!\n
-                 В этот чат тебе будут приходить уведомления о предстоящей смене";
+            $message = "Привет, " . $chat->getUser()->getName() . ". Все получилось!\nВ этот чат тебе будут приходить уведомления о предстоящей смене";
 
             $api->sendMessage(
                 $update->getMessage()->getChat()->getId(),
