@@ -13,7 +13,7 @@ class LocationCommand implements CommandInterface
     {
 
         //$update->getMessage()->getContact()->getPhoneNumber();
-        $text = 'бала бала бла';
+        $text = 'бала бала бла бла';
         $api->sendMessage(
             $update->getMessage()->getChat()->getId(),
             $text,
@@ -23,9 +23,9 @@ class LocationCommand implements CommandInterface
 
     public function isApplicable(Update $update): bool
     {
-       //if (!$update->getMessage()) {
-       //    return false;
-       //}
+       if (!$update->getMessage()?->getContact()) {
+           return false;
+       }
 
         return true;
     }
