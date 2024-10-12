@@ -13,6 +13,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use TelegramBot\Api\BotApi;
+use TelegramBot\Api\Types\ReplyKeyboardRemove;
 
 #[AsCommand(
     name: 'lead:test',
@@ -21,13 +23,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class TestCommand extends Command
 {
 
-    private AmoCRMApiClient $client;
-
     public function __construct(
-        AmoCRM $amoCRM,
+        private readonly BotApi $botApi
     )
     {
-        $this->client = $amoCRM->getClient();
         parent::__construct();
     }
 
@@ -35,21 +34,16 @@ class TestCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
+        $this->botApi->sendMessage(
+            927480477,
+            'тест',
+            'markdown',
+            false,
+            null,
+            new ReplyKeyboardRemove()
+        );
 
-        $filter = new LeadsFilter();
-        $filter->setStatuses([
-            [
-                'status_id' => 38307805,
-                'pipeline_id' => 4018768
-            ]
-        ]);
-
-
-        $leads = $this->client->leads()->get($filter);
-        dd($leads->count());
-
-
-        $io->success('Новый пользователь добавлен.');
+        $io->success('.');
 
         return Command::SUCCESS;
     }

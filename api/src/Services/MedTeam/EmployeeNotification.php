@@ -3,13 +3,13 @@
 namespace App\Services\MedTeam;
 
 use App\Entity\MedTeam\MedTeam;
-use App\Services\SmsSender\McnSmsSender;
+use App\Services\TelegramSender;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class EmployeeNotification
 {
     public function __construct(
-        readonly private McnSmsSender $sender
+        readonly private TelegramSender $sender
     )
     {
     }
@@ -44,21 +44,21 @@ class EmployeeNotification
 
         if ($medTeam->getAdmin()){
             $this->sender->send(
-                $medTeam->getAdmin()->getPhone(),
+                $medTeam->getAdmin(),
                 $message
             );
         }
 
         if ($medTeam->getDoctor()){
             $this->sender->send(
-                $medTeam->getDoctor()->getPhone(),
+                $medTeam->getDoctor(),
                 $message
             );
         }
 
         if ($medTeam->getDriver()){
             $this->sender->send(
-                $medTeam->getDriver()->getPhone(),
+                $medTeam->getDriver(),
                 $message
             );
         }
