@@ -19,27 +19,27 @@ class EmployeeNotification
      */
     public function send(MedTeam $medTeam): void
     {
-        $message = $medTeam->getPlannedStartAt()->format('d.m.Y') . '\n';
-        $message .= $medTeam->getPlannedStartAt()->format('H:i') . ' - ' .  $medTeam->getPlannedFinishAt()->format('H:i') . '\n';
+        $message = $medTeam->getPlannedStartAt()->format('d.m.Y') . "\r\n";
+        $message .= $medTeam->getPlannedStartAt()->format('H:i') . ' - ' .  $medTeam->getPlannedFinishAt()->format('H:i') . "\r\n";
 
         if ($medTeam->getDoctor()){
-            $message .= 'В: ' . $medTeam->getDoctor()->getName() . '\n';
+            $message .= "В: " . $medTeam->getDoctor()->getName() . "\r\n";
         }
 
         if ($medTeam->getAdmin()){
-            $message .= 'А: ' . $medTeam->getAdmin()->getName() . '\n';
+            $message .= "А: " . $medTeam->getAdmin()->getName() . "\r\n";
         }
 
         if ($medTeam->getDriver()){
-            $message .= 'Ш: ' . $medTeam->getDriver()->getName() . '\n';
+            $message .= "Ш: " . $medTeam->getDriver()->getName() . "\r\n";
         }
 
         if ($medTeam->getBase()){
-            $message .= 'База: ' . $medTeam->getBase()->getName() . '\n';
+            $message .= "База: " . $medTeam->getBase()->getName() . "\r\n";
         }
 
         if ($medTeam->getCar()){
-            $message .= 'Авто: ' . $medTeam->getCar()->getName() . '\n';
+            $message .= "Авто: " . $medTeam->getCar()->getName() . "\r\n";
         }
 
         if ($medTeam->getAdmin()){
