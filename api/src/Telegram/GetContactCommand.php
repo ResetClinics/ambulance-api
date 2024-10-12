@@ -12,7 +12,7 @@ class GetContactCommand implements CommandInterface
 
     public function execute(BotApi $api, Update $update): void
     {
-        $text = 'Получен телефон ' . $update->getMessage()->getContact()->getPhoneNumber();;
+        $text = 'Получен телефон ' . $update->getMessage()->getContact()->getPhoneNumber() . ' чат - ' . $update->getMessage()->getChat()->getId();
 
         $api->sendMessage(
             $update->getMessage()->getChat()->getId(),
