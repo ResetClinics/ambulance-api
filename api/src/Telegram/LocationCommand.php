@@ -19,7 +19,7 @@ class LocationCommand implements CommandInterface
             'markdown',
             false,
             null,
-            new ReplyKeyboardMarkup([])
+           // new ReplyKeyboardMarkup([])
         );
     }
 
