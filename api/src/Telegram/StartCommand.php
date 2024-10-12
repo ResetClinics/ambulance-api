@@ -37,15 +37,16 @@ class StartCommand extends AbstractCommand implements PublicCommandInterface
         $chat = $this->tgChatRepository->findOneByChatId((string)$chatId);
 
         if (!$chat) {
-            $buttons = [[
+            $buttons = [
                 'text' => '❗Отправить контакт❗',
                 'request_contact' => true,
                 'one_time_keyboard' => true,
-            ]];
+            ];
 
             $text = "Привет! Я виртуальный помощник клиники Ресет\n
 Можешь в этом убедиться и позвонить Андрею Седову\n 
-Сейчас мы подключим твой телеграмм к рассылке уведомлений о рабочих сменах (вместо СМС) Чтобы начать нажми на кнопку «Отправить контакт»\n
+Сейчас мы подключим твой телеграмм к рассылке уведомлений о рабочих сменах (вместо СМС)\n
+ Чтобы начать нажми на кнопку «Отправить контакт»\n
 🔻Она сейчас внизу экрана🔻";
 
             $api->sendMessage(
