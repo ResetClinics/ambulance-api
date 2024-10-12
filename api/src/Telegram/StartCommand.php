@@ -61,9 +61,10 @@ class StartCommand extends AbstractCommand implements PublicCommandInterface
 
             $user = $chat->getUser();
             if (!$user || !$user->isActive()) {
-                $message = $chat->getUser()->getName() . ', ваш пользователь деактивирован. Свяжитесь с администратором';
+                $message = $chat->getUser()->getName() . ", ваш пользователь деактивирован. Свяжитесь с администратором";
             }else {
-                $message = 'Привет, ' . $chat->getUser()->getName() . ', сюда вам будут приходить оповещения';
+                $message = "Привет, " . $chat->getUser()->getName() . ". Все получилось!\n
+                 В этот чат тебе будут приходить уведомления о предстоящей смене";
             }
 
             $api->sendMessage(
