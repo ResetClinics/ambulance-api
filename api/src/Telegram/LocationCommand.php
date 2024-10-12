@@ -11,7 +11,9 @@ class LocationCommand implements CommandInterface
 
     public function execute(BotApi $api, Update $update): void
     {
-        $text = 'бала бала';
+
+        //$update->getMessage()->getContact()->getPhoneNumber();
+        $text = 'бала бала бла';
         $api->sendMessage(
             $update->getMessage()->getChat()->getId(),
             $text,

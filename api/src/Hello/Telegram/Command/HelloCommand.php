@@ -30,8 +30,7 @@ class HelloCommand extends AbstractCommand implements PublicCommandInterface
 
         $buttons[] = [
             'text' => 'Контакт',
-            'request_contact' => true,
-            'callback_data' => 'contact'
+            'request_contact' => true
         ];
 
         $text = sprintf('Hello *%s*', $who);
@@ -43,18 +42,5 @@ class HelloCommand extends AbstractCommand implements PublicCommandInterface
             null,
             new ReplyKeyboardMarkup([$buttons])
         );
-    }
-
-
-    public function handleCallbackQuery(BotApi $api, Update $update): void
-    {
-      throw new \DomainException('Not implemented');
-    }
-
-    protected function configureCallbackQueryHandlers(BotApi $api): array
-    {
-        return [
-            'contact' => [$this, 'handleCallbackQuery'],
-        ];
     }
 }
