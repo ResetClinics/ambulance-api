@@ -19,7 +19,7 @@ class EmployeeNotification
      */
     public function send(MedTeam $medTeam): void
     {
-        $message = $medTeam->getPlannedStartAt()->format('d.m.Y') . "\r\n";
+        $message = "🔥 " . $medTeam->getPlannedStartAt()->format('d.m.Y') . "\r\n";
         $message .= $medTeam->getPlannedStartAt()->format('H:i') . ' - ' .  $medTeam->getPlannedFinishAt()->format('H:i') . "\r\n";
 
         if ($medTeam->getDoctor()){
