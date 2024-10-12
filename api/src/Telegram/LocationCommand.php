@@ -13,11 +13,12 @@ class LocationCommand implements CommandInterface
     {
         $text = 'бала бала бла бла ' . $update->getMessage()->getContact()->getPhoneNumber();;
         $messageId = $update->getMessage()->getMessageId();
-        $api->sendMessage(
+        $api->editMessageText(
             $update->getMessage()->getChat()->getId(),
+            $messageId,
             $text,
             'markdown',
-            false, // Устанавливаем значение false для параметра replyMarkup
+            false,
             null,
         );
     }
