@@ -11,7 +11,6 @@ class LocationCommand implements CommandInterface
 
     public function execute(BotApi $api, Update $update): void
     {
-
         $text = 'бала бала';
         $api->sendMessage(
             $update->getMessage()->getChat()->getId(),
@@ -22,9 +21,9 @@ class LocationCommand implements CommandInterface
 
     public function isApplicable(Update $update): bool
     {
-        if (!$update->getMessage()) {
-            return false;
-        }
+       //if (!$update->getMessage()) {
+       //    return false;
+       //}
 
         return true;
     }
