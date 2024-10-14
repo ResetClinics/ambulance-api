@@ -9,7 +9,5 @@ api_platform:
         name: Authorization
         type: header
   defaults:
-    extra_properties:
-      standard_put: true
     normalization_context:
       skip_null_values: false
