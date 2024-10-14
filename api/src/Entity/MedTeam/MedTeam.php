@@ -32,22 +32,23 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: MedTeamRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(routePrefix: '/api', openapi: false,),
+        new GetCollection(routePrefix: '/api'),
         new GetCollection(uriTemplate: '/exchange/med_teams'),
-        new Post(routePrefix: '/api', openapi: false,),
-        new Get(routePrefix: '/api', openapi: false,),
-        new Put(routePrefix: '/api', openapi: false,),
-        new Delete(routePrefix: '/api', openapi: false,),
+        new Post(
+            routePrefix: '/api',
+            processor: PostProcessor::class
+        ),
+        new Get(routePrefix: '/api'),
+        new Put(routePrefix: '/api'),
+        new Delete(routePrefix: '/api'),
         new Patch(
             routePrefix: '/api',
-            openapi: false,
             processor: PostProcessor::class
         ),
         new Post(
             uriTemplate: '/med_teams/{id}/send-sms',
             routePrefix: '/api',
             controller: SendSms::class,
-            openapi: false,
             name: 'med_teams-send_sms'
         )
     ],
@@ -74,6 +75,9 @@ class MedTeam
     #[ORM\Column]
     #[Groups(['med-team:read', 'administrator_report:read', 'calling:read','exchange_calling:read'])]
     private ?int $id = null;
+
+    #[Groups(['med-team:write'])]
+    private bool $sendSms = false;
 
     #[ORM\Column]
     #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read'])]
@@ -127,6 +131,7 @@ class MedTeam
 
     #[ORM\Column(nullable: true)]
     #[Groups(['med-team:read', 'med-team:write'])]
+    #[Assert\NotNull]
     private ?DateTimeImmutable $plannedFinishAt = null;
 
     #[ORM\ManyToOne]
@@ -442,5 +447,15 @@ class MedTeam
         $diff = $this->completedAt->diff($this->startedAt);
 
         return $diff->h;
+    }
+
+    public function isSendSms(): bool
+    {
+        return $this->sendSms;
+    }
+
+    public function setSendSms(bool $sendSms): void
+    {
+        $this->sendSms = $sendSms;
     }
 }
