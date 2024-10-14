@@ -4,7 +4,6 @@ namespace App\Services\MedTeam;
 
 use App\Entity\MedTeam\MedTeam;
 use App\Services\TelegramSender;
-use DomainException;
 
 readonly class EmployeeNotification
 {
@@ -16,10 +15,7 @@ readonly class EmployeeNotification
 
     public function send(MedTeam $medTeam): void
     {
-        if (!$medTeam->getAdmin() && !$medTeam->getDoctor() && !$medTeam->getDriver()) {
-            throw new DomainException('Не назначены работники для отправки уведомления');
-        }
-
+        throw new \Exception('Not implemented');
         $message = "🔥 " . $medTeam->getPlannedStartAt()->format('d.m.Y') . "\r\n";
         $message .= $medTeam->getPlannedStartAt()->format('H:i') . ' - ' .  $medTeam->getPlannedFinishAt()->format('H:i') . "\r\n";
 

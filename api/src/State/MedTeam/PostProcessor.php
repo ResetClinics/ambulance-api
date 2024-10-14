@@ -29,7 +29,6 @@ class PostProcessor implements ProcessorInterface
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
     {
-
         $this->wsClient->sendUpdateTeam($data->getId());
 
         if ($data instanceof MedTeam && $data->isSendSms()) {
@@ -37,8 +36,6 @@ class PostProcessor implements ProcessorInterface
         }
 
        if ($data->getStatus() !== 'completed' && $data->getCompletedAt() !== null) {
-
-
            return $this->processor->process($data, $operation, $uriVariables, $context);
        }
 
