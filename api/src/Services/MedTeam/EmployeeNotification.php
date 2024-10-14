@@ -15,7 +15,6 @@ readonly class EmployeeNotification
 
     public function send(MedTeam $medTeam): void
     {
-        throw new \Exception('Not implemented');
         $message = "🔥 " . $medTeam->getPlannedStartAt()->format('d.m.Y') . "\r\n";
         $message .= $medTeam->getPlannedStartAt()->format('H:i') . ' - ' .  $medTeam->getPlannedFinishAt()->format('H:i') . "\r\n";
 
