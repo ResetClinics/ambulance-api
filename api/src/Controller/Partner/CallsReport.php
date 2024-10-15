@@ -178,6 +178,8 @@ class CallsReport extends AbstractController
                 'stationaryAccrued' => $reward,
                 'hospitalized' => $hospital->getHospitalized()->format('d.m.Y'),
                 'discharged' => $hospital->getDischarged()->format('d.m.Y'),
+                'admin' => $call->getTeam()?->getAdmin()?->getName(),
+                'doctor' => $call->getTeam()?->getDoctor()?->getName(),
             ];
 
             $partners[$hospital->getPartner()->getId()]['stationaryEntrance']
