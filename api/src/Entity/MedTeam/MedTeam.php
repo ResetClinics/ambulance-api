@@ -52,8 +52,8 @@ use Symfony\Component\Validator\Constraints as Assert;
             name: 'med_teams-send_sms'
         )
     ],
-
-
+    normalizationContext: ['groups' => ['med-team:read', 'user:item:read', 'phone:read', 'car:read', 'base:read']],
+    denormalizationContext: ['groups' => ['med-team:write']],
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
 )]
