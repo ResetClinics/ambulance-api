@@ -92,6 +92,8 @@ class CallsReport extends AbstractController
                 'stationaryAccrued' => 0,
                 'hospitalized' => '',
                 'discharged' => '',
+                'admin' => $call->getTeam()?->getAdmin()?->getName(),
+                'doctor' => $call->getTeam()?->getDoctor()?->getName(),
             ];
 
             foreach ($call->getServices() as $service){
