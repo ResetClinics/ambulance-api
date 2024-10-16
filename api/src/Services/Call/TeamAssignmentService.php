@@ -51,6 +51,10 @@ readonly class TeamAssignmentService
             $this->tgSender->send($call->getAdmin(), "‼️️️️ ВНИМАНИЕ ‼️\nУ вас новый вызов, зайдите в приложение");
         }
 
+        if ($call->getDoctor()) {
+            $this->tgSender->send($call->getDoctor(), "‼️️️️ ВНИМАНИЕ ‼️\nУ вас новый вызов, зайдите в приложение");
+        }
+
         $this->sender->sendToAdmin(
             $call,
             'Внимание новый заказ',
