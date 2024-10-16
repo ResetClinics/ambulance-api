@@ -12,6 +12,21 @@ readonly class GetAudioCommand implements CommandInterface
 {
     public function execute(BotApi $api, Update $update): void
     {
+
+        $fileId = $update->getMessage()->getAudio()->getFileId();
+
+        $file = $api->getFile($fileId);
+
+
+        $timestamp = (new DateTime())->format('YmdHis');
+        $filePath = dirname(__DIR__) . "/../var/{$timestamp}.json";
+        file_put_contents(
+            $filePath,
+            $file->toJson(),
+            //json_encode($update->toJson()),
+            FILE_APPEND);
+
+
         $api->sendMessage(
             $update->getMessage()->getChat()->getId(),
             'Ваше сообщение получено, ожидайте',
@@ -24,15 +39,6 @@ readonly class GetAudioCommand implements CommandInterface
 
     public function isApplicable(Update $update): bool
     {
-
-        $timestamp = (new DateTime())->format('YmdHis');
-        $filePath = dirname(__DIR__) . "/../var/{$timestamp}.json";
-        file_put_contents(
-            $filePath,
-            $update->toJson(),
-            //json_encode($update->toJson()),
-            FILE_APPEND);
-
 
        if (!$update->getMessage()?->getAudio()) {
            return false;
