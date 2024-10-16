@@ -23,6 +23,7 @@ use App\Repository\ClientRepository;
 use App\Repository\PartnerRepository;
 use App\Services\AmoCRM;
 use App\Services\CallingSender;
+use App\Services\TelegramSender;
 use App\Services\TrackerToMkad;
 use App\Services\WSClient;
 use App\Services\YaGeolocation\Api;
@@ -52,6 +53,7 @@ class Handler
         private readonly \App\UseCase\Client\Create\Handler  $clientHandler,
         private readonly CallingSender                       $sender,
         private readonly WSClient                            $wsClient,
+        private readonly TelegramSender    $tgSender,
     )
     {
         $this->client = $amoCRM->getClient();
@@ -110,6 +112,10 @@ class Handler
         $this->sendMessageToAmo((int)$command->externalId, $message);
 
         $this->sendCrmEmployees($call, $lead);
+
+        if ($call->getAdmin()) {
+            $this->tgSender->send($call->getAdmin(), "‼️️️️ ВНИМАНИЕ ‼️\nУ вас новый вызов, зайдите в приложение");
+        }
 
         $this->sender->sendToAdmin(
             $call,
