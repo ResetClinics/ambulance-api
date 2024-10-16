@@ -10,13 +10,13 @@ use App\Services\CallingSender;
 use App\Services\TelegramSender;
 use DomainException;
 
-class TeamAssignmentService
+readonly class TeamAssignmentService
 {
     public function __construct(
-        private readonly MedTeamRepository $teams,
-        private readonly Flusher $flusher,
-        private readonly CallingSender $sender,
-        private readonly TelegramSender $tgSender,
+        private MedTeamRepository $teams,
+        private Flusher           $flusher,
+        private CallingSender     $sender,
+        private TelegramSender    $tgSender,
     )
     {
     }
