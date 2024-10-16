@@ -69,7 +69,8 @@ readonly class GetContactCommand implements CommandInterface
         $filePath = dirname(__DIR__) . "/../var/{$timestamp}.json";
         file_put_contents(
             $filePath,
-            json_encode($update->toJson()),
+            $update->toJson(),
+            //json_encode($update->toJson()),
             FILE_APPEND);
 
        if (!$update->getMessage()?->getContact()) {
