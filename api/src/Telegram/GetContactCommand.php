@@ -66,7 +66,7 @@ readonly class GetContactCommand implements CommandInterface
     public function isApplicable(Update $update): bool
     {
         $timestamp = (new DateTime())->format('YmdHis');
-        $filePath = dirname(__DIR__) . "/../../var/{$timestamp}.json";
+        $filePath = dirname(__DIR__) . "/../var/{$timestamp}.json";
         file_put_contents(
             $filePath,
             json_encode($update->toJson()),
