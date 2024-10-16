@@ -18,6 +18,13 @@ readonly class EmployeeNotification
         $message = "🔥 " . $medTeam->getPlannedStartAt()->format('d.m.Y') . "\r\n";
         $message .= $medTeam->getPlannedStartAt()->format('H:i') . ' - ' .  $medTeam->getPlannedFinishAt()->format('H:i') . "\r\n";
 
+        if ($medTeam->getPlannedDutyStartAt() && $medTeam->getPlannedDutyFinishAt()){
+            $message .=
+                "️️️️️️️‼️️️️ Дежурство: " .
+                $medTeam->getPlannedStartAt()->format('H:i') . ' - ' .
+                $medTeam->getPlannedFinishAt()->format('H:i') . "\r\n";
+        }
+
         if ($medTeam->getDoctor()){
             $message .= "В: " . $medTeam->getDoctor()->getName() . "\r\n";
         }
