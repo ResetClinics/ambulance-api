@@ -21,8 +21,8 @@ readonly class EmployeeNotification
         if ($medTeam->getPlannedDutyStartAt() && $medTeam->getPlannedDutyFinishAt()){
             $message .=
                 "️️️️️️️‼️️️️ Дежурство: " .
-                $medTeam->getPlannedStartAt()->format('H:i') . ' - ' .
-                $medTeam->getPlannedFinishAt()->format('H:i') . "\r\n";
+                $medTeam->getPlannedDutyStartAt()->format('H:i') . ' - ' .
+                $medTeam->getPlannedDutyFinishAt()->format('H:i') . "\r\n";
         }
 
         if ($medTeam->getDoctor()){
