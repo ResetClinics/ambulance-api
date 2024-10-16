@@ -121,6 +121,11 @@ class Handler
             $this->tgSender->send($call->getDoctor(), "‼️️️️ ВНИМАНИЕ ‼️\nУ вас новый вызов, зайдите в приложение");
         }
 
+        if ($call->getTeam()?->getDriver()) {
+            $this->tgSender->send($call->getTeam()->getDriver(), "‼️️️️ ВНИМАНИЕ ‼️\nУ вас новый вызов, зайдите в приложение");
+        }
+
+
         $this->sender->sendToAdmin(
             $call,
             'Внимание новый заказ',
