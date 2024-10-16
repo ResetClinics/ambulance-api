@@ -7,6 +7,7 @@ use App\Entity\Calling\Status;
 use App\Flusher;
 use App\Repository\MedTeam\MedTeamRepository;
 use App\Services\CallingSender;
+use App\Services\TelegramSender;
 use DomainException;
 
 class TeamAssignmentService
@@ -15,6 +16,7 @@ class TeamAssignmentService
         private readonly MedTeamRepository $teams,
         private readonly Flusher $flusher,
         private readonly CallingSender $sender,
+        private readonly TelegramSender $tgSender,
     )
     {
     }
@@ -44,6 +46,10 @@ class TeamAssignmentService
         $call->setDoctor($medTeam->getDoctor());
 
         $this->flusher->flush();
+
+        if ($call->getAdmin()) {
+            $this->tgSender->send($call->getAdmin(), "‼️️️️ ВНИМАНИЕ ‼️\nУ вас новый вызов, зайдите в приложение");
+        }
 
         $this->sender->sendToAdmin(
             $call,
