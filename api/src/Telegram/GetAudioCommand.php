@@ -15,14 +15,17 @@ readonly class GetAudioCommand implements CommandInterface
 
         $fileId = $update->getMessage()->getAudio()->getFileId();
 
-        $file = $api->getFile($fileId);
+
+
+
+        $ddd = $api->downloadFile($fileId);
 
 
         $timestamp = (new DateTime())->format('YmdHis');
-        $filePath = dirname(__DIR__) . "/../var/{$timestamp}.json";
+        $filePath = dirname(__DIR__) . "/../var/{$timestamp}.txt";
         file_put_contents(
             $filePath,
-            $file->toJson(),
+            $ddd,
             //json_encode($update->toJson()),
             FILE_APPEND);
 
