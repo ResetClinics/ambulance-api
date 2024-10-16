@@ -7,7 +7,6 @@ use App\Flusher;
 use App\Repository\TgChatRepository;
 use App\Repository\UserRepository;
 use BoShurik\TelegramBotBundle\Telegram\Command\CommandInterface;
-use DateTime;
 use TelegramBot\Api\BotApi;
 use TelegramBot\Api\Types\ReplyKeyboardRemove;
 use TelegramBot\Api\Types\Update;
@@ -65,14 +64,6 @@ readonly class GetContactCommand implements CommandInterface
 
     public function isApplicable(Update $update): bool
     {
-        $timestamp = (new DateTime())->format('YmdHis');
-        $filePath = dirname(__DIR__) . "/../var/{$timestamp}.json";
-        file_put_contents(
-            $filePath,
-            $update->toJson(),
-            //json_encode($update->toJson()),
-            FILE_APPEND);
-
        if (!$update->getMessage()?->getContact()) {
            return false;
        }
