@@ -15,6 +15,9 @@ readonly class GetAudioCommand implements CommandInterface
 
         $fileId = $update->getMessage()->getAudio()->getFileId();
 
+        $filePath = $api->getFile($fileId)->getFilePath();
+
+        $extension = pathinfo($filePath, PATHINFO_EXTENSION);
 
 
 
@@ -22,7 +25,7 @@ readonly class GetAudioCommand implements CommandInterface
 
 
         $timestamp = (new DateTime())->format('YmdHis');
-        $filePath = dirname(__DIR__) . "/../var/{$timestamp}.txt";
+        $filePath = dirname(__DIR__) . "/../var/{$timestamp}.{$extension}";
         file_put_contents(
             $filePath,
             $ddd,
