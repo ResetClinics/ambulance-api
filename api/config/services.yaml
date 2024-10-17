@@ -69,5 +69,7 @@ services:
         tags:
             - { name: api_platform.doctrine.orm.query_extension.collection }
 
-
     BoShurik\TelegramBotBundle\Telegram\Command\Registry\CommandRegistry:
+
+    App\Services\YaDiskApi\YaDiskApiInterface:
+        class: App\Services\YaDiskApi\YaDiskApi

@@ -4,27 +4,22 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use AmoCRM\Client\AmoCRMApiClient;
-use AmoCRM\Filters\LeadsFilter;
-use AmoCRM\Models\LeadModel;
-use App\Services\AmoCRM;
+use App\Services\YaDiskApi\YaDiskApiInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use TelegramBot\Api\BotApi;
-use TelegramBot\Api\Types\ReplyKeyboardRemove;
 
 #[AsCommand(
-    name: 'lead:test',
+    name: 'api:test',
     description: 'Init user for exchange',
 )]
 class TestCommand extends Command
 {
 
     public function __construct(
-        private readonly BotApi $botApi
+        private readonly YaDiskApiInterface $api
     )
     {
         parent::__construct();
@@ -34,14 +29,13 @@ class TestCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $this->botApi->sendMessage(
-            927480477,
-            'тест',
-            'markdown',
-            false,
-            null,
-            new ReplyKeyboardRemove()
-        );
+        $filePath = dirname(__DIR__) . "/../var/гушина .aac";
+
+        $this->api->upload($filePath, 'disk:/Аудиозаписи вызовов/11/гушина .aac');
+
+        $filePath = dirname(__DIR__) . "/../var/часовая.m4a";
+
+        $this->api->upload($filePath, 'disk:/Аудиозаписи вызовов/11/часовая.m4a');
 
         $io->success('.');
 
