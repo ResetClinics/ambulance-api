@@ -26,6 +26,12 @@ readonly class GetAudioCommand implements CommandInterface
         $fileSize = $update->getMessage()->getAudio()->getFileSize();
 
         if ($fileSize > 20000000) {
+
+            $api->deleteMessage(
+                $update->getMessage()->getChat()->getId(),
+                $update->getMessage()->getMessageId()
+            );
+
             $api->sendMessage(
                 $update->getMessage()->getChat()->getId(),
                 'Не могу принять файл размером более 20МБ',
