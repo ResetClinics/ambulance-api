@@ -24,7 +24,24 @@ readonly class GetAudioCommand implements CommandInterface
 
         $fileId = $update->getMessage()->getAudio()->getFileId();
 
-        $filePath = $api->getFile($fileId)->getFilePath();
+        $tgFile = $api->getFile($fileId);
+
+        $filePath = $tgFile->getFilePath();
+
+        $fileSize = $tgFile->getFileSize();
+
+        if ($fileSize > 3) {
+            $api->sendMessage(
+                $update->getMessage()->getChat()->getId(),
+                'размер файла ' . $fileSize,
+                'markdown',
+                false,
+                null,
+                new ReplyKeyboardRemove()
+            );
+
+            return;
+        }
 
         $extension = pathinfo($filePath, PATHINFO_EXTENSION);
 
