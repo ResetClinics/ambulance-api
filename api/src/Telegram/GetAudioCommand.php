@@ -23,59 +23,56 @@ readonly class GetAudioCommand implements CommandInterface
     {
 
         $fileId = $update->getMessage()->getAudio()->getFileId();
+        $fileSize = $update->getMessage()->getAudio()->getFileSize();
 
-        $tgFile = $api->getFile($fileId);
-
-        $filePath = $tgFile->getFilePath();
-
-        $fileSize = $tgFile->getFileSize();
-
-        if ($fileSize > 3) {
-            $api->sendMessage(
-                $update->getMessage()->getChat()->getId(),
-                'размер файла ' . $fileSize,
-                'markdown',
-                false,
-                null,
-                new ReplyKeyboardRemove()
-            );
-
-            return;
-        }
-
-        $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-
-        $file = $api->downloadFile($fileId);
-
-        $timestamp = (new DateTime())->format('YmdHis');
-        //$filePath = dirname(__DIR__) . "/../var/{$timestamp}.{$extension}";
-
-        $tempFile = tempnam(sys_get_temp_dir(), 'audio');
-
-        if (!$tempFile) {
-            throw new DomainException('Unable to create temporary file');
-        }
-
-        file_put_contents(
-            $tempFile,
-            $file
-        );
-
-        $this->api->upload($tempFile, "disk:/Аудиозаписи вызовов/11/{$timestamp}.{$extension}");
-
-        $api->deleteMessage(
-            $update->getMessage()->getChat()->getId(),
-            $update->getMessage()->getMessageId()
-        );
+        //$tgFile = $api->getFile($fileId);
+//
+        //$filePath = $tgFile->getFilePath();
+//
+        //$fileSize = $tgFile->getFileSize();
 
         $api->sendMessage(
             $update->getMessage()->getChat()->getId(),
-            'Ваша аудиозапись получена',
+            'размер файла ' . $fileSize,
             'markdown',
             false,
             null,
             new ReplyKeyboardRemove()
         );
+
+      //  $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+//
+      //  $file = $api->downloadFile($fileId);
+//
+      //  $timestamp = (new DateTime())->format('YmdHis');
+      //  //$filePath = dirname(__DIR__) . "/../var/{$timestamp}.{$extension}";
+//
+      //  $tempFile = tempnam(sys_get_temp_dir(), 'audio');
+//
+      //  if (!$tempFile) {
+      //      throw new DomainException('Unable to create temporary file');
+      //  }
+//
+      //  file_put_contents(
+      //      $tempFile,
+      //      $file
+      //  );
+//
+      //  $this->api->upload($tempFile, "disk:/Аудиозаписи вызовов/11/{$timestamp}.{$extension}");
+//
+      //  $api->deleteMessage(
+      //      $update->getMessage()->getChat()->getId(),
+      //      $update->getMessage()->getMessageId()
+      //  );
+//
+      //  $api->sendMessage(
+      //      $update->getMessage()->getChat()->getId(),
+      //      'Ваша аудиозапись получена',
+      //      'markdown',
+      //      false,
+      //      null,
+      //      new ReplyKeyboardRemove()
+      //  );
     }
 
     public function isApplicable(Update $update): bool
