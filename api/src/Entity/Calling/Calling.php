@@ -480,6 +480,11 @@ class Calling
     #[ApiFilter(BooleanFilter::class)]
     private bool $personal;
 
+    #[ORM\Column(nullable: false, options: ['default' => 0])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
+    #[ApiFilter(BooleanFilter::class)]
+    private bool $doNotHospitalize;
+
     #[ORM\ManyToMany(targetEntity: MediaObject::class, cascade: ['persist'])]
     #[ORM\JoinTable(name: 'calling_images')]
     #[ORM\JoinColumn(name: 'call_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
@@ -533,6 +538,7 @@ class Calling
         $this->noBusinessCards = false;
         $this->partnerHospitalization = false;
         $this->personal = false;
+        $this->doNotHospitalize = false;
 
         $this->images = new ArrayCollection();
     }
@@ -1373,6 +1379,16 @@ class Calling
     public function setPersonal(bool $personal): void
     {
         $this->personal = $personal;
+    }
+
+    public function isDoNotHospitalize(): bool
+    {
+        return $this->doNotHospitalize;
+    }
+
+    public function setDoNotHospitalize(bool $doNotHospitalize): void
+    {
+        $this->doNotHospitalize = $doNotHospitalize;
     }
 
     public function getResponsibleUserId(): ?int

@@ -194,6 +194,10 @@ class Handler
             if ($field->getFieldId() === 966615) {
                 $call->setPersonal($field->getValues()?->first()->getValue());
             }
+
+            if ($field->getFieldId() === 970557) {
+                $call->setDoNotHospitalize($field->getValues()?->first()->getValue());
+            }
         }
     }
 
