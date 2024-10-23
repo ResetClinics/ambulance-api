@@ -353,9 +353,9 @@ class Handler
             return;
         }
 
-        $partner = $this->cities->findOneByExternalId($externalId);
-        if ($partner) {
-            $call->setPartner($partner);
+        $city = $this->cities->findOneByExternalId($externalId);
+        if ($city) {
+            $call->setCity($city);
         }
     }
 
