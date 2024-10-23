@@ -19,6 +19,7 @@ use App\Entity\Calling\Calling;
 use App\Entity\Calling\Status;
 use App\Flusher;
 use App\Repository\CallingRepository;
+use App\Repository\CityRepository;
 use App\Repository\ClientRepository;
 use App\Repository\PartnerRepository;
 use App\Services\AmoCRM;
@@ -48,6 +49,7 @@ class Handler
         private readonly Api                                 $geocodingApi,
         private readonly TrackerToMkad                       $trackerToMkad,
         private readonly PartnerRepository                   $partners,
+        private readonly CityRepository $cities,
         private readonly \App\UseCase\Partner\Create\Handler $partnerHandler,
         private readonly ClientRepository                    $clients,
         private readonly \App\UseCase\Client\Create\Handler  $clientHandler,
@@ -453,4 +455,40 @@ class Handler
         }
     }
 
+    private function setCity(?Calling $call, LeadModel $lead): void
+    {
+        $externalId = $this->getCityExternalId($lead);
+
+        if (!$externalId) {
+            return;
+        }
+
+        if ($call->getCity()?->getExternalId() === $externalId) {
+            return;
+        }
+
+        $partner = $this->cities->findOneByExternalId($externalId);
+        if ($partner) {
+            $call->setPartner($partner);
+        }
+    }
+
+    private function getCityExternalId(LeadModel $lead): ?string
+    {
+
+        if (!$lead->getCustomFieldsValues()) {
+            return null;
+        }
+
+        foreach ($lead->getCustomFieldsValues() as $field) {
+            if ($field->getFieldId() === 970589) {
+                $first = $field->getValues()?->first();
+
+                if ($first instanceof BaseEnumCodeCustomFieldValueModel) {
+                    return $first->getEnumId() ? (string)$first->getEnumId() : null;
+                }
+            }
+        }
+        return null;
+    }
 }

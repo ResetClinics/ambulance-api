@@ -29,6 +29,7 @@ use App\Controller\Calling\NotReadyAction;
 use App\Controller\Calling\RecalculateOperatorReward;
 use App\Controller\Calling\RejectAction;
 use App\Controller\Calling\RepeatAction;
+use App\Entity\City;
 use App\Entity\Client;
 use App\Entity\MedTeam\MedTeam;
 use App\Entity\MediaObject;
@@ -507,6 +508,11 @@ class Calling
     #[ORM\Column(nullable: true)]
     #[Groups(['calling:read', 'calling:write', 'exchange_calling:read',])]
     private ?string $responsibleUserName = null;
+
+    #[ORM\ManyToOne]
+    #[Groups(['calling:read', 'calling:write'])]
+    #[ApiFilter(SearchFilter::class, properties: ['city.id' => 'exact'])]
+    private ?City $city = null;
 
     public function __construct(
         string  $numberCalling,
@@ -1409,6 +1415,18 @@ class Calling
     public function setResponsibleUserName(?string $responsibleUserName): void
     {
         $this->responsibleUserName = $responsibleUserName;
+    }
+
+    public function getCity(): ?City
+    {
+        return $this->city;
+    }
+
+    public function setCity(?City $city): static
+    {
+        $this->city = $city;
+
+        return $this;
     }
 
 }

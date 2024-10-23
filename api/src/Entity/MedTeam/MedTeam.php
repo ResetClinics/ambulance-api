@@ -19,6 +19,7 @@ use App\Controller\MedTeam\SendSms;
 use App\Entity\Base;
 use App\Entity\Calling\Calling;
 use App\Entity\Car;
+use App\Entity\City;
 use App\Entity\User\User;
 use App\Repository\MedTeam\MedTeamRepository;
 use App\State\MedTeam\PostProcessor;
@@ -170,6 +171,11 @@ class MedTeam
 
     #[ORM\OneToMany(mappedBy: 'team', targetEntity: Calling::class)]
     private Collection $callings;
+
+    #[ORM\ManyToOne]
+    #[Groups(['med-team:read', 'med-team:write'])]
+    #[ApiFilter(SearchFilter::class, properties: ['city.id' => 'exact'])]
+    private ?City $city = null;
 
     public function __construct()
     {
@@ -456,5 +462,17 @@ class MedTeam
     public function setSendSms(bool $sendSms): void
     {
         $this->sendSms = $sendSms;
+    }
+
+    public function getCity(): ?City
+    {
+        return $this->city;
+    }
+
+    public function setCity(?City $city): static
+    {
+        $this->city = $city;
+
+        return $this;
     }
 }
