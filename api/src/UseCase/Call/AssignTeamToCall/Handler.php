@@ -98,6 +98,13 @@ class Handler
             throw new DomainException('Ошибка при определении партнера ' . $e->getMessage());
         }
 
+        try {
+            $this->setCity($call, $lead);
+        } catch (Exception $e) {
+            $this->sendMessageToAmo((int)$command->externalId, 'Не удалось определить город');
+            throw new DomainException('Ошибка при определении города ' . $e->getMessage());
+        }
+
         if (!$call->getPartner()) {
             $this->sendMessageToAmo((int)$command->externalId, 'Партнер не определен');
             throw new DomainException('Партнер не определен');
