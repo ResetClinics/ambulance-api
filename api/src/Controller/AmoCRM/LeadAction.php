@@ -487,7 +487,8 @@ class LeadAction extends AbstractController
 
                 $distance = $this->trackerToMkad->getDistance(
                     (float)$geolocation->getLat(),
-                    (float)$geolocation->getLon()
+                    (float)$geolocation->getLon(),
+                    $calling->getCity()?->getId()
                 );
 
                 $calling->setMkadDistance($distance);

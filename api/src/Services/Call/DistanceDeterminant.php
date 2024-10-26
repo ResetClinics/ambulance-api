@@ -31,7 +31,8 @@ class DistanceDeterminant
 
             $distance = $this->trackerToMkad->getDistance(
                 (float)$geolocation->getLat(),
-                (float)$geolocation->getLon()
+                (float)$geolocation->getLon(),
+                $call->getCity()?->getId()
             );
 
             $call->setMkadDistance($distance);
