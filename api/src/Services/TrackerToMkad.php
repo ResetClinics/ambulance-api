@@ -11,21 +11,20 @@ class TrackerToMkad
     public function getDistance(float $lat, float $lon, ?int $cityId = 1): int
     {
         try {
-            if ($cityId == 1) {
-                $distance = Distance::createMoscowMkadCalculator(
-                    [$lat, $lon]
-                )->calculate();
-                return (int)$distance;
-            }
             if ($cityId == 2) {
                 $distance = Distance::createSpbKadCalculator(
                     [$lat, $lon]
                 )->calculate();
                 return (int)$distance;
             }
+
+            $distance = Distance::createMoscowMkadCalculator(
+                [$lat, $lon]
+            )->calculate();
+            return (int)$distance;
+
         } catch (Exception $e) {
             return 0;
         }
-        return 0;
     }
 }
