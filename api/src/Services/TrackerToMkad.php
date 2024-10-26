@@ -8,7 +8,7 @@ use Exception;
 
 class TrackerToMkad
 {
-    public function getDistance(float $lat, float $lon, int $cityId = 1): int
+    public function getDistance(float $lat, float $lon, ?int $cityId = 1): int
     {
         try {
             if ($cityId == 1) {
