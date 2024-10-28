@@ -20,6 +20,15 @@ class HomeController extends AbstractController
         ]);
     }
 
+    #[Route('/api/v1/version-info', name: 'version-info')]
+    public function versionInfo(): Response
+    {
+        return $this->json([
+            'min' => $this->getParameter('app.min_version'),
+            'target' => $this->getParameter('app.target_version'),
+        ]);
+    }
+
     #[Route('/home', name: 'app_home')]
     public function index(): Response
     {
