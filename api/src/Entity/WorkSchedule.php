@@ -97,6 +97,11 @@ class WorkSchedule
     #[Assert\NotBlank]
     private ?string $role = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: true, columnDefinition: "INT DEFAULT 1")]
+    #[Groups(['work-schedule:read', 'work-schedule:write'])]
+    private ?City $city = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -153,5 +158,17 @@ class WorkSchedule
     public function getDay(): int
     {
         return $this->workDate->format('d');
+    }
+
+    public function getCity(): ?City
+    {
+        return $this->city;
+    }
+
+    public function setCity(?City $city): static
+    {
+        $this->city = $city;
+
+        return $this;
     }
 }
