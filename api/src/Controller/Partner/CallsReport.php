@@ -81,6 +81,7 @@ class CallsReport extends AbstractController
             $partners[$call->getPartner()->getId()]['calls'][$id] = [
                 'id' => $call->getId(),
                 'external' => $call->getNumberCalling(),
+                'city' => $call->getCity()?->getName(),
                 'name' => $call->getFio(),
                 'debit' => 0,
                 'callEntrance' => 0,
