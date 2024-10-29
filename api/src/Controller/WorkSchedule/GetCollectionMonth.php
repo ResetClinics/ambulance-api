@@ -31,7 +31,10 @@ class GetCollectionMonth extends AbstractController
         } elseif ($role === 'ROLE_DRIVER') {
             $permission = 'can_be-driver';
         }
-        $users = $this->users->findAllByPermission($permission);
+
+        $cityId =  $request->get('city') ? (int)$request->get('city') : null;
+
+        $users = $this->users->findAllByPermission($permission, $cityId);
 
         $workSchedules = $this->workSchedules->findAllByRole($role, $year, $month, $request->get('city'));
 
