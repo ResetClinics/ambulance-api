@@ -8,6 +8,7 @@ use App\Repository\UserRepository;
 use App\Repository\WorkScheduleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class GetCollectionMonth extends AbstractController
@@ -20,7 +21,7 @@ class GetCollectionMonth extends AbstractController
     }
 
     #[Route(path: '/api/work_schedules/month/{role}/{year}/{month}', name: 'work_schedule_month', methods: 'GET')]
-    public function __invoke(string $role, int $year, int $month): JsonResponse
+    public function __invoke(string $role, int $year, int $month, Request $request): JsonResponse
     {
         $permission = $role;
         if ($role === 'ROLE_ADMIN') {
@@ -32,7 +33,7 @@ class GetCollectionMonth extends AbstractController
         }
         $users = $this->users->findAllByPermission($permission);
 
-        $workSchedules = $this->workSchedules->findAllByRole($role, $year, $month);
+        $workSchedules = $this->workSchedules->findAllByRole($role, $year, $month, $request->get('city'));
 
         $numDays = date('t', mktime(0, 0, 0, $month, 1, $year));
 

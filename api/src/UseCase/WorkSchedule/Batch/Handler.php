@@ -19,7 +19,12 @@ class Handler
     {
         $user = $this->users->get($command->user);
 
-        $schedules = $this->schedules->findAllByUserAndDates($command->user, $command->dateStart, $command->dateEnd);
+        $schedules = $this->schedules->findAllByUserAndDates(
+            $command->user,
+            $command->dateStart,
+            $command->dateEnd,
+            $command->city
+        );
 
         foreach ($schedules as $schedule){
             $this->schedules->remove($schedule, true);

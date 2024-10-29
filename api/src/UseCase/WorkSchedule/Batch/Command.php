@@ -29,4 +29,7 @@ class Command
 
     #[Assert\NotBlank]
     public ?string $role = null;
+
+    #[Assert\NotBlank]
+    public ?int $city = null;
 }
