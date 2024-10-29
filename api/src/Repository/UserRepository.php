@@ -116,15 +116,24 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult();
     }
 
-    public function findAllByPermission(string $permission)
+    public function findAllByPermission(string $permission, ?int $cityId = null)
     {
-        return $this->createQueryBuilder('u')
+        $qb = $this->createQueryBuilder('u')
             ->leftJoin('u.accessRoles', 'r')
             ->leftJoin('r.permissions', 'p')
             ->where('p.id = :permission')
             ->andWhere('u.active = 1')
             ->andWhere('u.hideInReports = 0')
-            ->setParameter('permission', $permission)
+            ->setParameter('permission', $permission);
+
+        if ($cityId) {
+            $qb
+                ->leftJoin('u.cities', 'c')
+                ->andWhere('c.id = :cityId')
+                ->setParameter('cityId', $cityId);
+        }
+
+        return $qb
             ->orderBy('u.name')
             ->getQuery()
             ->getResult();
