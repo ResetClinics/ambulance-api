@@ -456,6 +456,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->cities;
     }
 
+    public function setCities(array $cities): static
+    {
+        $this->cities = new ArrayCollection($cities);
+
+        return $this;
+    }
+
+
     public function addCity(City $city): static
     {
         if (!$this->cities->contains($city)) {
