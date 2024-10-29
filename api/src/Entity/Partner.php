@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Entity\Calling\Calling;
 use App\Entity\Partner\Agreement\Agreement;
+use App\Filter\Partner\PartnerCallingCityFilter;
 use App\Filter\Partner\PartnerCallingCompletedAtFilter;
 use App\Filter\Partner\SearchByFieldsFilter;
 use App\Repository\PartnerRepository;
@@ -54,6 +55,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     paginationClientItemsPerPage: true
 )]
 #[ApiFilter(PartnerCallingCompletedAtFilter::class, properties: ['name' => 'completedAt'])]
+#[ApiFilter(PartnerCallingCityFilter::class, properties: ['name' => 'city.id'])]
 #[ApiFilter(
     SearchByFieldsFilter::class,
     properties: ['name']
