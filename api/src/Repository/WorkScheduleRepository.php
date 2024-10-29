@@ -61,7 +61,7 @@ class WorkScheduleRepository extends ServiceEntityRepository
             ->setParameter('end_date', $endDate);
 
         if ($cityId) {
-            $qb->andWhere('e.city = :city')
+            $qb->andWhere('u.city = :city')
                 ->setParameter('city', $cityId);
         }
 
@@ -87,7 +87,7 @@ class WorkScheduleRepository extends ServiceEntityRepository
             ->setParameter('end_date', $dateEnd);
 
         if ($cityId) {
-            $qb->andWhere('e.city = :city')
+            $qb->andWhere('u.city = :city')
                 ->setParameter('city', $cityId);
         }
 
