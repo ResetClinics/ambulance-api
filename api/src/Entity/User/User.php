@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\User\MyAction;
+use App\Entity\City;
 use App\Entity\Device;
 use App\Entity\Role\Permission;
 use App\Entity\Role\Role;
@@ -39,7 +40,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Get(routePrefix: '/api', openapi: false,),
         new Put(routePrefix: '/api', openapi: false,),
     ],
-    normalizationContext: ['groups' => ['user:read']],
+    normalizationContext: ['groups' => ['user:read', 'city:read']],
     denormalizationContext: ['groups' => ['user:write']],
 )]
 #[UniqueEntity(fields: ['phone'], message: 'Этот номер телефона уже используется.')]
@@ -143,6 +144,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read', 'user:write'])]
     private ?string $telegram = null;
 
+    /**
+     * @var Collection<int, City>
+     */
+    #[ORM\ManyToMany(targetEntity: City::class)]
+    #[Groups(['user:read', 'user:write'])]
+    private Collection $cities;
+
+    #[ORM\Column(length: 255)]
+    #[Groups(['user:read', 'user:write'])]
+    private ?string $carNumber = null;
 
     public function __construct($externalId = null)
     {
@@ -150,6 +161,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->externalId = $externalId;
         $this->devices = new ArrayCollection();
         $this->accessRoles = new ArrayCollection();
+        $this->cities = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -432,6 +444,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setTelegram(?string $telegram): static
     {
         $this->telegram = $telegram;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, City>
+     */
+    public function getCities(): Collection
+    {
+        return $this->cities;
+    }
+
+    public function addCity(City $city): static
+    {
+        if (!$this->cities->contains($city)) {
+            $this->cities->add($city);
+        }
+
+        return $this;
+    }
+
+    public function removeCity(City $city): static
+    {
+        $this->cities->removeElement($city);
+
+        return $this;
+    }
+
+    public function getCarNumber(): ?string
+    {
+        return $this->carNumber;
+    }
+
+    public function setCarNumber(string $carNumber): static
+    {
+        $this->carNumber = $carNumber;
 
         return $this;
     }
