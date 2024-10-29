@@ -27,7 +27,7 @@ class PartnerCallingCityFilter extends AbstractFilter
         $alias = $queryBuilder->getRootAliases()[0];
         $queryBuilder
             ->join(sprintf('%s.callings', $alias), 'c')
-            ->andWhere('c.city > :city')
+            ->andWhere('c.city = :city')
             ->setParameter('city', $value)
         ;
     }
