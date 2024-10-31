@@ -86,15 +86,15 @@ class Handler
         }catch (Exception) {
         }
 
+        try {
+            $this->setCity($call, $lead);
+        }catch (Exception) {
+        }
+
         $this->updateAddress($call, $lead);
 
         try {
             $this->setPartner($call, $lead);
-        }catch (Exception) {
-        }
-
-        try {
-            $this->setCity($call, $lead);
         }catch (Exception) {
         }
 
