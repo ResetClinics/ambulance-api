@@ -80,6 +80,8 @@ class CallsReport extends AbstractController
 
             $partners[$call->getPartner()->getId()]['calls'][$id] = [
                 'id' => $call->getId(),
+                'month' => $call->getFinishedAt() ? (int)$call->getFinishedAt()->format('m') : '',
+                'day' => $call->getFinishedAt() ? (int)$call->getFinishedAt()->format('d') : '',
                 'external' => $call->getNumberCalling(),
                 'city' => $call->getCity()?->getName(),
                 'name' => $call->getFio(),
