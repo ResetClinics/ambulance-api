@@ -107,7 +107,7 @@ readonly class PostProcessor implements ProcessorInterface
 
         $this->reports->save($report, true);
 
-        if ($data instanceof MedTeam::class) {
+        if ($data instanceof MedTeam) {
             try {
                 $message = $this->createReportMessage($data, $report, $data->getAdminPrice());
 
