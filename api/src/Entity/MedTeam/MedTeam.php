@@ -523,7 +523,7 @@ class MedTeam
         ];
 
         if (isset($titles[$this->type])) {
-            return $this->type;
+            return $titles[$this->type];
         }
         return 0;
     }
@@ -546,7 +546,7 @@ class MedTeam
         ];
 
         if (isset($titles[$this->type])) {
-            return $this->type;
+            return $titles[$this->type];
         }
         return 0;
     }
@@ -569,7 +569,7 @@ class MedTeam
         ];
 
         if (isset($titles[$this->type])) {
-            return $this->type;
+            return $titles[$this->type];
         }
         return 0;
 
