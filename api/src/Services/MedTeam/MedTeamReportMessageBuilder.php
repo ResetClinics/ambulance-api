@@ -163,7 +163,7 @@ class MedTeamReportMessageBuilder
         $message[] = "\n";
 
         $message[] = "ПРИМЕЧАНИЕ:\n";
-        $message[] = "Не_учтено_комбо\n";
+        $message[] = "Не учтено комбо\n";
 
         $result = implode("", $message);
 
