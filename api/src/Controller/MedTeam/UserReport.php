@@ -48,6 +48,14 @@ class UserReport extends AbstractController
                 dd($e);
             }
             return $this->json(null);
+        }elseif ($type === 'buh') {
+            try {
+                $message = $this->reportMessageBuilder->build($medTeam, $report, $medTeam->getDoctorPrice());
+                $this->tgSender->sendByRoleId(5, $message);
+            }catch (Exception $e) {
+                dd($e);
+            }
+            return $this->json(null);
         }
 
         throw new NotFoundException();
