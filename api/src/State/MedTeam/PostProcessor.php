@@ -115,7 +115,7 @@ readonly class PostProcessor implements ProcessorInterface
             }catch (Exception $e) {}
 
             try {
-                $this->tgSender->sendByRoleId(5, $messageAdmin);
+                $this->tgSender->sendByRoleId(13, $messageAdmin);
             }catch (Exception $e) {}
 
 
@@ -125,7 +125,7 @@ readonly class PostProcessor implements ProcessorInterface
             }catch (Exception $e) {}
 
             try {
-                $this->tgSender->sendByRoleId(5, $messageDoctor);
+                $this->tgSender->sendByRoleId(13, $messageDoctor);
             }catch (Exception $e) {}
 
 

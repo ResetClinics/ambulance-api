@@ -38,8 +38,6 @@ readonly class TelegramSender
     {
         $users = $this->users->findAllActiveByRoleId($roleId);
 
-        dd($users);
-
         if (empty($users)) {
             return;
         }

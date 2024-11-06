@@ -51,7 +51,7 @@ class UserReport extends AbstractController
         }elseif ($type === 'buh') {
             try {
                 $message = $this->reportMessageBuilder->build($medTeam, $report, $medTeam->getDoctorPrice());
-                $this->tgSender->sendByRoleId(5, $message);
+                $this->tgSender->sendByRoleId(13, $message);
             }catch (Exception $e) {
                 dd($e);
             }
