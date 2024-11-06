@@ -95,17 +95,17 @@ class MedTeamReportMessageBuilder
             $stationaryReward += $reward;
         }
 */
-  //      $message[] = "СТАЦИОНАР: " . $stationaryCount . "\n";
-//
-  //      if ($stationaryCount > 0) {
-//
-  //          $message = array_merge($message, $stationaryMessage);
-//
-  //          $message[] = "ИТОГО_СТАЦ: " . $stationaryAmount . "\n";
-  //          $message[] = "ЗП_Админ_Стац " . $stationaryReward . "\n";
-  //          $message[] = "ЗП_Врач_Стац " . $stationaryReward . "\n";
-//
-  //      }
+        $message[] = "СТАЦИОНАР: " . $stationaryCount . "\n";
+
+        if ($stationaryCount > 0) {
+
+            $message = array_merge($message, $stationaryMessage);
+
+            $message[] = "ИТОГО СТАЦ: " . $stationaryAmount . "\n";
+            $message[] = "ЗП Админ Стац " . $stationaryReward . "\n";
+            $message[] = "ЗП Врач Стац " . $stationaryReward . "\n";
+
+        }
         $message[] = "\n";
 
         //************ Госпитализации ************
@@ -114,7 +114,7 @@ class MedTeamReportMessageBuilder
         $hospitalsMessages = [];
         $hospitalsAmount = 0;
         $hospitalsReward = 0;
-/*
+
         foreach ($data->getCallings() as $key => $calling) {
             $amount = 0;
             $reward = 0;
@@ -124,22 +124,22 @@ class MedTeamReportMessageBuilder
                     $amount += $service->getPrice();
                     $reward += $amount * $percent / 100;
                     $hospitalsCount++;
-                    $hospitalsMessages[] = $key + 1 . ". " . $this->convertFio($calling->getName()) . "/" . $calling->getId() .
+                    $hospitalsMessages[] = $key + 1 . ". " . $this->convertFio($calling->getName()) . " id - " . $calling->getId() .
                         " " . $amount . " - " . $percent . "%" . "\n";
                 }
             }
             $hospitalsAmount += $amount;
             $hospitalsReward += $reward;
         }
-*/
-  //      if ($hospitalsCount > 0) {
-  //          $message[] = "ГОСПИТАЛИЗАЦИЯ:\n";
-  //          $message = array_merge($message, $hospitalsMessages);
-  //          $message[] = "ИТОГО_ГОСПИТ: " . $hospitalsAmount . "\n";
-  //          $message[] = "ЗП_Админ_Госпит " . $hospitalsReward . "\n";
-  //          $message[] = "ЗП_Врач_Госпит " . $hospitalsReward . "\n";
-  //          $message[] = "\n";
-  //      }
+
+        if ($hospitalsCount > 0) {
+            $message[] = "ГОСПИТАЛИЗАЦИЯ:\n";
+            $message = array_merge($message, $hospitalsMessages);
+            $message[] = "ИТОГО ГОСПИТ: " . $hospitalsAmount . "\n";
+            $message[] = "ЗП Админ Госпит " . $hospitalsReward . "\n";
+            $message[] = "ЗП Врач Госпит " . $hospitalsReward . "\n";
+            $message[] = "\n";
+        }
 
         //************ Госпитализации ************
 
