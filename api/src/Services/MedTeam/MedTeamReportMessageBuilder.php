@@ -21,8 +21,10 @@ class MedTeamReportMessageBuilder
             $message[] = "ВОДИТЕЛЬ: " . $this->convertFio($data->getDriver()->getName()) . "\n";
         }
 
+        $overTimeHoursReward = $data->getOverTimeHours() * 170;
+
         $message[] = "ТИП СМЕНЫ " . $data->getTypeTitle() . " Сумма " . $medTeamPrice . "\n";
-        $message[] = "ПЕРЕРАБОТКА " . $data->getOverTimeHours() * 170 . "\n";
+        $message[] = "ПЕРЕРАБОТКА " . $overTimeHoursReward . "\n";
         $message[] = "\n";
 
         $message[] = "ВЫЕЗДЫ: " . count($data->getCallings()) . "\n";
@@ -54,7 +56,7 @@ class MedTeamReportMessageBuilder
 
                 $reward += $amount * $percent / 100;
 
-                $message[] = $key + 1 . ". " . $this->convertFio($calling->getFio()) . " id - " . $calling->getId() .
+                $message[] = $key + 1 . ". " . $this->convertFio($calling->getFio()) . " id-" . $calling->getId() .
                     " " . $amount . " - " . $percent . "%" .
                     ($calling->getCountRepeat() > 0 ? ' П' : '') .
                     ($calling->isPersonal() ? ' И' : '') . "\n";
@@ -77,7 +79,7 @@ class MedTeamReportMessageBuilder
         $stationaryAmount = 0;
         $stationaryReward = 0;
 
-        foreach ($data->getCallings() as $key => $calling) {
+        foreach ($data->getCallings() as $calling) {
             $amount = 0;
             $reward = 0;
             $percent = 5;
@@ -86,7 +88,7 @@ class MedTeamReportMessageBuilder
                     $amount += $service->getPrice();
                     $reward += $amount * 5 / 100;
                     $stationaryCount++;
-                    $stationaryMessage[] = $stationaryCount . ". " . $this->convertFio($calling->getFio()) . "/" . $calling->getId()
+                    $stationaryMessage[] = $stationaryCount . ". " . $this->convertFio($calling->getFio()) . " id-" . $calling->getId()
                         . " " . $amount . " - " . $percent . "%" . "\n";
                 }
             }
@@ -116,7 +118,7 @@ class MedTeamReportMessageBuilder
         $hospitalsReward = 0;
 
 
-        foreach ($data->getCallings() as $key => $calling) {
+        foreach ($data->getCallings() as $calling) {
             $amount = 0;
             $reward = 0;
             $percent = 20;
@@ -126,7 +128,7 @@ class MedTeamReportMessageBuilder
                     $amount += $service->getPrice();
                     $reward += $amount * $percent / 100;
                     $hospitalsCount++;
-                    $hospitalsMessages[] = $hospitalsCount . ". " . $this->convertFio($calling->getFio()) . " id - " . $calling->getId() .
+                    $hospitalsMessages[] = $hospitalsCount . ". " . $this->convertFio($calling->getFio()) . " id-" . $calling->getId() .
                         " " . $amount . " - " . $percent . "%" . "\n";
                 }
             }
@@ -161,6 +163,10 @@ class MedTeamReportMessageBuilder
         //************ Итоги ************
 
         $message[] = "ВСЕГО ВЫРУЧКА " . $callsAmount + $stationaryAmount + $hospitalsAmount . "\n";
+        $message[] = "ВСЕГО ЗП ВРАЧ " .
+            $data->getDoctorPrice() + $callsReward + $hospitalsReward + $stationaryReward + $overTimeHoursReward . "\n";
+        $message[] = "ВСЕГО ЗП ВРАЧ " .
+            $data->getDoctorPrice() + $callsReward + $hospitalsReward + $stationaryReward + $overTimeHoursReward + $transportAmount. "\n";
         $message[] = "НАЛ К СДАЧЕ ------\n";
         $message[] = "\n";
 
