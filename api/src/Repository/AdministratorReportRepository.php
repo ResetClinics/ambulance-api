@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\AdministratorReport;
+use App\Entity\MedTeam\MedTeam;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -39,28 +40,17 @@ class AdministratorReportRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return AdministratorReport[] Returns an array of AdministratorReport objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findOneByMedTeam(MedTeam $medTeam): ?AdministratorReport
+    {
+        $qb = $this->createQueryBuilder('ar');
 
-//    public function findOneBySomeField($value): ?AdministratorReport
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        $teams = $qb
+            ->andWhere('ar.team = :team')
+            ->setParameter(':team', $medTeam->getId())
+            ->orderBy('ar.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+        return array_shift($teams);
+    }
 }
