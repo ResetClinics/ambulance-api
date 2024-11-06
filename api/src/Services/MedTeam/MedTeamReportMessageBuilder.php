@@ -54,7 +54,7 @@ class MedTeamReportMessageBuilder
 
                 $reward += $amount * $percent / 100;
 
-                $message[] = $key + 1 . ". " . $this->convertFio($calling->getName()) . "/" . $calling->getId() .
+                $message[] = $key + 1 . ". " . $this->convertFio($calling->getName()) . " id - " . $calling->getId() .
                     " " . $amount . " - " . $percent . "%" .
                     ($calling->getCountRepeat() > 0 ? ' П' : '') .
                     ($calling->isPersonal() ? ' И' : '') . "\n";
