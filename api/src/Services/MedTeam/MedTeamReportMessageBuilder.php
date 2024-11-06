@@ -161,7 +161,7 @@ class MedTeamReportMessageBuilder
 
         $message[] = "ПРИМЕЧАНИЕ:\n";
         $message[] = "Не_учтено_комбо\n";
-
+        dd($message);
         $result = implode("", $message);
         mb_internal_encoding('UTF-8');
         dd($result);
