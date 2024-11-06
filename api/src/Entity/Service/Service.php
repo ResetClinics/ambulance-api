@@ -155,4 +155,9 @@ class Service
 
         return $this;
     }
+
+    public function isRepeatDesign(): bool
+    {
+        return $this->type === 'replay';
+    }
 }

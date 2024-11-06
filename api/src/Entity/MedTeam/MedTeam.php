@@ -73,7 +73,7 @@ class MedTeam
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['med-team:read', 'administrator_report:read', 'calling:read','exchange_calling:read'])]
+    #[Groups(['med-team:read', 'administrator_report:read', 'calling:read', 'exchange_calling:read'])]
     private ?int $id = null;
 
     #[Groups(['med-team:write'])]
@@ -85,7 +85,7 @@ class MedTeam
     private ?DateTimeImmutable $plannedStartAt = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read','exchange_calling:read'])]
+    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read', 'exchange_calling:read'])]
     #[ApiProperty(
         openapiContext: [
             'description' => 'Время начала смены.',
@@ -160,9 +160,13 @@ class MedTeam
 
     #[Assert\Choice(choices: [
         'daytime', //дневная *
+        'daytime13', //дневная 13*
+        'daytime14', //дневная 14*
+        'daytime15', //дневная 15*
         'night',   //ночная
         'evening', //вечерняя
         'day',     //суточная
+        'arbitrary',     //произвольная
     ])]
     #[ApiFilter(SearchFilter::class, properties: ['status' => 'exact'])]
     #[Groups(['med-team:read', 'med-team:write'])]
@@ -446,7 +450,7 @@ class MedTeam
     #[Groups(['med-team:read'])]
     public function getCountHours(): ?int
     {
-        if (!$this->startedAt || !$this->completedAt){
+        if (!$this->startedAt || !$this->completedAt) {
             return null;
         }
         $diff = $this->completedAt->diff($this->startedAt);
@@ -475,4 +479,100 @@ class MedTeam
 
         return $this;
     }
+
+    public function getOverTimeHOurs(): int
+    {
+        if (!$this->plannedFinishAt || !$this->completedAt) {
+            return 0;
+        }
+        $diff = $this->completedAt->diff($this->plannedFinishAt);
+        $hours = $diff->h;
+        return $hours + ($diff->days * 24);
+    }
+
+    public function getTypeTitle(): string
+    {
+        $titles = [
+            'daytime' => "дневная",
+            'daytime13' => "дневная 13",
+            'daytime14' => "дневная 14",
+            'daytime15' => "дневная 15",
+            'night' => "ночная",
+            'evening' => "вечерняя",
+            'day' => "суточная",
+            'arbitrary' => "произвольная",
+        ];
+
+        if (isset($titles[$this->type])) {
+            return $this->type;
+        }
+        return 'произвольная';
+    }
+
+    private function getTypePrice(): int
+    {
+        $titles = [
+            'daytime' => 0,
+            'daytime13' => 2000,
+            'daytime14' => 2350,
+            'daytime15' => 2500,
+            'night' => 0,
+            'evening' => 0,
+            'day' => 4000,
+            'arbitrary' => 0,
+        ];
+
+        if (isset($titles[$this->type])) {
+            return $this->type;
+        }
+        return 0;
+    }
+
+    public function getAdminPrice(): int
+    {
+        if (!$this->driver){
+            return $this->getTypePrice();
+        }
+
+        $titles = [
+            'daytime' => 0,
+            'daytime13' => 750,
+            'daytime14' => 750,
+            'daytime15' => 750,
+            'night' => 0,
+            'evening' => 0,
+            'day' => 1250,
+            'arbitrary' => 0,
+        ];
+
+        if (isset($titles[$this->type])) {
+            return $this->type;
+        }
+        return 0;
+    }
+
+    public function getDoctorPrice(): int
+    {
+        if (!$this->driver){
+            return $this->getTypePrice();
+        }
+
+        $titles = [
+            'daytime' => 0,
+            'daytime13' => 2000,
+            'daytime14' => 2335,
+            'daytime15' => 2500,
+            'night' => 0,
+            'evening' => 0,
+            'day' => 3500,
+            'arbitrary' => 0,
+        ];
+
+        if (isset($titles[$this->type])) {
+            return $this->type;
+        }
+        return 0;
+
+    }
+
 }
