@@ -182,6 +182,7 @@ class MedTeamReportMessageBuilder
         }
 
         if (count($parts) > 2) {
+            dd($parts);
             $result .= mb_substr($parts[2], 0, 1) . ".";
         }
         return $result;
