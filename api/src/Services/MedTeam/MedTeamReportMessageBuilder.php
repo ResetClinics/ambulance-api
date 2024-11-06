@@ -162,7 +162,11 @@ class MedTeamReportMessageBuilder
         $message[] = "ПРИМЕЧАНИЕ:\n";
         $message[] = "Не_учтено_комбо\n";
 
-        return implode("", $message);
+        $result = implode("", $message);
+        mb_internal_encoding('UTF-8');
+        dd($result);
+
+        return $result;
     }
 
     function convertFio($fio)
