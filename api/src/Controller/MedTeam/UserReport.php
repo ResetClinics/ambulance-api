@@ -41,8 +41,12 @@ class UserReport extends AbstractController
             $this->tgSender->send($medTeam->getAdmin(), $message);
             return $this->json(null);
         }elseif ($type === 'doctor') {
-            $message = $this->reportMessageBuilder->build($medTeam, $report, $medTeam->getDoctorPrice());
-            $this->tgSender->send($medTeam->getDoctor(), $message);
+            try {
+                $message = $this->reportMessageBuilder->build($medTeam, $report, $medTeam->getDoctorPrice());
+                $this->tgSender->send($medTeam->getDoctor(), $message);
+            }catch (Exception $e) {
+                dd($e);
+            }
             return $this->json(null);
         }
 
