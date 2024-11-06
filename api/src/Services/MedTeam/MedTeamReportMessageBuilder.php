@@ -158,8 +158,8 @@ class MedTeamReportMessageBuilder
 
         //************ Итоги ************
 
-        $message[] = "ВСЕГО_ВЫРУЧКА " . $callsAmount + $stationaryAmount + $hospitalsAmount . "\n";
-        //$message[] = "НАЛ_К_СДАЧЕ ------\n";
+        $message[] = "ВСЕГО ВЫРУЧКА " . $callsAmount + $stationaryAmount + $hospitalsAmount . "\n";
+        $message[] = "НАЛ К СДАЧЕ ------\n";
         $message[] = "\n";
 
         $message[] = "ПРИМЕЧАНИЕ:\n";
