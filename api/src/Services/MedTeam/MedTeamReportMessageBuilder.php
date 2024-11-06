@@ -178,12 +178,18 @@ class MedTeamReportMessageBuilder
         $result = $parts[0];
 
         if (count($parts) > 1) {
-            $result .= " " . mb_substr($parts[1], 0, 1) . ".";
+            $str = mb_substr($parts[1], 0, 1);
+            if (!empty($str)){
+                $result .= $str . ".";
+            }
         }
 
         if (count($parts) > 2) {
-            dd($parts);
-            $result .= mb_substr($parts[2], 0, 1) . ".";
+             $str = mb_substr($parts[2], 0, 1);
+             if (!empty($str)){
+                 $result .= $str . ".";
+             }
+
         }
         return $result;
     }
