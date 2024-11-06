@@ -140,7 +140,7 @@ class MedTeamReportMessageBuilder
 
         //************ Госпитализации ************
 
-        $mileage = $report?->getMileage() ? $report->getMileage()* 7.5 : 0;
+        $mileage = $report?->getMileage() ? $report->getMileage() * 7.5 : 0;
         $toolRoad = $report?->getToolRoad() ?: 0;
         $parkingFees = $report?->getParkingFees() ?: 0;
 
@@ -155,7 +155,7 @@ class MedTeamReportMessageBuilder
 
         //************ Итоги ************
 
-        $message[] = "ВСЕГО_ВЫРУЧКА " . $callsAmount + $stationaryAmount + $hospitalsAmount. "\n";
+        $message[] = "ВСЕГО_ВЫРУЧКА " . $callsAmount + $stationaryAmount + $hospitalsAmount . "\n";
         //$message[] = "НАЛ_К_СДАЧЕ ------\n";
         $message[] = "\n";
 
@@ -163,7 +163,10 @@ class MedTeamReportMessageBuilder
         $message[] = "Не_учтено_комбо\n";
 
         $result = implode("", $message);
-        return mb_convert_encoding($result, "UTF-8");
+
+        $result = mb_convert_encoding($result, "UTF-8");
+
+        return htmlspecialchars($result, ENT_QUOTES, 'UTF-8');
     }
 
     function convertFio($fio)
