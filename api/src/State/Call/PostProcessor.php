@@ -263,7 +263,7 @@ class PostProcessor implements ProcessorInterface
             $hospital->getPhone() === $call->getOriginalPhone() &&
             $hospital->getFio() === $call->getFio() &&
             $hospital->getPrepayment() === $price &&
-            $hospital->getClinic()->getId() === $clinic?->getId() &&
+            $hospital->getClinic()?->getId() === $clinic?->getId() &&
             !$changedImages
         ) {
             return;
