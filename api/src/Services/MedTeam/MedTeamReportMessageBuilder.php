@@ -94,17 +94,17 @@ class MedTeamReportMessageBuilder
             $stationaryReward += $reward;
         }
 */
-        $message[] = "СТАЦИОНАР: " . $stationaryCount . "\n";
-
-        if ($stationaryCount > 0) {
-
-            $message = array_merge($message, $stationaryMessage);
-
-            $message[] = "ИТОГО_СТАЦ: " . $stationaryAmount . "\n";
-            $message[] = "ЗП_Админ_Стац " . $stationaryReward . "\n";
-            $message[] = "ЗП_Врач_Стац " . $stationaryReward . "\n";
-
-        }
+  //      $message[] = "СТАЦИОНАР: " . $stationaryCount . "\n";
+//
+  //      if ($stationaryCount > 0) {
+//
+  //          $message = array_merge($message, $stationaryMessage);
+//
+  //          $message[] = "ИТОГО_СТАЦ: " . $stationaryAmount . "\n";
+  //          $message[] = "ЗП_Админ_Стац " . $stationaryReward . "\n";
+  //          $message[] = "ЗП_Врач_Стац " . $stationaryReward . "\n";
+//
+  //      }
         $message[] = "\n";
 
         //************ Госпитализации ************
@@ -148,21 +148,21 @@ class MedTeamReportMessageBuilder
 
         $transportAmount = $mileage + $toolRoad + $parkingFees;
 
-        $message[] = "ТРАНСПОРТНЫЕ\n";
-        $message[] = "Пробег " . $mileage . "\n";
-        $message[] = "Платка " . $toolRoad . "\n";
-        $message[] = "Парковка " . $parkingFees . "\n";
-        $message[] = "ИТОГО_ТРАНСПОРТ: " . $transportAmount . "\n";
-        $message[] = "\n";
-
-        //************ Итоги ************
-
-        $message[] = "ВСЕГО_ВЫРУЧКА " . $callsAmount + $stationaryAmount + $hospitalsAmount . "\n";
-        //$message[] = "НАЛ_К_СДАЧЕ ------\n";
-        $message[] = "\n";
-
-        $message[] = "ПРИМЕЧАНИЕ:\n";
-        $message[] = "Не_учтено_комбо\n";
+  //      $message[] = "ТРАНСПОРТНЫЕ\n";
+  //      $message[] = "Пробег " . $mileage . "\n";
+  //      $message[] = "Платка " . $toolRoad . "\n";
+  //      $message[] = "Парковка " . $parkingFees . "\n";
+  //      $message[] = "ИТОГО_ТРАНСПОРТ: " . $transportAmount . "\n";
+  //      $message[] = "\n";
+//
+  //      //************ Итоги ************
+//
+  //      $message[] = "ВСЕГО_ВЫРУЧКА " . $callsAmount + $stationaryAmount + $hospitalsAmount . "\n";
+  //      //$message[] = "НАЛ_К_СДАЧЕ ------\n";
+  //      $message[] = "\n";
+//
+  //      $message[] = "ПРИМЕЧАНИЕ:\n";
+  //      $message[] = "Не_учтено_комбо\n";
 
         $result = implode("", $message);
 
