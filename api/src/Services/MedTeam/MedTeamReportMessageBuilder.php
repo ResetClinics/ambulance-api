@@ -149,21 +149,21 @@ class MedTeamReportMessageBuilder
 
         $transportAmount = $mileage + $toolRoad + $parkingFees;
 
-  //      $message[] = "ТРАНСПОРТНЫЕ\n";
-  //      $message[] = "Пробег " . $mileage . "\n";
-  //      $message[] = "Платка " . $toolRoad . "\n";
-  //      $message[] = "Парковка " . $parkingFees . "\n";
-  //      $message[] = "ИТОГО_ТРАНСПОРТ: " . $transportAmount . "\n";
-  //      $message[] = "\n";
-//
-  //      //************ Итоги ************
-//
-  //      $message[] = "ВСЕГО_ВЫРУЧКА " . $callsAmount + $stationaryAmount + $hospitalsAmount . "\n";
-  //      //$message[] = "НАЛ_К_СДАЧЕ ------\n";
-  //      $message[] = "\n";
-//
-  //      $message[] = "ПРИМЕЧАНИЕ:\n";
-  //      $message[] = "Не_учтено_комбо\n";
+        $message[] = "ТРАНСПОРТНЫЕ\n";
+        $message[] = "Пробег " . $mileage . "\n";
+        $message[] = "Платка " . $toolRoad . "\n";
+        $message[] = "Парковка " . $parkingFees . "\n";
+        $message[] = "ИТОГО ТРАНСПОРТ: " . $transportAmount . "\n";
+        $message[] = "\n";
+
+        //************ Итоги ************
+
+        $message[] = "ВСЕГО_ВЫРУЧКА " . $callsAmount + $stationaryAmount + $hospitalsAmount . "\n";
+        //$message[] = "НАЛ_К_СДАЧЕ ------\n";
+        $message[] = "\n";
+
+        $message[] = "ПРИМЕЧАНИЕ:\n";
+        $message[] = "Не_учтено_комбо\n";
 
         $result = implode("", $message);
 
