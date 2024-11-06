@@ -292,7 +292,7 @@ readonly class PostProcessor implements ProcessorInterface
             $result .= " " . substr($parts[1], 0, 1) . ".";
         }
 
-        if (count($parts) > 1) {
+        if (count($parts) > 2) {
             $result .= substr($parts[2], 0, 1) . ".";
         }
         return $result;
