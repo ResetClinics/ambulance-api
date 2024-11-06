@@ -28,7 +28,7 @@ class MedTeamReportMessageBuilder
 
         $callsAmount = 0;
         $callsReward = 0;
-
+/*
         if (count($data->getCallings()) > 0) {
             foreach ($data->getCallings() as $key => $calling) {
                 $amount = 0;
@@ -67,14 +67,14 @@ class MedTeamReportMessageBuilder
             $message[] = "ЗП_Врач_Выезды " . $callsReward . "\n";
             $message[] = "\n";
         }
-
+*/
         //************ Стационары ************
 
         $stationaryCount = 0;
         $stationaryMessage = [];
         $stationaryAmount = 0;
         $stationaryReward = 0;
-
+/*
         foreach ($data->getCallings() as $key => $calling) {
             $amount = 0;
             $reward = 0;
@@ -92,7 +92,7 @@ class MedTeamReportMessageBuilder
             $stationaryAmount += $amount;
             $stationaryReward += $reward;
         }
-
+*/
         $message[] = "СТАЦИОНАР: " . $stationaryCount . "\n";
 
         if ($stationaryCount > 0) {
@@ -111,7 +111,7 @@ class MedTeamReportMessageBuilder
         $hospitalsMessages = [];
         $hospitalsAmount = 0;
         $hospitalsReward = 0;
-
+/*
         foreach ($data->getCallings() as $key => $calling) {
             $amount = 0;
             $reward = 0;
@@ -128,7 +128,7 @@ class MedTeamReportMessageBuilder
             $hospitalsAmount += $amount;
             $hospitalsReward += $reward;
         }
-
+*/
         if ($hospitalsCount > 0) {
             $message[] = "ГОСПИТАЛИЗАЦИЯ:\n";
             $message = array_merge($message, $hospitalsMessages);
