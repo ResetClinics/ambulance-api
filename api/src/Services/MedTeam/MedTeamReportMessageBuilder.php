@@ -176,6 +176,7 @@ class MedTeamReportMessageBuilder
     {
         $parts = explode(" ", $fio);
         $result = $parts[0];
+        dd($parts);
         if (count($parts) > 1) {
             $result .= " " . substr($parts[1], 0, 1) . ".";
         }
