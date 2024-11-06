@@ -34,7 +34,7 @@ class UserReport extends AbstractController
     #[Route(path: '/api/med_teams/{id}/report/{type}', name: 'med_teams_user_report', methods: 'GET', priority: 10)]
     public function __invoke(MedTeam $medTeam, string $type, Request $request): JsonResponse
     {
-        dd($medTeam);
+        dd($medTeam->getAdmin()->getName());
         $report = $this->reports->findOneByMedTeam($medTeam);
 
         if ($type === 'admin') {
