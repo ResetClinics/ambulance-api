@@ -131,14 +131,14 @@ class MedTeamReportMessageBuilder
             $hospitalsReward += $reward;
         }
 */
-        if ($hospitalsCount > 0) {
-            $message[] = "ГОСПИТАЛИЗАЦИЯ:\n";
-            $message = array_merge($message, $hospitalsMessages);
-            $message[] = "ИТОГО_ГОСПИТ: " . $hospitalsAmount . "\n";
-            $message[] = "ЗП_Админ_Госпит " . $hospitalsReward . "\n";
-            $message[] = "ЗП_Врач_Госпит " . $hospitalsReward . "\n";
-            $message[] = "\n";
-        }
+  //      if ($hospitalsCount > 0) {
+  //          $message[] = "ГОСПИТАЛИЗАЦИЯ:\n";
+  //          $message = array_merge($message, $hospitalsMessages);
+  //          $message[] = "ИТОГО_ГОСПИТ: " . $hospitalsAmount . "\n";
+  //          $message[] = "ЗП_Админ_Госпит " . $hospitalsReward . "\n";
+  //          $message[] = "ЗП_Врач_Госпит " . $hospitalsReward . "\n";
+  //          $message[] = "\n";
+  //      }
 
         //************ Госпитализации ************
 
