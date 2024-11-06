@@ -29,7 +29,7 @@ class MedTeamReportMessageBuilder
 
         $callsAmount = 0;
         $callsReward = 0;
-/*
+
         if (count($data->getCallings()) > 0) {
             foreach ($data->getCallings() as $key => $calling) {
                 $amount = 0;
@@ -57,18 +57,18 @@ class MedTeamReportMessageBuilder
                 $message[] = $key + 1 . ". " . $this->convertFio($calling->getName()) . "/" . $calling->getId() .
                     " " . $amount . " - " . $percent . "%" .
                     ($calling->getCountRepeat() > 0 ? ' П' : '') .
-                    ($calling->isPersonal() ? ' И' : '') . "{\n";
+                    ($calling->isPersonal() ? ' И' : '') . "\n";
 
                 $callsReward += $reward;
                 $callsAmount += $amount;
             }
 
-            $message[] = "ИТОГО_ВЫЗОВЫ: " . $callsAmount . "\n";
-            $message[] = "ЗП_Админ_Выезды " . $callsReward . "\n";
-            $message[] = "ЗП_Врач_Выезды " . $callsReward . "\n";
+            $message[] = "ИТОГО ВЫЗОВЫ: " . $callsAmount . "\n";
+            $message[] = "ЗП Админ Выезды " . $callsReward . "\n";
+            $message[] = "ЗП Врач Выезды " . $callsReward . "\n";
 
         }
-*/
+
         $message[] = "\n";
         //************ Стационары ************
 
