@@ -11,7 +11,7 @@ class MedTeamReportMessageBuilder
     {
         $message = [];
 
-        $message[] = "ОТЧЕТ " . $data->getStartedAt()?->format('d.m.y') . "\n";
+        $message[] = "ОТЧЕТ " . $data->getStartedAt()?->format('d.m.y') . ($data->getCity() ? ' г.' . $data->getCity()->getName() : "") . "\n";
         $message[] = "НОМЕР_СМЕНЫ " . $data->getId() . "\n";
         $message[] = "АДМИН: " . $this->convertFio($data->getAdmin()->getName()) . "\n";
         $message[] = "ВРАЧ: " . $this->convertFio($data->getDoctor()->getName()) . "\n";
@@ -20,7 +20,7 @@ class MedTeamReportMessageBuilder
         }
 
         //todo
-        $message[] = "ТИП_СМЕНЫ " . $data->getTypeTitle() . " Сумма " . $medTeamPrice . "\n";
+        $message[] = "ТИП СМЕНЫ " . $data->getTypeTitle() . " Сумма " . $medTeamPrice . "\n";
         $message[] = "ПЕРЕРАБОТКА " . $data->getOverTimeHours() * 170 . "\n";
         $message[] = "\n";
 
@@ -65,9 +65,10 @@ class MedTeamReportMessageBuilder
             $message[] = "ИТОГО_ВЫЗОВЫ: " . $callsAmount . "\n";
             $message[] = "ЗП_Админ_Выезды " . $callsReward . "\n";
             $message[] = "ЗП_Врач_Выезды " . $callsReward . "\n";
-            $message[] = "\n";
+
         }
 */
+        $message[] = "\n";
         //************ Стационары ************
 
         $stationaryCount = 0;
@@ -102,8 +103,9 @@ class MedTeamReportMessageBuilder
             $message[] = "ИТОГО_СТАЦ: " . $stationaryAmount . "\n";
             $message[] = "ЗП_Админ_Стац " . $stationaryReward . "\n";
             $message[] = "ЗП_Врач_Стац " . $stationaryReward . "\n";
-            $message[] = "\n";
+
         }
+        $message[] = "\n";
 
         //************ Госпитализации ************
 

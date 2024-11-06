@@ -482,7 +482,10 @@ class MedTeam
 
     public function getOverTimeHOurs(): int
     {
-        if (!$this->plannedFinishAt || !$this->completedAt) {
+        if (!$this->plannedFinishAt || !$this->completedAt ) {
+            return 0;
+        }
+        if ($this->completedAt <= $this->plannedFinishAt){
             return 0;
         }
         $diff = $this->completedAt->diff($this->plannedFinishAt);
@@ -504,7 +507,7 @@ class MedTeam
         ];
 
         if (isset($titles[$this->type])) {
-            return $this->type;
+            return $titles[$this->type];
         }
         return 'произвольная';
     }
