@@ -182,6 +182,7 @@ class MedTeamReportMessageBuilder
             $result .= " " . substr($parts[1], 0, 1) . ".";
         }
 
+
         if (count($parts) > 2) {
             $result .= substr($parts[2], 0, 1) . ".";
         }
