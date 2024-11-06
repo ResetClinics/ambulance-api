@@ -112,9 +112,13 @@ readonly class PostProcessor implements ProcessorInterface
 
             $this->tgSender->send($data->getAdmin(), $message);
 
+            $this->tgSender->sendByRoleId(5, $message);
+
             $message = $this->createReportMessage($data, $report, $data->getDoctorPrice());
 
             $this->tgSender->send($data->getDoctor(), $message);
+
+            $this->tgSender->sendByRoleId(5, $message);
         }catch (Exception $e) {}
 
         return $this->processor->process($data, $operation, $uriVariables, $context);
@@ -291,6 +295,4 @@ readonly class PostProcessor implements ProcessorInterface
         }
         return $result;
     }
-
-
 }
