@@ -54,7 +54,7 @@ class MedTeamReportMessageBuilder
 
                 $reward += $amount * $percent / 100;
 
-                $message[] = $key + 1 . ". " . $this->convertFio($calling->getName()) . " id - " . $calling->getId() .
+                $message[] = $key + 1 . ". " . $this->convertFio($calling->getFio()) . " id - " . $calling->getId() .
                     " " . $amount . " - " . $percent . "%" .
                     ($calling->getCountRepeat() > 0 ? ' П' : '') .
                     ($calling->isPersonal() ? ' И' : '') . "\n";
@@ -76,7 +76,7 @@ class MedTeamReportMessageBuilder
         $stationaryMessage = [];
         $stationaryAmount = 0;
         $stationaryReward = 0;
-/*
+
         foreach ($data->getCallings() as $key => $calling) {
             $amount = 0;
             $reward = 0;
@@ -86,7 +86,7 @@ class MedTeamReportMessageBuilder
                     $amount += $service->getPrice();
                     $reward += $amount * 5 / 100;
                     $stationaryCount++;
-                    $stationaryMessage[] = $key + 1 . ". " . $this->convertFio($calling->getName()) . "/" . $calling->getId()
+                    $stationaryMessage[] = $stationaryCount . ". " . $this->convertFio($calling->getFio()) . "/" . $calling->getId()
                         . " " . $amount . " - " . $percent . "%" . "\n";
                 }
             }
@@ -94,7 +94,7 @@ class MedTeamReportMessageBuilder
             $stationaryAmount += $amount;
             $stationaryReward += $reward;
         }
-*/
+
         $message[] = "СТАЦИОНАР: " . $stationaryCount . "\n";
 
         if ($stationaryCount > 0) {
@@ -115,16 +115,18 @@ class MedTeamReportMessageBuilder
         $hospitalsAmount = 0;
         $hospitalsReward = 0;
 
+
         foreach ($data->getCallings() as $key => $calling) {
             $amount = 0;
             $reward = 0;
             $percent = 20;
+
             foreach ($calling->getServices() as $service) {
                 if ($service->isHospital()) {
                     $amount += $service->getPrice();
                     $reward += $amount * $percent / 100;
                     $hospitalsCount++;
-                    $hospitalsMessages[] = $key + 1 . ". " . $this->convertFio($calling->getName()) . " id - " . $calling->getId() .
+                    $hospitalsMessages[] = $hospitalsCount . ". " . $this->convertFio($calling->getFio()) . " id - " . $calling->getId() .
                         " " . $amount . " - " . $percent . "%" . "\n";
                 }
             }
