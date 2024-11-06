@@ -145,7 +145,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->leftJoin('u.accessRoles', 'r')
             ->where('r.id = :roleId')
             ->andWhere('u.active = 1')
-            ->andWhere('u.hideInReports = 0')
             ->setParameter('roleId', $roleId);
 
         return $qb
