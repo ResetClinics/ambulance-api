@@ -11,8 +11,9 @@ class MedTeamReportMessageBuilder
     {
         $message = [];
 
-        //$message[] = "ОТЧЕТ " . $data->getStartedAt()?->format('d.m.y') . ($data->getCity() ? ' г.' . $data->getCity()->getName() : "") . "\n";
-        $message[] = "asdasdfasdf\n";
+        $message[] = "ОТЧЕТ " . $data->getStartedAt()?->format('d.m.y') .
+            ($data->getCity() ? ' г.' . $data->getCity()->getName() : "") . "\n";
+
         //$message[] = "НОМЕР_СМЕНЫ " . $data->getId() . "\n";
         //$message[] = "АДМИН: " . $this->convertFio($data->getAdmin()->getName()) . "\n";
         //$message[] = "ВРАЧ: " . $this->convertFio($data->getDoctor()->getName()) . "\n";
