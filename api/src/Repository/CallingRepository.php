@@ -169,6 +169,18 @@ class CallingRepository extends ServiceEntityRepository
             ;
     }
 
+    public function findAllByStatus(string $status): array
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        return $qb
+            ->andWhere('c.status >= :status')
+            ->setParameter('status', $status)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     public function findAllWhoHasOperator()
     {
         return $this->createQueryBuilder('c')
