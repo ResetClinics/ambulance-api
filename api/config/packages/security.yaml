@@ -98,6 +98,7 @@ security:
         - { path: ^/api/partners, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/administrator_reports, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/amo-crm, roles: PUBLIC_ACCESS }
+        - { path: ^/api/leads, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: PUBLIC_ACCESS }
         #- { path: ^/, roles: ROLE_APP }
 
