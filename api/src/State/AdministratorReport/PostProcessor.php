@@ -9,10 +9,10 @@ use ApiPlatform\State\ProcessorInterface;
 use App\Entity\MediaObject;
 use App\Services\File\UploadedBase64File;
 
-class PostProcessor implements ProcessorInterface
+readonly class PostProcessor implements ProcessorInterface
 {
     public function __construct(
-        private readonly ProcessorInterface $processor,
+        private ProcessorInterface $processor,
     ) {}
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])

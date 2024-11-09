@@ -11,24 +11,24 @@ use DateTimeImmutable;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Security\Core\Security;
 
-class HospitalProcessor implements ProcessorInterface
+readonly class HospitalProcessor implements ProcessorInterface
 {
     public function __construct(
         #[Autowire(service: 'api_platform.doctrine.orm.state.persist_processor')]
-        private readonly ProcessorInterface $persistProcessor,
+        private ProcessorInterface $persistProcessor,
         #[Autowire(service: 'api_platform.doctrine.orm.state.remove_processor')]
-        private readonly ProcessorInterface $removeProcessor,
-        private readonly Security $security,
-        private readonly PartnerReward $partnerReward,
+        private ProcessorInterface $removeProcessor,
+        private Security           $security,
+        private PartnerReward      $partnerReward,
     )
     {
     }
 
-    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
     {
         if ($operation instanceof DeleteOperationInterface) {
             $this->removeProcessor->process($data, $operation, $uriVariables, $context);
-            return;
+            return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
         }
         /** @var Hospital $data */
         if ($data->getStatus() === 'inpatient' && $data->getHospitalizedAt() === null){
@@ -43,6 +43,6 @@ class HospitalProcessor implements ProcessorInterface
             $this->partnerReward->calculate($data);
         }
 
-        $this->persistProcessor->process($data, $operation, $uriVariables, $context);
+        return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
     }
 }
