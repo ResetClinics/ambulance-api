@@ -309,6 +309,10 @@ readonly class PostProcessor implements ProcessorInterface
 
     function convertFio($fio)
     {
+        if (empty($fio)){
+            return '-';
+        }
+
         $parts = explode(" ", $fio);
         $result = $parts[0];
 
