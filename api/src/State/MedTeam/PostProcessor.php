@@ -110,9 +110,9 @@ readonly class PostProcessor implements ProcessorInterface
         if ($data instanceof MedTeam) {
 
             $messageAdmin = $this->buildReportMessage($data, $report, $data->getAdminPrice());
-            //try {
-            //    $this->tgSender->send($data->getAdmin(), $messageAdmin);
-            //}catch (Exception $e) {}
+            try {
+                $this->tgSender->send($data->getAdmin(), $messageAdmin);
+            }catch (Exception $e) {}
 
             try {
                 $this->tgSender->sendByRoleId(13, $messageAdmin);
@@ -120,9 +120,9 @@ readonly class PostProcessor implements ProcessorInterface
 
 
             $messageDoctor = $this->buildReportMessage($data, $report, $data->getDoctorPrice());
-            //try {
-            //    $this->tgSender->send($data->getDoctor(), $messageDoctor);
-            //}catch (Exception $e) {}
+            try {
+                $this->tgSender->send($data->getDoctor(), $messageDoctor);
+            }catch (Exception $e) {}
 
             try {
                 $this->tgSender->sendByRoleId(13, $messageDoctor);
