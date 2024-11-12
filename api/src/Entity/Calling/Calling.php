@@ -115,8 +115,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
             processor: PostProcessor::class
         ),
     ],
-    normalizationContext: ['groups' => ['calling:read',  'partner:item:read', 'service:item:read', 'user:item:read']],
-    denormalizationContext: ['groups' => ['calling:write','media_object:write']],
+    normalizationContext: ['groups' => ['calling:read', 'partner:item:read', 'service:item:read', 'user:item:read']],
+    denormalizationContext: ['groups' => ['calling:write', 'media_object:write']],
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
 )]
@@ -521,8 +521,8 @@ class Calling
         string  $phone,
         ?string $address = null,
         ?string $description = null,
-        ?User    $admin = null,
-        ?User    $doctor = null
+        ?User   $admin = null,
+        ?User   $doctor = null
     )
     {
         $this->name = $name;
@@ -540,7 +540,7 @@ class Calling
         $this->lat = null;
         $this->lon = null;
         $this->services = new ArrayCollection();
-        $this->operatorReward = new OperatorReward(0,0,0,0);
+        $this->operatorReward = new OperatorReward(0, 0, 0, 0);
         $this->noBusinessCards = false;
         $this->partnerHospitalization = false;
         $this->personal = false;
@@ -1108,11 +1108,11 @@ class Calling
         $this->totalAmount = 0;
 
         /** @var Row $serviceRow */
-        foreach ($this->services as $serviceRow){
-            if ($serviceRow->getService()->getType() === 'default'){
-                $this->price  += $serviceRow->getPrice() !== null ? (int) $serviceRow->getPrice() : 0;
-            }else{
-                $this->paymentNextOrder  += $serviceRow->getPrice() !== null ? (int) $serviceRow->getPrice() : 0;
+        foreach ($this->services as $serviceRow) {
+            if ($serviceRow->getService()->getType() === 'default') {
+                $this->price += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
+            } else {
+                $this->paymentNextOrder += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
             }
             $this->totalAmount = $this->price + $this->paymentNextOrder;
         }
@@ -1134,11 +1134,11 @@ class Calling
         $this->totalAmount = 0;
 
         /** @var Row $serviceRow */
-        foreach ($this->services as $serviceRow){
-            if ($serviceRow->getService()->getType() === 'default'){
-                $this->price  += $serviceRow->getPrice() !== null ? (int) $serviceRow->getPrice() : 0;
-            }else{
-                $this->paymentNextOrder  += $serviceRow->getPrice() !== null ? (int) $serviceRow->getPrice() : 0;
+        foreach ($this->services as $serviceRow) {
+            if ($serviceRow->getService()->getType() === 'default') {
+                $this->price += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
+            } else {
+                $this->paymentNextOrder += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
             }
             $this->totalAmount = $this->price + $this->paymentNextOrder;
         }
@@ -1228,7 +1228,7 @@ class Calling
     #[Groups(['calling:read', 'exchange_calling:read'])]
     public function getCountRepeat(): int
     {
-        if ($this->owner){
+        if ($this->owner) {
             return $this->owner->getCountRepeat() + 1;
         }
 
@@ -1305,7 +1305,7 @@ class Calling
     #[Groups(['calling:read'])]
     public function isCurrentNoBusinessCards(): bool
     {
-        return $this->partner?->isNoBusinessCards() ?:$this->noBusinessCards;
+        return $this->partner?->isNoBusinessCards() ?: $this->noBusinessCards;
     }
 
     public function isPartnerHospitalization(): bool
@@ -1323,7 +1323,7 @@ class Calling
     #[Groups(['calling:read'])]
     public function isCurrentPartnerHospitalization(): bool
     {
-        return $this->partner?->isPartnerHospitalization() ?:$this->partnerHospitalization;
+        return $this->partner?->isPartnerHospitalization() ?: $this->partnerHospitalization;
     }
 
     public function getImages(): Collection
@@ -1429,4 +1429,60 @@ class Calling
         return $this;
     }
 
+    public function isAdminCombo(): bool
+    {
+        if ($this->getCountRepeat() < 2) {
+            return false;
+        }
+
+        return $this->allOwnerHaveTheSameAdmin();
+
+    }
+
+
+    private function allOwnerHaveTheSameAdmin(): bool
+    {
+        if (!$this->getOwner()) {
+            return true;
+        }
+
+        if ($this->getOwner()->getAdmin()->getId() !== $this->getAdmin()->getId()) {
+            return false;
+        }
+
+        return  $this->allOwnerHaveTheSameAdmin();
+    }
+
+    public function isDoctorCombo(): bool
+    {
+        if ($this->getCountRepeat() < 2) {
+            return false;
+        }
+
+        return $this->allOwnerHaveTheSameDoctor();
+
+    }
+
+
+    private function allOwnerHaveTheSameDoctor(): bool
+    {
+        if (!$this->getOwner()) {
+            return true;
+        }
+
+        if ($this->getOwner()->getDoctor()->getId() !== $this->getDoctor()->getId()) {
+            return false;
+        }
+
+        return  $this->allOwnerHaveTheSameDoctor();
+    }
+
+    public function getTherapySum(): float|int|null
+    {
+        $sum = 0;
+        foreach ($this->getServices() as $service) {
+            $sum += $service->isTherapy() ? $service->getPrice() : 0;
+        }
+        return $sum;
+    }
 }

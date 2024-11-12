@@ -109,9 +109,14 @@ readonly class PostProcessor implements ProcessorInterface
 
         if ($data instanceof MedTeam) {
 
-            $messageAdmin = $this->buildReportMessage($data, $report, $data->getAdminPrice());
+            //TODO вынести формирование отчета и отправку и переделать
             try {
-                $this->tgSender->send($data->getAdmin(), $messageAdmin);
+                $messageAdmin = $this->buildReportMessage($data, $report, false);
+            }catch (Exception $e) {}
+
+            try {
+               $this->tgSender->send($data->getAdmin(), $messageAdmin);
+
             }catch (Exception $e) {}
 
             try {
@@ -119,7 +124,10 @@ readonly class PostProcessor implements ProcessorInterface
             }catch (Exception $e) {}
 
 
-            $messageDoctor = $this->buildReportMessage($data, $report, $data->getDoctorPrice());
+            try {
+                $messageDoctor = $this->buildReportMessage($data, $report, true);
+            }catch (Exception $e) {}
+
             try {
                 $this->tgSender->send($data->getDoctor(), $messageDoctor);
             }catch (Exception $e) {}
@@ -134,7 +142,7 @@ readonly class PostProcessor implements ProcessorInterface
         return $this->processor->process($data, $operation, $uriVariables, $context);
     }
 
-    public function buildReportMessage(MedTeam $data, ?AdministratorReport $report, int $medTeamPrice = 0): string
+    public function buildReportMessage(MedTeam $data, ?AdministratorReport $report, bool $isDoctor): string
     {
         $message = [];
 
@@ -150,7 +158,7 @@ readonly class PostProcessor implements ProcessorInterface
 
         $overTimeHoursReward = $data->getOverTimeHours() * 170;
 
-        $message[] = "ТИП СМЕНЫ " . $data->getTypeTitle() . " Сумма " . $medTeamPrice . "\n";
+        $message[] = "ТИП СМЕНЫ " . $data->getTypeTitle() . " Сумма " . ($isDoctor ? $data->getDoctorPrice() : $data->getAdminPrice() ) . "\n";
         $message[] = "ПЕРЕРАБОТКА " . $overTimeHoursReward . "\n";
         $message[] = "\n";
 
@@ -158,6 +166,7 @@ readonly class PostProcessor implements ProcessorInterface
 
         $callsAmount = 0;
         $callsReward = 0;
+        $sewingIn = 0;
 
         if (count($data->getCallings()) > 0) {
             foreach ($data->getCallings() as $key => $calling) {
@@ -179,6 +188,14 @@ readonly class PostProcessor implements ProcessorInterface
                     ) {
                         $amount += $service->getPrice();
                     }
+
+                    if ($service->isCoding() && $service->getService()->getId() !== 16) {
+                        $amount += $service->getPrice() - $service->getService()->getCoastPrice();
+                    }
+
+                    if ($service->isCoding() && $service->getService()->getId() === 16) {
+                        $sewingIn += 2500;
+                    }
                 }
 
                 $reward += $amount * $percent / 100;
@@ -194,11 +211,58 @@ readonly class PostProcessor implements ProcessorInterface
 
             $message[] = "ИТОГО ВЫЗОВЫ: " . $callsAmount . "\n";
             $message[] = "ЗП Админ Выезды " . $callsReward . "\n";
-            $message[] = "ЗП Врач Выезды " . $callsReward . "\n";
+            $message[] = "ЗП Врач Выезды " . $callsReward + $sewingIn . "\n";
 
         }
 
         $message[] = "\n";
+
+        $comboCount = 0;
+        $comboMessage = [];
+        $comboAmount = 0;
+
+        //************ КОМБО ************
+        if ($isDoctor){
+            foreach ($data->getCallings() as $calling) {
+                if ($calling->isDoctorCombo()) {
+                    $comboCount++;
+                    $comboMessage[] = $calling->getFio();
+                    $therapySum = $calling->getTherapySum();
+                    $comboMessage[] = $calling->getCompletedAt()?->format('d.m.y') . " id-" . $calling->getId() . " " . $therapySum . "*2.5% = " . $therapySum * 2.5 / 100  . "\n";
+                    while ($calling->getOwner()) {
+                        $owner = $calling->getOwner();
+                        $therapySum = $owner->getTherapySum();
+                        $comboMessage[] = $owner->getCompletedAt()?->format('d.m.y') . " id-" . $owner->getId() . " " . $therapySum . "*2.5% = " . $therapySum * 2.5 / 100  . "\n";
+                    }
+                }
+            }
+        }else{
+            foreach ($data->getCallings() as $calling) {
+                if ($calling->isAdminCombo()) {
+                    $comboCount++;
+                    $comboMessage[] = $calling->getFio();
+                    $therapySum = $calling->getTherapySum();
+                    $comboMessage[] = $calling->getCompletedAt()?->format('d.m.y') . " id-" . $calling->getId() . " " . $therapySum . "*2.5% = " . $therapySum * 2.5 / 100  . "\n";
+                    while ($calling->getOwner()) {
+                        $owner = $calling->getOwner();
+                        $therapySum = $owner->getTherapySum();
+                        $comboMessage[] = $owner->getCompletedAt()?->format('d.m.y') . " id-" . $owner->getId() . " " . $therapySum . "*2.5% = " . $therapySum * 2.5 / 100  . "\n";
+                    }
+                }
+            }
+        }
+
+        $message[] = "КОМБО: " . $comboCount . "\n";
+
+        if ($comboCount > 0) {
+
+            $message = array_merge($message, $comboMessage);
+
+            $message[] = "ИТОГО КОМБО: " . $comboAmount . "\n";
+        }
+        $message[] = "\n";
+
+
         //************ Стационары ************
 
         $stationaryCount = 0;
@@ -290,10 +354,14 @@ readonly class PostProcessor implements ProcessorInterface
         //************ Итоги ************
 
         $message[] = "ВСЕГО ВЫРУЧКА " . $callsAmount + $stationaryAmount + $hospitalsAmount . "\n";
-        $message[] = "ВСЕГО ЗП ВРАЧ " .
-            $data->getDoctorPrice() + $callsReward + $hospitalsReward + $stationaryReward + $overTimeHoursReward . "\n";
-        $message[] = "ВСЕГО ЗП ВРАЧ " .
-            $data->getDoctorPrice() + $callsReward + $hospitalsReward + $stationaryReward + $overTimeHoursReward + $transportAmount. "\n";
+        if ($isDoctor) {
+            $message[] = "ВСЕГО ЗП ВРАЧ " .
+                $data->getDoctorPrice() + $callsReward + $hospitalsReward + $stationaryReward + $overTimeHoursReward + $sewingIn + $comboAmount . "\n";
+        }else{
+            $message[] = "ВСЕГО ЗП АДМИН " .
+                $data->getDoctorPrice() + $callsReward + $hospitalsReward + $stationaryReward + $overTimeHoursReward + $transportAmount + $comboAmount. "\n";
+        }
+
         $message[] = "НАЛ К СДАЧЕ ------\n";
         $message[] = "\n";
 
