@@ -1,6 +1,7 @@
 FROM php:8.3-cli-alpine
 
 RUN apk add --no-cache --update linux-headers $PHPIZE_DEPS \
+    postgresql-dev \
     zlib-dev  \
     libxpm-dev \
     libzip-dev \
@@ -32,6 +33,8 @@ RUN apk add --no-cache --update linux-headers $PHPIZE_DEPS \
      pdo_mysql \
      zip \
      opcache \
+    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install pdo_pgsql \
     && apk del git \
     && rm -rf /tmp/*
 

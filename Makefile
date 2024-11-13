@@ -11,6 +11,7 @@ restart: down up
 
 create-volumes:
 	docker volume create ambulance-mysql
+	docker volume create asterisk-postgres
 
 check: lint analyze validate-schema test test-e2e
 lint: api-lint

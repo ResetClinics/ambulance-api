@@ -48,9 +48,13 @@ services:
       APP_DEBUG: 1
       PHP_IDE_CONFIG: serverName=API
       DB_HOST: ambulance-mysql
+      DB_NAME: ambulance
       DB_USER: ambulance
       DB_PASSWORD: secret
-      DB_NAME: ambulance
+      ASTERISK_DB_HOST: asterisk-postgres
+      ASTERISK_DB_NAME: asterisk_db
+      ASTERISK_DB_USER: user
+      ASTERISK_DB_PASSWORD: secret
       SENTRY_DSN: ""
     volumes:
       - ./api:/app
@@ -63,9 +67,13 @@ services:
       APP_ENV: dev
       APP_DEBUG: 1
       DB_HOST: ambulance-mysql
+      DB_NAME: ambulance
       DB_USER: root
       DB_PASSWORD: verysecret
-      DB_NAME: ambulance
+      ASTERISK_DB_HOST: asterisk-postgres
+      ASTERISK_DB_NAME: asterisk_db
+      ASTERISK_DB_USER: user
+      ASTERISK_DB_PASSWORD: secret
       SENTRY_DSN: null
     volumes:
       - ./api:/app
@@ -83,7 +91,20 @@ services:
       - "3306:3306"
     command: mysqld --sql_mode=""
 
+  asterisk-postgres:
+    image: postgres:16.4-alpine
+    volumes:
+      - asterisk-postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: asterisk_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432:5432"
+
 volumes:
+  asterisk-postgres:
+    external: true
   ambulance-mysql:
     external: true
 
