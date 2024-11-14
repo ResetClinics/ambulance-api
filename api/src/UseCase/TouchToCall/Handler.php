@@ -24,8 +24,7 @@ readonly class Handler
 
         $clientPhone = preg_replace('/[^0-9]/', '', $call->getClient()?->getPhone());
 
-        //$adminPhone = preg_replace('/[^0-9]/', '', $call->getAdmin()?->getPhone());
-        $adminPhone = preg_replace('/[^0-9]/', '', '7 996 697 6969');
+        $adminPhone = preg_replace('/[^0-9]/', '', $call->getAdmin()?->getPhone());
 
         $this->client->request('POST', 'https://pbx.reset-med.ru:8089/ari/channels', [
             'auth_basic' => 'ARI_user:G5heZ8ld03V1I3',
