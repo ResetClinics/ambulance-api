@@ -33,8 +33,8 @@ readonly class Handler
                 'Content-Type' => 'application/x-www-form-urlencoded',
             ],
             'body' => [
-                'endpoint' => 'Local/' . $clientPhone . '@from-inclient',
-                'extension' => $adminPhone,
+                'endpoint' => 'Local/' . $adminPhone . '@from-inclient',
+                'extension' => $clientPhone,
                 'context' => 'from-inclient',
                 'priority' => '1',
             ],
