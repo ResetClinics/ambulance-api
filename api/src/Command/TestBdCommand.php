@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Asterisk\UseCase\Channel\AddOrUpdate\Handler;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Statement;
 use Doctrine\Persistence\ManagerRegistry;
@@ -18,7 +19,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class TestBdCommand extends Command
 {
     public function __construct(
-        private readonly ManagerRegistry $doctrine
+        private readonly Handler $handler,
+        private readonly \App\Asterisk\UseCase\Channel\DeleteByClientPhone\Handler $deleteHandler
     )
     {
         parent::__construct();
@@ -32,21 +34,21 @@ class TestBdCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $connection = $this->doctrine->getConnection('asterisk');
 
-        $sql = 'SELECT * FROM channels';
-        /** @var Statement $statement */
-        $statement = $connection->prepare($sql);
+        $command = new \App\Asterisk\UseCase\Channel\AddOrUpdate\Command('7777777777', '1111111111');
 
-        $result = $statement
-            ->executeQuery()
-            ->fetchAllAssociative();
+        $this->handler->handle($command);
 
-        dd($result);
+
+        $command = new \App\Asterisk\UseCase\Channel\DeleteByClientPhone\Command('7777777777');
+
+        $this->deleteHandler->handle($command);
 
 
         $io->success('Success.');
 
         return Command::SUCCESS;
     }
+
+
 }

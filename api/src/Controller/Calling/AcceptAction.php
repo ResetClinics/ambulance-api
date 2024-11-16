@@ -7,6 +7,8 @@ namespace App\Controller\Calling;
 use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Filters\LeadsFilter;
 use AmoCRM\Models\LeadModel;
+use App\Asterisk\UseCase\Channel\AddOrUpdate\Command;
+use App\Asterisk\UseCase\Channel\AddOrUpdate\Handler;
 use App\Entity\Calling\Calling;
 use App\Entity\User\User;
 use App\Flusher;
@@ -16,6 +18,7 @@ use App\Services\AmoCRM;
 use App\Services\WSClient;
 use DateTimeImmutable;
 use DomainException;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,6 +33,7 @@ class AcceptAction extends AbstractController
     public function __construct(
         AmoCRM                    $amoCRM,
         private readonly WSClient $wsClient,
+        private readonly Handler  $asteriskAddOrUpdateHandler,
     )
     {
         $this->client = $amoCRM->getClient();
@@ -62,6 +66,16 @@ class AcceptAction extends AbstractController
         $flusher->flush();
 
         $this->wsClient->sendUpdateOffer($calling->getId());
+
+        try {
+            $this->asteriskAddOrUpdateHandler->handle(
+                new Command(
+                    $calling->getClient()?->getPhone(),
+                    $calling->getAdmin()?->getPhone()
+                )
+            );
+        } catch (Exception) {
+        }
 
         return $this->json([
             "id" => $calling->getId(),

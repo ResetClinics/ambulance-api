@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Calling;
 
+use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Collections\NotesCollection;
 use AmoCRM\Exceptions\AmoCRMApiException;
 use AmoCRM\Exceptions\AmoCRMMissedTokenException;
@@ -12,6 +13,8 @@ use AmoCRM\Filters\LeadsFilter;
 use AmoCRM\Helpers\EntityTypesInterface;
 use AmoCRM\Models\LeadModel;
 use AmoCRM\Models\NoteType\CommonNote;
+use App\Asterisk\UseCase\Channel\DeleteByClientPhone\Command;
+use App\Asterisk\UseCase\Channel\DeleteByClientPhone\Handler;
 use App\Entity\Calling\Calling;
 use App\Flusher;
 use App\Repository\CallingRepository;
@@ -21,6 +24,7 @@ use App\Services\CallingSender;
 use App\Services\WSClient;
 use DateTimeImmutable;
 use DateTimeZone;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,14 +34,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 #[AsController]
 class RejectAction extends AbstractController
 {
+    private AmoCRMApiClient $client;
     public function __construct(
         AmoCRM        $amoCRM,
-        CallingSender $sender,
+        private readonly CallingSender  $sender,
         private readonly WSClient $wsClient,
+        private readonly Handler $asteriskDeleteHandler,
     )
     {
         $this->client = $amoCRM->getClient();
-        $this->sender = $sender;
     }
 
     /**
@@ -100,6 +105,14 @@ class RejectAction extends AbstractController
         );
 
         $this->wsClient->sendUpdateOffer($calling->getId());
+
+        try {
+            $this->asteriskDeleteHandler->handle(
+                new Command($calling->getClient()?->getPhone())
+            );
+        }catch (Exception) {
+
+        }
 
         return $this->json([
             "id" => $calling->getId(),

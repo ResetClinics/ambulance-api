@@ -34,6 +34,7 @@ use App\UseCase\Call\AddOrUpdateRepeat\Command;
 use App\UseCase\Call\AddOrUpdateRepeat\Handler;
 use DateTimeImmutable;
 use DateTimeZone;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,6 +54,7 @@ class FinishAction extends AbstractController
         private readonly Flusher        $flusher,
         private readonly WSClient       $wsClient,
         private readonly Handler $handler,
+        private readonly \App\Asterisk\UseCase\Channel\DeleteByClientPhone\Handler $asteriskDeleteHandler,
     )
     {
         $this->client = $amoCRM->getClient();
@@ -119,6 +121,14 @@ class FinishAction extends AbstractController
         );
 
         $this->wsClient->sendUpdateOffer($calling->getId());
+
+        try {
+            $this->asteriskDeleteHandler->handle(
+                new \App\Asterisk\UseCase\Channel\DeleteByClientPhone\Command($calling->getClient()?->getPhone())
+            );
+        }catch (Exception) {
+
+        }
 
         return $this->json([
             "id" => $calling->getId(),
