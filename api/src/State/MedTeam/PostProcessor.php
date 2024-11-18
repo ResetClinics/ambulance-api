@@ -50,9 +50,9 @@ readonly class PostProcessor implements ProcessorInterface
         $tollRoadReceipts = $requestData['tollRoadReceipts'] ?? null;
 
 
-        $mileage = $requestData['mileage'] ?? null;
-        $parkingFees = $requestData['parkingFees'] ?? null;
-        $tollRoad = $requestData['tollRoad'] ?? null;
+        $mileage = $requestData['mileage'] ?? 0;
+        $parkingFees = $requestData['parkingFees'] ?? 0;
+        $tollRoad = $requestData['tollRoad'] ?? 0;
 
 
         if (!$mileageReceipts && !$parkingFeesReceipts && !$tollRoadReceipts && !$mileage && !$parkingFees && !$tollRoad) {
