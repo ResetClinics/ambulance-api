@@ -3,6 +3,10 @@ api_platform:
   version: 1.0.0
   description: 'API выездной службы'
   show_webby: false
+  formats:
+    multipart: [ 'multipart/form-data' ]
+    jsonld: [ 'application/ld+json' ]
+    json: [ 'application/json' ]
   swagger:
     api_keys:
       JWT:

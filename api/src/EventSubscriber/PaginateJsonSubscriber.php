@@ -8,6 +8,7 @@ use ApiPlatform\Symfony\EventListener\EventPriorities;
 use App\Entity\AdministratorReport;
 use App\Entity\Calling\Calling;
 use App\Entity\City;
+use App\Entity\FileObject;
 use App\Entity\Hospital\Clinic;
 use App\Entity\Hospital\Hospital;
 use App\Entity\Partner;
@@ -63,6 +64,7 @@ class PaginateJsonSubscriber implements EventSubscriberInterface
             $apiResourceClass !== Hospital::class &&
             $apiResourceClass !== Clinic::class &&
             $apiResourceClass !== AdministratorReport::class &&
+            $apiResourceClass !== FileObject::class &&
             $apiResourceClass !== PaymentSetting::class
         ) {
             return;
