@@ -22,11 +22,11 @@ class Base
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['base:read'])]
+    #[Groups(['base:read', 'v1:shift:item:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['base:read', 'base:write'])]
+    #[Groups(['base:read', 'base:write', 'v1:shift:item:read'])]
     #[Assert\NotBlank]
     private ?string $name = null;
 

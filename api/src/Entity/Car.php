@@ -50,11 +50,11 @@ class Car
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['car:read'])]
+    #[Groups(['car:read', 'v1:shift:item:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['car:read', 'car:write'])]
+    #[Groups(['car:read', 'car:write', 'v1:shift:item:read'])]
     #[Assert\NotBlank]
     private ?string $name = null;
 

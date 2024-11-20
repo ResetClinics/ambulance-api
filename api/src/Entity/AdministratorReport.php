@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Entity\MedTeam\MedTeam;
@@ -30,11 +31,39 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 #[ORM\Table(name: 'administrator_reports')]
 #[ApiResource(
     operations: [
-        new GetCollection(),
+        new GetCollection(
+            routePrefix: '/api/v1',
+            shortName: 'TransportReport'
+        ),
         new Post(
+            routePrefix: '/api/v1',
+            shortName: 'TransportReport'
+        ),
+        new Get(
+            routePrefix: '/api/v1',
+            shortName: 'TransportReport'
+        ),
+        new Patch(
+            routePrefix: '/api/v1',
+            shortName: 'TransportReport'
+        ),
+        new Delete(
+            routePrefix: '/api/v1',
+            shortName: 'TransportReport'
+        ),
+
+        new GetCollection(
+            routePrefix: '/api',
+            openapi: false,
+        ),
+        new Post(
+            routePrefix: '/api',
+            openapi: false,
             processor: PostProcessor::class
         ),
         new Get(
+            routePrefix: '/api',
+            openapi: false,
             normalizationContext: ['groups' => [
                 'administrator_report:read',
                 'administrator_report:detail:read',
@@ -46,14 +75,18 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
             ]],
         ),
         new Put(
-            processor: PostProcessor::class
+            routePrefix: '/api',
+            openapi: false,
+            processor: PostProcessor::class,
         ),
-        new Delete(),
+        new Delete(
+            routePrefix: '/api',
+            openapi: false,
+        ),
     ],
-    routePrefix: '/api',
+
     normalizationContext: ['groups' => ['administrator_report:read', 'media_object:read', 'user:item:read']],
     denormalizationContext: ['groups' => ['administrator_report:write', 'media_object:write']],
-    openapi: false,
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
 )]
@@ -79,12 +112,20 @@ class AdministratorReport
     private ?int $id = null;
 
     #[ORM\ManyToOne]
-    #[Groups(['administrator_report:read', 'administrator_report:write'])]
-   // #[Assert\NotBlank]
+    #[Groups([
+        'administrator_report:read',
+        'administrator_report:write'
+    ])]
+    // #[Assert\NotBlank]
     private ?MedTeam $team = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['administrator_report:read', 'administrator_report:write'])]
+    #[Groups([
+        'administrator_report:read',
+        'administrator_report:write',
+        'v1:shift:read',
+        'v1:shift:write',
+    ])]
     private ?int $mileage = null;
 
     #[ORM\ManyToMany(targetEntity: MediaObject::class, cascade: ['persist'])]
@@ -95,7 +136,12 @@ class AdministratorReport
     private Collection $mileageReceipts;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['administrator_report:read', 'administrator_report:write'])]
+    #[Groups([
+        'administrator_report:read',
+        'administrator_report:write',
+        'v1:shift:read',
+        'v1:shift:write',
+    ])]
     private ?int $toolRoad = null;
 
     #[ORM\ManyToMany(targetEntity: MediaObject::class, cascade: ['persist'])]
@@ -106,7 +152,12 @@ class AdministratorReport
     private Collection $tollRoadReceipts;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['administrator_report:read', 'administrator_report:write'])]
+    #[Groups([
+        'administrator_report:read',
+        'administrator_report:write',
+        'v1:shift:read',
+        'v1:shift:write',
+    ])]
     private ?int $parkingFees = null;
 
     #[ORM\ManyToMany(targetEntity: MediaObject::class, cascade: ['persist'])]
@@ -117,11 +168,28 @@ class AdministratorReport
     private Collection $parkingFeesReceipts;
 
 
+    /**
+     * @var Collection<int, FileObject>
+     */
+    #[ORM\ManyToMany(targetEntity: FileObject::class, cascade: ['persist'])]
+    #[ORM\JoinTable(name: 'administrator_reports_files')]
+    #[ORM\JoinColumn(name: 'administrator_report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'file_object_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[Groups([
+        'v1:shift:read',
+        'v1:shift:write',
+    ])]
+    private Collection $files;
+
+    #[ORM\OneToOne(mappedBy: 'transportReport', cascade: ['persist', 'remove'])]
+    private ?MedTeam $shift = null;
+
     public function __construct()
     {
         $this->mileageReceipts = new ArrayCollection();
         $this->parkingFeesReceipts = new ArrayCollection();
         $this->tollRoadReceipts = new ArrayCollection();
+        $this->files = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -263,4 +331,49 @@ class AdministratorReport
 
         return $this;
     }
+
+
+    /**
+     * @return Collection<int, FileObject>
+     */
+    public function getFiles(): Collection
+    {
+        return $this->files;
+    }
+
+    public function addFile(FileObject $file): static
+    {
+        if (!$this->files->contains($file)) {
+            $this->files->add($file);
+        }
+
+        return $this;
+    }
+
+    public function removeFile(FileObject $file): static
+    {
+        $this->files->removeElement($file);
+
+        return $this;
+    }
+
+    public function getShift(): ?MedTeam
+    {
+        return $this->shift;
+    }
+
+    public function setShift(?MedTeam $shift): static
+    {
+
+        if ($shift === null && $this->shift !== null) {
+            $this->shift->setTransportReport(null);
+        }
+        if ($shift !== null && $shift->getTransportReport() !== $this) {
+            $shift->setTransportReport($this);
+        }
+        $this->shift = $shift;
+
+        return $this;
+    }
+
 }

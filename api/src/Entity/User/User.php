@@ -65,12 +65,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         'team:item:get:team_my',
         'calling:detail:read',
         'hospital:read',
-        'work-schedule:read'
+        'work-schedule:read',
+        'v1:shift:item:read',
+        'v1:shift:write',
     ])]
     private ?int $id = null;
 
     #[ORM\Column(length: 11, unique: true)]
-    #[Groups(['user:read', 'user:write', 'team:item:get', 'calling:detail:read', 'med-team:read'])]
+    #[Groups([
+        'user:read',
+        'user:write',
+        'team:item:get',
+        'calling:detail:read',
+        'med-team:read',
+    ])]
     #[Assert\NotBlank(message: "Телефон обязателен для заполнения.")]
     #[Assert\Regex(
         pattern: '/\d{11}/',
@@ -86,7 +94,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         'team:item:get',
         'calling:detail:read',
         'hospital:read',
-        'work-schedule:read'
+        'work-schedule:read',
+        'v1:shift:item:read'
     ])]
     #[Assert\NotBlank]
     private ?string $name = null;

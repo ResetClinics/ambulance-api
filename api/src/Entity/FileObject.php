@@ -67,7 +67,6 @@ class FileObject
     #[ApiProperty(writable: false)]
     #[ORM\Column(nullable: true)]
     public ?string $filePath = null;
-
     public function getId(): ?int
     {
         return $this->id;

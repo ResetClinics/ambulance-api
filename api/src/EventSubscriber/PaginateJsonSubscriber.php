@@ -11,6 +11,7 @@ use App\Entity\City;
 use App\Entity\FileObject;
 use App\Entity\Hospital\Clinic;
 use App\Entity\Hospital\Hospital;
+use App\Entity\MedTeam\MedTeam;
 use App\Entity\Partner;
 use App\Entity\PaymentSetting\PaymentSetting;
 use App\Entity\Service\Category;
@@ -34,7 +35,6 @@ class PaginateJsonSubscriber implements EventSubscriberInterface
         ViewEvent $event
     ): void
     {
-
         $method = $event->getRequest()->getMethod();
         if ($method !== Request::METHOD_GET) {
             return;
@@ -50,8 +50,6 @@ class PaginateJsonSubscriber implements EventSubscriberInterface
         /** @var string $apiResourceClass */
         $apiResourceClass = $class['_api_resource_class'];
 
-
-
         if (
             $apiResourceClass !== City::class &&
             $apiResourceClass !== Partner::class &&
@@ -65,7 +63,11 @@ class PaginateJsonSubscriber implements EventSubscriberInterface
             $apiResourceClass !== Clinic::class &&
             $apiResourceClass !== AdministratorReport::class &&
             $apiResourceClass !== FileObject::class &&
-            $apiResourceClass !== PaymentSetting::class
+            $apiResourceClass !== PaymentSetting::class &&
+            (
+                $apiResourceClass === MedTeam::class &&
+                $event->getRequest()->attributes->get('_api_operation')?->getShortName() !== 'Shift'
+            )
         ) {
             return;
         }

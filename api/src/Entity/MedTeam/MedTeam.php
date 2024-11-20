@@ -16,6 +16,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\MedTeam\SendSms;
+use App\Entity\AdministratorReport;
 use App\Entity\Base;
 use App\Entity\Calling\Calling;
 use App\Entity\Car;
@@ -33,24 +34,73 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: MedTeamRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(routePrefix: '/api'),
+        new GetCollection(
+            outputFormats: ['json' => ['application/json']],
+            routePrefix: '/api/v1',
+            shortName: 'Shift',
+            normalizationContext: ['groups' => ['v1:shift:item:read']]
+        ),
+        new Post(
+            inputFormats: ['json' => ['application/json']],
+            outputFormats: ['json' => ['application/json']],
+            routePrefix: '/api/v1',
+            shortName: 'Shift',
+            normalizationContext: ['groups' => ['v1:shift:item:read', 'v1:shift:read', 'media_object:read']],
+            denormalizationContext: ['groups' => ['v1:shift:write']],
+        ),
+        new Get(
+            outputFormats: ['json' => ['application/json']],
+            routePrefix: '/api/v1',
+            shortName: 'Shift',
+            normalizationContext: ['groups' => ['v1:shift:item:read', 'v1:shift:read', 'media_object:read']],
+        ),
+        new Patch(
+            inputFormats: ['json' => ['application/json']],
+            outputFormats: ['json' => ['application/json']],
+            routePrefix: '/api/v1',
+            shortName: 'Shift',
+            normalizationContext: ['groups' => ['v1:shift:item:read', 'v1:shift:read', 'media_object:read']],
+            denormalizationContext: ['groups' => ['v1:shift:write']],
+        ),
+        new Delete(
+            routePrefix: '/api/v1',
+            shortName: 'Shift'
+        ),
+
         new GetCollection(uriTemplate: '/exchange/med_teams'),
+
+        new GetCollection(
+            routePrefix: '/api',
+            openapi: false,
+        ),
         new Post(
             routePrefix: '/api',
-            processor: PostProcessor::class
+            openapi: false,
+            processor: PostProcessor::class,
         ),
-        new Get(routePrefix: '/api'),
-        new Put(routePrefix: '/api'),
-        new Delete(routePrefix: '/api'),
+        new Get(
+            routePrefix: '/api',
+            openapi: false,
+        ),
+        new Put(
+            routePrefix: '/api',
+            openapi: false,
+        ),
+        new Delete(
+            routePrefix: '/api',
+            openapi: false,
+        ),
         new Patch(
             routePrefix: '/api',
-            processor: PostProcessor::class
+            openapi: false,
+            processor: PostProcessor::class,
         ),
         new Post(
             uriTemplate: '/med_teams/{id}/send-sms',
             routePrefix: '/api',
             controller: SendSms::class,
-            name: 'med_teams-send_sms'
+            openapi: false,
+            name: 'med_teams-send_sms',
         )
     ],
     normalizationContext: ['groups' => ['med-team:read', 'user:item:read', 'phone:read', 'car:read', 'base:read']],
@@ -73,19 +123,36 @@ class MedTeam
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['med-team:read', 'administrator_report:read', 'calling:read', 'exchange_calling:read'])]
+    #[Groups([
+        'med-team:read',
+        'administrator_report:read',
+        'calling:read',
+        'exchange_calling:read',
+        'v1:shift:item:read'
+    ])]
     private ?int $id = null;
 
     #[Groups(['med-team:write'])]
     private bool $sendSms = false;
 
     #[ORM\Column]
-    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read'])]
+    #[Groups([
+        'med-team:read',
+        'med-team:write',
+        'administrator_report:detail:read',
+        'v1:shift:item:read',
+    ])]
     #[Assert\NotNull]
     private ?DateTimeImmutable $plannedStartAt = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read', 'exchange_calling:read'])]
+    #[Groups([
+        'med-team:read',
+        'med-team:write',
+        'administrator_report:detail:read',
+        'exchange_calling:read',
+        'v1:shift:item:read',
+    ])]
     #[ApiProperty(
         openapiContext: [
             'description' => 'Время начала смены.',
@@ -94,7 +161,13 @@ class MedTeam
     private ?DateTimeImmutable $startedAt = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read', 'exchange_calling:read'])]
+    #[Groups([
+        'med-team:read',
+        'med-team:write',
+        'administrator_report:detail:read',
+        'exchange_calling:read',
+        'v1:shift:item:read',
+    ])]
     #[ApiProperty(
         openapiContext: [
             'description' => 'Время окончания смены.',
@@ -103,7 +176,15 @@ class MedTeam
     private ?DateTimeImmutable $completedAt = null;
 
     #[ORM\Column(length: 32)]
-    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read', 'calling:read', 'exchange_calling:read'])]
+    #[Groups([
+        'med-team:read',
+        'med-team:write',
+        'administrator_report:detail:read',
+        'calling:read',
+        'exchange_calling:read',
+        'v1:shift:item:read',
+        'v1:shift:write',
+    ])]
     #[Assert\Choice(choices: [
         'draft',
         'scheduled',
@@ -115,31 +196,56 @@ class MedTeam
     private string $status = 'scheduled';
 
     #[ORM\ManyToOne]
-    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:read'])]
+    #[Groups([
+        'med-team:read',
+        'med-team:write',
+        'administrator_report:read',
+        'v1:shift:item:read',
+    ])]
     #[ApiFilter(SearchFilter::class, properties: ['admin.id' => 'exact'])]
     private ?User $admin = null;
 
     #[ORM\ManyToOne]
-    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read'])]
+    #[Groups([
+        'med-team:read',
+        'med-team:write',
+        'administrator_report:detail:read',
+        'v1:shift:item:read',
+    ])]
     #[ApiFilter(SearchFilter::class, properties: ['doctor.id' => 'exact'])]
     private ?User $doctor = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: true)]
-    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read', 'calling:read'])]
+    #[Groups([
+        'med-team:read',
+        'med-team:write',
+        'administrator_report:detail:read',
+        'calling:read',
+    ])]
     private ?Phone $phone = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['med-team:read', 'med-team:write'])]
+    #[Groups(['med-team:read', 'med-team:write', 'v1:shift:item:read',])]
     #[Assert\NotNull]
     private ?DateTimeImmutable $plannedFinishAt = null;
 
     #[ORM\ManyToOne]
-    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read'])]
+    #[Groups([
+        'med-team:read',
+        'med-team:write',
+        'administrator_report:detail:read',
+        'v1:shift:item:read',
+    ])]
     private ?Base $base = null;
 
     #[ORM\ManyToOne]
-    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read'])]
+    #[Groups([
+        'med-team:read',
+        'med-team:write',
+        'administrator_report:detail:read',
+        'v1:shift:item:read',
+    ])]
     private ?Car $car = null;
 
     #[ORM\OneToMany(mappedBy: 'medTeam', targetEntity: Location::class)]
@@ -147,15 +253,30 @@ class MedTeam
     private Collection $locations;
 
     #[ORM\ManyToOne]
-    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read'])]
+    #[Groups([
+        'med-team:read',
+        'med-team:write',
+        'administrator_report:detail:read',
+        'v1:shift:item:read',
+    ])]
     private ?User $driver = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read'])]
+    #[Groups([
+        'med-team:read',
+        'med-team:write',
+        'administrator_report:detail:read',
+        'v1:shift:item:read',
+    ])]
     private ?DateTimeImmutable $plannedDutyStartAt = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['med-team:read', 'med-team:write', 'administrator_report:detail:read'])]
+    #[Groups([
+        'med-team:read',
+        'med-team:write',
+        'administrator_report:detail:read',
+        'v1:shift:item:read',
+    ])]
     private ?DateTimeImmutable $plannedDutyFinishAt = null;
 
     #[Assert\Choice(choices: [
@@ -169,7 +290,7 @@ class MedTeam
         'arbitrary',     //произвольная
     ])]
     #[ApiFilter(SearchFilter::class, properties: ['status' => 'exact'])]
-    #[Groups(['med-team:read', 'med-team:write'])]
+    #[Groups(['med-team:read', 'med-team:write', 'v1:shift:item:read'])]
     #[ORM\Column(length: 32, nullable: true, options: ['default' => 'daytime'])]
     private ?string $type = 'daytime';
 
@@ -177,9 +298,18 @@ class MedTeam
     private Collection $callings;
 
     #[ORM\ManyToOne]
-    #[Groups(['med-team:read', 'med-team:write'])]
+    #[Groups(['med-team:read', 'med-team:write', 'v1:shift:item:read'])]
     #[ApiFilter(SearchFilter::class, properties: ['city.id' => 'exact'])]
     private ?City $city = null;
+
+
+    #[Groups([
+        'v1:shift:read',
+        'v1:shift:write',
+    ])]
+    #[ORM\OneToOne(inversedBy: 'shift', cascade: ['persist', 'remove'])]
+    private ?AdministratorReport $transportReport = null;
+
 
     public function __construct()
     {
@@ -482,10 +612,10 @@ class MedTeam
 
     public function getOverTimeHOurs(): int
     {
-        if (!$this->plannedFinishAt || !$this->completedAt ) {
+        if (!$this->plannedFinishAt || !$this->completedAt) {
             return 0;
         }
-        if ($this->completedAt <= $this->plannedFinishAt){
+        if ($this->completedAt <= $this->plannedFinishAt) {
             return 0;
         }
         $diff = $this->completedAt->diff($this->plannedFinishAt);
@@ -533,7 +663,7 @@ class MedTeam
 
     public function getAdminPrice(): int
     {
-        if (!$this->driver){
+        if (!$this->driver) {
             return $this->getTypePrice();
         }
 
@@ -556,7 +686,7 @@ class MedTeam
 
     public function getDoctorPrice(): int
     {
-        if (!$this->driver){
+        if (!$this->driver) {
             return $this->getTypePrice();
         }
 
@@ -578,4 +708,15 @@ class MedTeam
 
     }
 
+    public function getTransportReport(): ?AdministratorReport
+    {
+        return $this->transportReport;
+    }
+
+    public function setTransportReport(?AdministratorReport $transportReport): static
+    {
+        $this->transportReport = $transportReport;
+
+        return $this;
+    }
 }

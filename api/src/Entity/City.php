@@ -24,6 +24,7 @@ class City
         'city:read',
         'med-team:read',
         'calling:read',
+        'v1:shift:item:read',
     ])]
     private ?int $id = null;
 
@@ -33,6 +34,7 @@ class City
         'city:write',
         'med-team:read',
         'calling:read',
+        'v1:shift:item:read'
         ])]
     #[Assert\NotBlank]
     private ?string $name = null;
