@@ -64,11 +64,15 @@ class PaginateJsonSubscriber implements EventSubscriberInterface
             $apiResourceClass !== AdministratorReport::class &&
             $apiResourceClass !== FileObject::class &&
             $apiResourceClass !== PaymentSetting::class &&
-            (
-                $apiResourceClass === MedTeam::class &&
-                $event->getRequest()->attributes->get('_api_operation')?->getShortName() !== 'Shift'
-            )
+            $apiResourceClass !== MedTeam::class
         ) {
+            return;
+        }
+
+        if  (
+            $apiResourceClass === MedTeam::class &&
+            $event->getRequest()->attributes->get('_api_operation')?->getShortName() !== 'Shift'
+        ){
             return;
         }
 
