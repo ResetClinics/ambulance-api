@@ -15,6 +15,7 @@ use App\Flusher;
 use App\Repository\CallingRepository;
 use App\Repository\TeamRepository;
 use App\Services\AmoCRM;
+use App\Services\ATS\BlacklistService\McnBlacklistService;
 use App\Services\WSClient;
 use DateTimeImmutable;
 use DomainException;
