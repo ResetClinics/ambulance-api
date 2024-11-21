@@ -1450,7 +1450,7 @@ class Calling
             return false;
         }
 
-        return  $this->allOwnerHaveTheSameAdmin();
+        return  $this->getOwner()->allOwnerHaveTheSameAdmin();
     }
 
     public function isDoctorCombo(): bool
@@ -1474,7 +1474,7 @@ class Calling
             return false;
         }
 
-        return  $this->allOwnerHaveTheSameDoctor();
+        return  $this->getOwner()->allOwnerHaveTheSameDoctor();
     }
 
     public function getTherapySum(): float|int|null
