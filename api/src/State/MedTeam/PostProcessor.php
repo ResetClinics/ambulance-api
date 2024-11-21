@@ -168,11 +168,13 @@ readonly class PostProcessor implements ProcessorInterface
         $callsAmount = 0;
         $callsReward = 0;
         $sewingIn = 0;
+        $surchargeForPenalty = 0;
 
         if (count($data->getCallings()) > 0) {
             foreach ($data->getCallings() as $key => $calling) {
                 $amount = 0;
                 $reward = 0;
+                $surchargeForPenaltyCall = 0;
 
                 $percent = 15;
 
@@ -185,7 +187,9 @@ readonly class PostProcessor implements ProcessorInterface
                         !$service->isStationary() &&
                         !$service->isHospital() &&
                         !$service->isCoding() &&
-                        !$service->getService()->isRepeatDesign()
+                        !$service->getService()->isRepeatDesign() &&
+                        $service->getService()->getId() !== 22 &&
+                        $service->getService()->getId() !== 23
                     ) {
                         $amount += $service->getPrice();
                     }
@@ -197,22 +201,38 @@ readonly class PostProcessor implements ProcessorInterface
                     if ($service->isCoding() && $service->getService()->getId() === 16) {
                         $sewingIn += 2500;
                     }
+
+                    if (
+                        $service->getService()->getId() === 22 ||
+                        $service->getService()->getId() === 23
+                    ){
+                        if ($service->getPrice() > 500){
+                            $surchargeForPenaltyCall = 500;
+                        }
+
+                    }
                 }
 
                 $reward += $amount * $percent / 100;
 
-                $message[] = $key + 1 . ". " . $this->convertFio($calling->getFio()) . " id-" . $calling->getId() .
-                    " " . $amount . " - " . $percent . "%" .
-                    ($calling->getCountRepeat() > 0 ? ' П' : '') .
-                    ($calling->isPersonal() ? ' И' : '') . "\n";
+                if ($surchargeForPenaltyCall > 0){
+                    $message[] = $key + 1 . ". " . $this->convertFio($calling->getFio()) . " id-" . $calling->getId() .
+                        " доплата за медотвод - " . $surchargeForPenaltyCall . "\n";
+                }else{
+                    $message[] = $key + 1 . ". " . $this->convertFio($calling->getFio()) . " id-" . $calling->getId() .
+                        " " . $amount . " * " . $percent . "% = " . $reward . " " .
+                        ($calling->getCountRepeat() > 0 ? ' П' : '') .
+                        ($calling->isPersonal() ? ' И' : '') . "\n";
+                }
 
+                $surchargeForPenalty += $surchargeForPenaltyCall;
                 $callsReward += $reward;
                 $callsAmount += $amount;
             }
 
             $message[] = "ИТОГО ВЫЗОВЫ: " . $callsAmount . "\n";
-            $message[] = "ЗП Админ Выезды " . $callsReward . "\n";
-            $message[] = "ЗП Врач Выезды " . $callsReward + $sewingIn . "\n";
+            $message[] = "ЗП Админ Выезды " . $callsReward + $surchargeForPenalty . "\n";
+            $message[] = "ЗП Врач Выезды " . $callsReward + $sewingIn + $surchargeForPenalty. "\n";
 
         }
 
@@ -284,7 +304,7 @@ readonly class PostProcessor implements ProcessorInterface
                     $reward += $amount * 5 / 100;
                     $stationaryCount++;
                     $stationaryMessage[] = $stationaryCount . ". " . $this->convertFio($calling->getFio()) . " id-" . $calling->getId()
-                        . " " . $amount . " - " . $percent . "%" . "\n";
+                        . " " . $amount . " * " . $percent . "% = " . $reward . "\n";
                 }
             }
 
@@ -324,7 +344,7 @@ readonly class PostProcessor implements ProcessorInterface
                     $reward += $amount * $percent / 100;
                     $hospitalsCount++;
                     $hospitalsMessages[] = $hospitalsCount . ". " . $this->convertFio($calling->getFio()) . " id-" . $calling->getId() .
-                        " " . $amount . " - " . $percent . "%" . "\n";
+                        " " . $amount . " * " . $percent . "% = " . $reward . "\n";
                 }
             }
             $hospitalsAmount += $amount;
@@ -360,17 +380,11 @@ readonly class PostProcessor implements ProcessorInterface
         $message[] = "ВСЕГО ВЫРУЧКА " . $callsAmount + $stationaryAmount + $hospitalsAmount . "\n";
         if ($isDoctor) {
             $message[] = "ВСЕГО ЗП ВРАЧ " .
-                $data->getDoctorPrice() + $callsReward + $hospitalsReward + $stationaryReward + $overTimeHoursReward + $sewingIn + $comboAmount . "\n";
+                $data->getDoctorPrice() + $callsReward + $hospitalsReward + $stationaryReward + $overTimeHoursReward + $sewingIn + $surchargeForPenalty + $comboAmount . "\n";
         }else{
             $message[] = "ВСЕГО ЗП АДМИН " .
-                $data->getDoctorPrice() + $callsReward + $hospitalsReward + $stationaryReward + $overTimeHoursReward + $transportAmount + $comboAmount. "\n";
+                $data->getDoctorPrice() + $callsReward + $hospitalsReward + $stationaryReward + $overTimeHoursReward + $surchargeForPenalty + $transportAmount + $comboAmount. "\n";
         }
-
-        $message[] = "НАЛ К СДАЧЕ ------\n";
-        $message[] = "\n";
-
-        $message[] = "ПРИМЕЧАНИЕ:\n";
-        $message[] = "Не учтено комбо\n";
 
         $result = implode("", $message);
 
@@ -378,6 +392,7 @@ readonly class PostProcessor implements ProcessorInterface
 
         return htmlspecialchars($result, ENT_QUOTES, 'UTF-8');
     }
+
 
     function convertFio($fio)
     {
