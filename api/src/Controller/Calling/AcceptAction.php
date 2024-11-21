@@ -34,6 +34,7 @@ class AcceptAction extends AbstractController
         AmoCRM                    $amoCRM,
         private readonly WSClient $wsClient,
         private readonly Handler  $asteriskAddOrUpdateHandler,
+        private readonly McnBlacklistService  $mcnBlacklistService,
     )
     {
         $this->client = $amoCRM->getClient();
@@ -74,6 +75,11 @@ class AcceptAction extends AbstractController
                     $calling->getAdmin()?->getPhone()
                 )
             );
+
+            if ($calling->getClient()?->getPhone()){
+                $this->mcnBlacklistService->addToBlacklist($calling->getClient()->getPhone());
+            }
+
         } catch (Exception) {
         }
 

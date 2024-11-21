@@ -3,9 +3,8 @@
 namespace App\Command;
 
 use App\Asterisk\UseCase\Channel\AddOrUpdate\Handler;
+use App\Services\ATS\BlacklistService\McnBlacklistService;
 use Doctrine\DBAL\Exception;
-use Doctrine\DBAL\Statement;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,8 +18,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class TestBdCommand extends Command
 {
     public function __construct(
-        private readonly Handler $handler,
-        private readonly \App\Asterisk\UseCase\Channel\DeleteByClientPhone\Handler $deleteHandler
+        private readonly McnBlacklistService $blacklists,
     )
     {
         parent::__construct();
@@ -35,14 +33,8 @@ class TestBdCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
 
-        $command = new \App\Asterisk\UseCase\Channel\AddOrUpdate\Command('7777777777', '1111111111');
-
-        $this->handler->handle($command);
-
-
-        $command = new \App\Asterisk\UseCase\Channel\DeleteByClientPhone\Command('7777777777');
-
-        $this->deleteHandler->handle($command);
+        //$this->blacklists->addToBlacklist('79657965566');
+        //$this->blacklists->deleteFromBlacklist('79657965566');
 
 
         $io->success('Success.');

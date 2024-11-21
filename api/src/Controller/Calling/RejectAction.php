@@ -20,6 +20,7 @@ use App\Flusher;
 use App\Repository\CallingRepository;
 use App\Repository\TeamRepository;
 use App\Services\AmoCRM;
+use App\Services\ATS\BlacklistService\McnBlacklistService;
 use App\Services\CallingSender;
 use App\Services\WSClient;
 use DateTimeImmutable;
@@ -40,6 +41,7 @@ class RejectAction extends AbstractController
         private readonly CallingSender  $sender,
         private readonly WSClient $wsClient,
         private readonly Handler $asteriskDeleteHandler,
+        private readonly McnBlacklistService $mcnBlacklistService,
     )
     {
         $this->client = $amoCRM->getClient();
@@ -110,6 +112,11 @@ class RejectAction extends AbstractController
             $this->asteriskDeleteHandler->handle(
                 new Command($calling->getClient()?->getPhone())
             );
+
+            if ($calling->getClient()?->getPhone()){
+                $this->mcnBlacklistService->deleteFromBlacklist($calling->getClient()->getPhone());
+            }
+
         }catch (Exception) {
 
         }

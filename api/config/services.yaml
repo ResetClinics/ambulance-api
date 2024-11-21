@@ -73,3 +73,7 @@ services:
 
     App\Services\YaDiskApi\YaDiskApiInterface:
         class: App\Services\YaDiskApi\YaDiskApi
+
+    App\Services\ATS\BlacklistService\McnBlacklistService:
+        arguments:
+            $token : "%env(MCN_API_TOKEN)%"
