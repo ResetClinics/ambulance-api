@@ -250,7 +250,7 @@ readonly class PostProcessor implements ProcessorInterface
                     while ($owner) {
                         $therapySum = $owner->getTherapySum();
                         $comboMessage[] = $owner->getCompletedAt()?->format('d.m.y') . " id-" . $owner->getId() . " " . $therapySum . "*2.5% = " . $therapySum * 2.5 / 100  . "\n";
-                        $owner = $calling->getOwner();
+                        $owner = $owner->getOwner();
                     }
                 }
             }
