@@ -142,6 +142,7 @@ readonly class PostProcessor implements ProcessorInterface
         return $this->processor->process($data, $operation, $uriVariables, $context);
     }
 
+
     public function buildReportMessage(MedTeam $data, ?AdministratorReport $report, bool $isDoctor): string
     {
         $message = [];
@@ -229,10 +230,11 @@ readonly class PostProcessor implements ProcessorInterface
                     $comboMessage[] = $calling->getFio();
                     $therapySum = $calling->getTherapySum();
                     $comboMessage[] = $calling->getCompletedAt()?->format('d.m.y') . " id-" . $calling->getId() . " " . $therapySum . "*2.5% = " . $therapySum * 2.5 / 100  . "\n";
-                    while ($calling->getOwner()) {
-                        $owner = $calling->getOwner();
+                    $owner = $calling->getOwner();
+                    while ($owner) {
                         $therapySum = $owner->getTherapySum();
                         $comboMessage[] = $owner->getCompletedAt()?->format('d.m.y') . " id-" . $owner->getId() . " " . $therapySum . "*2.5% = " . $therapySum * 2.5 / 100  . "\n";
+                        $owner = $owner->getOwner();
                     }
                 }
             }
@@ -243,10 +245,12 @@ readonly class PostProcessor implements ProcessorInterface
                     $comboMessage[] = $calling->getFio();
                     $therapySum = $calling->getTherapySum();
                     $comboMessage[] = $calling->getCompletedAt()?->format('d.m.y') . " id-" . $calling->getId() . " " . $therapySum . "*2.5% = " . $therapySum * 2.5 / 100  . "\n";
+
+                    $owner = $calling->getOwner();
                     while ($calling->getOwner()) {
-                        $owner = $calling->getOwner();
                         $therapySum = $owner->getTherapySum();
                         $comboMessage[] = $owner->getCompletedAt()?->format('d.m.y') . " id-" . $owner->getId() . " " . $therapySum . "*2.5% = " . $therapySum * 2.5 / 100  . "\n";
+                        $owner = $calling->getOwner();
                     }
                 }
             }
