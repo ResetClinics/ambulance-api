@@ -108,7 +108,7 @@ readonly class PostProcessor implements ProcessorInterface
         $this->reports->save($report, true);
 
         if ($data instanceof MedTeam) {
-
+            ini_set('memory_limit', '-1');
             //TODO вынести формирование отчета и отправку и переделать
             try {
                 $messageAdmin = $this->buildReportMessage($data, $report, false);
