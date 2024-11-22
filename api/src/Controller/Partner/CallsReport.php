@@ -97,6 +97,7 @@ class CallsReport extends AbstractController
                 'discharged' => '',
                 'admin' => $call->getTeam()?->getAdmin()?->getName(),
                 'doctor' => $call->getTeam()?->getDoctor()?->getName(),
+                'repeat' => $call->getCountRepeat(),
             ];
 
             foreach ($call->getServices() as $service){
@@ -183,6 +184,7 @@ class CallsReport extends AbstractController
                 'discharged' => $hospital->getDischarged()->format('d.m.Y'),
                 'admin' => $call->getTeam()?->getAdmin()?->getName(),
                 'doctor' => $call->getTeam()?->getDoctor()?->getName(),
+                'repeat' => $call->getCountRepeat(),
             ];
 
             $partners[$hospital->getPartner()->getId()]['stationaryEntrance']
