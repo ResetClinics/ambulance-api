@@ -226,4 +226,31 @@ class CallingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getHistory(int $callId)
+    {
+        $coll = $this->getById($callId);
+
+        if (
+            $coll->getStatus() != Status::ACCEPTED
+            && $coll->getStatus() != Status::DISPATCHED
+            && $coll->getStatus() != Status::ARRIVED
+        ) {
+            return [];
+        }
+
+        $qb = $this->createQueryBuilder('c')
+            ->leftJoin('c.client', 'cl')
+            ->where('cl.id = :clientId')
+            ->andWhere('c.status = :status')
+            ->andWhere('c.id != :callId')
+            ->setParameter('clientId', $coll->getClient()->getId())
+            ->setParameter('status', Status::COMPLETED)
+            ->setParameter('callId', $callId);
+
+        return $qb
+            ->orderBy('c.updatedAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }
