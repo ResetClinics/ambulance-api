@@ -38,7 +38,7 @@ class HistoryAction extends AbstractController
                         'name' => $service->getService()->getName(),
                         'price' => $service->getPrice(),
                     ];
-                }, $call->getServices()),
+                }, $call->getServices()->toArray()),
                 'price' => $call->getPrice(),
                 'client' => $call->getClient() ? [
                     'id' => $call->getClient()->getId(),
