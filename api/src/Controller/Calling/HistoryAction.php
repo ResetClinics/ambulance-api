@@ -35,7 +35,7 @@ class HistoryAction extends AbstractController
                 /** @var Row $service */
                 'services' => array_map(static function ($service) {
                     return [
-                        'name' => $service->service->getName(),
+                        'name' => $service->getService()->getName(),
                         'price' => $service->getPrice(),
                     ];
                 }, $call->getServices()),
