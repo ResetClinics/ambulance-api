@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Calling;
 
 use App\Entity\Calling\Calling;
+use App\Entity\Calling\Row;
 use App\Repository\CallingRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -30,7 +31,14 @@ class HistoryAction extends AbstractController
                 'id' => $call->getId(),
                 'status' => $call->getStatus(),
                 'completedAt' => $call->getCompletedAt()?->format('Y-m-d H:i:s'),
-                'services' => $call->getServices(),
+
+                /** @var Row $service */
+                'services' => array_map(static function ($service) {
+                    return [
+                        'name' => $service->service->getName(),
+                        'price' => $service->getPrice(),
+                    ];
+                }, $call->getServices()),
                 'price' => $call->getPrice(),
                 'client' => $call->getClient() ? [
                     'id' => $call->getClient()->getId(),
