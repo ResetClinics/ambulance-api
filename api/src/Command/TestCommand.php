@@ -55,7 +55,7 @@ class TestCommand extends Command
 
         dump($message);
         try {
-            $this->tgSender->send($user, $message);
+            $this->tgSender->send($medTeam->getAdmin(), $message);
         } catch (\Exception $e) {
             dump($e->getMessage());
         }
