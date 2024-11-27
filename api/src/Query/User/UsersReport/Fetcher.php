@@ -15,25 +15,22 @@ use DateTimeInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 
-class Fetcher
+readonly class Fetcher
 {
-
-
     public function __construct(
-        public readonly PeriodService     $periodService,
-        public readonly CallingRepository $calls,
-        public readonly HospitalRepository $hospitals,
-        private readonly Connection       $connection,
-        private readonly MedTeamRepository $teams,
+        public PeriodService      $periodService,
+        public CallingRepository  $calls,
+        public HospitalRepository $hospitals,
+        private Connection        $connection,
+        private MedTeamRepository $teams,
     )
     {
     }
 
     /**
-     * @throws Exception
      * @throws \Exception
      */
-    public function fetch(Query $query)
+    public function fetch(Query $query): array
     {
         $period = $this->periodService->createDatePeriodFromRequest($query->period);
         $calls = $this->calls->findAllByCompletedAtFromPeriod($period);
@@ -43,7 +40,6 @@ class Fetcher
         $roles = [
             'ROLE_DOCTOR',
             'ROLE_ADMIN',
-            //'ROLE_DRIVER',
         ];
 
         $sort = $query->sort;
@@ -58,8 +54,6 @@ class Fetcher
                 'id' => $user['id'],
                 'name' => $user['name'],
                 'roles' => json_decode($user['roles'], true),
-
-                //**************
 
                 'revenue' => 0,                     //Выручка ВСЕГО
                 'salary' => 'n/a',                  //ЗП ВСЕГО
@@ -108,23 +102,23 @@ class Fetcher
         }
 
         /** @var MedTeam $team */
-        foreach ($teams as $team){
+        foreach ($teams as $team) {
             $hours = $team->getPlannedHours();
             $dutyHours = $team->getDutyHours();
             $adminId = $team->getAdmin()->getId();
-            if (array_key_exists($adminId,$result)) {
+            if (array_key_exists($adminId, $result)) {
                 $result[$adminId]['workShiftCount'] += 1;
                 $result[$adminId]['workShiftHours'] += $hours;
-                if ($dutyHours > 0){
+                if ($dutyHours > 0) {
                     $result[$adminId]['dutyCount'] += 1;
                     $result[$adminId]['dutyHours'] += $dutyHours;
                 }
             }
             $doctorId = $team->getDoctor()->getId();
-            if ($doctorId !== $adminId && array_key_exists($doctorId,$result)) {
+            if ($doctorId !== $adminId && array_key_exists($doctorId, $result)) {
                 $result[$doctorId]['workShiftCount'] += 1;
                 $result[$doctorId]['workShiftHours'] += $hours;
-                if ($dutyHours > 0){
+                if ($dutyHours > 0) {
                     $result[$doctorId]['dutyCount'] += 1;
                     $result[$doctorId]['dutyHours'] += $dutyHours;
                 }
@@ -132,25 +126,24 @@ class Fetcher
         }
 
         /** @var Hospital $hospital */
-        foreach ($hospitals as $hospital){
-            if ($hospital->getOwner()){
+        foreach ($hospitals as $hospital) {
+            if ($hospital->getOwner()) {
 
                 $call = $hospital->getOwner();
                 $adminId = $call?->getAdmin()?->getId();
 
-                if (array_key_exists($adminId, $result)){
+                if (array_key_exists($adminId, $result)) {
                     $result[$adminId]['stationaryCount'] += 1;
                 }
 
                 $doctorId = $call?->getDoctor()?->getId();
                 if ($doctorId !== $adminId) {
-                    if (array_key_exists($doctorId, $result)){
+                    if (array_key_exists($doctorId, $result)) {
                         $result[$doctorId]['stationaryCount'] += 1;
                     }
                 }
             }
         }
-
 
         usort($result, function ($item1, $item2) use ($sort, $order) {
             if ($order === 'desc') {
@@ -174,8 +167,7 @@ class Fetcher
                 'u.roles',
             )
             ->from('user', 'u')
-            ->andWhere('u.active = 1')
-        ;
+            ->andWhere('u.active = 1');
 
         $orX = $qb->expr()->orX();
 
@@ -199,8 +191,8 @@ class Fetcher
      */
     public function getArr(array $result, ?int $adminId, Calling $call): array
     {
-        if (!array_key_exists($adminId, $result)){
-            return  $result;
+        if (!array_key_exists($adminId, $result)) {
+            return $result;
         }
 
         $result[$adminId]['revenue'] += $call->getPrice();
@@ -213,15 +205,14 @@ class Fetcher
                 = (int)($result[$adminId]['callsRevenue'] / $result[$adminId]['callsCount']);
         }
 
-        //первычные вызовы
-        if ($call->getCountRepeat() === 0){
+        if ($call->getCountRepeat() === 0) {
             $result[$adminId]['callsPrimaryCount'] += 1;
             $result[$adminId]['callsPrimaryRevenue'] += $call->getPrice();
             if ($result[$adminId]['callsPrimaryCount'] > 0) {
                 $result[$adminId]['callsPrimaryAverageCheck']
                     = (int)($result[$adminId]['callsPrimaryRevenue'] / $result[$adminId]['callsPrimaryCount']);
             }
-        }else{ // вторичные вызовы
+        } else { // вторичные вызовы
             $result[$adminId]['callsRepeatCount'] += 1;
             $result[$adminId]['callsRepeatRevenue'] += $call->getPrice();
             if ($result[$adminId]['callsRepeatCount'] > 0) {
@@ -230,11 +221,11 @@ class Fetcher
             }
         }
 
-        foreach ($call->getServices() as $service){
-            if ($service->getService()?->getCategory()?->getId() === 3){
+        foreach ($call->getServices() as $service) {
+            if ($service->getService()?->getCategory()?->getId() === 3) {
                 $result[$adminId]['codingCount'] += 1;
                 $result[$adminId]['codingRevenue'] += $service->getPrice();
-            }elseif ($service->getService()->getType() === 'hospital'){
+            } elseif ($service->getService()->getType() === 'hospital') {
                 $result[$adminId]['hospitalCount'] += 1;
             }
             break;

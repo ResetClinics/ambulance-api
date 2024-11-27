@@ -90,7 +90,7 @@ class TestCommand extends Command
         $callsReward = 0;
         $sewingIn = 0;
         $surchargeForPenalty = 0;
-/*
+
         if (count($data->getCallings()) > 0) {
             foreach ($data->getCallings() as $key => $calling) {
                 $amount = 0;
@@ -156,7 +156,7 @@ class TestCommand extends Command
             $message[] = "ЗП Врач Выезды " . $callsReward + $sewingIn + $surchargeForPenalty. "\n";
 
         }
-*/
+
         $message[] = "\n";
 
         $comboCount = 0;
