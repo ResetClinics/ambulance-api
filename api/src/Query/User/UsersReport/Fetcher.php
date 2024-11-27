@@ -145,7 +145,7 @@ class Fetcher
                 $doctorId = $call?->getDoctor()?->getId();
                 if ($doctorId !== $adminId) {
                     if (array_key_exists($doctorId, $result)){
-                        $result[$adminId]['stationaryCount'] += 1;
+                        $result[$doctorId]['stationaryCount'] += 1;
                     }
                 }
             }
