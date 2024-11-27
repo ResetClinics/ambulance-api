@@ -220,7 +220,7 @@ readonly class PostProcessor implements ProcessorInterface
                         " доплата за медотвод - " . $surchargeForPenaltyCall . "\n";
                 }else{
                     $message[] = $key + 1 . ". " . $this->convertFio($calling->getFio()) . " id-" . $calling->getId() .
-                        " " . $amount . " * " . $percent . "% = " . $reward . " " .
+                        " " . $amount . " - " . $percent . "% = " . $reward . " " .
                         ($calling->getCountRepeat() > 0 ? ' П' : '') .
                         ($calling->isPersonal() ? ' И' : '') . "\n";
                 }
@@ -304,7 +304,7 @@ readonly class PostProcessor implements ProcessorInterface
                     $reward += $amount * 5 / 100;
                     $stationaryCount++;
                     $stationaryMessage[] = $stationaryCount . ". " . $this->convertFio($calling->getFio()) . " id-" . $calling->getId()
-                        . " " . $amount . " * " . $percent . "% = " . $reward . "\n";
+                        . " " . $amount . " - " . $percent . "% = " . $reward . "\n";
                 }
             }
 
@@ -344,7 +344,7 @@ readonly class PostProcessor implements ProcessorInterface
                     $reward += $amount * $percent / 100;
                     $hospitalsCount++;
                     $hospitalsMessages[] = $hospitalsCount . ". " . $this->convertFio($calling->getFio()) . " id-" . $calling->getId() .
-                        " " . $amount . " * " . $percent . "% = " . $reward . "\n";
+                        " " . $amount . " - " . $percent . "% = " . $reward . "\n";
                 }
             }
             $hospitalsAmount += $amount;
@@ -406,7 +406,7 @@ readonly class PostProcessor implements ProcessorInterface
         if (count($parts) > 1) {
             $str = mb_substr($parts[1], 0, 1);
             if (!empty($str)){
-                $result .= $str . ".";
+                $result .= " " . $str . ".";
             }
         }
 
