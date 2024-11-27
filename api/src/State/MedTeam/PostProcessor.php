@@ -7,6 +7,7 @@ namespace App\State\MedTeam;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\AdministratorReport;
+use App\Entity\Calling\Status;
 use App\Entity\MediaObject;
 use App\Entity\MedTeam\MedTeam;
 use App\Repository\AdministratorReportRepository;
@@ -163,15 +164,23 @@ readonly class PostProcessor implements ProcessorInterface
         $message[] = "ПЕРЕРАБОТКА " . $overTimeHoursReward . "\n";
         $message[] = "\n";
 
-        $message[] = "ВЫЕЗДЫ: " . count($data->getCallings()) . "\n";
+        $calls = [];
+
+        foreach ($data->getCallings() as $call) {
+            if ($call->getStatus() === Status::COMPLETED){
+                $calls[] = $call;
+            }
+        }
+
+        $message[] = "ВЫЕЗДЫ: " . count($calls) . "\n";
 
         $callsAmount = 0;
         $callsReward = 0;
         $sewingIn = 0;
         $surchargeForPenalty = 0;
 
-        if (count($data->getCallings()) > 0) {
-            foreach ($data->getCallings() as $key => $calling) {
+        if (count($calls) > 0) {
+            foreach ($calls as $key => $calling) {
                 $amount = 0;
                 $reward = 0;
                 $surchargeForPenaltyCall = 0;
@@ -244,7 +253,7 @@ readonly class PostProcessor implements ProcessorInterface
 
         //************ КОМБО ************
         if ($isDoctor){
-            foreach ($data->getCallings() as $calling) {
+            foreach ($calls as $calling) {
                 if ($calling->isDoctorCombo()) {
                     $comboCount++;
                     $comboMessage[] = $calling->getFio();
@@ -259,7 +268,7 @@ readonly class PostProcessor implements ProcessorInterface
                 }
             }
         }else{
-            foreach ($data->getCallings() as $calling) {
+            foreach ($calls as $calling) {
                 if ($calling->isAdminCombo()) {
                     $comboCount++;
                     $comboMessage[] = $calling->getFio();
@@ -294,7 +303,7 @@ readonly class PostProcessor implements ProcessorInterface
         $stationaryAmount = 0;
         $stationaryReward = 0;
 
-        foreach ($data->getCallings() as $calling) {
+        foreach ($calls as $calling) {
             $amount = 0;
             $reward = 0;
             $percent = 5;
@@ -333,7 +342,7 @@ readonly class PostProcessor implements ProcessorInterface
         $hospitalsReward = 0;
 
 
-        foreach ($data->getCallings() as $calling) {
+        foreach ($calls as $calling) {
             $amount = 0;
             $reward = 0;
             $percent = 20;
