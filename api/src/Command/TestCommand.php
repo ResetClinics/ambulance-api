@@ -7,6 +7,8 @@ namespace App\Command;
 use App\Entity\AdministratorReport;
 use App\Entity\MedTeam\MedTeam;
 use App\Repository\MedTeam\MedTeamRepository;
+use App\Repository\UserRepository;
+use App\Services\TelegramSender;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,6 +24,8 @@ class TestCommand extends Command
 
     public function __construct(
         private readonly MedTeamRepository $medTeams,
+        private TelegramSender                $tgSender,
+        private readonly UserRepository $users,
     )
     {
         parent::__construct();
@@ -31,17 +35,31 @@ class TestCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $medTeam = $this->medTeams->find(4961);
+        $user = $this->users->get(122);
+
+        $medTeam = $this->medTeams->find(5088);
 
         $message = $this->buildReportMessage($medTeam, null, true);
 
         dump($message);
 
+        try {
+            $this->tgSender->send($user, $message);
+        } catch (\Exception $e) {
+            dump($e->getMessage());
+        }
+        $this->tgSender->send($user, $message);
+
+        $io->success('1');
         $message = $this->buildReportMessage($medTeam, null, false);
 
         dump($message);
-
-        $io->success('.');
+        try {
+            $this->tgSender->send($user, $message);
+        } catch (\Exception $e) {
+            dump($e->getMessage());
+        }
+        $io->success('2');
 
         return Command::SUCCESS;
     }
