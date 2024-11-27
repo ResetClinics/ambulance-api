@@ -37,7 +37,7 @@ class TestCommand extends Command
 
         $user = $this->users->get(122);
 
-        $medTeam = $this->medTeams->find(5088);
+        $medTeam = $this->medTeams->find(5099);
 
         $message = $this->buildReportMessage($medTeam, null, true);
 
@@ -55,7 +55,7 @@ class TestCommand extends Command
 
         dump($message);
         try {
-            $this->tgSender->send($medTeam->getAdmin(), $message);
+            $this->tgSender->send($user, $message);
         } catch (\Exception $e) {
             dump($e->getMessage());
         }
