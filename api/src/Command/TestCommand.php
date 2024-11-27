@@ -39,9 +39,43 @@ class TestCommand extends Command
 
         $medTeam = $this->medTeams->find(5099);
 
-        $message = $this->buildReportMessage($medTeam, null, true);
+        //$message = $this->buildReportMessage($medTeam, null, true);
+//
+        //dump($message);
 
-        dump($message);
+        $message = "
+        ОТЧЕТ 26.11.24 г.Москва\n
+НОМЕР СМЕНЫ 5099\n
+АДМИН: МустафинР.\n
+ВРАЧ: СередоваВ.\n
+ТИП СМЕНЫ суточная Сумма 4000\n
+ПЕРЕРАБОТКА 170\n
+\n
+ВЫЕЗДЫ: 7\n
+1. МаматовФ.А. id-37370 5000 * 10% = 500 \n
+2. КлиманцевИ.В. id-37375 5000 * 10% = 500 \n
+3. КлиманцевИ.В. id-37390 0 * 15% = 0  П\n
+4. ПанасенкаТ.В. id-37393 35000 * 10% = 3500 \n
+5. Ш.М. id-37400 25000 * 10% = 2500 \n
+6. ПобединскийВ.В. id-37448 25000 * 10% = 2500 \n
+7. - id-37459 0 * 10% = 0 \n
+ИТОГО ВЫЗОВЫ: 95000\n
+ЗП Админ Выезды 9500\n
+ЗП Врач Выезды 9500\n
+\n
+КОМБО: 0\n
+\n
+СТАЦИОНАР: 0\n
+\n
+ТРАНСПОРТНЫЕ\n
+Пробег 0\n
+Платка 0\n
+Парковка 0\n
+ИТОГО ТРАНСПОРТ: 0\n
+\n
+ВСЕГО ВЫРУЧКА 95000\n
+ВСЕГО ЗП ВРАЧ 13670\n
+        ";
 
         try {
             $this->tgSender->send($user, $message);
@@ -51,9 +85,9 @@ class TestCommand extends Command
         $this->tgSender->send($user, $message);
 
         $io->success('1');
-        $message = $this->buildReportMessage($medTeam, null, false);
+        //$message = $this->buildReportMessage($medTeam, null, false);
 
-        dump($message);
+       // dump($message);
         try {
             $this->tgSender->send($user, $message);
         } catch (\Exception $e) {
