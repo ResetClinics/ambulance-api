@@ -17,6 +17,8 @@ class Status
     public const DISPATCHED = 'dispatched';
 
     public const ARRIVED = 'arrived';
+    public const TREATING = 'treating';
+
     public const COMPLETED = 'completed';
     public const REJECTED = 'rejected';
 
@@ -34,6 +36,7 @@ class Status
             self::DISPATCHED,
             self::REJECTED,
             self::ARRIVED,
+            self::TREATING,
             self::COMPLETED,
             self::REPEAT,
         ]);
@@ -74,6 +77,11 @@ class Status
     public static function arrived(): self
     {
         return new self(self::ARRIVED);
+    }
+
+    public static function treating(): self
+    {
+        return new self(self::TREATING);
     }
 
     public static function completed(): self
@@ -136,8 +144,34 @@ class Status
         return $this->name === self::COMPLETED;
     }
 
+    public function isTreating(): bool
+    {
+        return $this->name === self::TREATING;
+    }
+
     public function isRepeat(): bool
     {
         return $this->name === self::REPEAT;
+    }
+
+    private function getLabels(): array
+    {
+        return [
+            self::NOT_READY => 'Не готов',
+            self::WAITING => 'Ожидает',
+            self::ASSIGNED => 'Назначен',
+            self::ACCEPTED => 'Принят',
+            self::DISPATCHED => 'Выехали',
+            self::REJECTED => 'Отклонен',
+            self::ARRIVED => 'Прибыли',
+            self::TREATING => 'Лечение',
+            self::COMPLETED => 'Завершен',
+            self::REPEAT => 'Повтор',
+        ];
+    }
+
+    public function getLabel(): string
+    {
+        return $this->getLabels()[$this->name];
     }
 }

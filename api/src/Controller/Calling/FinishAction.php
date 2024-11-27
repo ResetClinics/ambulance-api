@@ -215,6 +215,7 @@ class FinishAction extends AbstractController
             ],
             "finishedAt" => $calling->getFinishedAt()?->format('d.m.Y H:i'),
             "repeat" => $calling->getCountRepeat(),
+            'statusLabel' => $calling->getStatusLabel(),
         ], Response::HTTP_ACCEPTED);
     }
 

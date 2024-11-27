@@ -1485,4 +1485,10 @@ class Calling
         }
         return $sum;
     }
+
+    #[Groups(['calling:read'])]
+    public function getStatusLabel(): string
+    {
+        return $this->status->getLabel();
+    }
 }
