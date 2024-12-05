@@ -3,17 +3,16 @@
 namespace App\Query\User\UsersReport;
 
 use App\Entity\Calling\Calling;
-use App\Entity\Calling\Status;
 use App\Entity\Hospital\Hospital;
 use App\Entity\MedTeam\MedTeam;
+use App\Entity\User\User;
 use App\Repository\CallingRepository;
 use App\Repository\Hospital\HospitalRepository;
 use App\Repository\MedTeam\MedTeamRepository;
+use App\Repository\UserRepository;
 use App\Services\PeriodService\PeriodService;
-use DatePeriod;
-use DateTimeInterface;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception;
+use Exception;
+
 
 readonly class Fetcher
 {
@@ -21,14 +20,14 @@ readonly class Fetcher
         public PeriodService      $periodService,
         public CallingRepository  $calls,
         public HospitalRepository $hospitals,
-        private Connection        $connection,
         private MedTeamRepository $teams,
+        private UserRepository $users,
     )
     {
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function fetch(Query $query): array
     {
@@ -37,23 +36,22 @@ readonly class Fetcher
         $hospitals = $this->hospitals->findAllCompletedByHospitalizedAtFromPeriod($period);
         $teams = $this->teams->findByPlanned($period->getStartDate(), $period->getEndDate());
 
-        $roles = [
-            'ROLE_DOCTOR',
-            'ROLE_ADMIN',
-        ];
-
         $sort = $query->sort;
         $order = $query->order;
 
-        $users = $this->fetchUsers($roles);
+        $users = $this->users->findAllByPermissions([
+            'can_be-admin',
+            'can_be-doctor'
+        ]);
 
         $result = [];
 
+        /** @var User $user */
         foreach ($users as $user) {
-            $result[$user['id']] = [
-                'id' => $user['id'],
-                'name' => $user['name'],
-                'roles' => json_decode($user['roles'], true),
+            $result[$user->getId()] = [
+                'id' => $user->getId(),
+                'name' => $user->getName(),
+               // 'roles' => json_decode($user['roles'], true),
 
                 'revenue' => 0,                     //Выручка ВСЕГО
                 'salary' => 'n/a',                  //ЗП ВСЕГО
@@ -71,7 +69,7 @@ readonly class Fetcher
                 'callsAverageCheck' => 0,              //
                 'callsSalary' => 'n/a',                //
 
-                'callsPrimaryRevenue' => 0,             //Выручка выезды перпичные
+                'callsPrimaryRevenue' => 0,             //Выручка выезды первичные
                 'callsPrimaryCount' => 0,               //
                 'callsPrimaryAverageCheck' => 0,        //
                 'callsPrimarySalary' => 'n/a',          //
@@ -156,34 +154,6 @@ readonly class Fetcher
     }
 
     /**
-     * @throws Exception
-     */
-    public function fetchUsers(array $roles): array
-    {
-        $qb = $this->connection->createQueryBuilder()
-            ->select(
-                'u.id',
-                'u.name',
-                'u.roles',
-            )
-            ->from('user', 'u')
-            ->andWhere('u.active = 1');
-
-        $orX = $qb->expr()->orX();
-
-        foreach ($roles as $key => $role) {
-            $orX->add('JSON_CONTAINS(u.roles, :role' . $key . ') = 1');
-            $qb->setParameter('role' . $key, json_encode($role));
-        }
-
-        $qb->andWhere('u.hide_in_reports = 0')
-            ->andWhere($orX);
-
-        $stmt = $qb->executeQuery();
-        return $stmt->fetchAllAssociative() ?: [];
-    }
-
-    /**
      * @param array $result
      * @param int|null $adminId
      * @param Calling $call
@@ -232,33 +202,5 @@ readonly class Fetcher
         }
 
         return $result;
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function fitchCalls(DatePeriod $period): array
-    {
-        $qb = $this->connection->createQueryBuilder()
-            ->select(
-                'c.id',
-                'c.admin_id as admin',
-                'c.doctor_id as doctor',
-                'c.completed_at as completed',
-                'c.owner_external_id as owner',
-                'c.price as price',
-                'c.total_amount as total',
-                'c.payment_next_order as prepayment',
-            )
-            ->from('calling', 'c')
-            ->andWhere('c.completed_at >= :start')
-            ->andWhere('c.completed_at < :end')
-            ->andWhere('c.status = :status')
-            ->setParameter('start', $period->getStartDate()->format(DateTimeInterface::ATOM))
-            ->setParameter('end', $period->getEndDate()->format(DateTimeInterface::ATOM))
-            ->setParameter('status', Status::COMPLETED);
-
-        $stmt = $qb->executeQuery();
-        return $stmt->fetchAllAssociative() ?: [];
     }
 }
