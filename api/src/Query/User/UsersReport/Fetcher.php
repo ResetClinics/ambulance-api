@@ -6,7 +6,6 @@ use App\Entity\Calling\Calling;
 use App\Entity\Hospital\Hospital;
 use App\Entity\MedTeam\MedTeam;
 use App\Entity\User\User;
-use App\Repository\CallingRepository;
 use App\Repository\Hospital\HospitalRepository;
 use App\Repository\MedTeam\MedTeamRepository;
 use App\Repository\UserRepository;
@@ -17,9 +16,8 @@ use Exception;
 readonly class Fetcher
 {
     public function __construct(
-        public PeriodService      $periodService,
-        public CallingRepository  $calls,
-        public HospitalRepository $hospitals,
+        private PeriodService      $periodService,
+        private HospitalRepository $hospitals,
         private MedTeamRepository $teams,
         private UserRepository $users,
     )
@@ -32,7 +30,6 @@ readonly class Fetcher
     public function fetch(Query $query): array
     {
         $period = $this->periodService->createDatePeriodFromRequest($query->period);
-        $calls = $this->calls->findAllByCompletedAtFromPeriod($period);
         $hospitals = $this->hospitals->findAllCompletedByHospitalizedAtFromPeriod($period);
         $teams = $this->teams->findByPlanned($period->getStartDate(), $period->getEndDate());
 
@@ -88,14 +85,17 @@ readonly class Fetcher
             ];
         }
 
-        /** @var Calling $call */
-        foreach ($calls as $call) {
-            $adminId = $call?->getAdmin()?->getId();
-            $result = $this->getArr($result, $adminId, $call);
+        /** @var MedTeam $team */
+        foreach ($teams as $team) {
+            /** @var Calling $call */
+            foreach ($team->getCallings() as $call) {
+                $adminId = $call?->getAdmin()?->getId();
+                $result = $this->getArr($result, $adminId, $call);
 
-            $doctorId = $call?->getDoctor()?->getId();
-            if ($doctorId !== $adminId) {
-                $result = $this->getArr($result, $doctorId, $call);
+                $doctorId = $call?->getDoctor()?->getId();
+                if ($doctorId !== $adminId) {
+                    $result = $this->getArr($result, $doctorId, $call);
+                }
             }
         }
 
