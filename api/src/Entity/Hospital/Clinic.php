@@ -34,7 +34,7 @@ class Clinic
     private Collection $hospitals;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['clinic:read', 'clinic:write', 'hospital:read', 'calling:read'])]
+    #[Groups(['clinic:read', 'clinic:write', 'hospital:read'])]
     private ?string $shortName = null;
 
     public function __construct()
