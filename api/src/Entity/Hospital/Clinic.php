@@ -33,6 +33,10 @@ class Clinic
     #[ORM\OneToMany(mappedBy: 'clinic', targetEntity: Hospital::class)]
     private Collection $hospitals;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['clinic:read', 'clinic:write', 'hospital:read', 'calling:read'])]
+    private ?string $shortName = null;
+
     public function __construct()
     {
         $this->hospitals = new ArrayCollection();
@@ -81,6 +85,18 @@ class Clinic
                 $hospital->setClinic(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getShortName(): ?string
+    {
+        return $this->shortName;
+    }
+
+    public function setShortName(?string $shortName): static
+    {
+        $this->shortName = $shortName;
 
         return $this;
     }
