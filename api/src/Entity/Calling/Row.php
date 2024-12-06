@@ -211,6 +211,12 @@ class Row
         return $this->clinic;
     }
 
+    #[Groups(['calling:read'])]
+    public function getClinicShortName(): ?string
+    {
+        return $this->clinic?->getShortName();
+    }
+
     public function setClinic(?Clinic $clinic): self
     {
         $this->clinic = $clinic;
