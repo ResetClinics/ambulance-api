@@ -48,7 +48,7 @@ readonly class Fetcher
             $result[$user->getId()] = [
                 'id' => $user->getId(),
                 'name' => $user->getName(),
-               // 'roles' => json_decode($user['roles'], true),
+                'permissions' => $user->getPermissions(),
 
                 'revenue' => 0,                     //Выручка ВСЕГО
                 'salary' => 'n/a',                  //ЗП ВСЕГО
