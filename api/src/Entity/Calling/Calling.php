@@ -514,6 +514,14 @@ class Calling
     #[ApiFilter(SearchFilter::class, properties: ['city.id' => 'exact'])]
     private ?City $city = null;
 
+    #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
+    private ?\DateTimeImmutable $arrivalDateTime = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['calling:read', 'calling:write'])]
+    private ?\DateTimeImmutable $endOfServiceDateTime = null;
+
     public function __construct(
         string  $numberCalling,
         string  $title,
@@ -1490,5 +1498,29 @@ class Calling
     public function getStatusLabel(): string
     {
         return $this->status->getLabel();
+    }
+
+    public function getArrivalDateTime(): ?\DateTimeImmutable
+    {
+        return $this->arrivalDateTime;
+    }
+
+    public function setArrivalDateTime(?\DateTimeImmutable $arrivalDateTime): static
+    {
+        $this->arrivalDateTime = $arrivalDateTime;
+
+        return $this;
+    }
+
+    public function getEndOfServiceDateTime(): ?\DateTimeImmutable
+    {
+        return $this->endOfServiceDateTime;
+    }
+
+    public function setEndOfServiceDateTime(?\DateTimeImmutable $endOfServiceDateTime): static
+    {
+        $this->endOfServiceDateTime = $endOfServiceDateTime;
+
+        return $this;
     }
 }
