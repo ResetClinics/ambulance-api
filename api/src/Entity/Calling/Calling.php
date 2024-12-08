@@ -29,6 +29,7 @@ use App\Controller\Calling\NotReadyAction;
 use App\Controller\Calling\RecalculateOperatorReward;
 use App\Controller\Calling\RejectAction;
 use App\Controller\Calling\RepeatAction;
+use App\Controller\Calling\StartTreatmentAction;
 use App\Entity\City;
 use App\Entity\Client;
 use App\Entity\MedTeam\MedTeam;
@@ -157,6 +158,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
     uriTemplate: '/callings/{id}/dispatch',
     routePrefix: '/api',
     controller: DispatchAction::class,
+    openapi: false,
+    input: CallingDto::class,
+    read: false,
+)
+]#[Post(
+    uriTemplate: '/callings/{id}/start-treatment',
+    routePrefix: '/api',
+    controller: StartTreatmentAction::class,
     openapi: false,
     input: CallingDto::class,
     read: false,
