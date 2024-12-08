@@ -162,12 +162,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
     input: CallingDto::class,
     read: false,
 )
-]#[Post(
+]
+#[Post(
     uriTemplate: '/callings/{id}/start-treatment',
     routePrefix: '/api',
     controller: StartTreatmentAction::class,
     openapi: false,
-    input: CallingDto::class,
+    input: CallingArriveDto::class,
     read: false,
 )]
 #[Post(
