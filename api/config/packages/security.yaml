@@ -8,9 +8,7 @@ security:
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         app_user_provider:
-            entity:
-                class: App\Entity\User\User
-                property: phone
+            id: App\Security\UserProvider
         app_partner_user_provider:
             entity:
                 class: App\Entity\Partner\PartnerUser
