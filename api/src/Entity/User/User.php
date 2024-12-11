@@ -42,6 +42,8 @@ use Symfony\Component\Validator\Constraints as Assert;
     ],
     normalizationContext: ['groups' => ['user:read', 'city:read']],
     denormalizationContext: ['groups' => ['user:write']],
+    paginationClientEnabled: true,
+    paginationClientItemsPerPage: true,
 )]
 #[UniqueEntity(fields: ['phone'], message: 'Этот номер телефона уже используется.')]
 #[Post(uriTemplate: '/users/my', routePrefix: '/api', controller: MyAction::class, openapi: false, input: UserDto::class, read: false)]
