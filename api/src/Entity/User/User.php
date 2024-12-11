@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity\User;
 
 use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
@@ -34,7 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(routePrefix: '/api', openapi: false,),
+        new GetCollection(routePrefix: '/api', openapi: true,),
         new GetCollection(uriTemplate: '/exchange/users'),
         new Post(routePrefix: '/api', openapi: false,),
         new Get(routePrefix: '/api', openapi: false,),
@@ -55,6 +56,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     SearchByPermissionsFilter::class,
     properties: ['permissions']
 )]
+#[ApiFilter(SearchFilter::class, properties: ['accessRoles.id' => 'exact', 'cities.id' => 'exact'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
