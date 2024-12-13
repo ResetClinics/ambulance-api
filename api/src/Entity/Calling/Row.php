@@ -20,6 +20,7 @@ class Row
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['calling:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'rows')]
