@@ -115,10 +115,10 @@ readonly class PostProcessor implements ProcessorInterface
                 $messageAdmin = $this->buildReportMessage($data, $report, false);
             }catch (Exception $e) {}
 
-            try {
-               $this->tgSender->send($data->getAdmin(), $messageAdmin);
-
-            }catch (Exception $e) {}
+            //try {
+            //   $this->tgSender->send($data->getAdmin(), $messageAdmin);
+//
+            //}catch (Exception $e) {}
 
             try {
                 $this->tgSender->sendByRoleId(13, $messageAdmin);
@@ -129,9 +129,9 @@ readonly class PostProcessor implements ProcessorInterface
                 $messageDoctor = $this->buildReportMessage($data, $report, true);
             }catch (Exception $e) {}
 
-            try {
-                $this->tgSender->send($data->getDoctor(), $messageDoctor);
-            }catch (Exception $e) {}
+            //try {
+            //    $this->tgSender->send($data->getDoctor(), $messageDoctor);
+            //}catch (Exception $e) {}
 
             try {
                 $this->tgSender->sendByRoleId(13, $messageDoctor);
