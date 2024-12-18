@@ -3,6 +3,7 @@
 namespace App\Query\User\UsersReport;
 
 use App\Entity\Calling\Calling;
+use App\Entity\Calling\Status;
 use App\Entity\Hospital\Hospital;
 use App\Entity\MedTeam\MedTeam;
 use App\Entity\User\User;
@@ -62,6 +63,7 @@ readonly class Fetcher
                 'dutySalary' => 'n/a',              //ЗП Дежурства в смену на мероприятиях
 
                 'callsRevenue' => 0,                   //Выручка Выезды ВСЕГО
+                'callsCancelledCount' => 0,                     //
                 'callsCount' => 0,                     //
                 'callsAverageCheck' => 0,              //
                 'callsSalary' => 'n/a',                //
@@ -162,6 +164,11 @@ readonly class Fetcher
     public function getArr(array $result, ?int $adminId, Calling $call): array
     {
         if (!array_key_exists($adminId, $result)) {
+            return $result;
+        }
+
+        if ($call->getStatus() === Status::REJECTED) {
+            $result[$adminId]['callsCancelledCount'] += 1;
             return $result;
         }
 
