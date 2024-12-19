@@ -158,8 +158,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
     uriTemplate: '/callings/{id}/dispatch',
     routePrefix: '/api',
     controller: DispatchAction::class,
-    openapi: false,
-    input: CallingDto::class,
     read: false,
 )
 ]
