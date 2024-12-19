@@ -526,11 +526,14 @@ class Calling
 
     #[ORM\Column(nullable: true)]
     #[Groups(['calling:read', 'calling:write'])]
-    private ?\DateTimeImmutable $arrivalDateTime = null;
+    private ?DateTimeImmutable $arrivalDateTime = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['calling:read', 'calling:write'])]
-    private ?\DateTimeImmutable $endOfServiceDateTime = null;
+    private ?DateTimeImmutable $endOfServiceDateTime = null;
+
+    #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
+    private ?DateTimeImmutable $birthday = null;
 
     public function __construct(
         string  $numberCalling,
@@ -1510,26 +1513,38 @@ class Calling
         return $this->status->getLabel();
     }
 
-    public function getArrivalDateTime(): ?\DateTimeImmutable
+    public function getArrivalDateTime(): ?DateTimeImmutable
     {
         return $this->arrivalDateTime;
     }
 
-    public function setArrivalDateTime(?\DateTimeImmutable $arrivalDateTime): static
+    public function setArrivalDateTime(?DateTimeImmutable $arrivalDateTime): static
     {
         $this->arrivalDateTime = $arrivalDateTime;
 
         return $this;
     }
 
-    public function getEndOfServiceDateTime(): ?\DateTimeImmutable
+    public function getEndOfServiceDateTime(): ?DateTimeImmutable
     {
         return $this->endOfServiceDateTime;
     }
 
-    public function setEndOfServiceDateTime(?\DateTimeImmutable $endOfServiceDateTime): static
+    public function setEndOfServiceDateTime(?DateTimeImmutable $endOfServiceDateTime): static
     {
         $this->endOfServiceDateTime = $endOfServiceDateTime;
+
+        return $this;
+    }
+
+    public function getBirthday(): ?DateTimeImmutable
+    {
+        return $this->birthday;
+    }
+
+    public function setBirthday(?DateTimeImmutable $birthday): static
+    {
+        $this->birthday = $birthday;
 
         return $this;
     }

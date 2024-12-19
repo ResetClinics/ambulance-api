@@ -21,7 +21,6 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 class StartTreatmentAction extends AbstractController
 {
 
-
     public function __construct(
         private readonly WSClient $wsClient,
     )
@@ -34,12 +33,18 @@ class StartTreatmentAction extends AbstractController
         CallingRepository $callings,
         Flusher           $flusher): JsonResponse
     {
+        $calling->setFio($dto->fio);
+        $calling->setNote($dto->note);
 
-        $calling->setStatus(Status::treating());
+        if ($dto->dateOfBirth) {
+            $calling->setBirthday(new DateTimeImmutable($dto->dateOfBirth));
+        }
 
         if ($dto->endOfServiceDateTime) {
             $calling->setEndOfServiceDateTime(new DateTimeImmutable($dto->endOfServiceDateTime));
         }
+
+        $calling->setStatus(Status::treating());
 
         $flusher->flush();
 
