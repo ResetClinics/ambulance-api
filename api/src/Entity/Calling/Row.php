@@ -64,9 +64,9 @@ class Row
     private ?Clinic $clinic = null;
 
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(type: Types::BOOLEAN, nullable: true)]
     #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
-    private ?int $inCash = null;
+    private ?bool $inCash = null;
 
 
     public function getId(): ?int
@@ -237,6 +237,6 @@ class Row
 
     public function setInCash(?bool $inCash): void
     {
-        $this->inCash = $inCash !== null ? $inCash : null;
+        $this->inCash = $inCash;
     }
 }
