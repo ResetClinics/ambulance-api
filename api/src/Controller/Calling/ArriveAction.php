@@ -83,16 +83,16 @@ class ArriveAction extends AbstractController
             "arrivedAt" => $calling->getArrivedAt()?->format('d.m.Y H:i'),
             "completedAt" => $calling->getCompletedAt()?->format('d.m.Y H:i'),
             "dateTime" => $calling->getDateTime(),
-            "admin" => $calling?->getAdmin() ?: [
+            "admin" => $calling?->getAdmin() !== null ? [
                 'id' => $calling->getAdmin()->getId(),
                 'phone' => $calling->getAdmin()->getPhone(),
                 'name' => $calling->getAdmin()->getName(),
-            ],
-            "doctor" => $calling?->getDoctor() ?: [
+            ] : null,
+            "doctor" => $calling?->getDoctor() !== null ? [
                 'id' => $calling->getDoctor()->getId(),
                 'phone' => $calling->getDoctor()->getPhone(),
                 'name' => $calling->getDoctor()->getName(),
-            ],
+            ] : null,
             "price" => $calling->getPrice(),
             "estimated" => $calling->GetEstimated(),
             "prepayment" => $calling->getPrepayment(),
@@ -104,11 +104,11 @@ class ArriveAction extends AbstractController
             "phoneRelatives" => $calling->getPhoneRelatives(),
             "resultDate" => $calling->getResultDate(),
             "resultTime" => $calling->getResultTime(),
-            "partner" => $calling->getPartner() ?: [
+            "partner" => $calling->getPartner() !== null ? [
                 "id" => $calling->getPartner()->getId(),
                 "name" => $calling->getPartner()->getName(),
                 "whatsappGroup" => $calling->getPartner()->getWhatsappGroup(),
-            ],
+            ] : null,
             "lon" => $calling->getLon(),
             "lat" => $calling->getLat(),
             "services" => [],
@@ -119,23 +119,23 @@ class ArriveAction extends AbstractController
             "mkadDistance" => $calling->getMkadDistance(),
             "ownerExternalId" => $calling->getOwnerExternalId(),
             "operator" => null,
-            "client" => $calling->getClient() ?: [
+            "client" => $calling->getClient() !== null ? [
                 'id' => $calling->getClient()->getId(),
                 'phone' => $calling->getClient()->getPhone(),
                 'name' => $calling->getClient()->getName(),
-            ],
+            ] : null,
             "noBusinessCards" => $calling->isCurrentNoBusinessCards(),
             "partnerHospitalization" => $calling->isCurrentPartnerHospitalization(),
             "images" => [],
             "addressInfo" => $calling->getAddressInfo(),
-            "team" => $calling->getTeam() ?: [
+            "team" => $calling->getTeam() !== null ? [
                 'id' => $calling->getTeam()->getId(),
                 "status" => $calling->getTeam()->getStatus(),
                 "phone" => $calling->getTeam()->getPhone() ?: [
                     'id' => $calling->getTeam()->getPhone()->getId(),
                     "externalId" => $calling->getTeam()->getPhone()->getExternalId(),
                 ],
-            ],
+            ] : null,
             "finishedAt" => $calling->getFinishedAt()?->format('d.m.Y H:i'),
             "repeat" => $calling->getCountRepeat(),
             'statusLabel' => $calling->getStatusLabel(),
