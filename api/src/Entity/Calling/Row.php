@@ -2,10 +2,13 @@
 
 namespace App\Entity\Calling;
 
+use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use App\Entity\Hospital\Clinic;
 use App\Entity\Service\Service;
 use App\Repository\Calling\RowRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -61,6 +64,11 @@ class Row
     #[ORM\ManyToOne]
     #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
     private ?Clinic $clinic = null;
+
+
+    #[ORM\Column(type: Types::BOOLEAN)]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
+    private ?bool $inCash = null;
 
 
     public function getId(): ?int
@@ -222,5 +230,15 @@ class Row
         $this->clinic = $clinic;
 
         return $this;
+    }
+
+    public function getInCash(): ?bool
+    {
+        return $this->inCash;
+    }
+
+    public function setInCash(?bool $inCash): void
+    {
+        $this->inCash = $inCash;
     }
 }
