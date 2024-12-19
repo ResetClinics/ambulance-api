@@ -2,8 +2,6 @@
 
 namespace App\Entity\Calling;
 
-use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
-use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use App\Entity\Hospital\Clinic;
 use App\Entity\Service\Service;
@@ -66,9 +64,9 @@ class Row
     private ?Clinic $clinic = null;
 
 
-    #[ORM\Column(type: Types::BOOLEAN)]
+    #[ORM\Column(nullable: true)]
     #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
-    private ?bool $inCash = null;
+    private ?int $inCash = null;
 
 
     public function getId(): ?int
@@ -239,6 +237,6 @@ class Row
 
     public function setInCash(?bool $inCash): void
     {
-        $this->inCash = $inCash;
+        $this->inCash = $inCash !== null ? $inCash : null;
     }
 }
