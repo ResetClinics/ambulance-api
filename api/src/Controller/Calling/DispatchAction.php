@@ -8,7 +8,7 @@ use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Filters\LeadsFilter;
 use AmoCRM\Models\LeadModel;
 use App\Entity\Calling\Calling;
-use App\Entity\User\User;
+use App\Entity\Calling\CallingDispatchDto;
 use App\Flusher;
 use App\Repository\CallingRepository;
 use App\Repository\TeamRepository;
@@ -25,6 +25,7 @@ class DispatchAction extends AbstractController
 {
 
     private AmoCRMApiClient $client;
+
     public function __construct(
         AmoCRM                             $amoCRM,
         private readonly WSClient $wsClient,
@@ -33,11 +34,14 @@ class DispatchAction extends AbstractController
         $this->client = $amoCRM->getClient();
     }
 
-    public function __invoke(Calling $calling, TeamRepository $teams, CallingRepository $callings, Flusher $flusher): JsonResponse
+    public function __invoke(
+        Calling            $calling,
+        CallingDispatchDto $dto,
+        TeamRepository     $teams,
+        CallingRepository  $callings,
+        Flusher            $flusher
+    ): JsonResponse
     {
-        /** @var User $user */
-        $user = $this->getUser();
-
         $filter = new LeadsFilter();
         $filter->setIds([$calling->getNumberCalling()]);
 
@@ -50,6 +54,9 @@ class DispatchAction extends AbstractController
 
         $this->client->leads()->update($leads);
 
+        if ($dto->arrivalDateTime) {
+            $calling->setArrivalDateTime(new DateTimeImmutable($dto->arrivalDateTime));
+        }
 
         $calling->setDispatched(new DateTimeImmutable());
 
@@ -81,16 +88,16 @@ class DispatchAction extends AbstractController
             "arrivedAt" => $calling->getArrivedAt()?->format('d.m.Y H:i'),
             "completedAt" => $calling->getCompletedAt()?->format('d.m.Y H:i'),
             "dateTime" => $calling->getDateTime(),
-            "admin" => $calling?->getAdmin() ?: [
+            "admin" => $calling?->getAdmin() !== null ? [
                 'id' => $calling->getAdmin()->getId(),
                 'phone' => $calling->getAdmin()->getPhone(),
                 'name' => $calling->getAdmin()->getName(),
-            ],
-            "doctor" => $calling?->getDoctor() ?: [
+            ] : null,
+            "doctor" => $calling?->getDoctor() !== null ? [
                 'id' => $calling->getDoctor()->getId(),
                 'phone' => $calling->getDoctor()->getPhone(),
                 'name' => $calling->getDoctor()->getName(),
-            ],
+            ] : null,
             "price" => $calling->getPrice(),
             "estimated" => $calling->GetEstimated(),
             "prepayment" => $calling->getPrepayment(),
@@ -102,11 +109,11 @@ class DispatchAction extends AbstractController
             "phoneRelatives" => $calling->getPhoneRelatives(),
             "resultDate" => $calling->getResultDate(),
             "resultTime" => $calling->getResultTime(),
-            "partner" => $calling->getPartner() ?: [
+            "partner" => $calling->getPartner() !== null ? [
                 "id" => $calling->getPartner()->getId(),
                 "name" => $calling->getPartner()->getName(),
                 "whatsappGroup" => $calling->getPartner()->getWhatsappGroup(),
-            ],
+            ] : null,
             "lon" => $calling->getLon(),
             "lat" => $calling->getLat(),
             "services" => [],
@@ -117,23 +124,23 @@ class DispatchAction extends AbstractController
             "mkadDistance" => $calling->getMkadDistance(),
             "ownerExternalId" => $calling->getOwnerExternalId(),
             "operator" => null,
-            "client" => $calling->getClient() ?: [
+            "client" => $calling->getClient() !== null ? [
                 'id' => $calling->getClient()->getId(),
                 'phone' => $calling->getClient()->getPhone(),
                 'name' => $calling->getClient()->getName(),
-            ],
+            ] : null,
             "noBusinessCards" => $calling->isCurrentNoBusinessCards(),
             "partnerHospitalization" => $calling->isCurrentPartnerHospitalization(),
             "images" => [],
             "addressInfo" => $calling->getAddressInfo(),
-            "team" => $calling->getTeam() ?: [
+            "team" => $calling->getTeam() !== null ? [
                 'id' => $calling->getTeam()->getId(),
                 "status" => $calling->getTeam()->getStatus(),
                 "phone" => $calling->getTeam()->getPhone() ?: [
                     'id' => $calling->getTeam()->getPhone()->getId(),
                     "externalId" => $calling->getTeam()->getPhone()->getExternalId(),
                 ],
-            ],
+            ] : null,
             "finishedAt" => $calling->getFinishedAt()?->format('d.m.Y H:i'),
             "repeat" => $calling->getCountRepeat(),
             'statusLabel' => $calling->getStatusLabel(),
