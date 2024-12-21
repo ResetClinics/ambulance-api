@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\Calling\AcceptAction;
@@ -56,6 +57,41 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\Entity(repositoryClass: CallingRepository::class)]
 #[ApiResource(
     operations: [
+
+        new GetCollection(
+            routePrefix: '/api/v1',
+            shortName: 'AmbulanceCall',
+            normalizationContext: [
+                'groups' => [
+                    'v1-call:item:read',
+                ]],
+        ),
+        new Get(
+            routePrefix: '/api/v1',
+            shortName: 'AmbulanceCall',
+            normalizationContext: [
+                'groups' => [
+                    'v1-call:read',
+                    'client:item:read',
+                ]],
+        ),
+
+        new Patch(
+            routePrefix: '/api/v1',
+            shortName: 'AmbulanceCall',
+            normalizationContext: [
+                'groups' => [
+                    'v1-call:read',
+                    'client:item:read',
+                ]],
+            denormalizationContext: [
+                'groups' => [
+                    'v1-call:write',
+                ]
+            ],
+        ),
+
+
         new GetCollection(
             uriTemplate: '/calls',
             routePrefix: '/api',
@@ -259,59 +295,59 @@ class Calling
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['calling:read', 'hospital:detail:read', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'hospital:detail:read', 'exchange_calling:read', 'v1-call:read', 'v1-call:item:read',])]
     private ?int $id = null;
 
     #[ORM\Column(length: 256)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read', 'v1-call:item:read',])]
     private string $title;
 
     #[ORM\Column(length: 128)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:item:read',])]
     private string $name;
 
     #[ORM\Column(length: 16)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:item:read',])]
     private string $phone;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write',])]
     private ?string $fio = null;
 
     #[ORM\Column(length: 32)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read',])]
     private string $numberCalling;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:item:read',])]
     private string $address;
 
     #[ORM\Column(type: 'calling_status', length: 16, nullable: false)]
-    #[Groups(['calling:read', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'exchange_calling:read', 'v1-call:read', 'v1-call:item:read',])]
     #[ApiFilter(SearchFilter::class, strategy: 'exact')]
     private Status $status;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read',])]
     private string $description;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read',])]
     private ?string $chronicDiseases = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read',])]
     private ?string $nosology = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read',])]
     private ?string $age = null;
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read',])]
     private ?string $leadType = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
     private ?string $partnerName = null;
 
     #[ORM\Column(type: Types::BOOLEAN)]
@@ -320,11 +356,11 @@ class Calling
     private bool $sendPhone = false;
 
     #[ORM\Column(type: 'string', nullable: true)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read', 'v1-call:write',])]
     private ?string $rejectedComment = null;
 
     #[ORM\Column]
-    #[Groups(['calling:read', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'exchange_calling:read', 'v1-call:item:read',])]
     #[Context(normalizationContext: [DateTimeNormalizer::FORMAT_KEY => 'd.m.Y H:m'])]
     #[Gedmo\Timestampable(on: 'create')]
     private DateTimeImmutable $createdAt;
@@ -353,51 +389,51 @@ class Calling
     private ?DateTimeImmutable $completedAt = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'exchange_calling:read', 'v1-call:read', 'v1-call:item:read',])]
     private ?DateTimeImmutable $dateTime = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: true)]
-    #[Groups(['calling:read', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'exchange_calling:read', 'v1-call:read',])]
     #[ApiFilter(SearchFilter::class, properties: ['admin.id' => 'exact'])]
     private ?User $admin;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: true)]
-    #[Groups(['calling:read', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'exchange_calling:read', 'v1-call:read',])]
     #[ApiFilter(SearchFilter::class, properties: ['doctor.id' => 'exact'])]
     private ?User $doctor;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read',])]
     private ?int $price = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
     private ?int $estimated = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
     private ?int $prepayment = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read', 'v1-call:write',])]
     private ?string $note = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
     private ?string $passport = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
     private ?int $coastHospitalAdmission = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
     private ?int $coastHospital = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
     private ?int $costDay = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -405,15 +441,15 @@ class Calling
     private ?string $phoneRelatives = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
     private ?string $resultDate = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
     private ?string $resultTime = null;
 
     #[ORM\ManyToOne(inversedBy: 'callings')]
-    #[Groups(['calling:read', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'exchange_calling:read', 'v1-call:read',])]
     #[ApiFilter(SearchFilter::class, properties: ['partner.id' => 'exact'])]
     private ?Partner $partner = null;
 
@@ -421,22 +457,22 @@ class Calling
     private bool $deleted;
 
     #[ORM\Column(length: 16, nullable: true)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
     private ?string $lon;
 
     #[ORM\Column(length: 16, nullable: true)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
     private ?string $lat;
 
     #[ORM\OneToMany(mappedBy: 'calling', targetEntity: Row::class, cascade: ['persist'])]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write'])]
     private Collection $services;
 
     #[ORM\Column(nullable: true)]
     private ?int $amount = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
     private ?int $paymentNextOrder = null;
 
     #[ORM\Column(nullable: true)]
@@ -444,7 +480,7 @@ class Calling
     private ?int $paymentHospitalization = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read',])]
     private ?int $totalAmount = null;
 
     #[ORM\ManyToOne(targetEntity: self::class)]
@@ -472,7 +508,7 @@ class Calling
     private OperatorReward $operatorReward;
 
     #[ORM\ManyToOne(inversedBy: 'callings')]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read',])]
     #[ApiFilter(SearchFilter::class, properties: ['client.id' => 'exact'])]
     private ?Client $client = null;
 
@@ -487,12 +523,12 @@ class Calling
     private bool $partnerHospitalization;
 
     #[ORM\Column(nullable: false, options: ['default' => 0])]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read',])]
     #[ApiFilter(BooleanFilter::class)]
     private bool $personal;
 
     #[ORM\Column(nullable: false, options: ['default' => 0])]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read',])]
     #[ApiFilter(BooleanFilter::class)]
     private bool $doNotHospitalize;
 
@@ -500,11 +536,11 @@ class Calling
     #[ORM\JoinTable(name: 'calling_images')]
     #[ORM\JoinColumn(name: 'call_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'media_object_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[Groups(['calling:read', 'calling:write', 'hospital:detail:read'])]
+    #[Groups(['calling:read', 'calling:write', 'hospital:detail:read', 'v1-call:read',])]
     private Collection $images;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
     private ?string $addressInfo = null;
 
     #[ORM\ManyToOne(inversedBy: 'callings')]
@@ -525,14 +561,15 @@ class Calling
     private ?City $city = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read', 'v1-call:write',])]
     private ?DateTimeImmutable $arrivalDateTime = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write'])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read', 'v1-call:write',])]
     private ?DateTimeImmutable $endOfServiceDateTime = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
+    #[Groups(['v1-call:read', 'v1-call:write',])]
     private ?DateTimeImmutable $birthday = null;
 
     public function __construct(
@@ -789,6 +826,15 @@ class Calling
     {
         $this->status = $status;
     }
+
+
+    #[Groups(['v1-call:write',])]
+    #[SerializedName('status')]
+    public function setStatusValue(string $value): void
+    {
+        $this->status = new Status($value);
+    }
+
 
     /**
      * @param string|null $chronicDiseases
@@ -1167,6 +1213,12 @@ class Calling
         return $this;
     }
 
+   // public function setServices($services): self
+   // {
+   //     $this->services = new ArrayCollection($services);
+   //     return $this;
+   // }
+
     public function getAmount(): ?int
     {
         return $this->amount;
@@ -1323,7 +1375,7 @@ class Calling
     }
 
 
-    #[Groups(['calling:read'])]
+    #[Groups(['calling:read', 'v1-call:read',])]
     public function isCurrentNoBusinessCards(): bool
     {
         return $this->partner?->isNoBusinessCards() ?: $this->noBusinessCards;
@@ -1341,7 +1393,7 @@ class Calling
         return $this;
     }
 
-    #[Groups(['calling:read'])]
+    #[Groups(['calling:read', 'v1-call:read',])]
     public function isCurrentPartnerHospitalization(): bool
     {
         return $this->partner?->isPartnerHospitalization() ?: $this->partnerHospitalization;
@@ -1471,7 +1523,7 @@ class Calling
             return false;
         }
 
-        return  $this->getOwner()->allOwnerHaveTheSameAdmin();
+        return $this->getOwner()->allOwnerHaveTheSameAdmin();
     }
 
     public function isDoctorCombo(): bool
@@ -1495,7 +1547,7 @@ class Calling
             return false;
         }
 
-        return  $this->getOwner()->allOwnerHaveTheSameDoctor();
+        return $this->getOwner()->allOwnerHaveTheSameDoctor();
     }
 
     public function getTherapySum(): float|int|null
@@ -1507,7 +1559,7 @@ class Calling
         return $sum;
     }
 
-    #[Groups(['calling:read'])]
+    #[Groups(['calling:read', 'v1-call:read', 'v1-call:item:read',])]
     public function getStatusLabel(): string
     {
         return $this->status->getLabel();
@@ -1548,4 +1600,16 @@ class Calling
 
         return $this;
     }
+
+   public function getAddedServices(): Collection
+   {
+       return $this->services;
+   }
+
+   /** @param Row[] $services */
+   public function setAddedServices(array $services): self
+   {
+       $this->services = new ArrayCollection($services);
+       return $this;
+   }
 }

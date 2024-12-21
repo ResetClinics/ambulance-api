@@ -23,11 +23,11 @@ class Clinic
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['clinic:read', 'clinic:write', 'hospital:read'])]
+    #[Groups(['clinic:read', 'clinic:write', 'hospital:read', 'v1-call:read', 'v1-call:write',])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['clinic:read', 'clinic:write', 'hospital:read'])]
+    #[Groups(['clinic:read', 'clinic:write', 'hospital:read', 'v1-call:read',])]
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'clinic', targetEntity: Hospital::class)]

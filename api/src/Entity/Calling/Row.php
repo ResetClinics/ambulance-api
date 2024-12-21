@@ -25,34 +25,34 @@ class Row
 
     #[ORM\ManyToOne(inversedBy: 'rows')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write',])]
     private ?Service $service = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write',])]
     private ?float $price = null;
 
     #[ORM\ManyToOne(inversedBy: 'rows')]
     private ?Calling $calling = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write',])]
     private ?int $plannedPrice = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write',])]
     private ?\DateTimeImmutable $plannedAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write',])]
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read',])]
     private ?int $partnerReward = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write',])]
     private ?int $coastPrice = null;
 
     #[ORM\Column(nullable: true)]
@@ -60,12 +60,12 @@ class Row
     private ?int $percent = null;
 
     #[ORM\ManyToOne]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write',])]
     private ?Clinic $clinic = null;
 
 
     #[ORM\Column(type: Types::BOOLEAN, nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write',])]
     private ?bool $inCash = null;
 
 

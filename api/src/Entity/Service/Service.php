@@ -25,11 +25,11 @@ class Service
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['service:item:read', 'exchange_calling:read'])]
+    #[Groups(['service:item:read', 'exchange_calling:read', 'v1-call:read', 'v1-call:write',])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['service:item:read', 'service:write', 'exchange_calling:read'])]
+    #[Groups(['service:item:read', 'service:write', 'exchange_calling:read', 'v1-call:read',])]
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'service', targetEntity: Row::class)]
