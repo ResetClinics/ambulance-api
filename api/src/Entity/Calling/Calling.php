@@ -323,7 +323,6 @@ class Calling
     private string $address;
 
     #[ORM\Column(type: 'calling_status', length: 16, nullable: false)]
-    #[Groups(['calling:read', 'exchange_calling:read', 'v1-call:read', 'v1-call:item:read',])]
     #[ApiFilter(SearchFilter::class, strategy: 'exact')]
     private Status $status;
 
@@ -835,6 +834,12 @@ class Calling
         $this->status = new Status($value);
     }
 
+    #[Groups(['calling:read', 'exchange_calling:read','v1-call:read', 'v1-call:item:read',])]
+    #[SerializedName('status')]
+    public function getStatusValue(): string
+    {
+        return $this->status->getName();
+    }
 
     /**
      * @param string|null $chronicDiseases
