@@ -106,7 +106,6 @@ volumes:
   asterisk-postgres:
     external: true
   ambulance-mysql:
-    external: true
 
 networks:
   traefik-public:
