@@ -187,6 +187,14 @@ class Row
     }
 
     /**
+     * Услуга является Повтором
+     */
+    public function isReplay(): bool
+    {
+        return$this->getService()?->getType() === 'replay';
+    }
+
+    /**
      * Услуга является кодированием
      */
 

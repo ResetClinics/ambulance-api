@@ -25,9 +25,13 @@ use App\Asterisk\UseCase\Channel as AsteriskChannel;
 use App\Entity\Calling\Calling;
 use App\Entity\Calling\Row;
 use App\Entity\Calling\Status;
+use App\Entity\Hospital\Clinic;
+use App\Entity\Hospital\Hospital;
+use App\Entity\MediaObject;
 use App\Entity\User\User;
 use App\EventListener\CallPreDenormalizeListener;
 use App\Flusher;
+use App\Repository\Hospital\HospitalRepository;
 use App\Services\AmoCRM;
 use App\Services\ATS\BlacklistService\McnBlacklistService;
 use App\Services\Call\OperatorReward;
@@ -52,17 +56,18 @@ class PatchAction extends AbstractController
     private AmoCRMApiClient $client;
 
     public function __construct(
-        private readonly CallPreDenormalizeListener $callPreDenormalizeListener,
-        AmoCRM                    $amoCRM,
-        private readonly WSClient $wsClient,
-        private readonly AsteriskChannel\AddOrUpdate\Handler  $asteriskAddOrUpdateHandler,
-        private readonly AsteriskChannel\DeleteByClientPhone\Handler  $asteriskDeleteHandler,
-        private readonly McnBlacklistService  $mcnBlacklistService,
-        private readonly CallingSender  $sender,
-        private readonly Flusher $flusher,
-        private readonly PartnerReward  $partnerReward,
-        private readonly OperatorReward $operatorReward,
-        private readonly Handler $handler,
+        private readonly CallPreDenormalizeListener                  $callPreDenormalizeListener,
+        AmoCRM                                                       $amoCRM,
+        private readonly WSClient                                    $wsClient,
+        private readonly AsteriskChannel\AddOrUpdate\Handler         $asteriskAddOrUpdateHandler,
+        private readonly AsteriskChannel\DeleteByClientPhone\Handler $asteriskDeleteHandler,
+        private readonly McnBlacklistService                         $mcnBlacklistService,
+        private readonly CallingSender                               $sender,
+        private readonly Flusher                                     $flusher,
+        private readonly PartnerReward                               $partnerReward,
+        private readonly OperatorReward                              $operatorReward,
+        private readonly Handler                                     $handler,
+        private readonly HospitalRepository                          $hospitals,
     )
     {
         $this->client = $amoCRM->getClient();
@@ -70,6 +75,8 @@ class PatchAction extends AbstractController
 
     public function __invoke(Calling $calling): JsonResponse
     {
+        $this->handleServicesChange($calling);
+
         $this->handleStatusChange($calling);
 
         $this->flusher->flush();
@@ -91,7 +98,7 @@ class PatchAction extends AbstractController
     {
         $newStatus = $calling->getStatus();
         $originalStatus = $this->callPreDenormalizeListener->getStatus();
-        if ($newStatus === $originalStatus){
+        if ($newStatus === $originalStatus) {
             return;
         }
 
@@ -134,7 +141,7 @@ class PatchAction extends AbstractController
         $this->handleAsteriskUpdate($calling);
     }
 
-    private function handleArrivedStatus(Calling $calling)
+    private function handleArrivedStatus(Calling $calling): void
     {
         $this->updateAmoCRMLeads($calling, 62358398);
 
@@ -143,7 +150,7 @@ class PatchAction extends AbstractController
         $this->wsClient->sendUpdateOffer($calling->getId());
     }
 
-    private function handleDispatchedStatus(Calling $calling)
+    private function handleDispatchedStatus(Calling $calling): void
     {
         $this->updateAmoCRMLeads($calling, 38187418);
 
@@ -152,7 +159,7 @@ class PatchAction extends AbstractController
         $this->wsClient->sendUpdateOffer($calling->getId());
     }
 
-    private function handleTreatingStatus(Calling $calling)
+    private function handleTreatingStatus(Calling $calling): void
     {
         $this->updateAmoCRMLeads($calling, 38187418);
 
@@ -207,49 +214,18 @@ class PatchAction extends AbstractController
         }
     }
 
-
-
-    private function handleCompletedStatus(Calling $calling)
+    private function handleCompletedStatus(Calling $calling): void
     {
-        $price = 0;
-        $paymentNextOrder = 0;
-        $paymentHospitalization = 0;
+
+        $price = $this->calculateTotalPrice($calling);
+
+        $calling->setPrice($price['total']);
+        $calling->setPaymentHospitalization($price['hospital']);
+        $calling->setPaymentNextOrder($price['nextOrder']);
 
         /** @var Row $serviceRow */
         foreach ($calling->getServices() as $serviceRow) {
-            if ($serviceRow->getService()->getType() === 'default') {
-                $price += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
-            } elseif ($serviceRow->getService()->getType() === 'hospital') {
-                $paymentHospitalization += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
-            } else {
-                $paymentNextOrder += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
-            }
-        }
-
-        $calling->setPrice($price);
-        $calling->setPaymentHospitalization($paymentHospitalization);
-        $calling->setPaymentNextOrder($paymentNextOrder);
-
-        $replay = '';
-        $hospital = '';
-
-        /** @var Row $serviceRow */
-        foreach ($calling->getServices() as $serviceRow) {
-            if ($serviceRow->isStationary()) {
-                $hospital .= 'Стационар ' . PHP_EOL;
-                $hospital .= $serviceRow->getPlannedPrice() ? 'Ориентировочная цена ' . $serviceRow->getPlannedPrice() . PHP_EOL : '';
-                $hospital .= $serviceRow->getPrice() ? 'Предоплата ' . $serviceRow->getPrice() . PHP_EOL : '';
-                $hospital .= $serviceRow->getPlannedAt() ? 'Дата ' . $serviceRow->getPlannedAt()->format('d.m.y H:m') . PHP_EOL : '';
-                $hospital .= $serviceRow->getDescription() ?
-                    'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
-            }
-            if ($serviceRow->getService()->getType() === 'replay') {
-                $replay .= 'Повтор ' . PHP_EOL;
-                $replay .= $serviceRow->getPlannedPrice() ? 'Ориентировочная цена ' . $serviceRow->getPlannedPrice() . PHP_EOL : '';
-                $replay .= $serviceRow->getPrice() ? 'Предоплата ' . $serviceRow->getPrice() . PHP_EOL : '';
-                $replay .= $serviceRow->getPlannedAt() ? '*ПОВТОР* Дата ' . $serviceRow->getPlannedAt()->format('d.m.y H:m') . PHP_EOL : '';
-                $replay .= $serviceRow->getDescription() ?
-                    'Комментарий ' . $serviceRow->getDescription() . PHP_EOL : '';
+            if ($serviceRow->isReplay()) {
                 $this->repeat($calling, $serviceRow);
 
                 $this->sender->sendToAdmin(
@@ -260,7 +236,7 @@ class PatchAction extends AbstractController
             }
         }
 
-        $this->completeCall($calling, $hospital, $replay);
+        $this->completeCall($calling);
 
         $this->sender->sendToAdmin(
             $calling,
@@ -273,7 +249,7 @@ class PatchAction extends AbstractController
         $this->handleAsteriskDelete($calling);
     }
 
-    private function completeCall(Calling $calling, string $hospital, string $replay): void
+    private function completeCall(Calling $calling): void
     {
         $filter = new LeadsFilter();
         $filter->setIds([$calling->getNumberCalling()]);
@@ -387,8 +363,6 @@ class PatchAction extends AbstractController
         $this->flusher->flush();
     }
 
-
-
     private function repeat(Calling $calling, Row $row): void
     {
         $lead = $this->client->leads()->getOne($calling->getNumberCalling());
@@ -429,7 +403,7 @@ class PatchAction extends AbstractController
 
         $customFieldsValues = new CustomFieldsValuesCollection();
         foreach ($lead->getCustomFieldsValues() as $customFieldsValue) {
-            //Время прибытия, бригаду, админа и врача не переносим в повотор
+            //Время прибытия, бригаду, админа и врача не переносим в повтор
             if (
                 $customFieldsValue->getFieldId() === 880453 ||
                 $customFieldsValue->getFieldId() === 875863 ||
@@ -472,7 +446,6 @@ class PatchAction extends AbstractController
                     )
             );
 
-
         if ($companyId) {
             $newLead->setCompany(
                 (new CompanyModel())
@@ -491,5 +464,242 @@ class PatchAction extends AbstractController
 
         $command = new Command((string)$leadModel->getId());
         $this->handler->handle($command);
+    }
+
+    private function calculateTotalPrice(Calling $calling): array
+    {
+        $price = 0;
+        $paymentNextOrder = 0;
+        $paymentHospitalization = 0;
+
+        /** @var Row $serviceRow */
+        foreach ($calling->getServices() as $serviceRow) {
+            if ($serviceRow->getService()->getType() === 'default') {
+                $price += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
+            } elseif ($serviceRow->getService()->getType() === 'hospital') {
+                $paymentHospitalization += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
+            } else {
+                $paymentNextOrder += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
+            }
+        }
+
+        return [
+            'total' => $price,
+            'hospital' => $paymentHospitalization,
+            'nextOrder' => $paymentNextOrder,
+        ];
+    }
+
+    private function handleServicesChange(Calling $call): void
+    {
+        $hospital = $this->hospitals->findOneByOwnerId($call->getId());
+
+        foreach ($call->getServices() as $row) {
+            if ($row->isStationary()) {
+                $price = $row->getPrice() !== null ? (int)$row->getPrice() : null;
+                if (!$hospital) {
+                    $leadModel = $this->createStationaryLead($call);
+
+                    $this->createStationary(
+                        $call,
+                        $row->getClinic(),
+                        $price,
+                        (string)$leadModel->getId()
+                    );
+                } else {
+                    $this->updateStationary(
+                        $call,
+                        $row->getClinic(),
+                        $hospital,
+                        $price,
+                    );
+                }
+                return;
+            }
+        }
+
+        if ($hospital) {
+            $this->cancelStationary($call, $hospital);
+        }
+
+    }
+
+    private function createStationary(Calling $calling, ?Clinic $clinic, ?int $price, ?string $externalId): void
+    {
+        if (!$externalId){
+            return;
+        }
+
+        if (!$this->hospitals->findOneByExternal($externalId)) {
+
+            $hospital = new Hospital();
+            $hospital->setExternal($externalId);
+            $hospital->setStatus('assigned');
+            $hospital->setFio($calling->getFio());
+            $hospital->setPartner($calling->getPartner());
+            $hospital->setPhone($calling->getOriginalPhone());
+            $hospital->setOwner($calling);
+            $hospital->setPrepayment($price);
+
+            $hospital->setClinic($clinic);
+
+            foreach ($calling->getImages() as $image) {
+                $hospital->addImage($image);
+            }
+
+            $this->hospitals->save($hospital, true);
+        }
+
+        $this->sender->sendToAdmin(
+            $calling,
+            'Вызов N ' . $calling->getNumberCalling(),
+            'Создано назначение на стационар'
+        );
+    }
+
+    private function createStationaryLead(Calling $calling): LeadModel
+    {
+        $lead = $this->client->leads()->getOne((int)$calling->getNumberCalling());
+
+        if (!$lead) {
+            throw new NotFoundHttpException('Не получен лид');
+        }
+
+        $linksService = $this->client->links(EntityTypesInterface::LEADS);
+
+        $filter = new EntitiesLinksFilter([(int)$calling->getNumberCalling()]);
+        $allLinks = $linksService->get($filter);
+
+
+        $contactId = null;
+        $companyId = null;
+        /** @var LinkModel $link */
+        foreach ($allLinks as $link) {
+            if (
+                $link->getMetadata()
+                && isset($link->getMetadata()['main_contact'])
+                && $link->getMetadata()['main_contact']
+            ) {
+                $contactId = $link->getToEntityId();
+            }
+
+            if ($link->getToEntityType() === 'companies') {
+                $companyId = $link->getToEntityId();
+            }
+        }
+        if (!$contactId) {
+            throw new NotFoundHttpException('Не найден контакт при создании стационара');
+        }
+
+        $customFieldsValues = new CustomFieldsValuesCollection();
+        foreach ($lead->getCustomFieldsValues() as $customFieldsValue) {
+            if (
+                $customFieldsValue->getFieldId() === 875863 ||
+                $customFieldsValue->getFieldId() === 873879 ||
+                $customFieldsValue->getFieldId() === 873881
+            ) {
+                continue;
+            }
+            $customFieldsValues->add($customFieldsValue);
+        }
+
+        $newLead = new LeadModel();
+        $newLead->setName($lead->getName())
+            ->setCreatedBy(0)
+            ->setPrice($calling->getCoastHospital())
+            ->setStatusId(38709310)
+            ->setPipelineId(4093174)
+            ->setResponsibleUserId($lead->getResponsibleUserId())
+            ->setCustomFieldsValues($customFieldsValues)
+            ->setContacts(
+                (new ContactsCollection())
+                    ->add(
+                        (new ContactModel())
+                            ->setId($contactId)
+                            ->setIsMain(true)
+                    )
+            );
+
+
+        if ($companyId) {
+            $newLead->setCompany(
+                (new CompanyModel())
+                    ->setId($companyId)
+            );
+        }
+
+        $leadsCollection = new LeadsCollection();
+        $leadsCollection->add($newLead);
+
+        return $this->client->leads()->addOne($newLead);
+    }
+
+    private function updateStationary(Calling $call, ?Clinic $clinic, Hospital $hospital, ?int $price): void
+    {
+        if ($hospital->getStatus() !== 'assigned' && $hospital->getStatus() !== 'cancelled') {
+            return;
+        }
+
+        $changedImages = false;
+
+        if ($hospital->getImages()->count() !== $call->getImages()->count()) {
+            $changedImages = true;
+        }
+
+        /** @var MediaObject $image */
+        foreach ($call->getImages() as $image) {
+            if (!$hospital->getImages()->contains($image)){
+                $changedImages = true;
+            }
+        }
+
+
+        if (
+            $hospital->getPhone() === $call->getOriginalPhone() &&
+            $hospital->getFio() === $call->getFio() &&
+            $hospital->getPrepayment() === $price &&
+            $hospital->getClinic()?->getId() === $clinic?->getId() &&
+            !$changedImages
+        ) {
+            return;
+        }
+
+        $hospital->setFio($call->getFio());
+        $hospital->setPhone($call->getOriginalPhone());
+        $hospital->setPrepayment($price);
+        $hospital->setStatus('assigned');
+        $hospital->setClinic($clinic);
+
+        if ($changedImages) {
+            $hospital->getImages()->clear();
+            /** @var MediaObject $image */
+            foreach ($call->getImages() as $image) {
+                $hospital->addImage($image);
+            }
+        }
+
+        $this->hospitals->save($hospital, true);
+
+        $this->sender->sendToAdmin(
+            $call,
+            'Вызов N ' . $call->getNumberCalling(),
+            'Обновлено назначение на стационар'
+        );
+    }
+
+    private function cancelStationary(Calling $call, Hospital $hospital): void
+    {
+        if ($hospital->getStatus() !== 'assigned') {
+            return;
+        }
+        $hospital->setStatus('cancelled');
+
+        $this->hospitals->save($hospital, true);
+
+        $this->sender->sendToAdmin(
+            $call,
+            'Вызов N ' . $call->getNumberCalling(),
+            'Отменено назначение на стационар'
+        );
     }
 }
