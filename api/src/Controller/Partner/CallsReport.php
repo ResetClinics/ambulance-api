@@ -58,6 +58,9 @@ class CallsReport extends AbstractController
 
         /** @var Calling $call */
         foreach ($calls as $call){
+            if (!$call?->getPartner()?->getId()){
+                continue;
+            }
             $id = 'call-'.$call->getId();
             if ($call->getStatus() !== Status::COMPLETED){
                 continue;
