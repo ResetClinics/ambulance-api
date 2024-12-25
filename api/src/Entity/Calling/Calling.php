@@ -27,6 +27,7 @@ use App\Controller\Calling\HospitalizationAction;
 use App\Controller\Calling\HospitalizationWithoutTherapyAction;
 use App\Controller\Calling\HospitalizationWithTherapyAction;
 use App\Controller\Calling\NotReadyAction;
+use App\Controller\Calling\PatchAction;
 use App\Controller\Calling\RecalculateOperatorReward;
 use App\Controller\Calling\RejectAction;
 use App\Controller\Calling\RepeatAction;
@@ -75,9 +76,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
                     'client:item:read',
                 ]],
         ),
-
         new Patch(
             routePrefix: '/api/v1',
+            controller: PatchAction::class,
             shortName: 'AmbulanceCall',
             normalizationContext: [
                 'groups' => [
@@ -89,8 +90,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
                     'v1-call:write',
                 ]
             ],
+            write: false,
         ),
-
 
         new GetCollection(
             uriTemplate: '/calls',
