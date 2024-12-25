@@ -627,18 +627,12 @@ class Calling
 
     public function setAccepted(DateTimeImmutable $acceptedAt): void
     {
-        if (!$this->status->isAssigned()) {
-            throw new DomainException('Вызов имеет статус отличный от назначен');
-        }
         $this->status = Status::accepted();
         $this->acceptedAt = $acceptedAt;
     }
 
     public function setArrived(DateTimeImmutable $arrivedAt): void
     {
-        //if (!$this->status->isAccepted()) {
-        //    throw new DomainException('Вызов имеет статус отличный от принят');
-        //}
         $this->status = Status::arrived();
         $this->arrivedAt = $arrivedAt;
     }
