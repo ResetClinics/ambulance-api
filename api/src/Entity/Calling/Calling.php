@@ -47,7 +47,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use DomainException;
 use Exception;
 use Symfony\Component\Serializer\Annotation\Context;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -465,7 +464,7 @@ class Calling
     private ?string $lat;
 
     #[ORM\OneToMany(mappedBy: 'calling', targetEntity: Row::class, cascade: ['persist'])]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write'])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:write'])]
     private Collection $services;
 
     #[ORM\Column(nullable: true)]
@@ -1163,6 +1162,15 @@ class Calling
         return $this->services;
     }
 
+
+    #[Groups(['v1-call:read'])]
+    #[SerializedName('services')]
+    public function getServicesValues(): array
+    {
+        return $this->services->getValues();
+    }
+
+
     public function addService(Row $row): self
     {
         if (!$this->services->contains($row)) {
@@ -1600,16 +1608,4 @@ class Calling
 
         return $this;
     }
-
-   public function getAddedServices(): Collection
-   {
-       return $this->services;
-   }
-
-   /** @param Row[] $services */
-   public function setAddedServices(array $services): self
-   {
-       $this->services = new ArrayCollection($services);
-       return $this;
-   }
 }

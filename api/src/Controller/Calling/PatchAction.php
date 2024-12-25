@@ -46,6 +46,7 @@ use DomainException;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -526,7 +527,7 @@ class PatchAction extends AbstractController
 
     private function createStationary(Calling $calling, ?Clinic $clinic, ?int $price, ?string $externalId): void
     {
-        if (!$externalId){
+        if (!$externalId) {
             return;
         }
 
@@ -648,7 +649,7 @@ class PatchAction extends AbstractController
 
         /** @var MediaObject $image */
         foreach ($call->getImages() as $image) {
-            if (!$hospital->getImages()->contains($image)){
+            if (!$hospital->getImages()->contains($image)) {
                 $changedImages = true;
             }
         }
