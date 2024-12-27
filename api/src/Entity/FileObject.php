@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\OpenApi\Model;
+use App\Controller\FileObject\GetAction;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -21,7 +22,9 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     shortName: 'File',
     types: ['https://schema.org/MediaObject'],
     operations: [
-        new Get(),
+        new Get(
+            controller: GetAction::class,
+        ),
         new GetCollection(),
         new Post(
             inputFormats: ['multipart' => ['multipart/form-data']],
@@ -49,17 +52,15 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         'json' => ['application/json'],
     ],
     routePrefix: '/api/v1',
-    normalizationContext: ['groups' => ['media_object:read']]
+    normalizationContext: ['groups' => ['media_object:read:image']]
 )]
 class FileObject
 {
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
-    #[Groups(['media_object:read', 'v1-call:read', 'v1-call:write'])]
+    #[Groups(['media_object:read:image'])]
     private ?int $id = null;
 
     #[ApiProperty(writable: false, types: ['https://schema.org/contentUrl'])]
-    #[Groups(['media_object:read', 'v1-call:read', 'v1-call:write'])]
-    #[SerializedName('url')]
     public ?string $contentUrl = null;
 
     #[Vich\UploadableField(mapping: 'media_object', fileNameProperty: 'filePath')]
@@ -72,5 +73,12 @@ class FileObject
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    #[Groups(['media_object:read:image'])]
+    #[SerializedName('url')]
+    public function getIri(): string
+    {
+        return '/api/v1/files/' . $this->id;
     }
 }
