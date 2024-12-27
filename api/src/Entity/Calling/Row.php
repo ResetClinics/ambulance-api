@@ -35,8 +35,8 @@ class Row
     #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write',])]
     private ?float $price = null;
 
-    #[ORM\ManyToOne(cascade: ['persist', 'remove'], inversedBy: 'services')]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'services')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Calling $calling = null;
 
     #[ORM\Column(nullable: true)]
