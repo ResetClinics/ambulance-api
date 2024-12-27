@@ -40,8 +40,6 @@ services:
             $url : "%env(WEBSOCKET_URL)%"
 
     App\Services\CallingSender:
-        arguments:
-            $token : "%env(FIREBASE_SERVER_TOKEN)%"
 
     App\EventSubscriber\PaymentSettingUpdateSubscriber:
         tags:
