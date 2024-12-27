@@ -231,7 +231,7 @@ class CallingRepository extends ServiceEntityRepository
     {
         $coll = $this->getById($callId);
 
-        if ($coll->getStatus() != Status::ARRIVED) {
+        if ($coll->getStatus() != Status::ARRIVED && $coll->getStatus() != Status::TREATING) {
             return [];
         }
 
