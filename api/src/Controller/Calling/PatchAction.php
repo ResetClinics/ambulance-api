@@ -121,6 +121,10 @@ class PatchAction extends AbstractController
         if ($newStatus === Status::COMPLETED) {
             $this->handleCompletedStatus($calling);
         }
+
+        if ($newStatus === Status::REJECTED) {
+            $this->handleRejectedStatus($calling);
+        }
     }
 
     public function handleAcceptedStatus(Calling $calling): void
@@ -701,5 +705,61 @@ class PatchAction extends AbstractController
             'Вызов N ' . $call->getNumberCalling(),
             'Отменено назначение на стационар'
         );
+    }
+
+    private function handleRejectedStatus(Calling $calling)
+    {
+        $filter = new LeadsFilter();
+        $filter->setIds([$calling->getNumberCalling()]);
+
+        $leads = $this->client->leads()->get($filter);
+
+        if (!$leads) {
+            throw new NotFoundHttpException('Не найден лид №' . $calling->getNumberCalling() . ' в AmoCRM');
+        }
+
+
+        $message = 'Информация от бригады' . PHP_EOL;
+        $message .= 'Отмена заявки №' . $calling->getNumberCalling() . PHP_EOL;
+        $message .= $calling->getRejectedComment() ? 'Причина отмены ' . $calling->getRejectedComment() . PHP_EOL : '';
+
+
+        $entityId = null;
+        $currentDate = new DateTimeImmutable('now', new DateTimeZone('Europe/Moscow'));
+        /** @var LeadModel $lead */
+        foreach ($leads as $lead) {
+            $entityId = $lead->getId();
+            $lead->setStatusId(143);
+            $lead->setName('Неуспех ' . $currentDate->format('d.m.y') . ' ' . $calling->getName());
+        }
+
+        $this->client->leads()->update($leads);
+
+        $notesCollection = new NotesCollection();
+        $messageNote = new CommonNote();
+        $messageNote->setEntityId($entityId)
+            ->setText($message)
+            ->setCreatedBy(0);
+
+        $notesCollection->add($messageNote);
+
+        try {
+            $leadNotesService = $this->client->notes(EntityTypesInterface::LEADS);
+            $leadNotesService->add($notesCollection);
+        } catch (AmoCRMApiException $e) {
+        }
+
+        $calling->setReject(new DateTimeImmutable(), $calling->getRejectedComment());
+
+        $this->sender->sendToAdmin(
+            $calling,
+            'Вызов N ' . $calling->getNumberCalling() . ' отменен',
+            'Спасибо за информацию!'
+        );
+
+        $this->wsClient->sendUpdateOffer($calling->getId());
+
+        $this->handleAsteriskDelete($calling);
+
     }
 }
