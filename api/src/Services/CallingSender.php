@@ -4,15 +4,14 @@ namespace App\Services;
 
 use App\Entity\Calling\Calling;
 use App\Repository\DeviceRepository;
-use Exception;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Kreait\Firebase\Contract\Messaging;
+use Kreait\Firebase\Messaging\CloudMessage;
 
-class CallingSender
+readonly class CallingSender
 {
     public function __construct(
-        private readonly HttpClientInterface $client,
-        private readonly DeviceRepository $devices,
-        private readonly string $token
+        private DeviceRepository $devices,
+        private Messaging        $messaging,
     )
     {
     }
@@ -23,46 +22,20 @@ class CallingSender
 
         foreach ($devices as $device){
 
-            try {
-                $this->client->request('POST', 'https://fcm.googleapis.com/fcm/send', [
-                    'headers' => [
-                        'Content-Type' => 'application/json',
-                        'Accept' => 'application/json',
-                        'Authorization' => 'key=' . $this->token
-                    ],
-                    'json' => [
-                        "data" =>  [
-                            "callingId" =>  $calling->getId(),
-                            "callingStatus" =>  $calling->getStatus(),
-                            "url" =>  'сalls',
-                        ],
-                        'to' =>  $device->getId(),
-                        'notification' => [
-                            'title' => $title,
-                            'body' =>  $body,
-                        ]
-
-                    ],
-                ]);
-            }catch (Exception $e){}
-
-            $this->client->request('POST', 'https://exp.host/--/api/v2/push/send', [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                ],
-                'json' => [
-                    "data" =>  [
-                        "callingId" =>  $calling->getId(),
-                        "callingStatus" =>  $calling->getStatus(),
-                        "url" =>  'сalls',
-                    ],
-                    'to' => $device->getId(),
+            $message = CloudMessage::fromArray([
+                'token' =>  $device->getId(),
+                'notification' => [
                     'title' => $title,
                     'body' =>  $body,
                 ],
+                'data' => [
+                    "callingId" =>  $calling->getId(),
+                    "callingStatus" =>  $calling->getStatus(),
+                    "url" =>  'calls',
+                ],
             ]);
+
+            $this->messaging->send($message);
         }
     }
-
 }
