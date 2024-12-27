@@ -54,11 +54,11 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 class FileObject
 {
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
-    #[Groups(['media_object:read'])]
+    #[Groups(['media_object:read', 'v1-call:read', 'v1-call:write'])]
     private ?int $id = null;
 
     #[ApiProperty(writable: false, types: ['https://schema.org/contentUrl'])]
-    #[Groups(['media_object:read'])]
+    #[Groups(['media_object:read', 'v1-call:read', 'v1-call:write'])]
     #[SerializedName('url')]
     public ?string $contentUrl = null;
 

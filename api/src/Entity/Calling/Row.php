@@ -3,9 +3,12 @@
 namespace App\Entity\Calling;
 
 use ApiPlatform\Metadata\ApiResource;
+use App\Entity\FileObject;
 use App\Entity\Hospital\Clinic;
 use App\Entity\Service\Service;
 use App\Repository\Calling\RowRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -32,7 +35,8 @@ class Row
     #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write',])]
     private ?float $price = null;
 
-    #[ORM\ManyToOne(inversedBy: 'rows')]
+    #[ORM\ManyToOne(cascade: ['persist', 'remove'], inversedBy: 'services')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Calling $calling = null;
 
     #[ORM\Column(nullable: true)]
@@ -67,6 +71,24 @@ class Row
     #[ORM\Column(type: Types::BOOLEAN, nullable: true)]
     #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write',])]
     private ?bool $inCash = null;
+
+    /**
+     * @var Collection<int, FileObject>
+     */
+    #[ORM\ManyToMany(targetEntity: FileObject::class, cascade: ['persist'])]
+    #[ORM\JoinTable(name: 'calling_rows_files')]
+    #[ORM\JoinColumn(name: 'calling_row_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'file_object_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[Groups([
+        'v1-call:read',
+        'v1-call:write',
+    ])]
+    private Collection $files;
+
+    public function __construct()
+    {
+        $this->files = new ArrayCollection();
+    }
 
 
     public function getId(): ?int
@@ -246,5 +268,29 @@ class Row
     public function setInCash(?bool $inCash): void
     {
         $this->inCash = $inCash;
+    }
+
+    /**
+     * @return Collection<int, FileObject>
+     */
+    public function getFiles(): Collection
+    {
+        return $this->files;
+    }
+
+    public function addFile(FileObject $file): static
+    {
+        if (!$this->files->contains($file)) {
+            $this->files->add($file);
+        }
+
+        return $this;
+    }
+
+    public function removeFile(FileObject $file): static
+    {
+        $this->files->removeElement($file);
+
+        return $this;
     }
 }

@@ -87,6 +87,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
             denormalizationContext: [
                 'groups' => [
                     'v1-call:write',
+                    'calling:write'
                 ]
             ],
             write: false,
@@ -463,7 +464,7 @@ class Calling
     #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
     private ?string $lat;
 
-    #[ORM\OneToMany(mappedBy: 'calling', targetEntity: Row::class, cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'calling', targetEntity: Row::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:write'])]
     private Collection $services;
 
@@ -1178,21 +1179,27 @@ class Calling
             $row->setCalling($this);
         }
 
-        $this->price = 0;
-        $this->paymentNextOrder = 0;
-        $this->totalAmount = 0;
-
-        /** @var Row $serviceRow */
-        foreach ($this->services as $serviceRow) {
-            if ($serviceRow->getService()->getType() === 'default') {
-                $this->price += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
-            } else {
-                $this->paymentNextOrder += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
-            }
-            $this->totalAmount = $this->price + $this->paymentNextOrder;
-        }
-
         return $this;
+       // if (!$this->services->contains($row)) {
+       //     $this->services->add($row);
+       //     $row->setCalling($this);
+       // }
+//
+       // $this->price = 0;
+       // $this->paymentNextOrder = 0;
+       // $this->totalAmount = 0;
+//
+       // /** @var Row $serviceRow */
+       // foreach ($this->services as $serviceRow) {
+       //     if ($serviceRow->getService()->getType() === 'default') {
+       //         $this->price += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
+       //     } else {
+       //         $this->paymentNextOrder += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
+       //     }
+       //     $this->totalAmount = $this->price + $this->paymentNextOrder;
+       // }
+//
+       // return $this;
     }
 
     public function removeService(Row $row): self
@@ -1204,21 +1211,32 @@ class Calling
             }
         }
 
-        $this->price = 0;
-        $this->paymentNextOrder = 0;
-        $this->totalAmount = 0;
-
-        /** @var Row $serviceRow */
-        foreach ($this->services as $serviceRow) {
-            if ($serviceRow->getService()->getType() === 'default') {
-                $this->price += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
-            } else {
-                $this->paymentNextOrder += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
-            }
-            $this->totalAmount = $this->price + $this->paymentNextOrder;
-        }
-
         return $this;
+
+
+
+       // if ($this->services->removeElement($row)) {
+       //     // set the owning side to null (unless already changed)
+       //     if ($row->getCalling() === $this) {
+       //         $row->setCalling(null);
+       //     }
+       // }
+//
+       // $this->price = 0;
+       // $this->paymentNextOrder = 0;
+       // $this->totalAmount = 0;
+//
+       // /** @var Row $serviceRow */
+       // foreach ($this->services as $serviceRow) {
+       //     if ($serviceRow->getService()->getType() === 'default') {
+       //         $this->price += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
+       //     } else {
+       //         $this->paymentNextOrder += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
+       //     }
+       //     $this->totalAmount = $this->price + $this->paymentNextOrder;
+       // }
+//
+       // return $this;
     }
 
    // public function setServices($services): self
