@@ -89,6 +89,7 @@ class WorkSchedule
         'evening', //вечерняя
         'day',     //суточная
         'stop',     //выходной
+        'reserve',     //резерв
     ])]
     private ?string $type = null;
 
