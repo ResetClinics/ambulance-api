@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\DeleteOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Hospital\Hospital;
+use App\Repository\UserRepository;
 use App\Services\Hospital\PartnerReward;
 use DateTimeImmutable;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -20,6 +21,7 @@ readonly class HospitalProcessor implements ProcessorInterface
         private ProcessorInterface $removeProcessor,
         private Security           $security,
         private PartnerReward      $partnerReward,
+        private UserRepository     $users,
     )
     {
     }
@@ -30,16 +32,19 @@ readonly class HospitalProcessor implements ProcessorInterface
             $this->removeProcessor->process($data, $operation, $uriVariables, $context);
             return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
         }
+
+        $user = $this->users->get($this->security->getUser()?->getId());
+
         /** @var Hospital $data */
-        if ($data->getStatus() === 'inpatient' && $data->getHospitalizedAt() === null){
+        if ($data->getStatus() === 'inpatient' && $data->getHospitalizedAt() === null) {
             $data->setHospitalizedAt(new DateTimeImmutable());
-            $data->setHospitalizedBy($this->security->getUser());
+            $data->setHospitalizedBy($user);
             $data->setPartnerReward(0);
         }
 
-        if ($data->getStatus() === 'completed' && $data->getDischargedAt() === null){
+        if ($data->getStatus() === 'completed' && $data->getDischargedAt() === null) {
             $data->setDischargedAt(new DateTimeImmutable());
-            $data->setDischargedBy($this->security->getUser());
+            $data->setDischargedBy($user);
             $this->partnerReward->calculate($data);
         }
 
