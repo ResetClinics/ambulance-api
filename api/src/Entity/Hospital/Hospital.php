@@ -44,7 +44,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
                     'hospital:read',
                     'hospital:detail:read',
                     'partner:item:read',
-                    'media_object:read'
+                    'media_object:read',
+                    'media_object:read:image'
                 ]
             ],
         ),
