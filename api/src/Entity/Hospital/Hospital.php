@@ -524,6 +524,7 @@ class Hospital
                     'price' => $row->getPrice(),
                     'plannedPrice' => $row->getPlannedPrice(),
                     'description' => $row->getDescription(),
+                    'files' => $row->getFiles(),
                 ];
             }
         }
