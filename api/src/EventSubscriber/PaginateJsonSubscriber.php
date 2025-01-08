@@ -14,6 +14,7 @@ use App\Entity\Hospital\Hospital;
 use App\Entity\MedTeam\MedTeam;
 use App\Entity\Partner;
 use App\Entity\PaymentSetting\PaymentSetting;
+use App\Entity\ReasonForCancellation;
 use App\Entity\Service\Category;
 use App\Entity\Service\Service;
 use App\Entity\User\User;
@@ -64,6 +65,7 @@ class PaginateJsonSubscriber implements EventSubscriberInterface
             $apiResourceClass !== AdministratorReport::class &&
             $apiResourceClass !== FileObject::class &&
             $apiResourceClass !== PaymentSetting::class &&
+            $apiResourceClass !== ReasonForCancellation::class &&
             $apiResourceClass !== MedTeam::class
         ) {
             return;

@@ -37,6 +37,7 @@ use App\Entity\Client;
 use App\Entity\MedTeam\MedTeam;
 use App\Entity\MediaObject;
 use App\Entity\Partner;
+use App\Entity\ReasonForCancellation;
 use App\Entity\User\User;
 use App\Filter\Call\EmployeeFilter;
 use App\Filter\Call\SearchByFieldsFilter;
@@ -571,6 +572,10 @@ class Calling
     #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
     #[Groups(['v1-call:read', 'v1-call:write',])]
     private ?DateTimeImmutable $birthday = null;
+
+    #[ORM\ManyToOne]
+    #[Groups(['v1-call:read', 'v1-call:write',])]
+    private ?ReasonForCancellation $reasonForCancellation = null;
 
     public function __construct(
         string  $numberCalling,
@@ -1623,6 +1628,18 @@ class Calling
     public function setBirthday(?DateTimeImmutable $birthday): static
     {
         $this->birthday = $birthday;
+
+        return $this;
+    }
+
+    public function getReasonForCancellation(): ?ReasonForCancellation
+    {
+        return $this->reasonForCancellation;
+    }
+
+    public function setReasonForCancellation(?ReasonForCancellation $reasonForCancellation): static
+    {
+        $this->reasonForCancellation = $reasonForCancellation;
 
         return $this;
     }
