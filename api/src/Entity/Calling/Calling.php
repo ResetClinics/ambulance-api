@@ -292,6 +292,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
     SearchByFieldsFilter::class,
     properties: ['search']
 )]
+#[ApiFilter(SearchFilter::class, properties: ['services.service.id' => 'exact'])]
 class Calling
 {
     #[ORM\Id]
