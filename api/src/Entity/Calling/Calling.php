@@ -159,7 +159,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true
 )]
-#[ApiFilter(SearchFilter::class, properties: ['team.id' => 'exact'])]
 #[Post(
     uriTemplate: '/callings/recalculate-operators-rewards',
     routePrefix: '/api',
@@ -291,6 +290,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[ApiFilter(
     SearchByFieldsFilter::class,
     properties: ['search']
+)]
+#[ApiFilter(
+    SearchFilter::class,
+    properties: [
+        'team.id' => 'exact',
+        'services.service.id' => 'exact'
+    ]
 )]
 class Calling
 {
