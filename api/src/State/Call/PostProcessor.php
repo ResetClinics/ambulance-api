@@ -21,11 +21,13 @@ use AmoCRM\Models\LinkModel;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Calling\Calling;
+use App\Entity\Calling\Status;
 use App\Entity\Hospital\Clinic;
 use App\Entity\Hospital\Hospital;
 use App\Entity\MediaObject;
 use App\Repository\Hospital\HospitalRepository;
 use App\Services\AmoCRM;
+use App\Services\Call\PartnerReward;
 use App\Services\CallingSender;
 use App\Services\File\UploadedBase64File;
 use Doctrine\ORM\NonUniqueResultException;
@@ -36,6 +38,7 @@ class PostProcessor implements ProcessorInterface
     private AmoCRMApiClient $client;
 
     public function __construct(
+        private readonly PartnerReward                               $partnerReward,
         AmoCRM                              $amoCRM,
         private readonly CallingSender      $sender,
         private readonly HospitalRepository $hospitals,
@@ -73,6 +76,10 @@ class PostProcessor implements ProcessorInterface
         $hospital = $this->hospitals->findOneByOwnerId($data->getId());
 
         $this->checkStationary($data, $hospital);
+
+        if ($data->getStatus() === Status::COMPLETED) {
+            $this->partnerReward->calculate($data);
+        }
 
         return $this->processor->process($data, $operation, $uriVariables, $context);
     }
