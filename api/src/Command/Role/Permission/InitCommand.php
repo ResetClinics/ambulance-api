@@ -19,6 +19,35 @@ class InitCommand extends Command
 {
 
     private $data = [
+        //Расчет зп
+        //Метрики
+        [
+            'id' => 'payroll-metrics-view',
+            'description' => 'Расчет ЗП Метрики: просмотр'
+        ],
+        [
+            'id' => 'payroll-metrics-update',
+            'description' => 'Расчет ЗП Метрики: изменение'
+        ],
+        //KPI
+        [
+            'id' => 'payroll-kpis-view',
+            'description' => 'Расчет ЗП KPI: просмотр'
+        ],
+        [
+            'id' => 'payroll-kpis-update',
+            'description' => 'Расчет ЗП KPI: изменение'
+        ],
+        //Транспортные
+        [
+            'id' => 'payroll-transports-view',
+            'description' => 'Расчет ЗП Транспортные: просмотр'
+        ],
+        [
+            'id' => 'payroll-transports-update',
+            'description' => 'Расчет ЗП Транспортные: изменение'
+        ],
+
         //вызовы
         [
             'id' => 'calls-index',
