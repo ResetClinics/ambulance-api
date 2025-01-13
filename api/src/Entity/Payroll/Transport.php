@@ -16,9 +16,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     shortName: 'Payroll/Transport',
     operations: [
-        new GetCollection(security: "is_granted('payroll-transports-view')"),
-        new Get(security: "is_granted('payroll-transports-view')"),
-        new Patch(security: "is_granted('payroll-transports-update')"),
+        new GetCollection(),
+        new Get(),
+        new Patch(),
     ],
     routePrefix: '/api/v1',
     normalizationContext: ['groups' => ['payroll_transport:read']],

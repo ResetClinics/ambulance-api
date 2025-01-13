@@ -96,6 +96,7 @@ security:
         - { path: ^/api/partners, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/administrator_reports, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/v1/files/, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/payroll, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/v1/files, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/v1/shifts, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/v1/transport_reports, roles: IS_AUTHENTICATED_FULLY }

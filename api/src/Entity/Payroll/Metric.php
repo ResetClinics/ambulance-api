@@ -16,9 +16,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     shortName: 'Payroll/Metric',
     operations: [
-        new GetCollection(security: "is_granted('payroll-metrics-view')"),
-        new Get(security: "is_granted('payroll-metrics-view')"),
-        new Patch(security: "is_granted('payroll-metrics-update')"),
+        new GetCollection(),
+        new Get(),
+        new Patch(),
     ],
     routePrefix: '/api/v1',
     normalizationContext: ['groups' => ['payroll_metric:read']],
