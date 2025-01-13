@@ -661,7 +661,7 @@ class Calling
         $this->completedAt = $completedAt;
     }
 
-    public function setReject(DateTimeImmutable $completedAt, string $comment): void
+    public function setReject(DateTimeImmutable $completedAt, ?string $comment): void
     {
         $this->status = Status::rejected();
         $this->completedAt = $completedAt;
