@@ -24,6 +24,7 @@ doctrine:
         types:
             calling_status: 'App\Entity\Calling\StatusType'
             team_status: 'App\Entity\Team\StatusType'
+            money_currency: 'App\Entity\Money\CurrencyType'
 
     orm:
         auto_generate_proxy_classes: true
