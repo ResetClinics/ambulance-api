@@ -44,9 +44,9 @@ class OperatorReward
 
         $call->setOperatorReward(
             new \App\Entity\Calling\OperatorReward(
-                $therapy,
-                $hospital,
-                $coding,
+                (int)$therapy,
+                (int)$hospital,
+                (int)$coding,
                 $stationary
             )
         );

@@ -135,6 +135,6 @@ class Fetcher
 
         $result = array_shift($row);
 
-        return $result === null ? 0 : $result;
+        return $result === null ? 0 : (int)$result;
     }
 }
