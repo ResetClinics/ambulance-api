@@ -36,7 +36,9 @@ class GetCollectionMonth extends AbstractController
 
         $users = $this->users->findAllByPermission($permission, $cityId);
 
-        $workSchedules = $this->workSchedules->findAllByRole($role, $year, $month, $request->get('city'));
+        $cityId =  $request->get('city') ? (int)$request->get('city') : null;
+
+        $workSchedules = $this->workSchedules->findAllByRole($role, $year, $month, $cityId);
 
         $numDays = date('t', mktime(0, 0, 0, $month, 1, $year));
 
