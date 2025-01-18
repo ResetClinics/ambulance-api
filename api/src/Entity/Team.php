@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
@@ -26,7 +28,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             uriTemplate: '/locations',
             controller: AddLocationAction::class,
             input: AddLocation::class,
-        )
+        ),
     ],
     routePrefix: '/api',
     normalizationContext: ['groups' => ['team:read']],

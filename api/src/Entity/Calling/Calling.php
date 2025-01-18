@@ -8,9 +8,9 @@ use ApiPlatform\Doctrine\Common\Filter\DateFilterInterface;
 use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
 use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
@@ -34,8 +34,8 @@ use App\Controller\Calling\RepeatAction;
 use App\Controller\Calling\StartTreatmentAction;
 use App\Entity\City;
 use App\Entity\Client;
-use App\Entity\MedTeam\MedTeam;
 use App\Entity\MediaObject;
+use App\Entity\MedTeam\MedTeam;
 use App\Entity\Partner;
 use App\Entity\ReasonForCancellation;
 use App\Entity\User\User;
@@ -49,16 +49,15 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Context;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: CallingRepository::class)]
 #[ApiResource(
     operations: [
-
         new GetCollection(
             routePrefix: '/api/v1',
             shortName: 'AmbulanceCall',
@@ -88,8 +87,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
             denormalizationContext: [
                 'groups' => [
                     'v1-call:write',
-                    'calling:write'
-                ]
+                    'calling:write',
+                ],
             ],
             write: false,
         ),
@@ -108,7 +107,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
                     'user:item:read',
                     'service:item:read',
                     'client:item:read',
-                ]
+                ],
             ],
         ),
         new Post(
@@ -120,8 +119,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
                     'calling:item:read',
                     'calling:detail:read',
                     'partner:item:read',
-                    'service:item:read'
-                ]
+                    'service:item:read',
+                ],
             ],
         ),
         new Get(
@@ -135,7 +134,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
                     'partner:item:read',
                     'service:item:read',
                     'media_object:read',
-                ]
+                ],
             ],
         ),
         new Put(
@@ -149,7 +148,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
                     'partner:item:read',
                     'service:item:read',
                     'media_object:read',
-                ]
+                ],
             ],
             processor: PostProcessor::class
         ),
@@ -180,13 +179,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
     openapi: false,
     normalizationContext: [
         'groups' => [
-            //'calling:read',
-            //'calling:item:read',
-            //'calling:detail:read',
-            //'partner:item:read',
-            //'service:item:read',
+            // 'calling:read',
+            // 'calling:item:read',
+            // 'calling:detail:read',
+            // 'partner:item:read',
+            // 'service:item:read',
             'media_object:read',
-        ]
+        ],
     ],
     input: CallingDto::class,
     read: false,
@@ -273,7 +272,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[ApiFilter(
     OrderFilter::class,
     properties: ['createdAt', 'updatedAt', 'completedAt', 'dateTime'],
-    arguments: ['orderParameterName' => 'order'])]
+    arguments: ['orderParameterName' => 'order']
+)]
 #[ApiFilter(
     DateFilter::class,
     properties: [
@@ -295,7 +295,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
     SearchFilter::class,
     properties: [
         'team.id' => 'exact',
-        'services.service.id' => 'exact'
+        'services.service.id' => 'exact',
     ]
 )]
 class Calling
@@ -303,31 +303,31 @@ class Calling
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['calling:read', 'hospital:detail:read', 'exchange_calling:read', 'v1-call:read', 'v1-call:item:read',])]
+    #[Groups(['calling:read', 'hospital:detail:read', 'exchange_calling:read', 'v1-call:read', 'v1-call:item:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 256)]
-    #[Groups(['calling:read', 'calling:write', 'v1-call:read', 'v1-call:item:read',])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read', 'v1-call:item:read'])]
     private string $title;
 
     #[ORM\Column(length: 128)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:item:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:item:read'])]
     private string $name;
 
     #[ORM\Column(length: 16)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:item:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:item:read'])]
     private string $phone;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write'])]
     private ?string $fio = null;
 
     #[ORM\Column(length: 32)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read'])]
     private string $numberCalling;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:item:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:item:read'])]
     private string $address;
 
     #[ORM\Column(type: 'calling_status', length: 16, nullable: false)]
@@ -335,26 +335,26 @@ class Calling
     private Status $status;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read'])]
     private string $description;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read'])]
     private ?string $chronicDiseases = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read'])]
     private ?string $nosology = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read'])]
     private ?string $age = null;
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read'])]
     private ?string $leadType = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read'])]
     private ?string $partnerName = null;
 
     #[ORM\Column(type: Types::BOOLEAN)]
@@ -363,84 +363,83 @@ class Calling
     private bool $sendPhone = false;
 
     #[ORM\Column(type: 'string', nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'v1-call:read', 'v1-call:write',])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read', 'v1-call:write'])]
     private ?string $rejectedComment = null;
 
     #[ORM\Column]
-    #[Groups(['calling:read', 'exchange_calling:read', 'v1-call:item:read',])]
+    #[Groups(['calling:read', 'exchange_calling:read', 'v1-call:item:read'])]
     #[Context(normalizationContext: [DateTimeNormalizer::FORMAT_KEY => 'd.m.Y H:m'])]
     #[Gedmo\Timestampable(on: 'create')]
     private DateTimeImmutable $createdAt;
 
-
     #[ORM\Column]
-    #[Groups(['calling:read', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'exchange_calling:read'])]
     #[Context(normalizationContext: [DateTimeNormalizer::FORMAT_KEY => 'd.m.Y H:m'])]
     #[Gedmo\Timestampable(on: 'create')]
     private DateTimeImmutable $updatedAt;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'exchange_calling:read'])]
     private ?DateTimeImmutable $acceptedAt = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'exchange_calling:read'])]
     private ?DateTimeImmutable $dispatchedAt = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'exchange_calling:read'])]
     private ?DateTimeImmutable $arrivedAt = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'exchange_calling:read'])]
     private ?DateTimeImmutable $completedAt = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'exchange_calling:read', 'v1-call:read', 'v1-call:item:read',])]
+    #[Groups(['calling:read', 'exchange_calling:read', 'v1-call:read', 'v1-call:item:read'])]
     private ?DateTimeImmutable $dateTime = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: true)]
-    #[Groups(['calling:read', 'exchange_calling:read', 'v1-call:read',])]
+    #[Groups(['calling:read', 'exchange_calling:read', 'v1-call:read'])]
     #[ApiFilter(SearchFilter::class, properties: ['admin.id' => 'exact'])]
     private ?User $admin;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: true)]
-    #[Groups(['calling:read', 'exchange_calling:read', 'v1-call:read',])]
+    #[Groups(['calling:read', 'exchange_calling:read', 'v1-call:read'])]
     #[ApiFilter(SearchFilter::class, properties: ['doctor.id' => 'exact'])]
     private ?User $doctor;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read'])]
     private ?int $price = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read'])]
     private ?int $estimated = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read'])]
     private ?int $prepayment = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'v1-call:read', 'v1-call:write',])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read', 'v1-call:write'])]
     private ?string $note = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read'])]
     private ?string $passport = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read'])]
     private ?int $coastHospitalAdmission = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read'])]
     private ?int $coastHospital = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read'])]
     private ?int $costDay = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -448,15 +447,15 @@ class Calling
     private ?string $phoneRelatives = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read'])]
     private ?string $resultDate = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read'])]
     private ?string $resultTime = null;
 
     #[ORM\ManyToOne(inversedBy: 'callings')]
-    #[Groups(['calling:read', 'exchange_calling:read', 'v1-call:read',])]
+    #[Groups(['calling:read', 'exchange_calling:read', 'v1-call:read'])]
     #[ApiFilter(SearchFilter::class, properties: ['partner.id' => 'exact'])]
     private ?Partner $partner = null;
 
@@ -464,11 +463,11 @@ class Calling
     private bool $deleted;
 
     #[ORM\Column(length: 16, nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read'])]
     private ?string $lon;
 
     #[ORM\Column(length: 16, nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read'])]
     private ?string $lat;
 
     #[ORM\OneToMany(mappedBy: 'calling', targetEntity: Row::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
@@ -479,7 +478,7 @@ class Calling
     private ?int $amount = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read'])]
     private ?int $paymentNextOrder = null;
 
     #[ORM\Column(nullable: true)]
@@ -487,35 +486,35 @@ class Calling
     private ?int $paymentHospitalization = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read'])]
     private ?int $totalAmount = null;
 
     #[ORM\ManyToOne(targetEntity: self::class)]
     private ?self $owner = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
     private ?int $partnerReward = null;
 
-    #[ORM\Column(nullable: true, options: ["default" => 0])]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read',])]
+    #[ORM\Column(nullable: true, options: ['default' => 0])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
     private ?int $mkadDistance = null;
 
     #[ORM\Column(length: 32, nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
     private ?string $ownerExternalId = null;
 
     #[ORM\ManyToOne]
-    #[Groups(['calling:read', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'exchange_calling:read'])]
     #[ApiFilter(SearchFilter::class, properties: ['operator.id' => 'exact'])]
     private ?User $operator = null;
 
     #[ORM\Embedded(class: OperatorReward::class)]
-    #[Groups(['calling:read', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'exchange_calling:read'])]
     private OperatorReward $operatorReward;
 
     #[ORM\ManyToOne(inversedBy: 'callings')]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read'])]
     #[ApiFilter(SearchFilter::class, properties: ['client.id' => 'exact'])]
     private ?Client $client = null;
 
@@ -530,12 +529,12 @@ class Calling
     private bool $partnerHospitalization;
 
     #[ORM\Column(nullable: false, options: ['default' => 0])]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read'])]
     #[ApiFilter(BooleanFilter::class)]
     private bool $personal;
 
     #[ORM\Column(nullable: false, options: ['default' => 0])]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read'])]
     #[ApiFilter(BooleanFilter::class)]
     private bool $doNotHospitalize;
 
@@ -543,23 +542,23 @@ class Calling
     #[ORM\JoinTable(name: 'calling_images')]
     #[ORM\JoinColumn(name: 'call_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'media_object_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[Groups(['calling:read', 'calling:write', 'hospital:detail:read', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'hospital:detail:read', 'v1-call:read'])]
     private Collection $images;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read'])]
     private ?string $addressInfo = null;
 
     #[ORM\ManyToOne(inversedBy: 'callings')]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
     private ?MedTeam $team = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
     private ?int $responsibleUserId = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read'])]
     private ?string $responsibleUserName = null;
 
     #[ORM\ManyToOne]
@@ -568,32 +567,31 @@ class Calling
     private ?City $city = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'v1-call:read', 'v1-call:write',])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read', 'v1-call:write'])]
     private ?DateTimeImmutable $arrivalDateTime = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'v1-call:read', 'v1-call:write',])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read', 'v1-call:write'])]
     private ?DateTimeImmutable $endOfServiceDateTime = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
-    #[Groups(['v1-call:read', 'v1-call:write',])]
+    #[Groups(['v1-call:read', 'v1-call:write'])]
     private ?DateTimeImmutable $birthday = null;
 
     #[ORM\ManyToOne]
-    #[Groups(['v1-call:read', 'v1-call:write',])]
+    #[Groups(['v1-call:read', 'v1-call:write'])]
     private ?ReasonForCancellation $reasonForCancellation = null;
 
     public function __construct(
-        string  $numberCalling,
-        string  $title,
-        string  $name,
-        string  $phone,
+        string $numberCalling,
+        string $title,
+        string $name,
+        string $phone,
         ?string $address = null,
         ?string $description = null,
-        ?User   $admin = null,
-        ?User   $doctor = null
-    )
-    {
+        ?User $admin = null,
+        ?User $doctor = null
+    ) {
         $this->name = $name;
         $this->phone = $phone;
         $this->address = $address ?: '';
@@ -617,7 +615,6 @@ class Calling
 
         $this->images = new ArrayCollection();
     }
-
 
     public function getId(): ?int
     {
@@ -654,7 +651,6 @@ class Calling
         $this->dispatchedAt = $dispatchedAt;
     }
 
-
     public function setComplete(DateTimeImmutable $completedAt): void
     {
         $this->status = Status::completed();
@@ -690,18 +686,15 @@ class Calling
         return $this->createdAt;
     }
 
-
     public function getAcceptedAt(): ?DateTimeImmutable
     {
         return $this->acceptedAt;
     }
 
-
     public function getFinishedAt(): ?DateTimeImmutable
     {
         return $this->completedAt;
     }
-
 
     public function getRejectedComment(): ?string
     {
@@ -727,7 +720,6 @@ class Calling
     {
         return $this->phone;
     }
-
 
     public function setPhone(string $phone): void
     {
@@ -808,152 +800,100 @@ class Calling
         return $this->dateTime;
     }
 
-    /**
-     * @param string $title
-     */
     public function setTitle(string $title): void
     {
         $this->title = $title;
     }
 
-    /**
-     * @param string $numberCalling
-     */
     public function setNumberCalling(string $numberCalling): void
     {
         $this->numberCalling = $numberCalling;
     }
 
-    /**
-     * @param Status $status
-     */
     public function setStatus(Status $status): void
     {
         $this->status = $status;
     }
 
-
-    #[Groups(['v1-call:write',])]
+    #[Groups(['v1-call:write'])]
     #[SerializedName('status')]
     public function setStatusValue(string $value): void
     {
         $this->status = new Status($value);
     }
 
-    #[Groups(['calling:read', 'exchange_calling:read','v1-call:read', 'v1-call:item:read',])]
+    #[Groups(['calling:read', 'exchange_calling:read', 'v1-call:read', 'v1-call:item:read'])]
     #[SerializedName('status')]
     public function getStatusValue(): string
     {
         return $this->status->getName();
     }
 
-    /**
-     * @param string|null $chronicDiseases
-     */
     public function setChronicDiseases(?string $chronicDiseases): void
     {
         $this->chronicDiseases = $chronicDiseases;
     }
 
-    /**
-     * @param string|null $leadType
-     */
     public function setLeadType(?string $leadType): void
     {
         $this->leadType = $leadType;
     }
 
-    /**
-     * @param string|null $partnerName
-     */
     public function setPartnerName(?string $partnerName): void
     {
         $this->partnerName = $partnerName;
     }
 
-    /**
-     * @param bool $sendPhone
-     */
     public function setSendPhone(bool $sendPhone): void
     {
         $this->sendPhone = $sendPhone;
     }
 
-    /**
-     * @param string|null $rejectedComment
-     */
     public function setRejectedComment(?string $rejectedComment): void
     {
         $this->rejectedComment = $rejectedComment;
     }
 
-    /**
-     * @param DateTimeImmutable $createdAt
-     */
     public function setCreatedAt(DateTimeImmutable $createdAt): void
     {
         $this->createdAt = $createdAt;
     }
 
-    /**
-     * @param DateTimeImmutable|null $acceptedAt
-     */
     public function setAcceptedAt(?DateTimeImmutable $acceptedAt): void
     {
         $this->acceptedAt = $acceptedAt;
     }
 
-    /**
-     * @param DateTimeImmutable|null $arrivedAt
-     */
     public function setArrivedAt(?DateTimeImmutable $arrivedAt): void
     {
         $this->arrivedAt = $arrivedAt;
     }
 
-    /**
-     * @param DateTimeImmutable|null $completedAt
-     */
     public function setCompletedAt(?DateTimeImmutable $completedAt): void
     {
         $this->completedAt = $completedAt;
     }
 
-    /**
-     * @param DateTimeImmutable|null $dateTime
-     */
     public function setDateTime(?DateTimeImmutable $dateTime): void
     {
         $this->dateTime = $dateTime;
     }
 
-    /**
-     * @return string|null
-     */
     public function getNosology(): ?string
     {
         return $this->nosology;
     }
 
-    /**
-     * @return string|null
-     */
     public function getAge(): ?string
     {
         return $this->age;
     }
 
-    /**
-     * @param string|null $nosology
-     */
     public function setNosology(?string $nosology): void
     {
         $this->nosology = $nosology;
     }
 
-    /**
-     * @param string|null $age
-     */
     public function setAge(?string $age): void
     {
         $this->age = $age;
@@ -1174,14 +1114,12 @@ class Calling
         return $this->services;
     }
 
-
     #[Groups(['v1-call:read'])]
     #[SerializedName('services')]
     public function getServicesValues(): array
     {
         return $this->services->getValues();
     }
-
 
     public function addService(Row $row): self
     {
@@ -1191,26 +1129,26 @@ class Calling
         }
 
         return $this;
-       // if (!$this->services->contains($row)) {
-       //     $this->services->add($row);
-       //     $row->setCalling($this);
-       // }
-//
-       // $this->price = 0;
-       // $this->paymentNextOrder = 0;
-       // $this->totalAmount = 0;
-//
-       // /** @var Row $serviceRow */
-       // foreach ($this->services as $serviceRow) {
-       //     if ($serviceRow->getService()->getType() === 'default') {
-       //         $this->price += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
-       //     } else {
-       //         $this->paymentNextOrder += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
-       //     }
-       //     $this->totalAmount = $this->price + $this->paymentNextOrder;
-       // }
-//
-       // return $this;
+        // if (!$this->services->contains($row)) {
+        //     $this->services->add($row);
+        //     $row->setCalling($this);
+        // }
+        //
+        // $this->price = 0;
+        // $this->paymentNextOrder = 0;
+        // $this->totalAmount = 0;
+        //
+        // /** @var Row $serviceRow */
+        // foreach ($this->services as $serviceRow) {
+        //     if ($serviceRow->getService()->getType() === 'default') {
+        //         $this->price += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
+        //     } else {
+        //         $this->paymentNextOrder += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
+        //     }
+        //     $this->totalAmount = $this->price + $this->paymentNextOrder;
+        // }
+        //
+        // return $this;
     }
 
     public function removeService(Row $row): self
@@ -1223,38 +1161,35 @@ class Calling
         }
 
         return $this;
-
-
-
-       // if ($this->services->removeElement($row)) {
-       //     // set the owning side to null (unless already changed)
-       //     if ($row->getCalling() === $this) {
-       //         $row->setCalling(null);
-       //     }
-       // }
-//
-       // $this->price = 0;
-       // $this->paymentNextOrder = 0;
-       // $this->totalAmount = 0;
-//
-       // /** @var Row $serviceRow */
-       // foreach ($this->services as $serviceRow) {
-       //     if ($serviceRow->getService()->getType() === 'default') {
-       //         $this->price += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
-       //     } else {
-       //         $this->paymentNextOrder += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
-       //     }
-       //     $this->totalAmount = $this->price + $this->paymentNextOrder;
-       // }
-//
-       // return $this;
+        // if ($this->services->removeElement($row)) {
+        //     // set the owning side to null (unless already changed)
+        //     if ($row->getCalling() === $this) {
+        //         $row->setCalling(null);
+        //     }
+        // }
+        //
+        // $this->price = 0;
+        // $this->paymentNextOrder = 0;
+        // $this->totalAmount = 0;
+        //
+        // /** @var Row $serviceRow */
+        // foreach ($this->services as $serviceRow) {
+        //     if ($serviceRow->getService()->getType() === 'default') {
+        //         $this->price += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
+        //     } else {
+        //         $this->paymentNextOrder += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
+        //     }
+        //     $this->totalAmount = $this->price + $this->paymentNextOrder;
+        // }
+        //
+        // return $this;
     }
 
-   // public function setServices($services): self
-   // {
-   //     $this->services = new ArrayCollection($services);
-   //     return $this;
-   // }
+    // public function setServices($services): self
+    // {
+    //     $this->services = new ArrayCollection($services);
+    //     return $this;
+    // }
 
     public function getAmount(): ?int
     {
@@ -1333,7 +1268,6 @@ class Calling
         return $this->status === Status::completed();
     }
 
-
     #[SerializedName('repeat')]
     #[Groups(['calling:read', 'exchange_calling:read'])]
     public function getCountRepeat(): int
@@ -1411,8 +1345,7 @@ class Calling
         return $this;
     }
 
-
-    #[Groups(['calling:read', 'v1-call:read',])]
+    #[Groups(['calling:read', 'v1-call:read'])]
     public function isCurrentNoBusinessCards(): bool
     {
         return $this->partner?->isNoBusinessCards() ?: $this->noBusinessCards;
@@ -1430,7 +1363,7 @@ class Calling
         return $this;
     }
 
-    #[Groups(['calling:read', 'v1-call:read',])]
+    #[Groups(['calling:read', 'v1-call:read'])]
     public function isCurrentPartnerHospitalization(): bool
     {
         return $this->partner?->isPartnerHospitalization() ?: $this->partnerHospitalization;
@@ -1546,21 +1479,6 @@ class Calling
         }
 
         return $this->allOwnerHaveTheSameAdmin();
-
-    }
-
-
-    private function allOwnerHaveTheSameAdmin(): bool
-    {
-        if (!$this->getOwner()) {
-            return true;
-        }
-
-        if ($this->getOwner()->getAdmin()->getId() !== $this->getAdmin()->getId()) {
-            return false;
-        }
-
-        return $this->getOwner()->allOwnerHaveTheSameAdmin();
     }
 
     public function isDoctorCombo(): bool
@@ -1570,24 +1488,9 @@ class Calling
         }
 
         return $this->allOwnerHaveTheSameDoctor();
-
     }
 
-
-    private function allOwnerHaveTheSameDoctor(): bool
-    {
-        if (!$this->getOwner()) {
-            return true;
-        }
-
-        if ($this->getOwner()->getDoctor()->getId() !== $this->getDoctor()->getId()) {
-            return false;
-        }
-
-        return $this->getOwner()->allOwnerHaveTheSameDoctor();
-    }
-
-    public function getTherapySum(): float|int|null
+    public function getTherapySum(): null|float|int
     {
         $sum = 0;
         foreach ($this->getServices() as $service) {
@@ -1596,7 +1499,7 @@ class Calling
         return $sum;
     }
 
-    #[Groups(['calling:read', 'v1-call:read', 'v1-call:item:read',])]
+    #[Groups(['calling:read', 'v1-call:read', 'v1-call:item:read'])]
     public function getStatusLabel(): string
     {
         return $this->status->getLabel();
@@ -1648,5 +1551,31 @@ class Calling
         $this->reasonForCancellation = $reasonForCancellation;
 
         return $this;
+    }
+
+    private function allOwnerHaveTheSameAdmin(): bool
+    {
+        if (!$this->getOwner()) {
+            return true;
+        }
+
+        if ($this->getOwner()->getAdmin()->getId() !== $this->getAdmin()->getId()) {
+            return false;
+        }
+
+        return $this->getOwner()->allOwnerHaveTheSameAdmin();
+    }
+
+    private function allOwnerHaveTheSameDoctor(): bool
+    {
+        if (!$this->getOwner()) {
+            return true;
+        }
+
+        if ($this->getOwner()->getDoctor()->getId() !== $this->getDoctor()->getId()) {
+            return false;
+        }
+
+        return $this->getOwner()->allOwnerHaveTheSameDoctor();
     }
 }

@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api/amo-crm/set-team', name: 'amo-crm_set-team', methods: ["POST"])]
+#[Route('/api/amo-crm/set-team', name: 'amo-crm_set-team', methods: ['POST'])]
 class SetTeamAction extends AbstractController
 {
     private AmoCRMApiClient $client;
@@ -33,17 +33,15 @@ class SetTeamAction extends AbstractController
     private MedTeamRepository $medTeamRepository;
 
     public function __construct(
-        AmoCRM                             $amoCRM,
+        AmoCRM $amoCRM,
         MedTeamRepository $medTeamRepository
-    )
-    {
+    ) {
         $this->client = $amoCRM->getClient();
         $this->medTeamRepository = $medTeamRepository;
     }
 
     public function __invoke(Request $request): JsonResponse
     {
-
         $data = $request->request->all();
 
         $leadId = $data['leads']['status'][0]['id'];
@@ -59,15 +57,15 @@ class SetTeamAction extends AbstractController
 
         $medTeam = $this->medTeamRepository->getLastWorkByNumber($lead->team);
 
-        if (!$medTeam){
+        if (!$medTeam) {
             return $this->json(null, Response::HTTP_OK);
         }
 
-        if (!$medTeam->getAdmin()){
+        if (!$medTeam->getAdmin()) {
             return $this->json(null, Response::HTTP_OK);
         }
 
-        if (!$medTeam->getDoctor()){
+        if (!$medTeam->getDoctor()) {
             return $this->json(null, Response::HTTP_OK);
         }
 
@@ -85,7 +83,6 @@ class SetTeamAction extends AbstractController
         );
         $leadCustomFieldsValues->add($textCustomFieldValueModel);
 
-
         $textCustomFieldValueModel = new TextCustomFieldValuesModel();
         $textCustomFieldValueModel->setFieldId(873879);
         $textCustomFieldValueModel->setValues(
@@ -93,7 +90,6 @@ class SetTeamAction extends AbstractController
                 ->add((new TextCustomFieldValueModel())->setValue($medTeam->getAdmin()->getName()))
         );
         $leadCustomFieldsValues->add($textCustomFieldValueModel);
-
 
         $leadData->setCustomFieldsValues($leadCustomFieldsValues);
         $leadCollection = new LeadsCollection();
@@ -103,17 +99,17 @@ class SetTeamAction extends AbstractController
         try {
             $this->client->leads()->update($leadCollection);
         } catch (AmoCRMApiException $e) {
-            die;
+            exit;
         }
 
         return $this->json(null, Response::HTTP_OK);
     }
 
-
-    public function sendMessageToAmo($leadId, $message){
+    public function sendMessageToAmo($leadId, $message): void
+    {
         $notesCollection = new NotesCollection();
         $messageNote = new CommonNote();
-        $messageNote->setEntityId( $leadId)
+        $messageNote->setEntityId($leadId)
             ->setText($message)
             ->setCreatedBy(0);
 
@@ -130,24 +126,23 @@ class SetTeamAction extends AbstractController
     {
         $message = '';
 
-        $message .= 'Заявка №: '. $lead->numberCalling.PHP_EOL;
-        $message .= 'Тип заявки: '.$lead->leadType.PHP_EOL;
+        $message .= 'Заявка №: ' . $lead->numberCalling . PHP_EOL;
+        $message .= 'Тип заявки: ' . $lead->leadType . PHP_EOL;
 
-        $message .= 'Бригада №: '. $lead->team.PHP_EOL;
-        $message .= 'Сумма: '. $lead->price.PHP_EOL.PHP_EOL;
+        $message .= 'Бригада №: ' . $lead->team . PHP_EOL;
+        $message .= 'Сумма: ' . $lead->price . PHP_EOL . PHP_EOL;
 
-        $message .= 'Врач: '. $team->getDoctor()->getName().PHP_EOL;
-        $message .= 'Администратор: '. $team->getAdmin()->getName().PHP_EOL;
-        $message .= 'Время прибытия: '. $lead->dateTime.PHP_EOL.PHP_EOL;
+        $message .= 'Врач: ' . $team->getDoctor()->getName() . PHP_EOL;
+        $message .= 'Администратор: ' . $team->getAdmin()->getName() . PHP_EOL;
+        $message .= 'Время прибытия: ' . $lead->dateTime . PHP_EOL . PHP_EOL;
 
-        $message .= 'Адрес: '. $lead->address.PHP_EOL.PHP_EOL;
+        $message .= 'Адрес: ' . $lead->address . PHP_EOL . PHP_EOL;
 
-        $message .= 'Нозология: '. $lead->nosology.PHP_EOL;
-        $message .= 'Возраст: '. $lead->age.PHP_EOL;
-        $message .= 'ХЗ: '. $lead->hz.PHP_EOL.PHP_EOL;
+        $message .= 'Нозология: ' . $lead->nosology . PHP_EOL;
+        $message .= 'Возраст: ' . $lead->age . PHP_EOL;
+        $message .= 'ХЗ: ' . $lead->hz . PHP_EOL . PHP_EOL;
 
-
-        $message .= 'Примечание: '. $lead->description.PHP_EOL;
+        $message .= 'Примечание: ' . $lead->description . PHP_EOL;
         return $message;
     }
 
@@ -158,7 +153,6 @@ class SetTeamAction extends AbstractController
         $lead->price = $leadData->getPrice();
 
         foreach ($leadData->getCustomFieldsValues() as $field) {
-
             if ($field->getFieldId() === 879807) {
                 $lead->numberCalling = $field->getValues()?->first()->getValue();
             }

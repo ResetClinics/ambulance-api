@@ -19,9 +19,7 @@ class DeviceController extends AbstractController
         private readonly UserRepository $users,
         private readonly DeviceRepository $devices,
         private readonly Flusher $flusher
-    )
-    {
-    }
+    ) {}
 
     /**
      * @throws NonUniqueResultException
@@ -36,7 +34,7 @@ class DeviceController extends AbstractController
         if (!$device) {
             $device = new Device($id, $user);
             $this->devices->save($device);
-        }else{
+        } else {
             $device->setUser($user);
         }
 
@@ -45,14 +43,13 @@ class DeviceController extends AbstractController
         return $this->json([]);
     }
 
-
     #[Route('/api/devices/{id}', name: 'device_delete', methods: ['DELETE'])]
     public function delete(string $id): Response
     {
         $device = $this->devices->find($id);
-         if (!$device){
-             return $this->json([]);
-         }
+        if (!$device) {
+            return $this->json([]);
+        }
         $this->devices->remove($device);
 
         $this->flusher->flush();

@@ -154,6 +154,11 @@ class Status
         return $this->name === self::REPEAT;
     }
 
+    public function getLabel(): string
+    {
+        return $this->getLabels()[$this->name];
+    }
+
     private function getLabels(): array
     {
         return [
@@ -168,10 +173,5 @@ class Status
             self::COMPLETED => 'Завершен',
             self::REPEAT => 'Повтор',
         ];
-    }
-
-    public function getLabel(): string
-    {
-        return $this->getLabels()[$this->name];
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Call;
 
 use App\Entity\Calling\Calling;
@@ -11,19 +13,16 @@ class PartnerReward
 {
     public function __construct(
         readonly private Fetcher $fetcher,
-    )
-    {
-    }
+    ) {}
 
     public function calculate(Calling $call): void
     {
         $fullReward = 0;
-        if ($call->getStatus() !== Status::COMPLETED){
+        if ($call->getStatus() !== Status::COMPLETED) {
             return;
         }
 
-        foreach ($call->getServices() as $row){
-
+        foreach ($call->getServices() as $row) {
             $query = new Query(
                 $call->getCompletedAt(),
                 $call->getPartner()?->getId(),

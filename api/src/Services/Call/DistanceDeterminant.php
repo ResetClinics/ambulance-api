@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Call;
 
 use App\Entity\Calling\Calling;
@@ -10,11 +12,9 @@ use Exception;
 class DistanceDeterminant
 {
     public function __construct(
-        private readonly Api           $geocodingApi,
+        private readonly Api $geocodingApi,
         private readonly TrackerToMkad $trackerToMkad
-    )
-    {
-    }
+    ) {}
 
     public function toDetermine(Calling $call): void
     {
@@ -36,9 +36,7 @@ class DistanceDeterminant
             );
 
             $call->setMkadDistance($distance);
-
         } catch (Exception) {
         }
     }
-
 }

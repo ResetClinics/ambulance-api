@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console;
 
 use App\Entity\Calling\Calling;
 use App\Entity\Calling\Status;
-use App\MkadDistance\Distance;
 use App\Repository\CallingRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -19,8 +20,7 @@ class TestCommand extends Command
 {
     public function __construct(
         private readonly CallingRepository $calls,
-    )
-    {
+    ) {
         parent::__construct();
     }
 
@@ -39,25 +39,23 @@ class TestCommand extends Command
 
         /** @var Calling $call */
         foreach ($this->calls->findAllByStatus(Status::COMPLETED) as $call) {
-
-            $totalCount++;
+            ++$totalCount;
             $totalAmount += $call->getPrice();
 
             if ($call->getCountRepeat() === 1) {
-                $repeat1Count++;
+                ++$repeat1Count;
                 $repeat1Amount += $call->getPrice();
             }
 
             if ($call->getCountRepeat() === 2) {
-                $repeat2Count++;
+                ++$repeat2Count;
                 $repeat2Amount += $call->getPrice();
             }
 
             if ($call->getCountRepeat() === 3) {
-                $repeat3Count++;
+                ++$repeat3Count;
                 $repeat3Amount += $call->getPrice();
             }
-
         }
 
         echo 'Вызовы' . PHP_EOL;
@@ -79,4 +77,3 @@ class TestCommand extends Command
         return Command::SUCCESS;
     }
 }
-

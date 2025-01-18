@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Telegram;
 
 use App\Services\YaDiskApi\YaDiskApiInterface;
@@ -12,21 +14,16 @@ use TelegramBot\Api\Types\Update;
 
 readonly class GetAudioCommand implements CommandInterface
 {
-
     public function __construct(
         private YaDiskApiInterface $api
-    )
-    {
-    }
+    ) {}
 
     public function execute(BotApi $api, Update $update): void
     {
-
         $fileId = $update->getMessage()->getAudio()->getFileId();
         $fileSize = $update->getMessage()->getAudio()->getFileSize();
 
         if ($fileSize > 20000000) {
-
             $api->deleteMessage(
                 $update->getMessage()->getChat()->getId(),
                 $update->getMessage()->getMessageId()
@@ -48,13 +45,12 @@ readonly class GetAudioCommand implements CommandInterface
 
         $filePath = $tgFile->getFilePath();
 
-
         $extension = pathinfo($filePath, PATHINFO_EXTENSION);
 
         $file = $api->downloadFile($fileId);
 
         $timestamp = (new DateTime())->format('YmdHis');
-        //$filePath = dirname(__DIR__) . "/../var/{$timestamp}.{$extension}";
+        // $filePath = dirname(__DIR__) . "/../var/{$timestamp}.{$extension}";
 
         $tempFile = tempnam(sys_get_temp_dir(), 'audio');
 
@@ -86,10 +82,9 @@ readonly class GetAudioCommand implements CommandInterface
 
     public function isApplicable(Update $update): bool
     {
-
-       if (!$update->getMessage()?->getAudio()) {
-           return false;
-       }
+        if (!$update->getMessage()?->getAudio()) {
+            return false;
+        }
 
         return true;
     }

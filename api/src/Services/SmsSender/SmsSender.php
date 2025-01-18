@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\SmsSender;
 
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
@@ -9,9 +11,7 @@ class SmsSender
 {
     public function __construct(
         readonly private HttpClientInterface $client,
-    )
-    {
-    }
+    ) {}
 
     /**
      * @throws TransportExceptionInterface
@@ -20,7 +20,7 @@ class SmsSender
     {
         $this->client->request(
             'GET',
-            'https://sms.ru/sms/send?api_id=6F4B7B5D-AB04-3F68-8B13-AF80351F271E&to=' . $phone .'&msg='. $message . '&json=1'
+            'https://sms.ru/sms/send?api_id=6F4B7B5D-AB04-3F68-8B13-AF80351F271E&to=' . $phone . '&msg=' . $message . '&json=1'
         );
     }
 }

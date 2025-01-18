@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\UseCase\Call\SendFromCrm;
 
 use App\Entity\Partner;
 
 class Command
 {
-
     private Lead $lead;
     private Contact $contact;
     private Partner $partner;

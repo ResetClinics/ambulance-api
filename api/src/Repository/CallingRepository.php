@@ -57,8 +57,8 @@ class CallingRepository extends ServiceEntityRepository
     {
         $result = $this->find($id);
 
-        if (!$result){
-            throw new NotFoundHttpException('Вызов id: '.$id.' не найден');
+        if (!$result) {
+            throw new NotFoundHttpException('Вызов id: ' . $id . ' не найден');
         }
         return $result;
     }
@@ -108,7 +108,6 @@ class CallingRepository extends ServiceEntityRepository
         return $checkWordstat;
     }
 
-
     public function findOneByNumber(string $numberCalling): ?Calling
     {
         return $this->createQueryBuilder('c')
@@ -126,8 +125,8 @@ class CallingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
 
-        if (!$result){
-            throw new NotFoundHttpException('Вызов #'.$numberCalling.' не найден');
+        if (!$result) {
+            throw new NotFoundHttpException('Вызов #' . $numberCalling . ' не найден');
         }
         return $result;
     }
@@ -153,8 +152,7 @@ class CallingRepository extends ServiceEntityRepository
             ->setParameter('start', $period->getStartDate())
             ->setParameter('end', $period->getEndDate())
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     public function findAllByClientNull(): array
@@ -165,8 +163,7 @@ class CallingRepository extends ServiceEntityRepository
             ->andWhere('c.client IS NULL')
             ->setMaxResults(1000)
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 
     public function findAllByStatus(string $status): array
@@ -177,8 +174,7 @@ class CallingRepository extends ServiceEntityRepository
             ->andWhere('c.status >= :status')
             ->setParameter('status', $status)
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 
     public function findAllWhoHasOperator()
@@ -186,8 +182,7 @@ class CallingRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('c')
             ->andWhere('c.operator IS NOT NULL')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     public function getAllCoords(): array
@@ -201,15 +196,14 @@ class CallingRepository extends ServiceEntityRepository
             ->andWhere('c.status = :status')
             ->setParameter('status', Status::COMPLETED)
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 
     public function findAllForPartnerApi(Partner $partner, ?string $sort, ?string $direction, ?string $search): array
     {
         $qb = $this->createQueryBuilder('c');
 
-        if ($search){
+        if ($search) {
             $qb->where($qb->expr()->like('LOWER(c.address)', ':search'))
                 ->setParameter('search', '%' . $search . '%');
         }
@@ -231,7 +225,7 @@ class CallingRepository extends ServiceEntityRepository
     {
         $coll = $this->getById($callId);
 
-        if ($coll->getStatus() != Status::ARRIVED && $coll->getStatus() != Status::TREATING) {
+        if ($coll->getStatus() !== Status::ARRIVED && $coll->getStatus() !== Status::TREATING) {
             return [];
         }
 

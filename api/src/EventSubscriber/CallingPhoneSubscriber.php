@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\EventSubscriber;
 
 use ApiPlatform\Symfony\EventListener\EventPriorities;
@@ -9,6 +11,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Security;
+use Traversable;
 
 final class CallingPhoneSubscriber implements EventSubscriberInterface
 {
@@ -26,16 +29,16 @@ final class CallingPhoneSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onKernelView(ViewEvent $event)
+    public function onKernelView(ViewEvent $event): void
     {
         $callings = $event->getControllerResult();
         $request = $event->getRequest();
 
-        if (!$callings instanceof \Traversable || !$request->isMethod('GET')) {
+        if (!$callings instanceof Traversable || !$request->isMethod('GET')) {
             return;
         }
 
-        if ($request->attributes->get('_api_resource_class') !== Calling::class){
+        if ($request->attributes->get('_api_resource_class') !== Calling::class) {
             return;
         }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\MkadDistance\Geometry;
 
 use Stringable;
@@ -13,7 +15,7 @@ abstract class Polygon implements Stringable
 
     /**
      * Polygon constructor.
-     * @param Point[]|array $vertices
+     * @param array|Point[] $vertices
      */
     public function __construct(array $vertices = [])
     {
@@ -33,16 +35,12 @@ abstract class Polygon implements Stringable
     /**
      * @return Point[]
      */
-    public function getVertices(): array
+    final public function getVertices(): array
     {
         return $this->vertices;
     }
 
-    /**
-     * @param Point $point
-     * @return bool
-     */
-    public function pointOnVertex(Point $point): bool
+    final public function pointOnVertex(Point $point): bool
     {
         foreach ($this->vertices as $vertex) {
             if (Point::compare($point, $vertex)) {
@@ -54,11 +52,9 @@ abstract class Polygon implements Stringable
     }
 
     /**
-     * Попадает ли точка внутрь полигона
-     * @param Point $point
-     * @return bool
+     * Попадает ли точка внутрь полигона.
      */
-    public function isInner(Point $point): bool
+    final public function isInner(Point $point): bool
     {
         // Check if the point sits exactly on a vertex
         if ($this->pointOnVertex($point) === true) {
@@ -67,12 +63,12 @@ abstract class Polygon implements Stringable
 
         // Check if the point is inside the polygon or on the boundary
         $intersections = 0;
-        $vertices_count = count($this->vertices);
+        $vertices_count = \count($this->vertices);
 
-        for ($i = 1; $i < $vertices_count; $i++) {
+        for ($i = 1; $i < $vertices_count; ++$i) {
             $vertexPrev = $this->vertices[$i - 1];
             $vertexCur = $this->vertices[$i];
-            if ($vertexPrev->getLon() == $vertexCur->getLon() && $vertexPrev->getLon() == $point->getLon() &&
+            if ($vertexPrev->getLon() === $vertexCur->getLon() && $vertexPrev->getLon() === $point->getLon() &&
                 $point->getLat() > min($vertexPrev->getLat(), $vertexCur->getLat()) &&
                 $point->getLat() < max($vertexPrev->getLat(), $vertexCur->getLat())
             ) { // Check if point is on an horizontal polygon boundary
@@ -81,18 +77,18 @@ abstract class Polygon implements Stringable
             if ($point->getLon() > min($vertexPrev->getLon(), $vertexCur->getLon()) &&
                 $point->getLon() <= max($vertexPrev->getLon(), $vertexCur->getLon()) &&
                 $point->getLat() <= max($vertexPrev->getLat(), $vertexCur->getLat()) &&
-                $vertexPrev->getLon() != $vertexCur->getLon()
+                $vertexPrev->getLon() !== $vertexCur->getLon()
             ) {
                 $xinters = ($point->getLon() - $vertexPrev->getLon()) * ($vertexCur->getLat() - $vertexPrev->getLat()) / ($vertexCur->getLon() - $vertexPrev->getLon()) + $vertexPrev->getLat();
-                if ($xinters == $point->getLat()) { // Check if point is on the polygon boundary (other than horizontal)
+                if ($xinters === $point->getLat()) { // Check if point is on the polygon boundary (other than horizontal)
                     return true;
                 }
-                if ($vertexPrev->getLat() == $vertexCur->getLat() || $point->getLat() <= $xinters) {
-                    $intersections++;
+                if ($vertexPrev->getLat() === $vertexCur->getLat() || $point->getLat() <= $xinters) {
+                    ++$intersections;
                 }
             }
         }
         // If the number of edges we passed through is odd, then it's in the polygon.
-        return $intersections % 2 != 0;
+        return $intersections % 2 !== 0;
     }
 }

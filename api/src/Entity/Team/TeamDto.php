@@ -1,8 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\Team;
 
-class TeamDto
-{
-
-}
+class TeamDto {}

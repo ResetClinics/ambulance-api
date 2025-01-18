@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\PaymentSetting;
 
 use App\Repository\PaymentSetting\PaymentSettingVersionRepository;
@@ -11,8 +13,8 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 #[ORM\Table(name: 'payment_setting_version')]
 class PaymentSettingVersion
 {
-    use TimestampableEntity;
     use BlameableEntity;
+    use TimestampableEntity;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filter\Partner;
 
 use ApiPlatform\Doctrine\Orm\Filter\AbstractFilter;
@@ -27,16 +29,14 @@ final class SearchByFieldsFilter extends AbstractFilter
 
     /** @param string $value */
     protected function filterProperty(
-        string                      $property,
-                                    $value,
-        QueryBuilder                $queryBuilder,
+        string $property,
+        $value,
+        QueryBuilder $queryBuilder,
         QueryNameGeneratorInterface $queryNameGenerator,
-        string                      $resourceClass,
-        Operation                   $operation = null,
-        array                       $context = []
-    ): void
-    {
-
+        string $resourceClass,
+        ?Operation $operation = null,
+        array $context = []
+    ): void {
         if ('name' !== $property) {
             return;
         }
@@ -50,6 +50,6 @@ final class SearchByFieldsFilter extends AbstractFilter
                 $queryBuilder->expr()->like($alias . '.phone', ':search'),
                 $queryBuilder->expr()->like($alias . '.email', ':search'),
             )
-        )->setParameter('search',  '%' . $value . '%');
+        )->setParameter('search', '%' . $value . '%');
     }
 }

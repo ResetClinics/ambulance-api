@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Hospital;
 
 use App\Entity\Hospital\Hospital;
@@ -11,16 +13,14 @@ class PartnerReward
 {
     public function __construct(
         readonly private Fetcher $fetcher,
-    )
-    {
-    }
+    ) {}
 
     /**
      * @throws Exception
      */
     public function calculate(Hospital $hospital): void
     {
-        if ($hospital->getStatus() !== 'completed'){
+        if ($hospital->getStatus() !== 'completed') {
             return;
         }
 

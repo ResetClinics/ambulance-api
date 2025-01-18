@@ -1,6 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Hospital;
+
 use App\Entity\Hospital\Hospital;
 use App\Query\PartnerReward\Fetcher;
 use App\Query\PartnerReward\Query;
@@ -17,9 +20,7 @@ class PartnerReport extends AbstractController
     public function __construct(
         private readonly Fetcher $partnerRewardFetcher,
         private readonly HospitalRepository $hospitals
-    )
-    {
-    }
+    ) {}
 
     /**
      * @throws Exception
@@ -27,8 +28,6 @@ class PartnerReport extends AbstractController
     #[Route(path: '/api/hospitals/report', name: 'hospitals_report', methods: 'GET', priority: 10)]
     public function __invoke(Request $request): JsonResponse
     {
-
-
         $partnerId = $request->query->get('partnerId');
 
         $dischargedAtAfter = $request->query->get('dischargedAtAfter');
@@ -40,14 +39,12 @@ class PartnerReport extends AbstractController
             new DateTimeImmutable($dischargedAtBefore),
         );
 
-
         $items = [];
         $totalAmount = 0;
         $totalReward = 0;
 
         /** @var Hospital $hospital */
-        foreach ($hospitals as $hospital){
-
+        foreach ($hospitals as $hospital) {
             $query = new Query(
                 $hospital->getDischarged(),
                 $hospital->getPartner()->getId(),
@@ -68,9 +65,8 @@ class PartnerReport extends AbstractController
                 'fio' => $hospital->getFio(),
                 'phone' => $hospital->getPhone(),
                 'amount' => $hospital->getMainAmount(),
-                'reward' => $reward
+                'reward' => $reward,
             ];
-
         }
 
         $hospitals = $this->hospitals->findByPartnerAndHospitalizedAt(
@@ -80,14 +76,14 @@ class PartnerReport extends AbstractController
         );
 
         /** @var Hospital $hospital */
-        foreach ($hospitals as $hospital){
+        foreach ($hospitals as $hospital) {
             $items[] = [
                 'hospitalized' => $hospital->getHospitalized()?->format('d.m.Y'),
                 'discharged' => 'Не выписан',
                 'fio' => $hospital->getFio(),
                 'phone' => $hospital->getPhone(),
                 'amount' => 0,
-                'reward' => 0
+                'reward' => 0,
             ];
         }
 

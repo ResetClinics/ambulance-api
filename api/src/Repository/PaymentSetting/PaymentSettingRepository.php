@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository\PaymentSetting;
 
 use App\Entity\PaymentSetting\PaymentSetting;
@@ -40,7 +42,6 @@ class PaymentSettingRepository extends ServiceEntityRepository
         }
     }
 
-
     public function getOperatorPercentCoding(): int
     {
         return $this->get(PaymentSetting::OPERATOR_PERCENT_CODING)->getValue();
@@ -69,7 +70,7 @@ class PaymentSettingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
 
-        if (!$result){
+        if (!$result) {
             throw new NotFoundResourceException();
         }
 

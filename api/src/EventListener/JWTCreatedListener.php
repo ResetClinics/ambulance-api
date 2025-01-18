@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\EventListener;
 
-use App\Entity\User\User;
 use App\Security\UserIdentity;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
@@ -22,10 +21,11 @@ final class JWTCreatedListener implements EventSubscriberInterface
 
     public function onJWTCreated(JWTCreatedEvent $event): void
     {
-
         $user = $event->getUser();
 
-        if ($user instanceof UserIdentity === false) return;
+        if ($user instanceof UserIdentity === false) {
+            return;
+        }
 
         $payload = $event->getData();
         $payload['id'] = $user->getId();

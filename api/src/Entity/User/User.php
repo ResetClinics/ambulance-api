@@ -35,11 +35,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(routePrefix: '/api', openapi: true,),
+        new GetCollection(routePrefix: '/api', openapi: true),
         new GetCollection(uriTemplate: '/exchange/users'),
-        new Post(routePrefix: '/api', openapi: false,),
-        new Get(routePrefix: '/api', openapi: false,),
-        new Put(routePrefix: '/api', openapi: false,),
+        new Post(routePrefix: '/api', openapi: false),
+        new Get(routePrefix: '/api', openapi: false),
+        new Put(routePrefix: '/api', openapi: false),
     ],
     normalizationContext: ['groups' => ['user:read', 'city:read']],
     denormalizationContext: ['groups' => ['user:write']],
@@ -84,7 +84,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         'calling:detail:read',
         'med-team:read',
     ])]
-    #[Assert\NotBlank(message: "Телефон обязателен для заполнения.")]
+    #[Assert\NotBlank(message: 'Телефон обязателен для заполнения.')]
     #[Assert\Regex(
         pattern: '/\d{11}/',
         message: 'Номер телефона должен состоять из 11 цифр.'
@@ -177,6 +177,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->devices = new ArrayCollection();
         $this->accessRoles = new ArrayCollection();
         $this->cities = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->name;
     }
 
     public function getId(): ?int
@@ -318,9 +323,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->avatar = $avatar;
     }
 
-    /**
-     * @return int
-     */
     public function getExternalId(): ?int
     {
         return $this->externalId;
@@ -357,11 +359,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             ->setId($username)
             ->setRoles($payload['roles'])
             ->setPhone($payload['phone']);
-    }
-
-    public function __toString(): string
-    {
-        return $this->name;
     }
 
     public function getEmail(): ?string
@@ -477,7 +474,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
 
     public function addCity(City $city): static
     {

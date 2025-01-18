@@ -147,8 +147,8 @@ class Team
         }
 
         /** @var Calling $calling */
-        foreach ($this->callings as $calling){
-            if ($calling->inProgress()){
+        foreach ($this->callings as $calling) {
+            if ($calling->inProgress()) {
                 throw new DomainException('У бригады есть не закрытые вызовы');
             }
         }

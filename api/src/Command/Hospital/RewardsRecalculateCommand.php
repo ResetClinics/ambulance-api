@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command\Hospital;
 
 use App\Flusher;
@@ -19,16 +21,13 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class RewardsRecalculateCommand extends Command
 {
-
     public function __construct(
         private readonly HospitalRepository $hospitals,
         private readonly PartnerReward $partnerRewards,
         private readonly Flusher $flusher,
-    )
-    {
+    ) {
         parent::__construct();
     }
-
 
     /**
      * @throws Exception
@@ -36,7 +35,6 @@ class RewardsRecalculateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-
 
         foreach ($this->hospitals->findAll() as $hospital) {
             $io->note('Пересчитываю награды партнеров за стационар: ' . $hospital->getId());
@@ -48,5 +46,4 @@ class RewardsRecalculateCommand extends Command
 
         return Command::SUCCESS;
     }
-
 }

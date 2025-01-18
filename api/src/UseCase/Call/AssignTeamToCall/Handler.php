@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\UseCase\Call\AssignTeamToCall;
 
 use AmoCRM\Client\AmoCRMApiClient;
@@ -43,21 +45,20 @@ class Handler
     private AmoCRMApiClient $client;
 
     public function __construct(
-        AmoCRM                                               $amoCRM,
-        private readonly CallingRepository                   $calls,
-        private readonly Flusher                             $flusher,
-        private readonly Api                                 $geocodingApi,
-        private readonly TrackerToMkad                       $trackerToMkad,
-        private readonly PartnerRepository                   $partners,
+        AmoCRM $amoCRM,
+        private readonly CallingRepository $calls,
+        private readonly Flusher $flusher,
+        private readonly Api $geocodingApi,
+        private readonly TrackerToMkad $trackerToMkad,
+        private readonly PartnerRepository $partners,
         private readonly CityRepository $cities,
         private readonly \App\UseCase\Partner\Create\Handler $partnerHandler,
-        private readonly ClientRepository                    $clients,
-        private readonly \App\UseCase\Client\Create\Handler  $clientHandler,
-        private readonly CallingSender                       $sender,
-        private readonly WSClient                            $wsClient,
-        private readonly TelegramSender    $tgSender,
-    )
-    {
+        private readonly ClientRepository $clients,
+        private readonly \App\UseCase\Client\Create\Handler $clientHandler,
+        private readonly CallingSender $sender,
+        private readonly WSClient $wsClient,
+        private readonly TelegramSender $tgSender,
+    ) {
         $this->client = $amoCRM->getClient();
     }
 
@@ -105,7 +106,6 @@ class Handler
             throw new DomainException('Ошибка при определении партнера ' . $e->getMessage());
         }
 
-
         if (!$call->getPartner()) {
             $this->sendMessageToAmo((int)$command->externalId, 'Партнер не определен');
             throw new DomainException('Партнер не определен');
@@ -135,7 +135,6 @@ class Handler
             $this->tgSender->send($call->getTeam()->getDriver(), "‼️️️️ ВНИМАНИЕ ‼️\nУ вас новый вызов, зайдите в приложение");
         }
 
-
         $this->sender->sendToAdmin(
             $call,
             'Внимание новый заказ',
@@ -143,6 +142,23 @@ class Handler
         );
 
         $this->wsClient->sendUpdateOffer($call->getId());
+    }
+
+    public function sendMessageToAmo(int $leadId, string $message): void
+    {
+        $notesCollection = new NotesCollection();
+        $messageNote = new CommonNote();
+        $messageNote->setEntityId($leadId)
+            ->setText($message)
+            ->setCreatedBy(0);
+
+        $notesCollection->add($messageNote);
+
+        try {
+            $leadNotesService = $this->client->notes(EntityTypesInterface::LEADS);
+            $leadNotesService->add($notesCollection);
+        } catch (AmoCRMApiException $e) {
+        }
     }
 
     private function getContactData(LeadModel $lead): array
@@ -188,7 +204,7 @@ class Handler
             if ($field->getFieldId() === 880453) {
                 try {
                     $dateTime = $field->getValues()?->first()->getValue()?->toString();
-                    $call->setDateTime(new DateTimeImmutable($dateTime));
+                    $call->setDateTime(new DateTimeImmutable((string)$dateTime));
                 } catch (Exception) {
                 }
             }
@@ -265,15 +281,9 @@ class Handler
 
             $call->setMkadDistance($distance);
         } catch (
-        Exception|
-        ClientExceptionInterface|
-        DecodingExceptionInterface|
-        RedirectionExceptionInterface|
-        ServerExceptionInterface|
-        TransportExceptionInterface
+            ClientExceptionInterface|DecodingExceptionInterface|Exception|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface
         ) {
         }
-
     }
 
     private function getAddress(LeadModel $lead): ?string
@@ -385,7 +395,6 @@ class Handler
         return null;
     }
 
-
     private function createMessage(Calling $call): string
     {
         $message = '';
@@ -400,23 +409,6 @@ class Handler
         $message .= 'ХЗ: ' . $call->getChronicDiseases() . PHP_EOL . PHP_EOL;
         $message .= 'Примечание: ' . $call->getDescription() . PHP_EOL;
         return $message;
-    }
-
-    public function sendMessageToAmo(int $leadId, string $message): void
-    {
-        $notesCollection = new NotesCollection();
-        $messageNote = new CommonNote();
-        $messageNote->setEntityId($leadId)
-            ->setText($message)
-            ->setCreatedBy(0);
-
-        $notesCollection->add($messageNote);
-
-        try {
-            $leadNotesService = $this->client->notes(EntityTypesInterface::LEADS);
-            $leadNotesService->add($notesCollection);
-        } catch (AmoCRMApiException $e) {
-        }
     }
 
     private function sendCrmEmployees(Calling $call, LeadModel $lead): void
@@ -484,7 +476,6 @@ class Handler
 
     private function getCityExternalId(LeadModel $lead): ?string
     {
-
         if (!$lead->getCustomFieldsValues()) {
             return null;
         }

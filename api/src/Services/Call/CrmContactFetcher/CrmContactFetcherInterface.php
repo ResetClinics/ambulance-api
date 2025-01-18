@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Call\CrmContactFetcher;
 
 use App\UseCase\Call\SendFromCrm\Contact;

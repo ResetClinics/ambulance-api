@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\Partner\Agreement;
 
 use ApiPlatform\Doctrine\Common\Filter\DateFilterInterface;
@@ -30,7 +32,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             normalizationContext: [
                 'groups' => [
                     'exchange_agreements:read',
-                ]
+                ],
             ]
         ),
         new Get(
@@ -55,7 +57,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             'agreement:read',
             'agreement:item:read',
             'partner:item:read',
-            'service-category:item:read'
+            'service-category:item:read',
         ]],
     denormalizationContext: ['groups' => ['agreement:write']],
     paginationClientEnabled: true,
@@ -91,7 +93,7 @@ class Agreement
 
     #[ORM\OneToMany(mappedBy: 'agreement', targetEntity: Row::class, cascade: ['persist'])]
     #[Groups(['agreement:read', 'agreement:write'])]
-    #[Assert\Count(min: 1, minMessage: "В соглашении должна быть хоть одна строка.")]
+    #[Assert\Count(min: 1, minMessage: 'В соглашении должна быть хоть одна строка.')]
     private Collection $rows;
 
     public function __construct()

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository\Hospital;
 
 use App\Entity\Hospital\Hospital;
@@ -56,11 +58,10 @@ class HospitalRepository extends ServiceEntityRepository
     }
 
     public function findByPartnerAndDischargedAt(
-        int               $partnerId,
+        int $partnerId,
         DateTimeImmutable $dischargedAtAfter,
         DateTimeImmutable $dischargedAtBefore
-    )
-    {
+    ) {
         return $this->createQueryBuilder('h')
             ->andWhere('h.partner = :partner')
             ->andWhere('h.dischargedAt >= :dischargedAtAfter')
@@ -75,8 +76,7 @@ class HospitalRepository extends ServiceEntityRepository
 
     public function findOneByOwnerId(
         int $ownerId,
-    ): ?Hospital
-    {
+    ): ?Hospital {
         $data = $this->createQueryBuilder('c')
             ->andWhere('c.owner = :owner')
             ->setParameter(':owner', $ownerId)
@@ -88,13 +88,11 @@ class HospitalRepository extends ServiceEntityRepository
         return array_shift($data);
     }
 
-
     public function findByPartnerAndHospitalizedAt(
-        int               $partnerId,
+        int $partnerId,
         DateTimeImmutable $hospitalizedAtAfter,
         DateTimeImmutable $hospitalizedAtBefore
-    )
-    {
+    ) {
         return $this->createQueryBuilder('h')
             ->andWhere('h.partner = :partner')
             ->andWhere('h.hospitalizedAt >= :hospitalizedAtAfter')
@@ -108,7 +106,6 @@ class HospitalRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-
 
     public function findAllByDischargedAtFromPeriod(DatePeriod $period): array
     {
@@ -127,7 +124,7 @@ class HospitalRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('h');
 
-        if ($search){
+        if ($search) {
             $qb->where($qb->expr()->like('LOWER(h.fio)', ':search'))
                 ->setParameter('search', '%' . $search . '%');
         }
@@ -156,7 +153,6 @@ class HospitalRepository extends ServiceEntityRepository
             ->setParameter('start', $period->getStartDate())
             ->setParameter('end', $period->getEndDate())
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 }

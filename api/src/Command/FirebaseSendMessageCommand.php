@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use Kreait\Firebase\Contract\Messaging;
@@ -18,14 +20,13 @@ class FirebaseSendMessageCommand extends Command
 {
     public function __construct(
         private readonly Messaging $messaging
-    )
-    {
+    ) {
         parent::__construct();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        //todo переделать через сервис отправки пользователю
+        // todo переделать через сервис отправки пользователю
         $io = new SymfonyStyle($input, $output);
         $message = CloudMessage::fromArray([
             'token' => '',

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\MedTeam;
 
 use ApiPlatform\Doctrine\Common\Filter\DateFilterInterface;
@@ -101,7 +103,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             controller: SendSms::class,
             openapi: false,
             name: 'med_teams-send_sms',
-        )
+        ),
     ],
     normalizationContext: ['groups' => ['med-team:read', 'user:item:read', 'phone:read', 'car:read', 'base:read']],
     denormalizationContext: ['groups' => ['med-team:write']],
@@ -128,7 +130,7 @@ class MedTeam
         'administrator_report:read',
         'calling:read',
         'exchange_calling:read',
-        'v1:shift:item:read'
+        'v1:shift:item:read',
     ])]
     private ?int $id = null;
 
@@ -226,7 +228,7 @@ class MedTeam
     private ?Phone $phone = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['med-team:read', 'med-team:write', 'v1:shift:item:read',])]
+    #[Groups(['med-team:read', 'med-team:write', 'v1:shift:item:read'])]
     #[Assert\NotNull]
     private ?DateTimeImmutable $plannedFinishAt = null;
 
@@ -280,14 +282,14 @@ class MedTeam
     private ?DateTimeImmutable $plannedDutyFinishAt = null;
 
     #[Assert\Choice(choices: [
-        'daytime', //дневная *
-        'daytime13', //дневная 13*
-        'daytime14', //дневная 14*
-        'daytime15', //дневная 15*
-        'night',   //ночная
-        'evening', //вечерняя
-        'day',     //суточная
-        'arbitrary',     //произвольная
+        'daytime', // дневная *
+        'daytime13', // дневная 13*
+        'daytime14', // дневная 14*
+        'daytime15', // дневная 15*
+        'night',   // ночная
+        'evening', // вечерняя
+        'day',     // суточная
+        'arbitrary',     // произвольная
     ])]
     #[ApiFilter(SearchFilter::class, properties: ['status' => 'exact'])]
     #[Groups(['med-team:read', 'med-team:write', 'v1:shift:item:read'])]
@@ -302,14 +304,12 @@ class MedTeam
     #[ApiFilter(SearchFilter::class, properties: ['city.id' => 'exact'])]
     private ?City $city = null;
 
-
     #[Groups([
         'v1:shift:read',
         'v1:shift:write',
     ])]
     #[ORM\OneToOne(inversedBy: 'shift', cascade: ['persist', 'remove'])]
     private ?AdministratorReport $transportReport = null;
-
 
     public function __construct()
     {
@@ -333,7 +333,6 @@ class MedTeam
         $hours = $interval->h;
         return $hours + ($interval->days * 24);
     }
-
 
     public function getDay(): int
     {
@@ -626,39 +625,20 @@ class MedTeam
     public function getTypeTitle(): string
     {
         $titles = [
-            'daytime' => "дневная",
-            'daytime13' => "дневная 13",
-            'daytime14' => "дневная 14",
-            'daytime15' => "дневная 15",
-            'night' => "ночная",
-            'evening' => "вечерняя",
-            'day' => "суточная",
-            'arbitrary' => "произвольная",
+            'daytime' => 'дневная',
+            'daytime13' => 'дневная 13',
+            'daytime14' => 'дневная 14',
+            'daytime15' => 'дневная 15',
+            'night' => 'ночная',
+            'evening' => 'вечерняя',
+            'day' => 'суточная',
+            'arbitrary' => 'произвольная',
         ];
 
         if (isset($titles[$this->type])) {
             return $titles[$this->type];
         }
         return 'произвольная';
-    }
-
-    private function getTypePrice(): int
-    {
-        $titles = [
-            'daytime' => 0,
-            'daytime13' => 2000,
-            'daytime14' => 2350,
-            'daytime15' => 2500,
-            'night' => 0,
-            'evening' => 0,
-            'day' => 4000,
-            'arbitrary' => 0,
-        ];
-
-        if (isset($titles[$this->type])) {
-            return $titles[$this->type];
-        }
-        return 0;
     }
 
     public function getAdminPrice(): int
@@ -705,7 +685,6 @@ class MedTeam
             return $titles[$this->type];
         }
         return 0;
-
     }
 
     public function getTransportReport(): ?AdministratorReport
@@ -718,5 +697,24 @@ class MedTeam
         $this->transportReport = $transportReport;
 
         return $this;
+    }
+
+    private function getTypePrice(): int
+    {
+        $titles = [
+            'daytime' => 0,
+            'daytime13' => 2000,
+            'daytime14' => 2350,
+            'daytime15' => 2500,
+            'night' => 0,
+            'evening' => 0,
+            'day' => 4000,
+            'arbitrary' => 0,
+        ];
+
+        if (isset($titles[$this->type])) {
+            return $titles[$this->type];
+        }
+        return 0;
     }
 }

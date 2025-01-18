@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller\FileObject;
 
-
-use App\Asterisk\UseCase\Channel as AsteriskChannel;
 use App\Entity\FileObject;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -15,9 +13,7 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 class GetAction extends AbstractController
 {
     public function __construct(
-    )
-    {
-    }
+    ) {}
 
     public function __invoke(FileObject $fileObject): StreamedResponse
     {
@@ -28,7 +24,7 @@ class GetAction extends AbstractController
             throw $this->createNotFoundException('File not found');
         }
 
-        $response = new StreamedResponse(function () use ($filePath) {
+        $response = new StreamedResponse(static function () use ($filePath): void {
             $handle = fopen($filePath, 'rb');
             fpassthru($handle);
             fclose($handle);

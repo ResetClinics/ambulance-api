@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\MkadDistance\Geometry;
 
 class Point
@@ -15,8 +17,6 @@ class Point
 
     /**
      * Point constructor.
-     * @param float $lat
-     * @param float $lon
      */
     public function __construct(float $lat, float $lon)
     {
@@ -24,43 +24,31 @@ class Point
         $this->lon = $lon;
     }
 
-    /**
-     * @return float
-     */
+    public function __toString(): string
+    {
+        return \sprintf('%s,%s', $this->lon, $this->lat);
+    }
+
     public function getLat(): float
     {
         return $this->lat;
     }
 
-    /**
-     * @return float
-     */
     public function getLon(): float
     {
         return $this->lon;
     }
 
-    public function __toString(): string
+    public static function compare(self $p1, self $p2): bool
     {
-        return sprintf('%s,%s', $this->lon, $this->lat);
-    }
-
-    /**
-     * @param Point $p1
-     * @param Point $p2
-     * @return bool
-     */
-    public static function compare(Point $p1, Point $p2): bool
-    {
-        return $p1->getLat() == $p2->getLat() && $p1->getLon() == $p2->getLon();
+        return $p1->getLat() === $p2->getLat() && $p1->getLon() === $p2->getLon();
     }
 
     /**
      * @param array|float[] $coordinate
-     * @return Point
      */
-    public static function createFromArray(array $coordinate): Point
+    public static function createFromArray(array $coordinate): self
     {
-        return new Point($coordinate[0], $coordinate[1]);
+        return new self($coordinate[0], $coordinate[1]);
     }
 }

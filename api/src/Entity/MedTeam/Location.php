@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\MedTeam;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\MedTeam\LocationRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
     uriTemplate: '/team-locations',
@@ -34,8 +36,7 @@ class Location
     #[Groups(['med-team-location:write', 'med-team:read'])]
     #[ORM\Column(length: 16)]
     private string $lon;
-    #[Groups(['med-team-location:write','med-team:read'])]
-
+    #[Groups(['med-team-location:write', 'med-team:read'])]
     #[ORM\Column(length: 16)]
     private string $lat;
 

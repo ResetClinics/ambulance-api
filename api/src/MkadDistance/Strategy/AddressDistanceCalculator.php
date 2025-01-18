@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\MkadDistance\Strategy;
 
-use InvalidArgumentException;
 use App\MkadDistance\Exception\DistanceException;
 use App\MkadDistance\Exception\InnerPolygonException;
 use App\MkadDistance\Geometry\DistanceBetweenPoints;
 use App\MkadDistance\Geometry\Point;
 use App\MkadDistance\Geometry\Polygon;
+use InvalidArgumentException;
 use Psr\SimpleCache\CacheException;
 use Psr\SimpleCache\CacheInterface;
 use Yandex\Geo\Api;
@@ -17,18 +19,11 @@ class AddressDistanceCalculator extends PointDistanceCalculator
 {
     private $api;
 
-    /**
-     * @param string $yandexGeoCoderApiKey
-     * @param Polygon $basePolygon
-     * @param Polygon $junctionsPolygon
-     * @param CacheInterface|null $cache
-     * @param int $cacheTtl
-     */
     public function __construct(
         string $yandexGeoCoderApiKey,
         Polygon $basePolygon,
         Polygon $junctionsPolygon,
-        CacheInterface $cache = null,
+        ?CacheInterface $cache = null,
         int $cacheTtl = 5 * 24 * 60 * 60
     ) {
         $this->api = new Api();
@@ -38,15 +33,13 @@ class AddressDistanceCalculator extends PointDistanceCalculator
 
     /**
      * @param string $target
-     * @param bool $calcByRoutes
-     * @return DistanceBetweenPoints
      * @throws DistanceException
      * @throws InnerPolygonException
      * @throws InvalidArgumentException
      */
     public function calculate($target, bool $calcByRoutes = true): DistanceBetweenPoints
     {
-        if (is_string($target) === false) {
+        if (\is_string($target) === false) {
             throw new InvalidArgumentException('Target param most be string address');
         }
         $cacheKey = 'geocoder.' . md5(strtolower($target));
@@ -63,7 +56,7 @@ class AddressDistanceCalculator extends PointDistanceCalculator
                     $this->cache->set($cacheKey, $response, $this->cacheTtl);
                 }
             }
-        } catch (YandexGeoException|CacheException $e) {
+        } catch (CacheException|YandexGeoException $e) {
             throw new DistanceException($e->getMessage(), $e->getCode(), $e);
         }
 

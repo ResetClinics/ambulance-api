@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\MkadDistance\Strategy;
 
 use App\MkadDistance\Exception\DistanceException;
@@ -8,6 +10,7 @@ use App\MkadDistance\Exception\RouteNotFoundException;
 use App\MkadDistance\Geometry\DistanceBetweenPoints;
 use App\MkadDistance\Geometry\Point;
 use App\MkadDistance\Geometry\Polygon;
+use Exception;
 use OSRM\Service\Route;
 use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
@@ -15,7 +18,7 @@ use Psr\SimpleCache\InvalidArgumentException;
 abstract class AbstractDistanceCalculate
 {
     /**
-     * Радиус Земли
+     * Радиус Земли.
      * @var float
      */
     private const EARTH_RADIUS = 6372795.0;
@@ -35,21 +38,15 @@ abstract class AbstractDistanceCalculate
     protected $cache;
 
     /**
-     * Default 5 days
+     * Default 5 days.
      * @var int
      */
     protected $cacheTtl;
 
-    /**
-     * @param Polygon $basePolygon
-     * @param Polygon $junctionsPolygon
-     * @param CacheInterface|null $cache
-     * @param int $cacheTtl
-     */
     public function __construct(
         Polygon $basePolygon,
         Polygon $junctionsPolygon,
-        CacheInterface $cache = null,
+        ?CacheInterface $cache = null,
         int $cacheTtl = 5 * 24 * 60 * 60
     ) {
         $this->basePolygon = $basePolygon;
@@ -58,11 +55,6 @@ abstract class AbstractDistanceCalculate
         $this->cacheTtl = $cacheTtl;
     }
 
-    /**
-     * @param Point $from
-     * @param Point $to
-     * @return DistanceBetweenPoints
-     */
     protected function calculateLineDistance(Point $from, Point $to): DistanceBetweenPoints
     {
         // перевести координаты в радианы
@@ -79,16 +71,13 @@ abstract class AbstractDistanceCalculate
         $cdelta = cos($delta);
         $sdelta = sin($delta);
         // вычисления длины большого круга
-        $y = sqrt(pow($cl2 * $sdelta, 2) + pow($cl1 * $sl2 - $sl1 * $cl2 * $cdelta, 2));
+        $y = sqrt(($cl2 * $sdelta)** 2 + ($cl1 * $sl2 - $sl1 * $cl2 * $cdelta)** 2);
         $x = $sl1 * $sl2 + $cl1 * $cl2 * $cdelta;
         $ad = atan2($y, $x);
         return new DistanceBetweenPoints($from, $to, $ad * self::EARTH_RADIUS);
     }
 
     /**
-     * @param Point $from
-     * @param Point $to
-     * @return DistanceBetweenPoints
      * @throws DistanceRequestException
      * @throws InvalidArgumentException
      */
@@ -96,7 +85,7 @@ abstract class AbstractDistanceCalculate
     {
         $route = new Route();
         $route->setOverview('false');
-        $coordinates = sprintf('%s;%s', $from, $to);
+        $coordinates = \sprintf('%s;%s', $from, $to);
         $cacheKey = self::class . '.osrm.' . md5($route->getUri());
         if ($this->cache && $this->cache->has($cacheKey)) {
             $result = $this->cache->get($cacheKey);
@@ -114,7 +103,7 @@ abstract class AbstractDistanceCalculate
                 } else {
                     throw new RouteNotFoundException('Route not found.');
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 throw new DistanceRequestException(
                     $e->getMessage(),
                     $e->getCode(),
@@ -128,19 +117,16 @@ abstract class AbstractDistanceCalculate
 
     /**
      * @param DistanceBetweenPoints[] $distances
-     * @return DistanceBetweenPoints|null
      */
     protected function findMinDistance(array $distances): ?DistanceBetweenPoints
     {
         if (empty($distances)) {
             return null;
         }
-        $invalidDistances = array_filter($distances, function ($distance) {
-            return !$distance instanceof DistanceBetweenPoints;
-        });
+        $invalidDistances = array_filter($distances, static fn ($distance) => !$distance instanceof DistanceBetweenPoints);
         if (empty($invalidDistances) === false) {
             throw new \InvalidArgumentException(
-                sprintf('Element from array most be %s type', DistanceBetweenPoints::class)
+                \sprintf('Element from array most be %s type', DistanceBetweenPoints::class)
             );
         }
         $min = null;

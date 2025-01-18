@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\Hospital;
 
 use ApiPlatform\Doctrine\Common\Filter\DateFilterInterface;
@@ -27,10 +29,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: HospitalRepository::class)]
 #[ORM\Table(name: 'hospital_hospitals')]
@@ -45,8 +47,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
                     'hospital:detail:read',
                     'partner:item:read',
                     'media_object:read',
-                    'media_object:read:image'
-                ]
+                    'media_object:read:image',
+                ],
             ],
         ),
         new Put(),
@@ -109,7 +111,7 @@ class Hospital
         'assigned',
         'inpatient',
         'completed',
-        'cancelled'
+        'cancelled',
     ])]
     private ?string $status = 'assigned';
 
@@ -120,7 +122,7 @@ class Hospital
         'drugs',
         'alcohol-drugs',
         'gambler',
-        'psycho'
+        'psycho',
     ])]
     private ?string $nosology = null;
 
@@ -199,7 +201,7 @@ class Hospital
     #[Groups(['hospital:read', 'hospital:write', 'hospital:detail:read'])]
     private Collection $images;
 
-    #[ORM\Column(nullable: true, options: ["default" => 0])]
+    #[ORM\Column(nullable: true, options: ['default' => 0])]
     #[Groups(['hospital:read', 'hospital:write', 'hospital:detail:read'])]
     private int $partnerReward = 0;
 
@@ -333,7 +335,7 @@ class Hospital
 
     public function setPhone(?string $phone): self
     {
-        $this->phone = $phone ? preg_replace('/\D/', '', $phone) : null;;
+        $this->phone = $phone ? preg_replace('/\D/', '', $phone) : null;
 
         return $this;
     }
@@ -366,18 +368,10 @@ class Hospital
         return $this;
     }
 
-    private function calcAmount(): void
-    {
-        $mainAmount = $this->mainAmount === null ? 0 : $this->mainAmount;
-        $additionalAmount = $this->additionalAmount === null ? 0 : $this->additionalAmount;
-
-        $this->amount = $mainAmount + $additionalAmount;
-    }
-
     #[Groups(['hospital:read'])]
     public function getCreatedAt(): string
     {
-        if (($this->createdAt === null || $this->createdAt == new DateTime('0000-00-00 00:00:00'))) {
+        if ($this->createdAt === null || $this->createdAt === new DateTime('0000-00-00 00:00:00')) {
             return '';
         }
         return $this->createdAt->format('d.m.Y H:i:s');
@@ -386,12 +380,11 @@ class Hospital
     #[Groups(['hospital:read'])]
     public function getUpdatedAt(): string
     {
-        if (($this->updatedAt === null || $this->updatedAt == new DateTime('0000-00-00 00:00:00'))) {
+        if ($this->updatedAt === null || $this->updatedAt === new DateTime('0000-00-00 00:00:00')) {
             return '';
         }
         return $this->updatedAt->format('d.m.Y H:i:s');
     }
-
 
     public function getCreatedBy(): ?User
     {
@@ -498,7 +491,6 @@ class Hospital
         return $this;
     }
 
-
     #[Groups(['hospital:detail:read'])]
     public function getOwnerData(): array
     {
@@ -509,28 +501,6 @@ class Hospital
             'age' => $this->owner?->getAge(),
             'stationary' => $this->getOwnerStationary(),
         ];
-    }
-
-    private function getOwnerStationary(): ?array
-    {
-        if (!$this->owner){
-            return null;
-        }
-
-        foreach ($this->owner->getServices() as $row){
-            if ($row->isStationary()){
-                return [
-                    'id' => $row->getService()->getId(),
-                    'name' => $row->getService()->getName(),
-                    'price' => $row->getPrice(),
-                    'plannedPrice' => $row->getPlannedPrice(),
-                    'description' => $row->getDescription(),
-                    'files' => $row->getFiles(),
-                ];
-            }
-        }
-
-        return null;
     }
 
     public function getPartnerReward(): int
@@ -544,5 +514,34 @@ class Hospital
 
         return $this;
     }
-}
 
+    private function calcAmount(): void
+    {
+        $mainAmount = $this->mainAmount === null ? 0 : $this->mainAmount;
+        $additionalAmount = $this->additionalAmount === null ? 0 : $this->additionalAmount;
+
+        $this->amount = $mainAmount + $additionalAmount;
+    }
+
+    private function getOwnerStationary(): ?array
+    {
+        if (!$this->owner) {
+            return null;
+        }
+
+        foreach ($this->owner->getServices() as $row) {
+            if ($row->isStationary()) {
+                return [
+                    'id' => $row->getService()->getId(),
+                    'name' => $row->getService()->getName(),
+                    'price' => $row->getPrice(),
+                    'plannedPrice' => $row->getPlannedPrice(),
+                    'description' => $row->getDescription(),
+                    'files' => $row->getFiles(),
+                ];
+            }
+        }
+
+        return null;
+    }
+}

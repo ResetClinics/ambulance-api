@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -34,8 +36,8 @@ class City
         'city:write',
         'med-team:read',
         'calling:read',
-        'v1:shift:item:read'
-        ])]
+        'v1:shift:item:read',
+    ])]
     #[Assert\NotBlank]
     private ?string $name = null;
 

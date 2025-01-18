@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\WorkSchedule;
 
 use App\UseCase\WorkSchedule\Batch\Command;
@@ -17,9 +19,7 @@ class BatchChange extends AbstractController
         private readonly SerializerInterface $serializer,
         private readonly ValidatorInterface $validator,
         private readonly Handler $handler,
-    )
-    {
-    }
+    ) {}
 
     #[Route(path: '/api/work_schedules/batch', name: 'work_schedule_batch', methods: 'POST')]
     public function __invoke(Request $request): JsonResponse

@@ -13,14 +13,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api/amo-crm/auth/callback', name: 'amo-crm_auth-callback', methods: ["GET"])]
+#[Route('/api/amo-crm/auth/callback', name: 'amo-crm_auth-callback', methods: ['GET'])]
 class AuthCallbackAction extends AbstractController
 {
     public function __construct(
-       private readonly AmoCrmTokenRepository $tokens
-    )
-    {
-    }
+        private readonly AmoCrmTokenRepository $tokens
+    ) {}
 
     /**
      * @throws AmoCRMoAuthApiException
@@ -39,7 +37,7 @@ class AuthCallbackAction extends AbstractController
 
         $accessToken = $client->getOAuthClient()->getAccessTokenByCode($request->get('code'));
 
-        $this->tokens->update($accessToken, $client->getAccountBaseDomain() );
+        $this->tokens->update($accessToken, $client->getAccountBaseDomain());
 
         return $this->json([], Response::HTTP_OK);
     }

@@ -18,15 +18,8 @@ class NotReadyAction extends AbstractController
 {
     public function __construct(
         private readonly WSClient $wsClient,
-    )
-    {
-    }
+    ) {}
 
-    /**
-     * @param Calling $call
-     * @param Flusher $flusher
-     * @return JsonResponse
-     */
     public function __invoke(Calling $call, Flusher $flusher): JsonResponse
     {
         $call->setStatus(Status::notReady());

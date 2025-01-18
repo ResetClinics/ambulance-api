@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiProperty;
@@ -7,8 +9,6 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
-use ApiPlatform\OpenApi\Model;
-use ArrayObject;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -24,7 +24,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         new GetCollection(),
         new Post(
             inputFormats: ['multipart' => ['multipart/form-data']],
-        )
+        ),
     ],
     outputFormats: ['jsonld' => ['application/ld+json']],
     routePrefix: '/api',
@@ -33,10 +33,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 )]
 class MediaObject
 {
-    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
-    #[Groups(['media_object:read', 'media_object:write'])]
-    private ?int $id = null;
-
     #[ApiProperty(writable: false, types: ['https://schema.org/contentUrl'])]
     #[Groups(['media_object:read'])]
     public ?string $contentUrl = null;
@@ -52,6 +48,9 @@ class MediaObject
 
     #[Groups(['media_object:write'])]
     public ?string $base64content = null;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    #[Groups(['media_object:read', 'media_object:write'])]
+    private ?int $id = null;
 
     public function getId(): ?int
     {

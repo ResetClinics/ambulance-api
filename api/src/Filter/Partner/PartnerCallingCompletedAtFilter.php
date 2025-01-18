@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filter\Partner;
 
 use ApiPlatform\Doctrine\Orm\Filter\AbstractFilter;
@@ -10,31 +12,6 @@ use Doctrine\ORM\QueryBuilder;
 
 class PartnerCallingCompletedAtFilter extends AbstractFilter
 {
-
-    protected function filterProperty(
-        string $property,
-        $value,
-        QueryBuilder $queryBuilder,
-        QueryNameGeneratorInterface $queryNameGenerator,
-        string $resourceClass,
-        Operation $operation = null,
-        array $context = []
-    ): void
-    {
-        if ('completedAt' !== $property) {
-            return;
-        }
-
-        $alias = $queryBuilder->getRootAliases()[0];
-        $queryBuilder
-            ->join(sprintf('%s.callings', $alias), 'c')
-            ->andWhere('c.completedAt > :before')
-            ->andWhere('c.completedAt <= :after')
-            ->setParameter('before', new DateTime($value['before']))
-            ->setParameter('after', new DateTime($value['after']))
-        ;
-    }
-
     public function getDescription(string $resourceClass): array
     {
         if (!$this->properties) {
@@ -43,7 +20,7 @@ class PartnerCallingCompletedAtFilter extends AbstractFilter
 
         $description = [];
         foreach ($this->properties as $property => $unused) {
-            $description["$property"] = [
+            $description["{$property}"] = [
                 'property' => $property,
                 'type' => 'string',
                 'required' => false,
@@ -53,5 +30,27 @@ class PartnerCallingCompletedAtFilter extends AbstractFilter
         }
 
         return $description;
+    }
+
+    protected function filterProperty(
+        string $property,
+        $value,
+        QueryBuilder $queryBuilder,
+        QueryNameGeneratorInterface $queryNameGenerator,
+        string $resourceClass,
+        ?Operation $operation = null,
+        array $context = []
+    ): void {
+        if ('completedAt' !== $property) {
+            return;
+        }
+
+        $alias = $queryBuilder->getRootAliases()[0];
+        $queryBuilder
+            ->join(\sprintf('%s.callings', $alias), 'c')
+            ->andWhere('c.completedAt > :before')
+            ->andWhere('c.completedAt <= :after')
+            ->setParameter('before', new DateTime($value['before']))
+            ->setParameter('after', new DateTime($value['after']));
     }
 }

@@ -13,18 +13,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api/calls/{id}/history', name: 'call.history', methods: ["GET"])]
+#[Route('/api/calls/{id}/history', name: 'call.history', methods: ['GET'])]
 class HistoryAction extends AbstractController
 {
     public function __construct(
         private readonly CallingRepository $calls
-    )
-    {
-    }
+    ) {}
 
     public function __invoke($id, Request $request): JsonResponse
     {
-
         $calls = $this->calls->getHistory((int)$id);
         return $this->json(array_map(static function (Calling $call) {
             return [
@@ -44,8 +41,7 @@ class HistoryAction extends AbstractController
                     'id' => $call->getClient()->getId(),
                     'name' => $call->getClient()->getName(),
                 ]
-                : null
-
+                : null,
             ];
         }, $calls), Response::HTTP_ACCEPTED);
     }

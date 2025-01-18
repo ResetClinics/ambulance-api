@@ -36,7 +36,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity(fields: ['phone'], message: 'Этот номер телефона уже используется.')]
 class ApiUser implements UserInterface, PasswordAuthenticatedUserInterface
 {
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -45,13 +44,12 @@ class ApiUser implements UserInterface, PasswordAuthenticatedUserInterface
     ])]
     private ?int $id = null;
 
-
     #[ORM\Column(length: 11, unique: true)]
     #[Groups([
         'api_user:read',
         'api_user:write',
     ])]
-    #[Assert\NotBlank(message: "Телефон обязателен для заполнения.")]
+    #[Assert\NotBlank(message: 'Телефон обязателен для заполнения.')]
     #[Assert\Regex(
         pattern: '/\d{11}/',
         message: 'Номер телефона должен состоять из 11 цифр.'
@@ -69,7 +67,7 @@ class ApiUser implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     #[Groups([
         'api_user:read',
-        'api_user:write'
+        'api_user:write',
     ])]
     private array $roles = [];
 
@@ -78,10 +76,15 @@ class ApiUser implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Assert\Length(min: 4)]
     #[Groups([
-        'api_user:write'
+        'api_user:write',
     ])]
     #[SerializedName('password')]
     private ?string $plainPassword = null;
+
+    public function __toString(): string
+    {
+        return $this->name;
+    }
 
     public function getId(): ?int
     {
@@ -178,10 +181,5 @@ class ApiUser implements UserInterface, PasswordAuthenticatedUserInterface
     public function setName(?string $name): void
     {
         $this->name = $name;
-    }
-
-    public function __toString(): string
-    {
-        return $this->name;
     }
 }

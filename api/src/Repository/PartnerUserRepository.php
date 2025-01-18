@@ -45,7 +45,7 @@ class PartnerUserRepository extends ServiceEntityRepository implements PasswordU
         /** @var PartnerUser $user */
         if (!$user = $this->find($id)) {
             throw new EntityNotFoundException(
-                sprintf('User id: %s is not found.', $id)
+                \sprintf('User id: %s is not found.', $id)
             );
         }
         return $user;
@@ -66,7 +66,7 @@ class PartnerUserRepository extends ServiceEntityRepository implements PasswordU
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         if (!$user instanceof PartnerUser) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
+            throw new UnsupportedUserException(\sprintf('Instances of "%s" are not supported.', $user::class));
         }
 
         $user->setPassword($newHashedPassword);

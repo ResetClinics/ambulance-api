@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use AmoCRM\Client\AmoCRMApiClient;
@@ -19,11 +21,9 @@ class HospitalizationScheduler
 {
     private AmoCRMApiClient $client;
 
-
     public function __construct(
-        AmoCRM        $amoCRM,
-    )
-    {
+        AmoCRM $amoCRM,
+    ) {
         $this->client = $amoCRM->getClient();
     }
 
@@ -40,7 +40,6 @@ class HospitalizationScheduler
         $filter = new EntitiesLinksFilter([(int)$calling->getNumberCalling()]);
         $allLinks = $linksService->get($filter);
 
-
         $contactId = null;
         $companyId = null;
         /** @var LinkModel $link */
@@ -53,7 +52,7 @@ class HospitalizationScheduler
                 $contactId = $link->getToEntityId();
             }
 
-            if ($link->getToEntityType() === 'companies'){
+            if ($link->getToEntityType() === 'companies') {
                 $companyId = $link->getToEntityId();
             }
         }
@@ -63,13 +62,13 @@ class HospitalizationScheduler
         }
 
         $customFieldsValues = new CustomFieldsValuesCollection();
-        foreach ($lead->getCustomFieldsValues() as $customFieldsValue){
-            //бригаду, админа и врача не переносим в повотор
+        foreach ($lead->getCustomFieldsValues() as $customFieldsValue) {
+            // бригаду, админа и врача не переносим в повотор
             if (
                 $customFieldsValue->getFieldId() === 875863 ||
                 $customFieldsValue->getFieldId() === 873879 ||
                 $customFieldsValue->getFieldId() === 873881
-            ){
+            ) {
                 continue;
             }
             $customFieldsValues->add($customFieldsValue);
@@ -92,8 +91,8 @@ class HospitalizationScheduler
                     )
             );
 
-        if ($companyId){
-            $newLead ->setCompany(
+        if ($companyId) {
+            $newLead->setCompany(
                 (new CompanyModel())
                     ->setId($companyId)
             );

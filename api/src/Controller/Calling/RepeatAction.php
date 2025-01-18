@@ -22,6 +22,7 @@ use App\Services\CallingSender;
 use App\Services\RepeatedCallScheduler;
 use DateTimeImmutable;
 use DateTimeZone;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,11 +37,10 @@ class RepeatAction extends AbstractController
     private RepeatedCallScheduler $scheduler;
 
     public function __construct(
-        AmoCRM        $amoCRM,
+        AmoCRM $amoCRM,
         CallingSender $sender,
         RepeatedCallScheduler $scheduler
-    )
-    {
+    ) {
         $this->client = $amoCRM->getClient();
         $this->sender = $sender;
         $this->scheduler = $scheduler;
@@ -50,7 +50,7 @@ class RepeatAction extends AbstractController
      * @throws AmoCRMoAuthApiException
      * @throws AmoCRMApiException
      * @throws AmoCRMMissedTokenException
-     * @throws \Exception
+     * @throws Exception
      */
     public function __invoke(Calling $calling, CallingRepository $callings, Flusher $flusher): JsonResponse
     {
@@ -73,11 +73,10 @@ class RepeatAction extends AbstractController
         $message .= $calling->getResultDateFormat() ? '*ПОВТОР* Дата ' . $calling->getResultDateFormat() . PHP_EOL : '';
         $message .= $calling->getResultTime() ? 'Время ' . $calling->getResultTime() . PHP_EOL : '';
 
-
         $description = '';
 
         /** @var Row $row */
-        foreach ($calling->getServices()->toArray() as $row){
+        foreach ($calling->getServices()->toArray() as $row) {
             $description = $row->getDescription() ? $row->getDescription() . PHP_EOL : '';
         }
 
@@ -124,7 +123,6 @@ class RepeatAction extends AbstractController
             'Спасибо за работу!'
         );
 
-
         $this->sender->sendToAdmin(
             $calling,
             'Вызов N ' . $calling->getNumberCalling(),
@@ -132,84 +130,84 @@ class RepeatAction extends AbstractController
         );
 
         return $this->json([
-            "id" => $calling->getId(),
-            "title" => $calling->getTitle(),
-            "name" => $calling->getName(),
-            "phone" => '+70000000000',
-            "fio" => $calling->getFio(),
-            "numberCalling" => $calling->getNumberCalling(),
-            "address" => $calling->getAddress(),
-            "status" => $calling->getStatus(),
-            "description" => $calling->getDescription(),
-            "chronicDiseases" => $calling->getChronicDiseases(),
-            "nosology" => $calling->getNosology(),
-            "age" => $calling->getAge(),
-            "leadType" => $calling->getLeadType(),
-            "partnerName" => $calling->getPartnerName(),
-            "sendPhone" => $calling->isSendPhone(),
-            "rejectedComment" => $calling->getRejectedComment(),
-            "createdAt" => $calling->getCreatedAt()?->format('d.m.Y H:i'),
-            "updatedAt" => $calling->getUpdatedAt()?->format('d.m.Y H:i'),
-            "acceptedAt" => $calling->getAcceptedAt()?->format('d.m.Y H:i'),
-            "dispatchedAt" => $calling->getDispatchedAt()?->format('d.m.Y H:i'),
-            "arrivedAt" => $calling->getArrivedAt()?->format('d.m.Y H:i'),
-            "completedAt" => $calling->getCompletedAt()?->format('d.m.Y H:i'),
-            "dateTime" => $calling->getDateTime(),
-            "admin" => $calling?->getAdmin() ?: [
+            'id' => $calling->getId(),
+            'title' => $calling->getTitle(),
+            'name' => $calling->getName(),
+            'phone' => '+70000000000',
+            'fio' => $calling->getFio(),
+            'numberCalling' => $calling->getNumberCalling(),
+            'address' => $calling->getAddress(),
+            'status' => $calling->getStatus(),
+            'description' => $calling->getDescription(),
+            'chronicDiseases' => $calling->getChronicDiseases(),
+            'nosology' => $calling->getNosology(),
+            'age' => $calling->getAge(),
+            'leadType' => $calling->getLeadType(),
+            'partnerName' => $calling->getPartnerName(),
+            'sendPhone' => $calling->isSendPhone(),
+            'rejectedComment' => $calling->getRejectedComment(),
+            'createdAt' => $calling->getCreatedAt()?->format('d.m.Y H:i'),
+            'updatedAt' => $calling->getUpdatedAt()?->format('d.m.Y H:i'),
+            'acceptedAt' => $calling->getAcceptedAt()?->format('d.m.Y H:i'),
+            'dispatchedAt' => $calling->getDispatchedAt()?->format('d.m.Y H:i'),
+            'arrivedAt' => $calling->getArrivedAt()?->format('d.m.Y H:i'),
+            'completedAt' => $calling->getCompletedAt()?->format('d.m.Y H:i'),
+            'dateTime' => $calling->getDateTime(),
+            'admin' => $calling?->getAdmin() ?: [
                 'id' => $calling->getAdmin()->getId(),
                 'phone' => $calling->getAdmin()->getPhone(),
                 'name' => $calling->getAdmin()->getName(),
             ],
-            "doctor" => $calling?->getDoctor() ?: [
+            'doctor' => $calling?->getDoctor() ?: [
                 'id' => $calling->getDoctor()->getId(),
                 'phone' => $calling->getDoctor()->getPhone(),
                 'name' => $calling->getDoctor()->getName(),
             ],
-            "price" => $calling->getPrice(),
-            "estimated" => $calling->GetEstimated(),
-            "prepayment" => $calling->getPrepayment(),
-            "note" => $calling->getNote(),
-            "passport" => $calling->getPassport(),
-            "coastHospitalAdmission" => $calling->getCoastHospitalAdmission(),
-            "coastHospital" => $calling->getCoastHospital(),
-            "costDay" => $calling->getCostDay(),
-            "phoneRelatives" => $calling->getPhoneRelatives(),
-            "resultDate" => $calling->getResultDate(),
-            "resultTime" => $calling->getResultTime(),
-            "partner" => $calling->getPartner() ?: [
-                "id" => $calling->getPartner()->getId(),
-                "name" => $calling->getPartner()->getName(),
-                "whatsappGroup" => $calling->getPartner()->getWhatsappGroup(),
+            'price' => $calling->getPrice(),
+            'estimated' => $calling->GetEstimated(),
+            'prepayment' => $calling->getPrepayment(),
+            'note' => $calling->getNote(),
+            'passport' => $calling->getPassport(),
+            'coastHospitalAdmission' => $calling->getCoastHospitalAdmission(),
+            'coastHospital' => $calling->getCoastHospital(),
+            'costDay' => $calling->getCostDay(),
+            'phoneRelatives' => $calling->getPhoneRelatives(),
+            'resultDate' => $calling->getResultDate(),
+            'resultTime' => $calling->getResultTime(),
+            'partner' => $calling->getPartner() ?: [
+                'id' => $calling->getPartner()->getId(),
+                'name' => $calling->getPartner()->getName(),
+                'whatsappGroup' => $calling->getPartner()->getWhatsappGroup(),
             ],
-            "lon" => $calling->getLon(),
-            "lat" => $calling->getLat(),
-            "services" => [],
-            "amount" => $calling->getAmount(),
-            "paymentNextOrder" => $calling->getPaymentNextOrder(),
-            "paymentHospitalization" => $calling->getPaymentHospitalization(),
-            "totalAmount" => $calling->getTotalAmount(),
-            "mkadDistance" => $calling->getMkadDistance(),
-            "ownerExternalId" => $calling->getOwnerExternalId(),
-            "operator" => null,
-            "client" => $calling->getClient() ?: [
+            'lon' => $calling->getLon(),
+            'lat' => $calling->getLat(),
+            'services' => [],
+            'amount' => $calling->getAmount(),
+            'paymentNextOrder' => $calling->getPaymentNextOrder(),
+            'paymentHospitalization' => $calling->getPaymentHospitalization(),
+            'totalAmount' => $calling->getTotalAmount(),
+            'mkadDistance' => $calling->getMkadDistance(),
+            'ownerExternalId' => $calling->getOwnerExternalId(),
+            'operator' => null,
+            'client' => $calling->getClient() ?: [
                 'id' => $calling->getClient()->getId(),
                 'phone' => $calling->getClient()->getPhone(),
                 'name' => $calling->getClient()->getName(),
             ],
-            "noBusinessCards" => $calling->isCurrentNoBusinessCards(),
-            "partnerHospitalization" => $calling->isCurrentPartnerHospitalization(),
-            "images" => [],
-            "addressInfo" => $calling->getAddressInfo(),
-            "team" => $calling->getTeam() ?: [
+            'noBusinessCards' => $calling->isCurrentNoBusinessCards(),
+            'partnerHospitalization' => $calling->isCurrentPartnerHospitalization(),
+            'images' => [],
+            'addressInfo' => $calling->getAddressInfo(),
+            'team' => $calling->getTeam() ?: [
                 'id' => $calling->getTeam()->getId(),
-                "status" => $calling->getTeam()->getStatus(),
-                "phone" => $calling->getTeam()->getPhone() ?: [
+                'status' => $calling->getTeam()->getStatus(),
+                'phone' => $calling->getTeam()->getPhone() ?: [
                     'id' => $calling->getTeam()->getPhone()->getId(),
-                    "externalId" => $calling->getTeam()->getPhone()->getExternalId(),
+                    'externalId' => $calling->getTeam()->getPhone()->getExternalId(),
                 ],
             ],
-            "finishedAt" => $calling->getFinishedAt()?->format('d.m.Y H:i'),
-            "repeat" => $calling->getCountRepeat(),
+            'finishedAt' => $calling->getFinishedAt()?->format('d.m.Y H:i'),
+            'repeat' => $calling->getCountRepeat(),
             'statusLabel' => $calling->getStatusLabel(),
         ], Response::HTTP_ACCEPTED);
     }

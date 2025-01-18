@@ -20,14 +20,12 @@ class PartnerCallsAction extends AbstractController
     private const PER_PAGE = 50;
 
     public function __construct(
-        private readonly Security           $security,
-        private readonly CallingRepository  $calls,
+        private readonly Security $security,
+        private readonly CallingRepository $calls,
         private readonly PaginatorInterface $paginator,
-    )
-    {
-    }
+    ) {}
 
-    #[Route('/partner/calls', name: 'partner-api.calls.index', methods: ["GET"])]
+    #[Route('/partner/calls', name: 'partner-api.calls.index', methods: ['GET'])]
     public function calls(Request $request): JsonResponse
     {
         /** @var PartnerUser $user */
@@ -43,12 +41,12 @@ class PartnerCallsAction extends AbstractController
 
         $search = $request->query->get('search');
 
-
         $calls = $this->calls->findAllForPartnerApi($user->getPartner(), $sort, $direction, $search);
 
         $pagination = $this->paginator->paginate($calls, $page, $perPage);
 
-        return $this->json([
+        return $this->json(
+            [
                 'items' => array_map(static function (Calling $call) {
                     return [
                         'id' => $call->getId(),
@@ -61,7 +59,7 @@ class PartnerCallsAction extends AbstractController
                         'dateTime' => $call->getDateTime()?->format('d.m.Y H:i'),
                         'createdAt' => $call->getCreatedAt()?->format('d.m.Y H:i'),
                         'completedAt' => $call->getCompletedAt()?->format('d.m.Y H:i'),
-                        'location' => $call->getLon() && $call->getLat() ? [$call->getLat(), $call->getLon()] : null,                                            ];
+                        'location' => $call->getLon() && $call->getLat() ? [$call->getLat(), $call->getLon()] : null, ];
                 }, $pagination->getItems()),
                 'pagination' => PaginationSerializer::toArray($pagination),
             ]

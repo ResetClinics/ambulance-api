@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository\AmoCrm;
 
 use AmoCRM\Client\AmoCRMApiClient;
@@ -19,12 +21,12 @@ class ContactRepository
 {
     private AmoCRMApiClient $client;
 
-    public function __construct(AmoCRM        $amoCRM)
+    public function __construct(AmoCRM $amoCRM)
     {
         $this->client = $amoCRM->getClient();
     }
 
-    public function findByPhone(string $phone):?int
+    public function findByPhone(string $phone): ?int
     {
         try {
             $contacts = $this->client->contacts()->get(
@@ -33,16 +35,16 @@ class ContactRepository
             );
             $contact = $contacts->first();
             return $contact->getId();
-        }catch (AmoCRMApiNoContentException $e){
+        } catch (AmoCRMApiNoContentException $e) {
             return null;
-        }catch (Exception $e){
+        } catch (Exception $e) {
             throw new DomainException($e->getMessage());
         }
     }
 
     public function createByPhone($phone): int
     {
-        $phone = preg_replace('/[^0-9]/', '', $phone);;
+        $phone = preg_replace('/[^0-9]/', '', $phone);
         $phone = '+' . $phone;
 
         $contact = new ContactModel();
@@ -76,26 +78,24 @@ class ContactRepository
     {
         $phone = trim($phone);
 
-        $res = preg_replace(
-            array(
+        return preg_replace(
+            [
                 '/[\+]?([7|8])[-|\s]?\([-|\s]?(\d{3})[-|\s]?\)[-|\s]?(\d{3})[-|\s]?(\d{2})[-|\s]?(\d{2})/',
                 '/[\+]?([7|8])[-|\s]?(\d{3})[-|\s]?(\d{3})[-|\s]?(\d{2})[-|\s]?(\d{2})/',
                 '/[\+]?([7|8])[-|\s]?\([-|\s]?(\d{4})[-|\s]?\)[-|\s]?(\d{2})[-|\s]?(\d{2})[-|\s]?(\d{2})/',
                 '/[\+]?([7|8])[-|\s]?(\d{4})[-|\s]?(\d{2})[-|\s]?(\d{2})[-|\s]?(\d{2})/',
                 '/[\+]?([7|8])[-|\s]?\([-|\s]?(\d{4})[-|\s]?\)[-|\s]?(\d{3})[-|\s]?(\d{3})/',
                 '/[\+]?([7|8])[-|\s]?(\d{4})[-|\s]?(\d{3})[-|\s]?(\d{3})/',
-            ),
-            array(
+            ],
+            [
                 '+7 ($2) $3-$4-$5',
                 '+7 ($2) $3-$4-$5',
                 '+7 ($2) $3-$4-$5',
                 '+7 ($2) $3-$4-$5',
                 '+7 ($2) $3-$4',
                 '+7 ($2) $3-$4',
-            ),
+            ],
             $phone
         );
-
-        return $res;
     }
 }

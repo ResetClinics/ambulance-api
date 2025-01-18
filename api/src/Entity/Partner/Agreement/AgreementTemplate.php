@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\Partner\Agreement;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -16,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         'groups' => [
             'agreement:read',
             'agreement:item:read',
-            'service-category:item:read'
+            'service-category:item:read',
         ]],
     denormalizationContext: ['groups' => ['agreement:write']],
     openapi: false,
@@ -54,12 +56,10 @@ class AgreementTemplate
     #[Assert\NotBlank]
     private ?int $repeatNumber = null;
 
-
     public function getId(): ?int
     {
         return $this->id;
     }
-
 
     public function getDistance(): ?int
     {

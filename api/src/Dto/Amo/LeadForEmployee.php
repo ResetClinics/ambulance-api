@@ -1,20 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Dto\Amo;
 
 class LeadForEmployee
 {
-    public $price = null;
-    public $numberCalling = null;
-    public $dateTime = null;
-    public $address = null;
-    public $team = null;
-    public $nosology = null;
-    public $age = null;
-    public $description = null;
-    public $hz = null;
-    public $leadType = null;
-    public $sendPhone = null;
-
-
+    public $price;
+    public $numberCalling;
+    public $dateTime;
+    public $address;
+    public $team;
+    public $nosology;
+    public $age;
+    public $description;
+    public $hz;
+    public $leadType;
+    public $sendPhone;
 }

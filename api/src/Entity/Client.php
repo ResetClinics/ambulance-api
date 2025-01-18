@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -44,11 +46,10 @@ class Client
     public function __construct(
         string $phone,
         ?string $name,
-    )
-    {
+    ) {
         $this->callings = new ArrayCollection();
 
-        $this->phone = preg_replace('/[^0-9]/', '', $phone);;
+        $this->phone = preg_replace('/[^0-9]/', '', $phone);
         $this->name = $name;
     }
 

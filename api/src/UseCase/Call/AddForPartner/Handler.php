@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\UseCase\Call\AddForPartner;
 
 use App\Entity\Calling\Calling;
@@ -16,16 +18,13 @@ class Handler
 {
     public function __construct(
         private readonly ContactRepository $contacts,
-        private readonly LeadRepository    $leads,
+        private readonly LeadRepository $leads,
         private readonly PartnerRepository $partners,
         private readonly CallingRepository $calls,
-        private readonly Flusher           $flusher
-    )
-    {
-    }
+        private readonly Flusher $flusher
+    ) {}
 
     public function handle(Command $command): void
-
     {
         $partner = $this->partners->getById($command->partnerId);
         $contactId = $this->contacts->findByPhone($command->phone);
@@ -45,7 +44,7 @@ class Handler
             throw new DomainException('Вызов уже существует');
         }
 
-        $clientPhone = preg_replace('/[^0-9]/', '', $command->phone);;
+        $clientPhone = preg_replace('/[^0-9]/', '', $command->phone);
         $phone = '+' . $clientPhone;
 
         $call = new Calling(

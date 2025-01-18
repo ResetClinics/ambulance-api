@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\UseCase\Call\SetTime;
 
 use AmoCRM\Client\AmoCRMApiClient;
@@ -17,15 +19,13 @@ use Exception;
 
 class Handler
 {
-
     private AmoCRMApiClient $client;
 
     public function __construct(
         private readonly CallingRepository $calls,
         private readonly Flusher $flusher,
-        AmoCRM                             $amoCRM,
-    )
-    {
+        AmoCRM $amoCRM,
+    ) {
         $this->client = $amoCRM->getClient();
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Call;
 
 use App\Entity\Calling\Calling;
@@ -14,12 +16,10 @@ readonly class TeamAssignmentService
 {
     public function __construct(
         private MedTeamRepository $teams,
-        private Flusher           $flusher,
-        private CallingSender     $sender,
-        private TelegramSender    $tgSender,
-    )
-    {
-    }
+        private Flusher $flusher,
+        private CallingSender $sender,
+        private TelegramSender $tgSender,
+    ) {}
 
     public function toAppoint(Calling $call, ?int $teamId): void
     {
@@ -33,7 +33,7 @@ readonly class TeamAssignmentService
 
         $medTeam = $this->teams->getLastWorkByNumber($teamId);
 
-        if (!$medTeam){
+        if (!$medTeam) {
             throw new DomainException('Не найдено рабочей бригады № ' . $teamId);
         }
 

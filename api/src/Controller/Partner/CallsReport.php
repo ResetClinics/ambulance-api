@@ -1,6 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Partner;
+
 use App\Entity\Calling\Calling;
 use App\Entity\Calling\Status;
 use App\Entity\Hospital\Hospital;
@@ -23,9 +26,7 @@ class CallsReport extends AbstractController
         private readonly CallingRepository $calls,
         private readonly HospitalRepository $hospitals,
         private readonly Fetcher $partnerRewardFetcher,
-    )
-    {
-    }
+    ) {}
 
     /**
      * @throws Exception
@@ -33,18 +34,16 @@ class CallsReport extends AbstractController
     #[Route(path: '/api/calls/report', name: 'partner_calls_report', methods: 'GET', priority: 10)]
     public function __invoke(Request $request): JsonResponse
     {
-
         $completedAtAfter = $request->query->get('completedAtAfter');
         $completedAtBefore = $request->query->get('completedAtBefore');
 
         $period = new DatePeriod(
             new DateTimeImmutable($completedAtBefore),
             new DateInterval('P1D'),
-            new DateTimeImmutable($completedAtAfter));
-
+            new DateTimeImmutable($completedAtAfter)
+        );
 
         $calls = $this->calls->findAllByCompletedAtFromPeriod($period);
-
 
         $partners = [];
 
@@ -57,16 +56,16 @@ class CallsReport extends AbstractController
         $stationaryAccrued = 0;
 
         /** @var Calling $call */
-        foreach ($calls as $call){
-            if (!$call?->getPartner()?->getId()){
+        foreach ($calls as $call) {
+            if (!$call?->getPartner()?->getId()) {
                 continue;
             }
-            $id = 'call-'.$call->getId();
-            if ($call->getStatus() !== Status::COMPLETED){
+            $id = 'call-' . $call->getId();
+            if ($call->getStatus() !== Status::COMPLETED) {
                 continue;
             }
 
-            if (!key_exists($call->getPartner()->getId(), $partners)){
+            if (!\array_key_exists($call->getPartner()->getId(), $partners)) {
                 $partners[$call->getPartner()->getId()] = [
                     'id' => $call->getPartner()->getId(),
                     'name' => $call->getPartner()->getName(),
@@ -103,8 +102,8 @@ class CallsReport extends AbstractController
                 'repeat' => $call->getCountRepeat(),
             ];
 
-            foreach ($call->getServices() as $service){
-                if ($service->isHospital()){
+            foreach ($call->getServices() as $service) {
+                if ($service->isHospital()) {
                     $partners[$call->getPartner()->getId()]['calls'][$id]['hospitalEntrance']
                         += $service->getPrice();
                     $partners[$call->getPartner()->getId()]['calls'][$id]['hospitalAccrued']
@@ -117,8 +116,7 @@ class CallsReport extends AbstractController
 
                     $hospitalEntrance  += $service->getPrice();
                     $hospitalAccrued += $service->getPartnerReward();
-
-                }elseif ($service->isTherapy()){
+                } elseif ($service->isTherapy()) {
                     $partners[$call->getPartner()->getId()]['calls'][$id]['callEntrance']
                         += $service->getPrice();
                     $partners[$call->getPartner()->getId()]['calls'][$id]['callAccrued']
@@ -137,16 +135,14 @@ class CallsReport extends AbstractController
                 $partners[$call->getPartner()->getId()]['debit'] += $call->getPrice();
                 $debit += $call->getPrice();
             }
-
         }
-
 
         $hospitals = $this->hospitals->findAllByDischargedAtFromPeriod($period);
 
         /** @var Hospital $hospital */
-        foreach ($hospitals as $hospital){
-            $id = 'hospital-'.$hospital->getId();
-            if (!key_exists($hospital->getPartner()->getId(), $partners)){
+        foreach ($hospitals as $hospital) {
+            $id = 'hospital-' . $hospital->getId();
+            if (!\array_key_exists($hospital->getPartner()->getId(), $partners)) {
                 $partners[$hospital->getPartner()->getId()] = [
                     'id' => $hospital->getPartner()->getId(),
                     'name' => $hospital->getPartner()->getName(),
@@ -201,9 +197,7 @@ class CallsReport extends AbstractController
             $partners[$hospital->getPartner()->getId()]['calls'][$id]['debit'] = $hospital->getAmount();
             $partners[$hospital->getPartner()->getId()]['debit'] += $hospital->getAmount();
             $debit += $hospital->getAmount();
-
         }
-
 
         return $this->json([
             'items' => $partners,

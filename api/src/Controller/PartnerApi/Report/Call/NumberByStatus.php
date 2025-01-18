@@ -13,14 +13,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 
-#[Route('/partner/report/call/number-by-status', name: 'partner_report_call_number_by_status', methods: ["GET"])]
+#[Route('/partner/report/call/number-by-status', name: 'partner_report_call_number_by_status', methods: ['GET'])]
 class NumberByStatus extends AbstractController
 {
     public function __construct(
-        private readonly Security           $security,
-    )
-    {
-    }
+        private readonly Security $security,
+    ) {}
 
     /**
      * @throws Exception
@@ -55,5 +53,4 @@ class NumberByStatus extends AbstractController
 
         return $this->json($result);
     }
-
 }

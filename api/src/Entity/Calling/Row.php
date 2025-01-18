@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\Calling;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -7,6 +9,7 @@ use App\Entity\FileObject;
 use App\Entity\Hospital\Clinic;
 use App\Entity\Service\Service;
 use App\Repository\Calling\RowRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -28,11 +31,11 @@ class Row
 
     #[ORM\ManyToOne(inversedBy: 'rows')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write'])]
     private ?Service $service = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write'])]
     private ?float $price = null;
 
     #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'services')]
@@ -40,23 +43,23 @@ class Row
     private ?Calling $calling = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write'])]
     private ?int $plannedPrice = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write',])]
-    private ?\DateTimeImmutable $plannedAt = null;
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write'])]
+    private ?DateTimeImmutable $plannedAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write'])]
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read'])]
     private ?int $partnerReward = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write'])]
     private ?int $coastPrice = null;
 
     #[ORM\Column(nullable: true)]
@@ -64,12 +67,11 @@ class Row
     private ?int $percent = null;
 
     #[ORM\ManyToOne]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write'])]
     private ?Clinic $clinic = null;
 
-
     #[ORM\Column(type: Types::BOOLEAN, nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write',])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write'])]
     private ?bool $inCash = null;
 
     /**
@@ -89,7 +91,6 @@ class Row
     {
         $this->files = new ArrayCollection();
     }
-
 
     public function getId(): ?int
     {
@@ -144,12 +145,12 @@ class Row
         return $this;
     }
 
-    public function getPlannedAt(): ?\DateTimeImmutable
+    public function getPlannedAt(): ?DateTimeImmutable
     {
         return $this->plannedAt;
     }
 
-    public function setPlannedAt(?\DateTimeImmutable $plannedAt): self
+    public function setPlannedAt(?DateTimeImmutable $plannedAt): self
     {
         $this->plannedAt = $plannedAt;
 
@@ -205,7 +206,7 @@ class Row
      */
     public function isStationary(): bool
     {
-        return$this->getService()?->getType() === 'hospital';
+        return $this->getService()?->getType() === 'hospital';
     }
 
     /**
@@ -213,29 +214,27 @@ class Row
      */
     public function isReplay(): bool
     {
-        return$this->getService()?->getType() === 'replay';
+        return $this->getService()?->getType() === 'replay';
     }
 
     /**
      * Услуга является кодированием
      */
-
     public function isCoding(): bool
     {
         return $this->getService()?->getCategory()?->getId() === 3;
     }
 
     /**
-     * Услуга является терапией
+     * Услуга является терапией.
      */
-
     public function isTherapy(): bool
     {
         return $this->getService()?->getCategory()?->getId() === 1;
     }
 
     /**
-     * Услуга является госпитализацией (доставка в больницу)
+     * Услуга является госпитализацией (доставка в больницу).
      */
     public function isHospital(): bool
     {

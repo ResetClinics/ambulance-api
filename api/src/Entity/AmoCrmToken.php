@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
@@ -25,12 +27,6 @@ class AmoCrmToken
     #[ORM\Column(length: 255)]
     private ?string $baseDomain = null;
 
-    /**
-     * @param string|null $accessToken
-     * @param string|null $refreshToken
-     * @param int|null $expires
-     * @param string|null $baseDomain
-     */
     public function __construct(?string $accessToken, ?string $refreshToken, ?int $expires, ?string $baseDomain)
     {
         $this->accessToken = $accessToken;
@@ -38,7 +34,6 @@ class AmoCrmToken
         $this->expires = $expires;
         $this->baseDomain = $baseDomain;
     }
-
 
     public function getId(): ?int
     {

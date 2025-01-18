@@ -22,33 +22,31 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-#[Route('/api/amo-crm/web-hook-home-call', name: 'amo_crm.web_hook_home_call', methods: ["POST"])]
+#[Route('/api/amo-crm/web-hook-home-call', name: 'amo_crm.web_hook_home_call', methods: ['POST'])]
 class WebHookHomeCallAction extends AbstractController
 {
     public function __construct(
-        private readonly CrmToAppDenormalizerInterface       $leadDenormalizer,
-        private readonly CrmContactFetcherInterface          $contactFetcher,
-        private readonly PartnerRepository                   $partners,
-        private readonly ClientRepository                    $clients,
+        private readonly CrmToAppDenormalizerInterface $leadDenormalizer,
+        private readonly CrmContactFetcherInterface $contactFetcher,
+        private readonly PartnerRepository $partners,
+        private readonly ClientRepository $clients,
         private readonly ValidatorInterface $validator,
-        private readonly Handler                             $handler,
+        private readonly Handler $handler,
         private readonly \App\UseCase\Partner\Create\Handler $partnerHandler,
         private readonly \App\UseCase\Client\Create\Handler $clientHandler,
         private readonly CallingRepository $calls,
         private readonly Flusher $flusher,
-    )
-    {
-    }
+    ) {}
 
     public function __invoke(Request $request): JsonResponse
     {
-       $data = $request->request->all();
+        $data = $request->request->all();
 
         try {
             $lead = $this->leadDenormalizer->denormalize($data, Lead::class);
 
             $violations = $this->validator->validate($lead);
-            if (count($violations)) {
+            if (\count($violations)) {
                 return $this->json(null, Response::HTTP_OK);
             }
 
@@ -92,7 +90,7 @@ class WebHookHomeCallAction extends AbstractController
             $contact = $this->contactFetcher->fetch($lead->getId());
 
             $violations = $this->validator->validate($contact);
-            if (count($violations)) {
+            if (\count($violations)) {
                 return $this->json(null, Response::HTTP_OK);
             }
 
@@ -108,13 +106,12 @@ class WebHookHomeCallAction extends AbstractController
 
             $command = new Command($lead, $contact);
             $this->handler->handle($command);
-
         } catch (Exception $e) {
-
             file_put_contents(
-                dirname(__DIR__) . '/../../var/error-1.txt',
-                print_r($e->getMessage() , true).PHP_EOL,
-                FILE_APPEND);
+                \dirname(__DIR__) . '/../../var/error-1.txt',
+                print_r($e->getMessage(), true) . PHP_EOL,
+                FILE_APPEND
+            );
 
             return $this->json(null, Response::HTTP_OK);
         }

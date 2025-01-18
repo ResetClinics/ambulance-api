@@ -1,6 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\User;
+
 use App\Query\User\UsersReport\Fetcher;
 use App\Query\User\UsersReport\Query;
 use Exception;
@@ -16,9 +19,7 @@ class UsersReport extends AbstractController
     public function __construct(
         private readonly DenormalizerInterface $denormalizer,
         private readonly Fetcher $fetcher,
-    )
-    {
-    }
+    ) {}
 
     /**
      * @throws Exception

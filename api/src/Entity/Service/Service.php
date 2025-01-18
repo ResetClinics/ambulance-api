@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\Service;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -25,11 +27,11 @@ class Service
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['service:item:read', 'exchange_calling:read', 'v1-call:read', 'v1-call:write',])]
+    #[Groups(['service:item:read', 'exchange_calling:read', 'v1-call:read', 'v1-call:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['service:item:read', 'service:write', 'exchange_calling:read', 'v1-call:read',])]
+    #[Groups(['service:item:read', 'service:write', 'exchange_calling:read', 'v1-call:read'])]
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'service', targetEntity: Row::class)]

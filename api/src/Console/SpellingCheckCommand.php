@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console;
 
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -16,15 +18,13 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 )]
 class SpellingCheckCommand extends Command
 {
-
     private HttpClientInterface $client;
     private SerializerInterface $serializer;
 
     public function __construct(
         HttpClientInterface $client,
         SerializerInterface $serializer
-    )
-    {
+    ) {
         parent::__construct();
         $this->client = $client;
         $this->serializer = $serializer;
@@ -37,13 +37,12 @@ class SpellingCheckCommand extends Command
         $io->success('Spelling check finished.');
 
         $resp = $this->client->request('GET', 'https://rc-respect.ru/psihiatriya/');
-//
+
         $content = $resp->getContent();
 
         $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
         $content = preg_replace('#<style(.*?)>(.*?)</style>#is', '', $content);
         $content = preg_replace('#<!--(.*?)>(.*?)-->#is', '', $content);
-
 
         $resp = $this->client->request(
             'POST',
@@ -60,10 +59,9 @@ class SpellingCheckCommand extends Command
 
         $content = $resp->getContent();
 
-        //dd($content);
+        // dd($content);
 
         dd($this->serializer->deserialize($content, Test::class, 'xml'));
         return Command::SUCCESS;
     }
 }
-

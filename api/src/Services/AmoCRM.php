@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use AmoCRM\Client\AmoCRMApiClient;
@@ -9,10 +11,10 @@ use League\OAuth2\Client\Token\AccessTokenInterface;
 class AmoCRM
 {
     private AmoCRMApiClient $client;
+
     public function __construct(
         AmoCrmTokenRepository $tokens,
-    )
-    {
+    ) {
         $apiClient = new AmoCRMApiClient(
             'd80b0f1f-1687-4b1e-8abd-9f3cbbe7a19e',
             'fCUzh7hiQ1bcuKQSrdJVp7Mnwnwi4b2vsK4W7yzhBCcumEkvRcHl3wX3hVxglhmK',
@@ -24,7 +26,7 @@ class AmoCRM
         $apiClient->setAccessToken($token)
             ->setAccountBaseDomain('af4040148.amocrm.ru')
             ->onAccessTokenRefresh(
-                function (AccessTokenInterface $accessToken, string $baseDomain) use ($tokens) {
+                static function (AccessTokenInterface $accessToken, string $baseDomain) use ($tokens): void {
                     $tokens->update($accessToken, $baseDomain);
                 }
             );
@@ -32,13 +34,8 @@ class AmoCRM
         $this->client = $apiClient;
     }
 
-    /**
-     * @return AmoCRMApiClient
-     */
     public function getClient(): AmoCRMApiClient
     {
         return $this->client;
     }
-
-
 }

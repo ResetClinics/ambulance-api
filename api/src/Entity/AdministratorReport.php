@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Doctrine\Common\Filter\DateFilterInterface;
@@ -71,7 +73,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
                 'user:item:read',
                 'phone:read',
                 'car:read',
-                'base:read'
+                'base:read',
             ]],
         ),
         new Put(
@@ -84,7 +86,6 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
             openapi: false,
         ),
     ],
-
     normalizationContext: ['groups' => ['administrator_report:read', 'media_object:read', 'user:item:read']],
     denormalizationContext: ['groups' => ['administrator_report:write', 'media_object:write']],
     paginationClientEnabled: true,
@@ -102,8 +103,8 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 )]
 class AdministratorReport
 {
-    use TimestampableEntity;
     use BlameableEntity;
+    use TimestampableEntity;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -114,7 +115,7 @@ class AdministratorReport
     #[ORM\ManyToOne]
     #[Groups([
         'administrator_report:read',
-        'administrator_report:write'
+        'administrator_report:write',
     ])]
     // #[Assert\NotBlank]
     private ?MedTeam $team = null;
@@ -166,7 +167,6 @@ class AdministratorReport
     #[ORM\InverseJoinColumn(name: 'media_object_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[Groups(['administrator_report:detail:read', 'administrator_report:write'])]
     private Collection $parkingFeesReceipts;
-
 
     /**
      * @var Collection<int, FileObject>
@@ -283,7 +283,6 @@ class AdministratorReport
         return $this;
     }
 
-
     /**
      * @return Collection<int, MediaObject>
      */
@@ -332,7 +331,6 @@ class AdministratorReport
         return $this;
     }
 
-
     /**
      * @return Collection<int, FileObject>
      */
@@ -364,7 +362,6 @@ class AdministratorReport
 
     public function setShift(?MedTeam $shift): static
     {
-
         if ($shift === null && $this->shift !== null) {
             $this->shift->setTransportReport(null);
         }
@@ -375,5 +372,4 @@ class AdministratorReport
 
         return $this;
     }
-
 }

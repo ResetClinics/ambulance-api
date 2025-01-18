@@ -48,23 +48,21 @@ class FinishAction extends AbstractController
     private AmoCRMApiClient $client;
 
     public function __construct(
-        AmoCRM                          $amoCRM,
-        private readonly CallingSender  $sender,
-        private readonly PartnerReward  $partnerReward,
+        AmoCRM $amoCRM,
+        private readonly CallingSender $sender,
+        private readonly PartnerReward $partnerReward,
         private readonly OperatorReward $operatorReward,
-        private readonly Flusher        $flusher,
-        private readonly WSClient       $wsClient,
+        private readonly Flusher $flusher,
+        private readonly WSClient $wsClient,
         private readonly Handler $handler,
         private readonly \App\Asterisk\UseCase\Channel\DeleteByClientPhone\Handler $asteriskDeleteHandler,
         private readonly McnBlacklistService $mcnBlacklistService,
-    )
-    {
+    ) {
         $this->client = $amoCRM->getClient();
     }
 
     public function __invoke(Calling $calling, CallingRepository $callings, Flusher $flusher): JsonResponse
     {
-
         $price = 0;
         $paymentNextOrder = 0;
         $paymentHospitalization = 0;
@@ -129,96 +127,94 @@ class FinishAction extends AbstractController
                 new \App\Asterisk\UseCase\Channel\DeleteByClientPhone\Command($calling->getClient()?->getPhone())
             );
 
-            if ($calling->getClient()?->getPhone()){
+            if ($calling->getClient()?->getPhone()) {
                 $this->mcnBlacklistService->deleteFromBlacklist($calling->getClient()->getPhone());
             }
-        }catch (Exception) {
-
+        } catch (Exception) {
         }
 
         return $this->json([
-            "id" => $calling->getId(),
-            "title" => $calling->getTitle(),
-            "name" => $calling->getName(),
-            "phone" => '+70000000000',
-            "fio" => $calling->getFio(),
-            "numberCalling" => $calling->getNumberCalling(),
-            "address" => $calling->getAddress(),
-            "status" => $calling->getStatus(),
-            "description" => $calling->getDescription(),
-            "chronicDiseases" => $calling->getChronicDiseases(),
-            "nosology" => $calling->getNosology(),
-            "age" => $calling->getAge(),
-            "leadType" => $calling->getLeadType(),
-            "partnerName" => $calling->getPartnerName(),
-            "sendPhone" => $calling->isSendPhone(),
-            "rejectedComment" => $calling->getRejectedComment(),
-            "createdAt" => $calling->getCreatedAt()?->format('d.m.Y H:i'),
-            "updatedAt" => $calling->getUpdatedAt()?->format('d.m.Y H:i'),
-            "acceptedAt" => $calling->getAcceptedAt()?->format('d.m.Y H:i'),
-            "dispatchedAt" => $calling->getDispatchedAt()?->format('d.m.Y H:i'),
-            "arrivedAt" => $calling->getArrivedAt()?->format('d.m.Y H:i'),
-            "completedAt" => $calling->getCompletedAt()?->format('d.m.Y H:i'),
-            "dateTime" => $calling->getDateTime(),
-            "admin" => $calling?->getAdmin() ?: [
+            'id' => $calling->getId(),
+            'title' => $calling->getTitle(),
+            'name' => $calling->getName(),
+            'phone' => '+70000000000',
+            'fio' => $calling->getFio(),
+            'numberCalling' => $calling->getNumberCalling(),
+            'address' => $calling->getAddress(),
+            'status' => $calling->getStatus(),
+            'description' => $calling->getDescription(),
+            'chronicDiseases' => $calling->getChronicDiseases(),
+            'nosology' => $calling->getNosology(),
+            'age' => $calling->getAge(),
+            'leadType' => $calling->getLeadType(),
+            'partnerName' => $calling->getPartnerName(),
+            'sendPhone' => $calling->isSendPhone(),
+            'rejectedComment' => $calling->getRejectedComment(),
+            'createdAt' => $calling->getCreatedAt()?->format('d.m.Y H:i'),
+            'updatedAt' => $calling->getUpdatedAt()?->format('d.m.Y H:i'),
+            'acceptedAt' => $calling->getAcceptedAt()?->format('d.m.Y H:i'),
+            'dispatchedAt' => $calling->getDispatchedAt()?->format('d.m.Y H:i'),
+            'arrivedAt' => $calling->getArrivedAt()?->format('d.m.Y H:i'),
+            'completedAt' => $calling->getCompletedAt()?->format('d.m.Y H:i'),
+            'dateTime' => $calling->getDateTime(),
+            'admin' => $calling?->getAdmin() ?: [
                 'id' => $calling->getAdmin()->getId(),
                 'phone' => $calling->getAdmin()->getPhone(),
                 'name' => $calling->getAdmin()->getName(),
             ],
-            "doctor" => $calling?->getDoctor() ?: [
+            'doctor' => $calling?->getDoctor() ?: [
                 'id' => $calling->getDoctor()->getId(),
                 'phone' => $calling->getDoctor()->getPhone(),
                 'name' => $calling->getDoctor()->getName(),
             ],
-            "price" => $calling->getPrice(),
-            "estimated" => $calling->GetEstimated(),
-            "prepayment" => $calling->getPrepayment(),
-            "note" => $calling->getNote(),
-            "passport" => $calling->getPassport(),
-            "coastHospitalAdmission" => $calling->getCoastHospitalAdmission(),
-            "coastHospital" => $calling->getCoastHospital(),
-            "costDay" => $calling->getCostDay(),
-            "phoneRelatives" => $calling->getPhoneRelatives(),
-            "resultDate" => $calling->getResultDate(),
-            "resultTime" => $calling->getResultTime(),
-            "partner" => $calling->getPartner() ?: [
-                "id" => $calling->getPartner()->getId(),
-                "name" => $calling->getPartner()->getName(),
-                "whatsappGroup" => $calling->getPartner()->getWhatsappGroup(),
+            'price' => $calling->getPrice(),
+            'estimated' => $calling->GetEstimated(),
+            'prepayment' => $calling->getPrepayment(),
+            'note' => $calling->getNote(),
+            'passport' => $calling->getPassport(),
+            'coastHospitalAdmission' => $calling->getCoastHospitalAdmission(),
+            'coastHospital' => $calling->getCoastHospital(),
+            'costDay' => $calling->getCostDay(),
+            'phoneRelatives' => $calling->getPhoneRelatives(),
+            'resultDate' => $calling->getResultDate(),
+            'resultTime' => $calling->getResultTime(),
+            'partner' => $calling->getPartner() ?: [
+                'id' => $calling->getPartner()->getId(),
+                'name' => $calling->getPartner()->getName(),
+                'whatsappGroup' => $calling->getPartner()->getWhatsappGroup(),
             ],
-            "lon" => $calling->getLon(),
-            "lat" => $calling->getLat(),
-            "services" => [],
-            "amount" => $calling->getAmount(),
-            "paymentNextOrder" => $calling->getPaymentNextOrder(),
-            "paymentHospitalization" => $calling->getPaymentHospitalization(),
-            "totalAmount" => $calling->getTotalAmount(),
-            "mkadDistance" => $calling->getMkadDistance(),
-            "ownerExternalId" => $calling->getOwnerExternalId(),
-            "operator" => null,
-            "client" => $calling->getClient() ?: [
+            'lon' => $calling->getLon(),
+            'lat' => $calling->getLat(),
+            'services' => [],
+            'amount' => $calling->getAmount(),
+            'paymentNextOrder' => $calling->getPaymentNextOrder(),
+            'paymentHospitalization' => $calling->getPaymentHospitalization(),
+            'totalAmount' => $calling->getTotalAmount(),
+            'mkadDistance' => $calling->getMkadDistance(),
+            'ownerExternalId' => $calling->getOwnerExternalId(),
+            'operator' => null,
+            'client' => $calling->getClient() ?: [
                 'id' => $calling->getClient()->getId(),
                 'phone' => $calling->getClient()->getPhone(),
                 'name' => $calling->getClient()->getName(),
             ],
-            "noBusinessCards" => $calling->isCurrentNoBusinessCards(),
-            "partnerHospitalization" => $calling->isCurrentPartnerHospitalization(),
-            "images" => [],
-            "addressInfo" => $calling->getAddressInfo(),
-            "team" => $calling->getTeam() ?: [
+            'noBusinessCards' => $calling->isCurrentNoBusinessCards(),
+            'partnerHospitalization' => $calling->isCurrentPartnerHospitalization(),
+            'images' => [],
+            'addressInfo' => $calling->getAddressInfo(),
+            'team' => $calling->getTeam() ?: [
                 'id' => $calling->getTeam()->getId(),
-                "status" => $calling->getTeam()->getStatus(),
-                "phone" => $calling->getTeam()->getPhone() ?: [
+                'status' => $calling->getTeam()->getStatus(),
+                'phone' => $calling->getTeam()->getPhone() ?: [
                     'id' => $calling->getTeam()->getPhone()->getId(),
-                    "externalId" => $calling->getTeam()->getPhone()->getExternalId(),
+                    'externalId' => $calling->getTeam()->getPhone()->getExternalId(),
                 ],
             ],
-            "finishedAt" => $calling->getFinishedAt()?->format('d.m.Y H:i'),
-            "repeat" => $calling->getCountRepeat(),
+            'finishedAt' => $calling->getFinishedAt()?->format('d.m.Y H:i'),
+            'repeat' => $calling->getCountRepeat(),
             'statusLabel' => $calling->getStatusLabel(),
         ], Response::HTTP_ACCEPTED);
     }
-
 
     private function completeCall(Calling $calling, string $hospital, string $replay): void
     {
@@ -251,7 +247,6 @@ class FinishAction extends AbstractController
 
         /** @var Row $serviceRow */
         foreach ($calling->getServices() as $serviceRow) {
-
             if ($serviceRow->getService()->getType() === 'replay') {
                 $message .= 'Повтор' . ($serviceRow->getPlannedAt() ? ' - ' . $serviceRow->getPlannedAt()->format('d.m.y H:m') : '') . PHP_EOL;
                 $message .= $serviceRow->getPrice() ? 'Предоплата ' . $serviceRow->getPrice() . PHP_EOL : '';
@@ -263,10 +258,10 @@ class FinishAction extends AbstractController
 
         /** @var Row $serviceRow */
         foreach ($calling->getServices() as $serviceRow) {
-
             if ($serviceRow->isStationary()) {
                 continue;
-            } elseif ($serviceRow->isHospital()) {
+            }
+            if ($serviceRow->isHospital()) {
                 $message .= 'Госпитализация' . ($serviceRow->getPrice() ? ' - ' . $serviceRow->getPrice() : '') . PHP_EOL;
                 $message .= $serviceRow->getDescription() ?
                     'Комментарий: ' . $serviceRow->getDescription() . PHP_EOL : '';
@@ -347,7 +342,6 @@ class FinishAction extends AbstractController
         $filter = new EntitiesLinksFilter([$calling->getNumberCalling()]);
         $allLinks = $linksService->get($filter);
 
-
         $contactId = null;
         $companyId = null;
         /** @var LinkModel $link */
@@ -365,7 +359,6 @@ class FinishAction extends AbstractController
             }
         }
 
-
         if (!$contactId) {
             throw new NotFoundHttpException('Не найден контакт при создании повтора');
         }
@@ -374,7 +367,7 @@ class FinishAction extends AbstractController
 
         $customFieldsValues = new CustomFieldsValuesCollection();
         foreach ($lead->getCustomFieldsValues() as $customFieldsValue) {
-            //Время прибытия, бригаду, админа и врача не переносим в повотор
+            // Время прибытия, бригаду, админа и врача не переносим в повотор
             if (
                 $customFieldsValue->getFieldId() === 880453 ||
                 $customFieldsValue->getFieldId() === 875863 ||
@@ -416,7 +409,6 @@ class FinishAction extends AbstractController
                             ->setIsMain(true)
                     )
             );
-
 
         if ($companyId) {
             $newLead->setCompany(

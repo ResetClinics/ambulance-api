@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\EventSubscriber;
 
 use ApiPlatform\Symfony\EventListener\EventPriorities;
@@ -26,7 +28,7 @@ final class CallingItemPhoneSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onKernelView(ViewEvent $event)
+    public function onKernelView(ViewEvent $event): void
     {
         $call = $event->getControllerResult();
         $request = $event->getRequest();
@@ -35,7 +37,7 @@ final class CallingItemPhoneSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if ($request->attributes->get('_api_resource_class') !== Calling::class){
+        if ($request->attributes->get('_api_resource_class') !== Calling::class) {
             return;
         }
 

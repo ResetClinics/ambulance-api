@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Query\User\UsersOperatorReport;
 
 use App\Entity\Calling\Calling;
@@ -13,15 +15,11 @@ use Doctrine\DBAL\Exception;
 
 class Fetcher
 {
-
-
     public function __construct(
-        public readonly PeriodService     $periodService,
+        public readonly PeriodService $periodService,
         public readonly CallingRepository $calls,
-        private readonly Connection       $connection,
-    )
-    {
-    }
+        private readonly Connection $connection,
+    ) {}
 
     /**
      * @throws Exception
@@ -32,11 +30,10 @@ class Fetcher
         $period = $this->periodService->createDatePeriodFromRequest($query->period);
         $calls = $this->calls->findAllByCompletedAtFromPeriod($period);
 
-
         $roles = [
             'ROLE_DOCTOR',
             'ROLE_ADMIN',
-            //'ROLE_DRIVER',
+            // 'ROLE_DRIVER',
         ];
 
         $sort = $query->sort;
@@ -52,37 +49,37 @@ class Fetcher
                 'name' => $user['name'],
                 'roles' => json_decode($user['roles'], true),
 
-                //**************
+                // **************
 
-                'revenue' => 0,                     //Выручка ВСЕГО
-                'salary' => 'n/a',                  //ЗП ВСЕГО
+                'revenue' => 0,                     // Выручка ВСЕГО
+                'salary' => 'n/a',                  // ЗП ВСЕГО
 
-                'workShiftCount' => 0,              //Смены ВСЕГО шт
-                'workShiftHours' => 0,              //Смены ВСЕГО часы
-                'workShiftSalary' => 'n/a',        //ЗП Смены ВСЕГО
+                'workShiftCount' => 0,              // Смены ВСЕГО шт
+                'workShiftHours' => 0,              // Смены ВСЕГО часы
+                'workShiftSalary' => 'n/a',        // ЗП Смены ВСЕГО
 
-                'dutyCount' => 0,                   //Дежурства в смену на мероприятиях
-                'dutyHours' => 0,                   //Дежурства в смену на мероприятиях
-                'dutySalary' => 'n/a',              //ЗП Дежурства в смену на мероприятиях
+                'dutyCount' => 0,                   // Дежурства в смену на мероприятиях
+                'dutyHours' => 0,                   // Дежурства в смену на мероприятиях
+                'dutySalary' => 'n/a',              // ЗП Дежурства в смену на мероприятиях
 
-                'callsRevenue' => 0,                   //Выручка Выезды ВСЕГО
-                'callsCount' => 0,                     //
-                'callsAverageCheck' => 0,              //
-                'callsSalary' => 'n/a',                //
+                'callsRevenue' => 0,                   // Выручка Выезды ВСЕГО
+                'callsCount' => 0,
+                'callsAverageCheck' => 0,
+                'callsSalary' => 'n/a',
 
-                'callsPrimaryRevenue' => 0,             //Выручка выезды перпичные
-                'callsPrimaryCount' => 0,               //
-                'callsPrimaryAverageCheck' => 0,        //
-                'callsPrimarySalary' => 'n/a',          //
+                'callsPrimaryRevenue' => 0,             // Выручка выезды перпичные
+                'callsPrimaryCount' => 0,
+                'callsPrimaryAverageCheck' => 0,
+                'callsPrimarySalary' => 'n/a',
 
-                'callsRepeatRevenue' => 0,          //Выручка выезды повторы
-                'callsRepeatCount' => 0,            //
-                'callsRepeatAverageCheck' => 0,     //
-                'callsRepeatSalary' => 'n/a',       //
+                'callsRepeatRevenue' => 0,          // Выручка выезды повторы
+                'callsRepeatCount' => 0,
+                'callsRepeatAverageCheck' => 0,
+                'callsRepeatSalary' => 'n/a',
 
-                'codingRevenue' => 0,               //Кодирование выручка
-                'codingCount' => 0,                 //Кодирование количество
-                'codingSalary' => 'n/a',            //Кодирование зарплата
+                'codingRevenue' => 0,               // Кодирование выручка
+                'codingCount' => 0,                 // Кодирование количество
+                'codingSalary' => 'n/a',            // Кодирование зарплата
             ];
         }
 
@@ -97,8 +94,7 @@ class Fetcher
             }
         }
 
-
-        usort($result, function ($item1, $item2) use ($sort, $order) {
+        usort($result, static function ($item1, $item2) use ($sort, $order) {
             if ($order === 'desc') {
                 return $item2[$sort] <=> $item1[$sort];
             }
@@ -120,8 +116,7 @@ class Fetcher
                 'u.roles',
             )
             ->from('user', 'u')
-            ->andWhere('u.active = 1')
-        ;
+            ->andWhere('u.active = 1');
 
         $orX = $qb->expr()->orX();
 
@@ -137,38 +132,32 @@ class Fetcher
         return $stmt->fetchAllAssociative() ?: [];
     }
 
-    /**
-     * @param array $result
-     * @param int|null $adminId
-     * @param Calling $call
-     * @return array
-     */
     public function getArr(array $result, ?int $adminId, Calling $call): array
     {
-        if (!array_key_exists($adminId, $result)){
-            return  $result;
+        if (!\array_key_exists($adminId, $result)) {
+            return $result;
         }
 
         $result[$adminId]['revenue'] += $call->getPrice();
 
         // вызовы всего
-        $result[$adminId]['callsCount'] += 1;
+        ++$result[$adminId]['callsCount'];
         $result[$adminId]['callsRevenue'] += $call->getPrice();
         if ($result[$adminId]['callsCount'] > 0) {
             $result[$adminId]['callsAverageCheck']
                 = (int)($result[$adminId]['callsRevenue'] / $result[$adminId]['callsCount']);
         }
 
-        //первычные вызовы
-        if ($call->getCountRepeat() === 0){
-            $result[$adminId]['callsPrimaryCount'] += 1;
+        // первычные вызовы
+        if ($call->getCountRepeat() === 0) {
+            ++$result[$adminId]['callsPrimaryCount'];
             $result[$adminId]['callsPrimaryRevenue'] += $call->getPrice();
             if ($result[$adminId]['callsPrimaryCount'] > 0) {
                 $result[$adminId]['callsPrimaryAverageCheck']
                     = (int)($result[$adminId]['callsPrimaryRevenue'] / $result[$adminId]['callsPrimaryCount']);
             }
-        }else{ // вторичные вызовы
-            $result[$adminId]['callsRepeatCount'] += 1;
+        } else { // вторичные вызовы
+            ++$result[$adminId]['callsRepeatCount'];
             $result[$adminId]['callsRepeatRevenue'] += $call->getPrice();
             if ($result[$adminId]['callsRepeatCount'] > 0) {
                 $result[$adminId]['callsRepeatAverageCheck']
@@ -176,9 +165,9 @@ class Fetcher
             }
         }
 
-        foreach ($call->getServices() as $service){
-            if ($service->getService()?->getCategory()?->getId() === 3){
-                $result[$adminId]['codingCount'] += 1;
+        foreach ($call->getServices() as $service) {
+            if ($service->getService()?->getCategory()?->getId() === 3) {
+                ++$result[$adminId]['codingCount'];
                 $result[$adminId]['codingRevenue'] += $service->getPrice();
             }
             break;

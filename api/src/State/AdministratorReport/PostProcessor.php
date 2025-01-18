@@ -17,13 +17,12 @@ readonly class PostProcessor implements ProcessorInterface
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
     {
-
         $images = $data->getTollRoadReceipts();
 
         /** @var MediaObject $image */
-        foreach ($images as $image){
-            if ($image->base64content){
-                $imageFile = new UploadedBase64File($image->base64content, "toll_road_receipt.png");
+        foreach ($images as $image) {
+            if ($image->base64content) {
+                $imageFile = new UploadedBase64File($image->base64content, 'toll_road_receipt.png');
                 $image->file = $imageFile;
             }
         }
@@ -31,9 +30,9 @@ readonly class PostProcessor implements ProcessorInterface
         $images = $data->getParkingFeesReceipts();
 
         /** @var MediaObject $image */
-        foreach ($images as $image){
+        foreach ($images as $image) {
             if ($image->base64content) {
-                $imageFile = new UploadedBase64File($image->base64content, "parking_fees_receipt.png");
+                $imageFile = new UploadedBase64File($image->base64content, 'parking_fees_receipt.png');
                 $image->file = $imageFile;
             }
         }
@@ -41,13 +40,12 @@ readonly class PostProcessor implements ProcessorInterface
         $images = $data->getMileageReceipts();
 
         /** @var MediaObject $image */
-        foreach ($images as $image){
+        foreach ($images as $image) {
             if ($image->base64content) {
-                $imageFile = new UploadedBase64File($image->base64content, "mileage_receipt.png");
+                $imageFile = new UploadedBase64File($image->base64content, 'mileage_receipt.png');
                 $image->file = $imageFile;
             }
         }
-
 
         return $this->processor->process($data, $operation, $uriVariables, $context);
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\MkadDistance\Exception;
 
 use App\MkadDistance\Geometry\DistanceBetweenPoints;
@@ -16,22 +18,17 @@ class DistanceRequestException extends DistanceException
      * DistanceRequestException constructor.
      * @param string $message
      * @param int $code
-     * @param Throwable|null $previous
-     * @param DistanceBetweenPoints|null $lineDistance
      */
     public function __construct(
         $message = '',
         $code = 0,
-        Throwable $previous = null,
-        DistanceBetweenPoints $lineDistance = null
+        ?Throwable $previous = null,
+        ?DistanceBetweenPoints $lineDistance = null
     ) {
         $this->lineDistance = $lineDistance;
         parent::__construct($message, $code, $previous);
     }
 
-    /**
-     * @return DistanceBetweenPoints|null
-     */
     public function getLineDistance(): ?DistanceBetweenPoints
     {
         return $this->lineDistance;

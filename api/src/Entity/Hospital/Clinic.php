@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\Hospital;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -12,7 +14,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: ClinicRepository::class)]
 #[ApiResource(
     routePrefix: '/api',
-    normalizationContext: ['groups' => ['clinic:read',  'clinic:item:read']],
+    normalizationContext: ['groups' => ['clinic:read', 'clinic:item:read']],
     denormalizationContext: ['groups' => ['clinic:write']],
     openapi: false,
     paginationClientEnabled: true,
@@ -23,11 +25,11 @@ class Clinic
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['clinic:read', 'clinic:write', 'hospital:read', 'v1-call:read', 'v1-call:write',])]
+    #[Groups(['clinic:read', 'clinic:write', 'hospital:read', 'v1-call:read', 'v1-call:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['clinic:read', 'clinic:write', 'hospital:read', 'v1-call:read',])]
+    #[Groups(['clinic:read', 'clinic:write', 'hospital:read', 'v1-call:read'])]
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'clinic', targetEntity: Hospital::class)]

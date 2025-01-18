@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\UseCase\Partner\Create;
 
 class Command
@@ -22,6 +24,4 @@ class Command
     {
         return $this->externalId;
     }
-
-
 }

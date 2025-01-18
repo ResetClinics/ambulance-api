@@ -23,7 +23,9 @@ final class JWTPartnerUsdrCreatedListener implements EventSubscriberInterface
     {
         $user = $event->getUser();
 
-        if ($user instanceof PartnerUser === false) return;
+        if ($user instanceof PartnerUser === false) {
+            return;
+        }
 
         $payload = $event->getData();
         $payload['id'] = $user->getId();

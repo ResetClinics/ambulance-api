@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\UseCase\Partner\Create;
 
 use App\Entity\Partner;
@@ -14,13 +16,11 @@ use DomainException;
 class Handler
 {
     public function __construct(
-        private readonly PartnerRepository           $partners,
+        private readonly PartnerRepository $partners,
         private readonly AgreementTemplateRepository $templates,
-        private readonly AgreementRepository         $agreements,
-        private readonly Flusher                     $flusher,
-    )
-    {
-    }
+        private readonly AgreementRepository $agreements,
+        private readonly Flusher $flusher,
+    ) {}
 
     /**
      * @throws NonUniqueResultException
@@ -40,7 +40,7 @@ class Handler
 
         $agreement = new Partner\Agreement\Agreement();
         $agreement->setPartner($partner);
-        $agreement->setStartsAt((new DateTimeImmutable())->setTime(0, 0),);
+        $agreement->setStartsAt((new DateTimeImmutable())->setTime(0, 0));
 
         foreach ($this->templates->findAll() as $template) {
             $row = new Partner\Agreement\Row();
@@ -57,7 +57,5 @@ class Handler
         $this->agreements->add($agreement);
 
         $this->flusher->flush();
-
     }
-
 }

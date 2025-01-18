@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\PaymentSetting;
 
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
@@ -72,19 +74,16 @@ class PaymentSetting
     )]
     private Collection $versions;
 
-
     public function __construct(
         string $id,
-        int    $value,
+        int $value,
         string $title
-    )
-    {
+    ) {
         $this->id = $id;
         $this->value = $value;
         $this->title = $title;
         $this->versions = new ArrayCollection();
     }
-
 
     public function getId(): string
     {

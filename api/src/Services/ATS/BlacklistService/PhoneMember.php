@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\ATS\BlacklistService;
 
 readonly class PhoneMember
@@ -8,11 +10,9 @@ readonly class PhoneMember
         public string $id,
         public string $blacklistId,
         public string $number,
-    )
-    {
-    }
+    ) {}
 
-    public static function fromArray(array $data): PhoneMember
+    public static function fromArray(array $data): self
     {
         return new self(
             $data['id'],

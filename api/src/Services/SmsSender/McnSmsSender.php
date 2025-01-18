@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\SmsSender;
 
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
@@ -9,9 +11,7 @@ class McnSmsSender
 {
     public function __construct(
         readonly private HttpClientInterface $client,
-    )
-    {
-    }
+    ) {}
 
     /**
      * @throws TransportExceptionInterface
@@ -29,8 +29,8 @@ class McnSmsSender
                     'Authorization' => 'Bearer 5fbaa4938bb36db16e357ba2079e9e2f5dfb7b3c4307a713',
                 ],
                 'json' => [
-                    "title" => 'MCNtelecom',
-                    'sender' => "MCNtelecom",
+                    'title' => 'MCNtelecom',
+                    'sender' => 'MCNtelecom',
                     'receiver' => $phone,
                     'msgdata' =>  $message,
                 ],

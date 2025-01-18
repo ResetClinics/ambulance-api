@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\AmoCrmToken;
@@ -27,12 +29,12 @@ class AmoCrmTokenRepository
             ->getQuery()
             ->getOneOrNullResult();
 
-        if ($token){
+        if ($token) {
             $token->setAccessToken($accessToken->getToken());
             $token->setRefreshToken($accessToken->getRefreshToken());
             $token->setBaseDomain($baseDomain);
             $token->setExpires($accessToken->getExpires());
-        }else{
+        } else {
             $token = new AmoCrmToken(
                 $accessToken->getToken(),
                 $accessToken->getRefreshToken(),
@@ -51,7 +53,7 @@ class AmoCrmTokenRepository
             ->getQuery()
             ->getOneOrNullResult();
 
-        if ($token){
+        if ($token) {
             return new AccessToken([
                 'access_token' => $token->getAccessToken(),
                 'refresh_token' => $token->getRefreshToken(),

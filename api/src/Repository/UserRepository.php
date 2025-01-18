@@ -9,6 +9,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
+use DomainException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -45,12 +46,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         /** @var User $user */
         if (!$user = $this->find($id)) {
             throw new EntityNotFoundException(
-                sprintf('User id: %s is not found.', $id)
+                \sprintf('User id: %s is not found.', $id)
             );
         }
         return $user;
     }
-
 
     public function remove(User $entity, bool $flush = false): void
     {
@@ -67,14 +67,13 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         if (!$user instanceof User) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
+            throw new UnsupportedUserException(\sprintf('Instances of "%s" are not supported.', $user::class));
         }
 
         $user->setPassword($newHashedPassword);
 
         $this->save($user, true);
     }
-
 
     public function findOneByExternalId(?int $externalId): ?User
     {
@@ -91,10 +90,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->andWhere('u.externalId = :externalId')
             ->setParameter(':externalId', $externalId)
             ->getQuery()
-            ->getOneOrNullResult()){
-            return  $user;
+            ->getOneOrNullResult()) {
+            return $user;
         }
-        throw new \DomainException(sprintf('User externalId "%s" notfound.', $externalId));
+        throw new DomainException(\sprintf('User externalId "%s" notfound.', $externalId));
     }
 
     public function getCountUsers(): int

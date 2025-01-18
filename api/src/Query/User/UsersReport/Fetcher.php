@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Query\User\UsersReport;
 
 use App\Entity\Calling\Calling;
@@ -13,17 +15,14 @@ use App\Repository\UserRepository;
 use App\Services\PeriodService\PeriodService;
 use Exception;
 
-
 readonly class Fetcher
 {
     public function __construct(
-        private PeriodService      $periodService,
+        private PeriodService $periodService,
         private HospitalRepository $hospitals,
         private MedTeamRepository $teams,
         private UserRepository $users,
-    )
-    {
-    }
+    ) {}
 
     /**
      * @throws Exception
@@ -39,7 +38,7 @@ readonly class Fetcher
 
         $users = $this->users->findAllByPermissions([
             'can_be-admin',
-            'can_be-doctor'
+            'can_be-doctor',
         ]);
 
         $result = [];
@@ -51,39 +50,39 @@ readonly class Fetcher
                 'name' => $user->getName(),
                 'permissions' => $user->getPermissions(),
 
-                'revenue' => 0,                     //Выручка ВСЕГО
-                'salary' => 'n/a',                  //ЗП ВСЕГО
+                'revenue' => 0,                     // Выручка ВСЕГО
+                'salary' => 'n/a',                  // ЗП ВСЕГО
 
-                'workShiftCount' => 0,              //Смены ВСЕГО шт
-                'workShiftHours' => 0,              //Смены ВСЕГО часы
-                'workShiftSalary' => 'n/a',        //ЗП Смены ВСЕГО
+                'workShiftCount' => 0,              // Смены ВСЕГО шт
+                'workShiftHours' => 0,              // Смены ВСЕГО часы
+                'workShiftSalary' => 'n/a',        // ЗП Смены ВСЕГО
 
-                'dutyCount' => 0,                   //Дежурства в смену на мероприятиях
-                'dutyHours' => 0,                   //Дежурства в смену на мероприятиях
-                'dutySalary' => 'n/a',              //ЗП Дежурства в смену на мероприятиях
+                'dutyCount' => 0,                   // Дежурства в смену на мероприятиях
+                'dutyHours' => 0,                   // Дежурства в смену на мероприятиях
+                'dutySalary' => 'n/a',              // ЗП Дежурства в смену на мероприятиях
 
-                'callsRevenue' => 0,                   //Выручка Выезды ВСЕГО
-                'callsCancelledCount' => 0,                     //
-                'callsCount' => 0,                     //
-                'callsAverageCheck' => 0,              //
-                'callsSalary' => 'n/a',                //
+                'callsRevenue' => 0,                   // Выручка Выезды ВСЕГО
+                'callsCancelledCount' => 0,
+                'callsCount' => 0,
+                'callsAverageCheck' => 0,
+                'callsSalary' => 'n/a',
 
-                'callsPrimaryRevenue' => 0,             //Выручка выезды первичные
-                'callsPrimaryCount' => 0,               //
-                'callsPrimaryAverageCheck' => 0,        //
-                'callsPrimarySalary' => 'n/a',          //
+                'callsPrimaryRevenue' => 0,             // Выручка выезды первичные
+                'callsPrimaryCount' => 0,
+                'callsPrimaryAverageCheck' => 0,
+                'callsPrimarySalary' => 'n/a',
 
-                'callsRepeatRevenue' => 0,          //Выручка выезды повторы
-                'callsRepeatCount' => 0,            //
-                'callsRepeatAverageCheck' => 0,     //
-                'callsRepeatSalary' => 'n/a',       //
+                'callsRepeatRevenue' => 0,          // Выручка выезды повторы
+                'callsRepeatCount' => 0,
+                'callsRepeatAverageCheck' => 0,
+                'callsRepeatSalary' => 'n/a',
 
-                'codingRevenue' => 0,               //Кодирование выручка
-                'codingCount' => 0,                 //Кодирование количество
-                'codingSalary' => 'n/a',            //Кодирование зарплата
+                'codingRevenue' => 0,               // Кодирование выручка
+                'codingCount' => 0,                 // Кодирование количество
+                'codingSalary' => 'n/a',            // Кодирование зарплата
 
-                'hospitalCount' => 0,            //Количество госпитализаций
-                'stationaryCount' => 0,            //Количество стационаров
+                'hospitalCount' => 0,            // Количество госпитализаций
+                'stationaryCount' => 0,            // Количество стационаров
             ];
         }
 
@@ -106,20 +105,20 @@ readonly class Fetcher
             $hours = $team->getPlannedHours();
             $dutyHours = $team->getDutyHours();
             $adminId = $team->getAdmin()->getId();
-            if (array_key_exists($adminId, $result)) {
-                $result[$adminId]['workShiftCount'] += 1;
+            if (\array_key_exists($adminId, $result)) {
+                ++$result[$adminId]['workShiftCount'];
                 $result[$adminId]['workShiftHours'] += $hours;
                 if ($dutyHours > 0) {
-                    $result[$adminId]['dutyCount'] += 1;
+                    ++$result[$adminId]['dutyCount'];
                     $result[$adminId]['dutyHours'] += $dutyHours;
                 }
             }
             $doctorId = $team->getDoctor()->getId();
-            if ($doctorId !== $adminId && array_key_exists($doctorId, $result)) {
-                $result[$doctorId]['workShiftCount'] += 1;
+            if ($doctorId !== $adminId && \array_key_exists($doctorId, $result)) {
+                ++$result[$doctorId]['workShiftCount'];
                 $result[$doctorId]['workShiftHours'] += $hours;
                 if ($dutyHours > 0) {
-                    $result[$doctorId]['dutyCount'] += 1;
+                    ++$result[$doctorId]['dutyCount'];
                     $result[$doctorId]['dutyHours'] += $dutyHours;
                 }
             }
@@ -128,24 +127,23 @@ readonly class Fetcher
         /** @var Hospital $hospital */
         foreach ($hospitals as $hospital) {
             if ($hospital->getOwner()) {
-
                 $call = $hospital->getOwner();
                 $adminId = $call?->getAdmin()?->getId();
 
-                if (array_key_exists($adminId, $result)) {
-                    $result[$adminId]['stationaryCount'] += 1;
+                if (\array_key_exists($adminId, $result)) {
+                    ++$result[$adminId]['stationaryCount'];
                 }
 
                 $doctorId = $call?->getDoctor()?->getId();
                 if ($doctorId !== $adminId) {
-                    if (array_key_exists($doctorId, $result)) {
-                        $result[$doctorId]['stationaryCount'] += 1;
+                    if (\array_key_exists($doctorId, $result)) {
+                        ++$result[$doctorId]['stationaryCount'];
                     }
                 }
             }
         }
 
-        usort($result, function ($item1, $item2) use ($sort, $order) {
+        usort($result, static function ($item1, $item2) use ($sort, $order) {
             if ($order === 'desc') {
                 return $item2[$sort] <=> $item1[$sort];
             }
@@ -155,27 +153,21 @@ readonly class Fetcher
         return $result;
     }
 
-    /**
-     * @param array $result
-     * @param int|null $adminId
-     * @param Calling $call
-     * @return array
-     */
     public function getArr(array $result, ?int $adminId, Calling $call): array
     {
-        if (!array_key_exists($adminId, $result)) {
+        if (!\array_key_exists($adminId, $result)) {
             return $result;
         }
 
         if ($call->getStatus() === Status::REJECTED) {
-            $result[$adminId]['callsCancelledCount'] += 1;
+            ++$result[$adminId]['callsCancelledCount'];
             return $result;
         }
 
         $result[$adminId]['revenue'] += $call->getPrice();
 
         // вызовы всего
-        $result[$adminId]['callsCount'] += 1;
+        ++$result[$adminId]['callsCount'];
         $result[$adminId]['callsRevenue'] += $call->getPrice();
         if ($result[$adminId]['callsCount'] > 0) {
             $result[$adminId]['callsAverageCheck']
@@ -183,14 +175,14 @@ readonly class Fetcher
         }
 
         if ($call->getCountRepeat() === 0) {
-            $result[$adminId]['callsPrimaryCount'] += 1;
+            ++$result[$adminId]['callsPrimaryCount'];
             $result[$adminId]['callsPrimaryRevenue'] += $call->getPrice();
             if ($result[$adminId]['callsPrimaryCount'] > 0) {
                 $result[$adminId]['callsPrimaryAverageCheck']
                     = (int)($result[$adminId]['callsPrimaryRevenue'] / $result[$adminId]['callsPrimaryCount']);
             }
         } else { // вторичные вызовы
-            $result[$adminId]['callsRepeatCount'] += 1;
+            ++$result[$adminId]['callsRepeatCount'];
             $result[$adminId]['callsRepeatRevenue'] += $call->getPrice();
             if ($result[$adminId]['callsRepeatCount'] > 0) {
                 $result[$adminId]['callsRepeatAverageCheck']
@@ -200,10 +192,10 @@ readonly class Fetcher
 
         foreach ($call->getServices() as $service) {
             if ($service->getService()?->getCategory()?->getId() === 3) {
-                $result[$adminId]['codingCount'] += 1;
+                ++$result[$adminId]['codingCount'];
                 $result[$adminId]['codingRevenue'] += $service->getPrice();
             } elseif ($service->getService()->getType() === 'hospital') {
-                $result[$adminId]['hospitalCount'] += 1;
+                ++$result[$adminId]['hospitalCount'];
             }
             break;
         }

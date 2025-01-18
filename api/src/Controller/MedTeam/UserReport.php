@@ -1,14 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\MedTeam;
+
 use App\Entity\MedTeam\MedTeam;
-use App\Entity\User\User;
 use App\Repository\AdministratorReportRepository;
 use App\Repository\MedTeam\MedTeamRepository;
 use App\Repository\UserRepository;
 use App\Services\MedTeam\MedTeamReportMessageBuilder;
 use App\Services\TelegramSender;
-use DateTimeImmutable;
 use Exception;
 use Http\Discovery\Exception\NotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,10 +24,8 @@ class UserReport extends AbstractController
         private readonly AdministratorReportRepository $reports,
         private readonly UserRepository $users,
         private readonly MedTeamReportMessageBuilder $reportMessageBuilder,
-        private TelegramSender                $tgSender,
-    )
-    {
-    }
+        private TelegramSender $tgSender,
+    ) {}
 
     /**
      * @throws Exception
@@ -40,19 +39,21 @@ class UserReport extends AbstractController
             $message = $this->reportMessageBuilder->build($medTeam, $report, $medTeam->getAdminPrice());
             $this->tgSender->send($medTeam->getAdmin(), $message);
             return $this->json(null);
-        }elseif ($type === 'doctor') {
+        }
+        if ($type === 'doctor') {
             try {
                 $message = $this->reportMessageBuilder->build($medTeam, $report, $medTeam->getDoctorPrice());
                 $this->tgSender->send($medTeam->getDoctor(), $message);
-            }catch (Exception $e) {
+            } catch (Exception $e) {
                 dd($e);
             }
             return $this->json(null);
-        }elseif ($type === 'buh') {
+        }
+        if ($type === 'buh') {
             try {
                 $message = $this->reportMessageBuilder->build($medTeam, $report, $medTeam->getDoctorPrice());
                 $this->tgSender->sendByRoleId(13, $message);
-            }catch (Exception $e) {
+            } catch (Exception $e) {
                 dd($e);
             }
             return $this->json(null);

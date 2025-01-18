@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\WorkSchedule;
+use DateInterval;
+use DateTime;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -42,13 +46,13 @@ class WorkScheduleRepository extends ServiceEntityRepository
 
     public function findAllByRole(string $role, int $year, int $month, ?int $cityId = null)
     {
-        $date = new \DateTime();
+        $date = new DateTime();
         $date->setDate($year, $month, 1);
         $date->setTime(0, 0);
 
         $startDate = $date->format('Y-m-d H:i:s');
 
-        $date->add(new \DateInterval('P1M'));
+        $date->add(new DateInterval('P1M'));
         $endDate = $date->format('Y-m-d H:i:s');
 
         $qb = $this->createQueryBuilder('u')
@@ -71,12 +75,11 @@ class WorkScheduleRepository extends ServiceEntityRepository
     }
 
     public function findAllByUserAndDates(
-        ?int               $user,
+        ?int $user,
         ?DateTimeImmutable $dateStart,
         ?DateTimeImmutable $dateEnd,
-        ?int               $cityId = null
-    )
-    {
+        ?int $cityId = null
+    ) {
         $qb = $this->createQueryBuilder('u')
             ->leftJoin('u.employee', 'e')
             ->andWhere('u.employee = :user')
@@ -95,5 +98,4 @@ class WorkScheduleRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-
 }

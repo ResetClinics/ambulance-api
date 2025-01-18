@@ -17,17 +17,14 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class LeadCreateAction extends AbstractController
 {
-
     public function __construct(
         private readonly SerializerInterface $serializer,
         private readonly ValidatorInterface $validator,
-        private readonly Handler            $handler
-    )
-    {
-    }
+        private readonly Handler $handler
+    ) {}
 
-    #[Route('/api/leads/{partnerId}', name: 'leads.create', methods: ["POST"])]
-    public function calls(int $partnerId,Request $request): JsonResponse
+    #[Route('/api/leads/{partnerId}', name: 'leads.create', methods: ['POST'])]
+    public function calls(int $partnerId, Request $request): JsonResponse
     {
         $command = new Command($partnerId);
 

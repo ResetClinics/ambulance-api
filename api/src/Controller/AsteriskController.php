@@ -15,17 +15,13 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-
 class AsteriskController extends AbstractController
 {
-
     public function __construct(
         private readonly SerializerInterface $serializer,
         private readonly ValidatorInterface $validator,
         private readonly Handler $handler,
-    )
-    {
-    }
+    ) {}
 
     /**
      * @throws TransportExceptionInterface
@@ -33,7 +29,6 @@ class AsteriskController extends AbstractController
     #[Route('/api/v1/touch-to-call', name: 'touch-to-call', methods: ['POST'])]
     public function touchToCall(Request $request, HttpClientInterface $client)
     {
-
         /** @var Command $command */
         $command = $this->serializer->deserialize(
             $request->getContent(),

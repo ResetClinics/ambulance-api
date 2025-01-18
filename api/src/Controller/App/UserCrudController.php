@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\App;
 
 use App\Entity\User\User;
@@ -7,8 +9,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class UserCrudController extends AbstractCrudController
@@ -30,8 +30,7 @@ class UserCrudController extends AbstractCrudController
                     'Доктор' => 'ROLE_DOCTOR',
                 ])
                 ->setRequired(isRequired: false)
-                ->allowMultipleChoices()
-            ,
+                ->allowMultipleChoices(),
             TextField::new(propertyName: 'plainPassword')->onlyOnForms(),
         ];
     }
@@ -41,8 +40,7 @@ class UserCrudController extends AbstractCrudController
         $actions
             ->disable(Action::NEW)
             ->disable(Action::DELETE)
-            ->disable(Action::BATCH_DELETE)
-        ;
+            ->disable(Action::BATCH_DELETE);
         return $actions;
     }
 }

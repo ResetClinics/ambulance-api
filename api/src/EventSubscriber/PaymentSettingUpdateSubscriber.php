@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\EventSubscriber;
 
 use App\Entity\PaymentSetting\PaymentSetting;
@@ -12,7 +14,6 @@ class PaymentSettingUpdateSubscriber implements EventSubscriber
 {
     public function postUpdate(PostUpdateEventArgs $args): void
     {
-
         $entity = $args->getObject();
 
         if (!$entity instanceof PaymentSetting) {
@@ -30,10 +31,7 @@ class PaymentSettingUpdateSubscriber implements EventSubscriber
         $entityManager->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public  function getSubscribedEvents()
+    public function getSubscribedEvents()
     {
         return [
             Events::postUpdate,

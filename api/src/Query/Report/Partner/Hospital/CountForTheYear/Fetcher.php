@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Query\Report\Partner\Hospital\CountForTheYear;
 
 use DateTimeImmutable;
@@ -17,7 +19,6 @@ class Fetcher
      */
     public function fetch(Query $query): array
     {
-
         $sql = 'SELECT COUNT(h.id) AS amount, MONTH(h.discharged_at) as month, YEAR(h.discharged_at) as year
             FROM hospital_hospitals h
             WHERE h.discharged_at BETWEEN :start_date AND :end_date
@@ -35,9 +36,6 @@ class Fetcher
             'partner_id' => $query->partnerId,
         ]);
 
-        $result = $statement->fetchAllAssociative();
-
-        return $result;
-
+        return $statement->fetchAllAssociative();
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Entity\User\User;
@@ -10,14 +12,11 @@ use TelegramBot\Api\Types\ReplyKeyboardRemove;
 
 readonly class TelegramSender
 {
-
     public function __construct(
-        private BotApi           $botApi,
+        private BotApi $botApi,
         private TgChatRepository $tgChatRepository,
         private UserRepository $users,
-    )
-    {
-    }
+    ) {}
 
     public function send(User $user, string $message): void
     {

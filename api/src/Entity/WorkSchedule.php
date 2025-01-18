@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Doctrine\Common\Filter\DateFilterInterface;
@@ -84,12 +86,12 @@ class WorkSchedule
     #[Groups(['work-schedule:read', 'work-schedule:write'])]
     #[Assert\NotBlank]
     #[Assert\Choice(choices: [
-        'daytime', //дневная *
-        'night',   //ночная
-        'evening', //вечерняя
-        'day',     //суточная
-        'stop',     //выходной
-        'reserve',     //резерв
+        'daytime', // дневная *
+        'night',   // ночная
+        'evening', // вечерняя
+        'day',     // суточная
+        'stop',     // выходной
+        'reserve',     // резерв
     ])]
     private ?string $type = null;
 
@@ -99,7 +101,7 @@ class WorkSchedule
     private ?string $role = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: true, columnDefinition: "INT DEFAULT 1")]
+    #[ORM\JoinColumn(nullable: true, columnDefinition: 'INT DEFAULT 1')]
     #[Groups(['work-schedule:read', 'work-schedule:write'])]
     private ?City $city = null;
 
@@ -158,7 +160,7 @@ class WorkSchedule
 
     public function getDay(): int
     {
-        return $this->workDate->format('d');
+        return (int)$this->workDate->format('d');
     }
 
     public function getCity(): ?City

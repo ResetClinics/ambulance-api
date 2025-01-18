@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\State;
 
 use ApiPlatform\Metadata\DeleteOperationInterface;
@@ -19,12 +21,10 @@ readonly class HospitalProcessor implements ProcessorInterface
         private ProcessorInterface $persistProcessor,
         #[Autowire(service: 'api_platform.doctrine.orm.state.remove_processor')]
         private ProcessorInterface $removeProcessor,
-        private Security           $security,
-        private PartnerReward      $partnerReward,
-        private UserRepository     $users,
-    )
-    {
-    }
+        private Security $security,
+        private PartnerReward $partnerReward,
+        private UserRepository $users,
+    ) {}
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
     {
@@ -33,7 +33,7 @@ readonly class HospitalProcessor implements ProcessorInterface
             return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
         }
 
-        $user = $this->users->get($this->security->getUser()?->getId());
+        $user = $this->users->get((int)$this->security->getUser()?->getId());
 
         /** @var Hospital $data */
         if ($data->getStatus() === 'inpatient' && $data->getHospitalizedAt() === null) {

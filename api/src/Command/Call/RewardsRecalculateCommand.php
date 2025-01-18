@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command\Call;
 
 use App\Flusher;
@@ -24,24 +26,21 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class RewardsRecalculateCommand extends Command
 {
-    protected function configure(): void
-    {
-        $this
-            ->addArgument('start', InputArgument::REQUIRED, 'Начало периода в формате DD-MM-YYYY')
-            ->addArgument('end', InputArgument::REQUIRED, 'Окончание периода в формате DD-MM-YYYY')
-        ;
-    }
-
     public function __construct(
         private readonly CallingRepository $calls,
         private readonly PartnerReward $partnerRewards,
         private readonly OperatorReward $operatorReward,
         private readonly Flusher $flusher,
-    )
-    {
+    ) {
         parent::__construct();
     }
 
+    protected function configure(): void
+    {
+        $this
+            ->addArgument('start', InputArgument::REQUIRED, 'Начало периода в формате DD-MM-YYYY')
+            ->addArgument('end', InputArgument::REQUIRED, 'Окончание периода в формате DD-MM-YYYY');
+    }
 
     /**
      * @throws Exception
@@ -50,7 +49,7 @@ class RewardsRecalculateCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $start = $input->getArgument('start');;
+        $start = $input->getArgument('start');
         $end = $input->getArgument('end');
 
         try {
@@ -59,7 +58,7 @@ class RewardsRecalculateCommand extends Command
                 new DateInterval('P1D'),
                 (new DateTimeImmutable($end))->setTime(23, 59, 59)
             );
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             $io->error('Ошибка создания периода: ' . $e->getMessage());
             return Command::FAILURE;
         }
@@ -74,5 +73,4 @@ class RewardsRecalculateCommand extends Command
 
         return Command::SUCCESS;
     }
-
 }

@@ -17,8 +17,6 @@ class RecalculateOperatorReward extends AbstractController
 {
     public function __invoke(CallingRepository $callings, Flusher $flusher, OperatorReward $operatorReward): JsonResponse
     {
-
-
         foreach ($callings->findAllWhoHasOperator() as $calling) {
             $operatorReward->calculate($calling);
         }

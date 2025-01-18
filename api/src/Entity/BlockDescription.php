@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -39,7 +41,6 @@ class BlockDescription
     {
         $this->id = $id;
     }
-
 
     public function getId(): string
     {

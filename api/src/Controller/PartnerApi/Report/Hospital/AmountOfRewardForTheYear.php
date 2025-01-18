@@ -16,14 +16,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 
-#[Route('/partner/report/hospital/amount-of-reward-for-the-year', name: 'partner_report_hospital_amount_of_reward', methods: ["GET"])]
+#[Route('/partner/report/hospital/amount-of-reward-for-the-year', name: 'partner_report_hospital_amount_of_reward', methods: ['GET'])]
 class AmountOfRewardForTheYear extends AbstractController
 {
     public function __construct(
-        private readonly Security           $security,
-    )
-    {
-    }
+        private readonly Security $security,
+    ) {}
 
     /**
      * @throws Exception
@@ -47,13 +45,23 @@ class AmountOfRewardForTheYear extends AbstractController
         );
     }
 
+    public function searchMonthAmount($month, $array)
+    {
+        foreach ($array as $element) {
+            if ($element['month'] === $month['month'] && $element['year'] === $month['year']) {
+                return $element['amount'];
+            }
+        }
+        return 0;
+    }
+
     private function createResult($array): array
     {
         $today = new DateTime();
 
         $date = clone $today;
         $months = [];
-        for ($i = 1; $i <= 12; $i++) {
+        for ($i = 1; $i <= 12; ++$i) {
             $months[] = [
                 'amount' => 0,
                 'month' => (int)$date->format('m'),
@@ -69,15 +77,5 @@ class AmountOfRewardForTheYear extends AbstractController
         }
 
         return $months;
-
-    }
-
-    function searchMonthAmount($month, $array) {
-        foreach ($array as $element) {
-            if ($element['month'] === $month['month'] && $element['year'] === $month['year']) {
-                return $element['amount'];
-            }
-        }
-        return 0;
     }
 }

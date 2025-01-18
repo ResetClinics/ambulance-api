@@ -6,7 +6,6 @@ namespace App\Command;
 
 use App\Entity\ApiUser;
 use App\Repository\ApiUserRepository;
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -32,7 +31,7 @@ class UserInitCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $user = new ApiUser();
-        $user->setName('Exchange') ;
+        $user->setName('Exchange');
         $user->setPhone('79000000000');
         $user->setRoles(['ROLE_API_USER']);
 

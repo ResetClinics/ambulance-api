@@ -20,14 +20,12 @@ class PartnerHospitalsAction extends AbstractController
     private const PER_PAGE = 50;
 
     public function __construct(
-        private readonly Security           $security,
-        private readonly HospitalRepository  $hospitals,
+        private readonly Security $security,
+        private readonly HospitalRepository $hospitals,
         private readonly PaginatorInterface $paginator,
-    )
-    {
-    }
+    ) {}
 
-    #[Route('/partner/hospitals', name: 'partner-api.hospitals.index', methods: ["GET"])]
+    #[Route('/partner/hospitals', name: 'partner-api.hospitals.index', methods: ['GET'])]
     public function hospitals(Request $request): JsonResponse
     {
         /** @var PartnerUser $user */
@@ -45,7 +43,8 @@ class PartnerHospitalsAction extends AbstractController
 
         $pagination = $this->paginator->paginate($hospitals, $page, $perPage);
 
-        return $this->json([
+        return $this->json(
+            [
                 'items' => array_map(static function (Hospital $hospital) {
                     return [
                         'id' => $hospital->getId(),

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\WorkSchedule;
 
 use App\Entity\User\User;
@@ -16,9 +18,7 @@ class GetCollectionMonth extends AbstractController
     public function __construct(
         private readonly UserRepository $users,
         private readonly WorkScheduleRepository $workSchedules,
-    )
-    {
-    }
+    ) {}
 
     #[Route(path: '/api/work_schedules/month/{role}/{year}/{month}', name: 'work_schedule_month', methods: 'GET')]
     public function __invoke(string $role, int $year, int $month, Request $request): JsonResponse
@@ -50,38 +50,36 @@ class GetCollectionMonth extends AbstractController
             'stop' => 0,
         ];
 
-        for ($i = 1; $i <= $numDays; $i++) {
+        for ($i = 1; $i <= $numDays; ++$i) {
             $daysArray[$i] = null;
             $totalDays[$i] = $totalTemplate;
         }
 
         $result = [
             'total' => $totalDays,
-            'users' => []
+            'users' => [],
         ];
 
         /** @var User $user */
-        foreach ($users as $user){
-
+        foreach ($users as $user) {
             $result['users'][$user->getName()] = [
                 'id' => $user->getId(),
                 'name' => $user->getName(),
                 'schedules' => $daysArray,
-                'total' =>$totalTemplate
+                'total' =>$totalTemplate,
             ];
         }
 
         /** @var WorkSchedule $workSchedule */
-        foreach ($workSchedules as $workSchedule){
-
+        foreach ($workSchedules as $workSchedule) {
             $employeeName = $workSchedule->getEmployee()->getName();
 
-            if (!array_key_exists($employeeName, $result['users'])){
+            if (!\array_key_exists($employeeName, $result['users'])) {
                 $result['users'][$employeeName] = [
                     'id' => $workSchedule->getEmployee()->getId(),
                     'name' => $employeeName,
                     'schedules' => $daysArray,
-                    'total' =>$totalTemplate
+                    'total' =>$totalTemplate,
                 ];
             }
 
@@ -92,9 +90,9 @@ class GetCollectionMonth extends AbstractController
                 'type' => $workSchedule->getType(),
                 'role' => $workSchedule->getRole(),
             ];
-            $result['users'][$employeeName]['total'][$workSchedule->getType()] += 1;
+            ++$result['users'][$employeeName]['total'][$workSchedule->getType()];
 
-            $result['total'][$workSchedule->getDay()][$workSchedule->getType()] += 1;
+            ++$result['total'][$workSchedule->getDay()][$workSchedule->getType()];
         }
 
         return $this->json($result);

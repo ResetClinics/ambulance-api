@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\UseCase\Call\AddOrUpdateRepeat;
 
 use AmoCRM\Client\AmoCRMApiClient;
@@ -32,18 +34,17 @@ class Handler
     private AmoCRMApiClient $client;
 
     public function __construct(
-        AmoCRM                             $amoCRM,
+        AmoCRM $amoCRM,
         private readonly CallingRepository $calls,
-        private readonly Flusher           $flusher,
-        private readonly Api               $geocodingApi,
-        private readonly TrackerToMkad     $trackerToMkad,
+        private readonly Flusher $flusher,
+        private readonly Api $geocodingApi,
+        private readonly TrackerToMkad $trackerToMkad,
         private readonly PartnerRepository $partners,
         private readonly CityRepository $cities,
         private readonly \App\UseCase\Partner\Create\Handler $partnerHandler,
-        private readonly ClientRepository                    $clients,
+        private readonly ClientRepository $clients,
         private readonly \App\UseCase\Client\Create\Handler $clientHandler,
-    )
-    {
+    ) {
         $this->client = $amoCRM->getClient();
     }
 
@@ -83,19 +84,19 @@ class Handler
 
         try {
             $this->setClient($call, $clientName, $clientPhone);
-        }catch (Exception) {
+        } catch (Exception) {
         }
 
         try {
             $this->setCity($call, $lead);
-        }catch (Exception) {
+        } catch (Exception) {
         }
 
         $this->updateAddress($call, $lead);
 
         try {
             $this->setPartner($call, $lead);
-        }catch (Exception) {
+        } catch (Exception) {
         }
 
         $this->updateData($call, $lead);
@@ -154,7 +155,7 @@ class Handler
             if ($field->getFieldId() === 880453) {
                 try {
                     $dateTime = $field->getValues()?->first()->getValue()?->toString();
-                    $call->setDateTime(new DateTimeImmutable($dateTime));
+                    $call->setDateTime(new DateTimeImmutable((string)$dateTime));
                 } catch (Exception) {
                 }
             }
@@ -230,15 +231,9 @@ class Handler
 
             $call->setMkadDistance($distance);
         } catch (
-        Exception|
-        ClientExceptionInterface|
-        DecodingExceptionInterface|
-        RedirectionExceptionInterface|
-        ServerExceptionInterface|
-        TransportExceptionInterface
+            ClientExceptionInterface|DecodingExceptionInterface|Exception|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface
         ) {
         }
-
     }
 
     private function getAddress(LeadModel $lead): ?string
@@ -356,7 +351,6 @@ class Handler
 
     private function getCityExternalId(LeadModel $lead): ?string
     {
-
         if (!$lead->getCustomFieldsValues()) {
             return null;
         }

@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\EventSubscriber;
 
 use ApiPlatform\Doctrine\Orm\Paginator;
 use ApiPlatform\Symfony\EventListener\EventPriorities;
-
 use App\Entity\AdministratorReport;
 use App\Entity\Calling\Calling;
 use App\Entity\City;
@@ -37,8 +38,7 @@ class PaginateJsonSubscriber implements EventSubscriberInterface
 
     public function normalizePaginationResidentialComplex(
         ViewEvent $event
-    ): void
-    {
+    ): void {
         $method = $event->getRequest()->getMethod();
         if ($method !== Request::METHOD_GET) {
             return;
@@ -47,7 +47,7 @@ class PaginateJsonSubscriber implements EventSubscriberInterface
         /** @var array $class */
         $class = $event->getRequest()->attributes->get('_route_params');
 
-        if (!array_key_exists('_api_resource_class', $class)){
+        if (!\array_key_exists('_api_resource_class', $class)) {
             return;
         }
 
@@ -77,10 +77,10 @@ class PaginateJsonSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if  (
+        if (
             $apiResourceClass === MedTeam::class &&
             $event->getRequest()->attributes->get('_api_operation')?->getShortName() !== 'Shift'
-        ){
+        ) {
             return;
         }
 

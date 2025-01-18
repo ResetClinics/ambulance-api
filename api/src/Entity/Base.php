@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -41,6 +43,7 @@ class Base
     #[Groups(['base:read', 'base:write'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $shortName = null;
+
     public function getId(): ?int
     {
         return $this->id;

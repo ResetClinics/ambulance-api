@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller\Calling;
 
-use App\Entity\Calling\Calling;
 use App\Entity\User\User;
 use App\Repository\CallingRepository;
 use App\Repository\TeamRepository;
-use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,13 +51,12 @@ class CurrentAction extends AbstractController
             'status' => $call->getStatus(),
             'admin' => [
                 'id' => $call->getAdmin()?->getId(),
-                'name' => $call->getAdmin()?->getName()
+                'name' => $call->getAdmin()?->getName(),
             ],
             'doctor' => [
                 'id' => $call->getDoctor()?->getId(),
-                'name' => $call->getDoctor()?->getName()
+                'name' => $call->getDoctor()?->getName(),
             ],
-
         ], Response::HTTP_OK);
     }
 }

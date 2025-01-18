@@ -19,11 +19,11 @@ class AddLocationAction extends AbstractController
 {
     public function __invoke(AddLocation $dto, TeamLocationRepository $teams, Flusher $flusher): JsonResponse
     {
-        if ($dto->id === 0){
+        if ($dto->id === 0) {
             throw new NotFoundException('Not found team 0');
         }
         $teamLocation = $teams->find($dto->id);
-        if (!$teamLocation){
+        if (!$teamLocation) {
             $teamLocation = new Team($dto->id);
             $teams->add($teamLocation);
         }

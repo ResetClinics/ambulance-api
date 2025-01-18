@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Dto\Amo\Lead;
 
 class Field
@@ -26,6 +28,4 @@ class Field
     {
         $this->values = $values;
     }
-
-
 }

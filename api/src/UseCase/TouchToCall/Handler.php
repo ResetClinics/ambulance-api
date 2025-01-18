@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\UseCase\TouchToCall;
 
 use App\Repository\CallingRepository;
@@ -9,11 +11,9 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 readonly class Handler
 {
     public function __construct(
-        private CallingRepository   $calls,
+        private CallingRepository $calls,
         private HttpClientInterface $client,
-    )
-    {
-    }
+    ) {}
 
     /**
      * @throws TransportExceptionInterface
@@ -39,5 +39,4 @@ readonly class Handler
             ],
         ]);
     }
-
 }

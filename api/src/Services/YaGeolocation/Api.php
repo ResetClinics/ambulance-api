@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\YaGeolocation;
 
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -13,10 +15,8 @@ class Api
 {
     public function __construct(
         private readonly HttpClientInterface $client,
-        private readonly string              $token
-    )
-    {
-    }
+        private readonly string $token
+    ) {}
 
     /**
      * @throws TransportExceptionInterface
@@ -29,12 +29,13 @@ class Api
     {
         $response = $this->client->request(
             'GET',
-            'https://geocode-maps.yandex.ru/1.x/', [
+            'https://geocode-maps.yandex.ru/1.x/',
+            [
                 'query' => [
                     'apikey' => $this->token,
                     'geocode' => $address,
                     'results' => 1,
-                    'format' => 'json'
+                    'format' => 'json',
                 ],
             ]
         );

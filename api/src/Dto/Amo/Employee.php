@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Dto\Amo;
 
 class Employee
@@ -7,7 +9,6 @@ class Employee
     private int $id;
     private string $name;
     private string $role;
-
 
     public function __construct(int $id, string $name, string $role)
     {

@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository\MedTeam;
 
-use App\Entity\Calling\Calling;
 use App\Entity\MedTeam\MedTeam;
-use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -47,8 +47,8 @@ class MedTeamRepository extends ServiceEntityRepository
     {
         $result = $this->find($id);
 
-        if (!$result){
-            throw new NotFoundHttpException('Команда #'.$id.' не найдена');
+        if (!$result) {
+            throw new NotFoundHttpException('Команда #' . $id . ' не найдена');
         }
         return $result;
     }
@@ -63,7 +63,6 @@ class MedTeamRepository extends ServiceEntityRepository
             ->orderBy('t.plannedStartAt', 'DESC')
             ->getQuery()
             ->getResult();
-        ;
 
         $data = $data === null ? [] : $data;
 
@@ -83,7 +82,6 @@ class MedTeamRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-
 
     public function findForReportByPlanned(DateTimeInterface $startDate, DateTimeInterface $endDate)
     {

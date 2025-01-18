@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\Partner\Agreement;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -44,7 +46,6 @@ class Row
     #[Groups(['agreement:read', 'agreement:write'])]
     #[Assert\NotBlank]
     private ?int $repeatNumber = null;
-
 
     public function getId(): ?int
     {

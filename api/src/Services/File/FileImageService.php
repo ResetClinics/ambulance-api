@@ -71,7 +71,7 @@ class FileImageService implements FileImageInterface
 
         $base64Data = explode(';base64', $base64String);
 
-        $decoded = base64_decode(end($base64Data));
+        $decoded = base64_decode(end($base64Data), true);
 
         $mime = end($matches);
 

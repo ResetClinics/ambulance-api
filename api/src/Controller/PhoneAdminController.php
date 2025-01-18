@@ -6,22 +6,19 @@ namespace App\Controller;
 
 use App\Entity\User\User;
 use App\Repository\UserRepository;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class PhoneAdminController extends AbstractController
 {
-
     public function __construct(
         private readonly SerializerInterface $serializer,
-        private readonly UserRepository      $users,
-    )
-    {
-    }
+        private readonly UserRepository $users,
+    ) {}
 
-    #[Route('/api/phone/admins.xml', name: 'phone.admin', methods: ["GET"])]
+    #[Route('/api/phone/admins.xml', name: 'phone.admin', methods: ['GET'])]
     public function phoneAdmin(): Response
     {
         $users = $this->users->findAllByPermission('can_be-admin');
@@ -34,7 +31,7 @@ class PhoneAdminController extends AbstractController
         ];
         /** @var User $user */
         foreach ($users as $user) {
-            $data['CiscoIPPhoneDirectory']['DirectoryEntry'][] = [//
+            $data['CiscoIPPhoneDirectory']['DirectoryEntry'][] = [
                 'Name' => $user->getName(),
                 'Telephone' => '+' . $user->getPhone(),
             ];
@@ -44,7 +41,7 @@ class PhoneAdminController extends AbstractController
 
         /** @var User $user */
         foreach ($users as $user) {
-            $data['CiscoIPPhoneDirectory']['DirectoryEntry'][] = [//
+            $data['CiscoIPPhoneDirectory']['DirectoryEntry'][] = [
                 'Name' => $user->getName(),
                 'Telephone' => '+' . $user->getPhone(),
             ];

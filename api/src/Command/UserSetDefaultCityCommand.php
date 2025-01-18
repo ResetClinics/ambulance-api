@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use App\Flusher;
@@ -21,8 +23,7 @@ class UserSetDefaultCityCommand extends Command
         private readonly CityRepository $cityRepository,
         private readonly UserRepository $userRepository,
         private readonly Flusher $flusher
-    )
-    {
+    ) {
         parent::__construct();
     }
 

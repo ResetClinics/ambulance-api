@@ -10,10 +10,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api/amo-crm/test', name: 'amo-crm_test', methods: ["GET"])]
+#[Route('/api/amo-crm/test', name: 'amo-crm_test', methods: ['GET'])]
 class TestAction extends AbstractController
 {
-
     public function __invoke(Request $request)
     {
         $apiClient = new AmoCRMApiClient(

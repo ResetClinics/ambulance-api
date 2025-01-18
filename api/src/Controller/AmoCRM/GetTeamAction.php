@@ -20,24 +20,22 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api/amo-crm/get-team', name: 'amo-crm_get-team', methods: ["GET"])]
+#[Route('/api/amo-crm/get-team', name: 'amo-crm_get-team', methods: ['GET'])]
 class GetTeamAction extends AbstractController
 {
     private UserRepository $users;
     private AmoCRMApiClient $client;
 
     public function __construct(
-        AmoCRM         $amoCRM,
+        AmoCRM $amoCRM,
         UserRepository $users
-    )
-    {
+    ) {
         $this->client = $amoCRM->getClient();
         $this->users = $users;
     }
 
     public function __invoke(Request $request): JsonResponse
     {
-
         try {
             $user = $this->getUser();
 
@@ -49,15 +47,15 @@ class GetTeamAction extends AbstractController
 
             $filter->setStatuses([[
                 'pipeline_id' => 4105087,
-                'status_id' => $lead?->getStatusId()
+                'status_id' => $lead?->getStatusId(),
             ]]);
 
             $leads = $this->client->leads()->get($filter);
             /** @var LeadModel $lead */
-            foreach ($leads as $lead){
+            foreach ($leads as $lead) {
                 /** @var TagModel $tag */
-                foreach ($lead->getTags() as $tag){
-                    if ($tag->getId() === 62145){
+                foreach ($lead->getTags() as $tag) {
+                    if ($tag->getId() === 62145) {
                         $user = $this->users->getByExternalId($lead->getId());
                         $team['admin'] = [
                             'id' => $user->getId(),
@@ -69,7 +67,7 @@ class GetTeamAction extends AbstractController
                             'externalId' => $user->getExternalId(),
                         ];
                     }
-                    if ($tag->getId() === 62135){
+                    if ($tag->getId() === 62135) {
                         $user = $this->users->getByExternalId($lead->getId());
                         $team['doctor'] = [
                             'id' => $user->getId(),
@@ -84,8 +82,7 @@ class GetTeamAction extends AbstractController
                 }
             }
             return $this->json($team, Response::HTTP_OK);
-
-        }catch (DomainException|AmoCRMMissedTokenException|AmoCRMoAuthApiException|AmoCRMApiException $e){
+        } catch (AmoCRMApiException|AmoCRMMissedTokenException|AmoCRMoAuthApiException|DomainException $e) {
             return $this->json(null, Response::HTTP_OK);
         }
     }
@@ -116,12 +113,10 @@ class GetTeamAction extends AbstractController
                 return [
                     'id' => (int)$key,
                     'external' => (int)$id,
-                    'name' => $team[0]
+                    'name' => $team[0],
                 ];
             }
-
         }
-        throw new \DomainException('Нет бригады с таким внешним id');
+        throw new DomainException('Нет бригады с таким внешним id');
     }
-
 }

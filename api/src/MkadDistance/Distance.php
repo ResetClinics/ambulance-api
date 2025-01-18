@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\MkadDistance;
 
-use InvalidArgumentException;
 use App\MkadDistance\Geometry\Point;
 use App\MkadDistance\Geometry\Polygon\MscMkad;
 use App\MkadDistance\Geometry\Polygon\MscMkadJunctions;
@@ -10,6 +11,7 @@ use App\MkadDistance\Geometry\Polygon\SpbKad;
 use App\MkadDistance\Geometry\Polygon\SpbKadJunctions;
 use App\MkadDistance\Iterface\DistanceCalculatorStrategy;
 use App\MkadDistance\Strategy\StrategyFactory;
+use InvalidArgumentException;
 
 class Distance
 {
@@ -19,7 +21,7 @@ class Distance
     private $calculator;
 
     /**
-     * @var string|array|Point
+     * @var array|Point|string
      */
     private $target;
 
@@ -30,9 +32,7 @@ class Distance
     }
 
     /**
-     * Distance in kilometers
-     * @param bool $calByRoutes
-     * @return float
+     * Distance in kilometers.
      */
     public function calculate(bool $calByRoutes = true): float
     {
@@ -40,33 +40,27 @@ class Distance
     }
 
     /**
-     * @param $target
-     * @param array $options
      * @return static
      * @throws InvalidArgumentException
      */
-    public static function createMoscowMkadCalculator($target, array $options = []): Distance
+    public static function createMoscowMkadCalculator($target, array $options = []): self
     {
         $strategyFactory = new StrategyFactory($options);
-        return new Distance(
+        return new self(
             $strategyFactory->create($target, new MscMkad(), new MscMkadJunctions()),
             $target
         );
     }
 
     /**
-     * @param $target
-     * @param array $options
-     * @return Distance
      * @throws InvalidArgumentException
      */
-    public static function createSpbKadCalculator($target, array $options = []): Distance
+    public static function createSpbKadCalculator($target, array $options = []): self
     {
         $strategyFactory = new StrategyFactory($options);
-        return new Distance(
+        return new self(
             $strategyFactory->create($target, new SpbKad(), new SpbKadJunctions()),
             $target
         );
     }
-
 }

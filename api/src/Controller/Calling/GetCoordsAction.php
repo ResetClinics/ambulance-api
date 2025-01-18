@@ -11,19 +11,16 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class GetCoordsAction extends AbstractController
 {
-
     public function __construct(
         private readonly CallingRepository $calls
-    )
-    {
-    }
+    ) {}
 
-    #[Route('/api/calls/coords', name: 'calls.get_coords', methods: ["GET"])]
+    #[Route('/api/calls/coords', name: 'calls.get_coords', methods: ['GET'])]
     public function version(): JsonResponse
     {
         return $this->json(
             array_map(
-                fn($call) => [$call['lat'], $call['lon']],
+                static fn ($call) => [$call['lat'], $call['lon']],
                 $this->calls->getAllCoords()
             )
         );

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\MkadDistance\Geometry\Polygon;
 
 use App\MkadDistance\Geometry\Polygon;

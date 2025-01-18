@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\UseCase\Call\SetResponsiblePerson;
 
 use AmoCRM\Client\AmoCRMApiClient;
@@ -15,11 +17,10 @@ class Handler
     private AmoCRMApiClient $client;
 
     public function __construct(
-        AmoCRM                                               $amoCRM,
-        private readonly CallingRepository                   $calls,
-        private readonly Flusher                             $flusher,
-    )
-    {
+        AmoCRM $amoCRM,
+        private readonly CallingRepository $calls,
+        private readonly Flusher $flusher,
+    ) {
         $this->client = $amoCRM->getClient();
     }
 
@@ -31,7 +32,7 @@ class Handler
                 throw new DomainException('Не найден лид');
             }
             $user = $this->client->users()->getOne($lead->getResponsibleUserId());
-            if (!$user){
+            if (!$user) {
                 throw new DomainException('Не найден ответственный пользователь лида');
             }
         } catch (AmoCRMApiException $e) {

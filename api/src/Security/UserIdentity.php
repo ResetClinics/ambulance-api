@@ -9,19 +9,16 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 final readonly class UserIdentity implements JWTUserInterface, PasswordAuthenticatedUserInterface
 {
-
     public function __construct(
-        private int    $id,
+        private int $id,
         private string $username,
         private string $name,
-        private array  $permissions,
+        private array $permissions,
         private string $password,
         private ?string $avatar,
         private ?string $position,
-        private int    $active,
-    )
-    {
-    }
+        private int $active,
+    ) {}
 
     public static function createFromPayload($username, array $payload): self
     {
@@ -47,8 +44,7 @@ final readonly class UserIdentity implements JWTUserInterface, PasswordAuthentic
         return $this->permissions;
     }
 
-    public function eraseCredentials()
-    {}
+    public function eraseCredentials(): void {}
 
     public function getUserIdentifier(): string
     {

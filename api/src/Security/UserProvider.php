@@ -40,7 +40,7 @@ final class UserProvider implements UserProviderInterface
     public function refreshUser(UserInterface $user): UserIdentity
     {
         if (!$user instanceof UserIdentity) {
-            throw new UnsupportedUserException(sprintf('Invalid user class "%s".', $user::class));
+            throw new UnsupportedUserException(\sprintf('Invalid user class "%s".', $user::class));
         }
 
         if (!$userModel = $this->loadUserByUsername($user->getUserIdentifier())) {

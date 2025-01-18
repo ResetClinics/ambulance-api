@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\ATS\BlacklistService;
 
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -11,45 +13,18 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 readonly class McnBlacklistService
 {
-
     private HttpClientInterface $client;
+
     public function __construct(
         HttpClientInterface $client,
         string $token
-    )
-    {
+    ) {
         $this->client = $client->withOptions([
             'base_uri' => 'https://vpbx.mcn.ru/api/protected/',
             'headers' => [
                 'Authorization' => 'Bearer ' . $token,
             ],
         ]);
-
-    }
-
-    /**
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws ClientExceptionInterface
-     */
-    private function getPhoneMember($phoneNumber): ?PhoneMember
-    {
-        $response = $this->client->request(
-            'GET',
-            'vpbx/blacklists/2846/members'
-        );
-
-        $res = $response->toArray(false);
-
-        foreach ($res['data'] as $item) {
-            if ($item['number'] == $phoneNumber) {
-                return PhoneMember::fromArray($item);
-            }
-        }
-
-        return null;
     }
 
     /**
@@ -66,7 +41,7 @@ readonly class McnBlacklistService
         $phoneMember = $this->getPhoneMember($phoneNumber);
 
         if ($phoneMember) {
-           return;
+            return;
         }
 
         $this->client->request(
@@ -111,5 +86,31 @@ readonly class McnBlacklistService
                 ],
             ]
         );
+    }
+
+    /**
+     * @param mixed $phoneNumber
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     */
+    private function getPhoneMember($phoneNumber): ?PhoneMember
+    {
+        $response = $this->client->request(
+            'GET',
+            'vpbx/blacklists/2846/members'
+        );
+
+        $res = $response->toArray(false);
+
+        foreach ($res['data'] as $item) {
+            if ($item['number'] === $phoneNumber) {
+                return PhoneMember::fromArray($item);
+            }
+        }
+
+        return null;
     }
 }

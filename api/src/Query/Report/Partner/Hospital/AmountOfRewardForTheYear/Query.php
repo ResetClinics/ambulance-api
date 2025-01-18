@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Query\Report\Partner\Hospital\AmountOfRewardForTheYear;
 
 class Query
@@ -8,7 +10,5 @@ class Query
         public readonly int $partnerId,
         public readonly string $startDate,
         public readonly string $endDate,
-    )
-    {
-    }
+    ) {}
 }

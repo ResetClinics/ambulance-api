@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\EventSubscriber;
 
 use App\Entity\User\User;
@@ -10,9 +12,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class PasswordUpdateSubscriber implements EventSubscriberInterface
 {
-    public function __construct(protected UserPasswordHasherInterface $passwordHasher)
-    {
-    }
+    public function __construct(protected UserPasswordHasherInterface $passwordHasher) {}
 
     /**
      * @return array<string, string>
@@ -25,7 +25,7 @@ class PasswordUpdateSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onBeforeEntityPersisted(BeforeEntityUpdatedEvent|BeforeEntityPersistedEvent $event): void
+    public function onBeforeEntityPersisted(BeforeEntityPersistedEvent|BeforeEntityUpdatedEvent $event): void
     {
         $entity = $event->getEntityInstance();
 
@@ -33,7 +33,7 @@ class PasswordUpdateSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if (!is_null($entity->getPlainPassword()) && '' !== $entity->getPlainPassword()) {
+        if (null !== $entity->getPlainPassword() && '' !== $entity->getPlainPassword()) {
             $entity->setPassword(
                 $this->passwordHasher->hashPassword($entity, $entity->getPlainPassword())
             );

@@ -22,15 +22,13 @@ class PartnerCallsCreateAction extends AbstractController
     private const PER_PAGE = 50;
 
     public function __construct(
-        private readonly Security           $security,
+        private readonly Security $security,
         private readonly SerializerInterface $serializer,
         private readonly ValidatorInterface $validator,
-        private readonly Handler            $handler
-    )
-    {
-    }
+        private readonly Handler $handler
+    ) {}
 
-    #[Route('/partner/calls', name: 'partner-api.calls.create', methods: ["POST"])]
+    #[Route('/partner/calls', name: 'partner-api.calls.create', methods: ['POST'])]
     public function calls(Request $request): JsonResponse
     {
         /** @var PartnerUser $user */

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Query\Report\Partner\Call\NumberByStatus;
 
 use Doctrine\DBAL\Connection;
@@ -16,7 +18,6 @@ class Fetcher
      */
     public function fetch(Query $query): array
     {
-
         $sql = 'SELECT COUNT(c.id) AS count, c.status as status
             FROM calling c
             WHERE c.partner_id = :partner_id

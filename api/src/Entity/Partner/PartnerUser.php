@@ -49,13 +49,12 @@ class PartnerUser implements UserInterface, PasswordAuthenticatedUserInterface
     ])]
     private ?int $id = null;
 
-
     #[ORM\Column(length: 11, unique: true)]
     #[Groups([
         'partner_user:read',
         'partner_user:write',
     ])]
-    #[Assert\NotBlank(message: "Телефон обязателен для заполнения.")]
+    #[Assert\NotBlank(message: 'Телефон обязателен для заполнения.')]
     #[Assert\Regex(
         pattern: '/\d{11}/',
         message: 'Номер телефона должен состоять из 11 цифр.'
@@ -73,7 +72,7 @@ class PartnerUser implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     #[Groups([
         'partner_user:read',
-        'partner_user:write'
+        'partner_user:write',
     ])]
     private array $roles = [];
 
@@ -82,7 +81,7 @@ class PartnerUser implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Assert\Length(min: 4)]
     #[Groups([
-        'partner_user:write'
+        'partner_user:write',
     ])]
     #[SerializedName('password')]
     private ?string $plainPassword = null;
@@ -91,9 +90,14 @@ class PartnerUser implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     #[Groups([
         'partner_user:read',
-        'partner_user:write'
+        'partner_user:write',
     ])]
     private ?Partner $partner = null;
+
+    public function __toString(): string
+    {
+        return $this->name;
+    }
 
     public function getId(): ?int
     {
@@ -192,11 +196,6 @@ class PartnerUser implements UserInterface, PasswordAuthenticatedUserInterface
         $this->name = $name;
     }
 
-    public function __toString(): string
-    {
-        return $this->name;
-    }
-
     public function getPartner(): ?Partner
     {
         return $this->partner;
@@ -208,5 +207,4 @@ class PartnerUser implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
 }

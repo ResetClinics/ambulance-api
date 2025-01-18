@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -20,11 +22,11 @@ class ReasonForCancellation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['reason:read', 'v1-call:read', 'v1-call:write',])]
+    #[Groups(['reason:read', 'v1-call:read', 'v1-call:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['reason:read', 'reason:write', 'v1-call:read',])]
+    #[Groups(['reason:read', 'reason:write', 'v1-call:read'])]
     private ?string $name = null;
 
     public function getId(): ?int

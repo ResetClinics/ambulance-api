@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\MedTeam;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -27,7 +29,7 @@ class Phone
 
     #[ORM\Column(length: 255)]
     #[Groups(['phone:read', 'phone:write'])]
-    #[Assert\NotBlank(message: "Телефон обязателен для заполнения.")]
+    #[Assert\NotBlank(message: 'Телефон обязателен для заполнения.')]
     #[Assert\Regex(
         pattern: '/\d{11}/',
         message: 'Номер телефона должен состоять из 11 цифр.'

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository\AmoCrm;
 
 use AmoCRM\Client\AmoCRMApiClient;
@@ -29,7 +31,7 @@ class LeadRepository
 
     public function create(string $partnerId, string $partnerName, int $contactId, string $description): LeadModel
     {
-          $lead = new LeadModel();
+        $lead = new LeadModel();
         $lead->setName('Сделка создана из ЛК партнера ' . $partnerName)
             ->setContacts(
                 (new ContactsCollection())
@@ -48,7 +50,6 @@ class LeadRepository
         );
         $leadCustomFieldsValues->add($textCustomFieldValueModel);
 
-
         $teamSelectCustomValueModel = new SelectCustomFieldValuesModel();
         $teamSelectCustomValueModel->setFieldId(882361);
         $teamSelectCustomValueModel->setValues(
@@ -60,7 +61,6 @@ class LeadRepository
                 )
         );
         $leadCustomFieldsValues->add($teamSelectCustomValueModel);
-
 
         $lead->setCustomFieldsValues($leadCustomFieldsValues);
 

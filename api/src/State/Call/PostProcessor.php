@@ -38,22 +38,16 @@ class PostProcessor implements ProcessorInterface
     private AmoCRMApiClient $client;
 
     public function __construct(
-        private readonly PartnerReward                               $partnerReward,
-        AmoCRM                              $amoCRM,
-        private readonly CallingSender      $sender,
+        private readonly PartnerReward $partnerReward,
+        AmoCRM $amoCRM,
+        private readonly CallingSender $sender,
         private readonly HospitalRepository $hospitals,
         private readonly ProcessorInterface $processor,
-    )
-    {
+    ) {
         $this->client = $amoCRM->getClient();
     }
 
     /**
-     * @param mixed $data
-     * @param Operation $operation
-     * @param array $uriVariables
-     * @param array $context
-     * @return mixed
      * @throws AmoCRMApiException
      * @throws AmoCRMMissedTokenException
      * @throws AmoCRMoAuthApiException
@@ -68,7 +62,7 @@ class PostProcessor implements ProcessorInterface
         /** @var MediaObject $image */
         foreach ($images as $image) {
             if ($image->base64content) {
-                $imageFile = new UploadedBase64File($image->base64content, "call_image.png");
+                $imageFile = new UploadedBase64File($image->base64content, 'call_image.png');
                 $image->file = $imageFile;
             }
         }
@@ -122,22 +116,16 @@ class PostProcessor implements ProcessorInterface
         }
     }
 
-
     /**
-     * @param Calling $calling
-     * @param Clinic|null $clinic
-     * @param int|null $price
-     * @param string|null $externalId
      * @throws NonUniqueResultException
      */
     private function createStationary(Calling $calling, ?Clinic $clinic, ?int $price, ?string $externalId): void
     {
-        if (!$externalId){
+        if (!$externalId) {
             return;
         }
 
         if (!$this->hospitals->findOneByExternal($externalId)) {
-
             $hospital = new Hospital();
             $hospital->setExternal($externalId);
             $hospital->setStatus('assigned');
@@ -181,7 +169,6 @@ class PostProcessor implements ProcessorInterface
 
         $filter = new EntitiesLinksFilter([(int)$calling->getNumberCalling()]);
         $allLinks = $linksService->get($filter);
-
 
         $contactId = null;
         $companyId = null;
@@ -232,7 +219,6 @@ class PostProcessor implements ProcessorInterface
                     )
             );
 
-
         if ($companyId) {
             $newLead->setCompany(
                 (new CompanyModel())
@@ -260,11 +246,10 @@ class PostProcessor implements ProcessorInterface
 
         /** @var MediaObject $image */
         foreach ($call->getImages() as $image) {
-            if (!$hospital->getImages()->contains($image)){
+            if (!$hospital->getImages()->contains($image)) {
                 $changedImages = true;
             }
         }
-
 
         if (
             $hospital->getPhone() === $call->getOriginalPhone() &&
@@ -297,7 +282,6 @@ class PostProcessor implements ProcessorInterface
             'Вызов N ' . $call->getNumberCalling(),
             'Обновлено назначение на стационар'
         );
-
     }
 
     private function cancelStationary(Calling $call, Hospital $hospital): void
@@ -315,5 +299,4 @@ class PostProcessor implements ProcessorInterface
             'Отменено назначение на стационар'
         );
     }
-
 }

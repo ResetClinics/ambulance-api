@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Entity\Calling\Calling;
@@ -12,10 +14,8 @@ readonly class CallingSender
 {
     public function __construct(
         private DeviceRepository $devices,
-        private Messaging        $messaging,
-    )
-    {
-    }
+        private Messaging $messaging,
+    ) {}
 
     public function sendToAdmin(Calling $calling, string $title, string $body): void
     {
@@ -30,9 +30,9 @@ readonly class CallingSender
                         'body' => $body,
                     ],
                     'data' => [
-                        "callingId" => $calling->getId(),
-                        "callingStatus" => $calling->getStatus(),
-                        "url" => 'calls',
+                        'callingId' => $calling->getId(),
+                        'callingStatus' => $calling->getStatus(),
+                        'url' => 'calls',
                     ],
                 ]);
 

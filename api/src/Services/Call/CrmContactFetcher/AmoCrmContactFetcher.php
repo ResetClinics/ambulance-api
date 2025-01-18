@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Call\CrmContactFetcher;
 
 use AmoCRM\Client\AmoCRMApiClient;
@@ -16,17 +18,14 @@ class AmoCrmContactFetcher implements CrmContactFetcherInterface
     private AmoCRMApiClient $client;
 
     public function __construct(
-        AmoCRM                                       $amoCRM,
-    )
-    {
+        AmoCRM $amoCRM,
+    ) {
         $this->client = $amoCRM->getClient();
     }
 
     public function fetch(int $leadId): Contact
     {
-
         $lead = $this->client->leads()->getOne($leadId, [LeadModel::CONTACTS]);
-
 
         if (!$lead->getMainContact()->getId()) {
             throw new DomainException('Не указан контакт');
@@ -63,7 +62,8 @@ class AmoCrmContactFetcher implements CrmContactFetcherInterface
         }
 
         return new Contact(
-            $name, $phone
+            $name,
+            $phone
         );
     }
 }

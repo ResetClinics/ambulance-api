@@ -52,24 +52,22 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 #[AsController]
 class PatchAction extends AbstractController
 {
-
     private AmoCRMApiClient $client;
 
     public function __construct(
-        private readonly CallPreDenormalizeListener                  $callPreDenormalizeListener,
-        AmoCRM                                                       $amoCRM,
-        private readonly WSClient                                    $wsClient,
-        private readonly AsteriskChannel\AddOrUpdate\Handler         $asteriskAddOrUpdateHandler,
+        private readonly CallPreDenormalizeListener $callPreDenormalizeListener,
+        AmoCRM $amoCRM,
+        private readonly WSClient $wsClient,
+        private readonly AsteriskChannel\AddOrUpdate\Handler $asteriskAddOrUpdateHandler,
         private readonly AsteriskChannel\DeleteByClientPhone\Handler $asteriskDeleteHandler,
-        private readonly McnBlacklistService                         $mcnBlacklistService,
-        private readonly CallingSender                               $sender,
-        private readonly Flusher                                     $flusher,
-        private readonly PartnerReward                               $partnerReward,
-        private readonly OperatorReward                              $operatorReward,
-        private readonly Handler                                     $handler,
-        private readonly HospitalRepository                          $hospitals,
-    )
-    {
+        private readonly McnBlacklistService $mcnBlacklistService,
+        private readonly CallingSender $sender,
+        private readonly Flusher $flusher,
+        private readonly PartnerReward $partnerReward,
+        private readonly OperatorReward $operatorReward,
+        private readonly Handler $handler,
+        private readonly HospitalRepository $hospitals,
+    ) {
         $this->client = $amoCRM->getClient();
     }
 
@@ -89,7 +87,7 @@ class PatchAction extends AbstractController
                 'groups' => [
                     'v1-call:read',
                     'client:item:read',
-                ]
+                ],
             ]
         );
     }
@@ -145,31 +143,6 @@ class PatchAction extends AbstractController
         $this->handleAsteriskUpdate($calling);
     }
 
-    private function handleArrivedStatus(Calling $calling): void
-    {
-        $this->updateAmoCRMLeads($calling, 62358398);
-
-        $calling->setArrived(new DateTimeImmutable());
-
-        $this->wsClient->sendUpdateOffer($calling->getId());
-    }
-
-    private function handleDispatchedStatus(Calling $calling): void
-    {
-        $this->updateAmoCRMLeads($calling, 38187418);
-
-        $calling->setDispatched(new DateTimeImmutable());
-
-        $this->wsClient->sendUpdateOffer($calling->getId());
-    }
-
-    private function handleTreatingStatus(Calling $calling): void
-    {
-        $this->updateAmoCRMLeads($calling, 38187418);
-
-        $this->wsClient->sendUpdateOffer($calling->getId());
-    }
-
     public function updateAmoCRMLeads(Calling $calling, int $leadStatusId): void
     {
         $filter = new LeadsFilter();
@@ -198,7 +171,6 @@ class PatchAction extends AbstractController
             if ($calling->getClient()?->getPhone()) {
                 $this->mcnBlacklistService->addToBlacklist($calling->getClient()->getPhone());
             }
-
         } catch (Exception) {
         }
     }
@@ -214,13 +186,36 @@ class PatchAction extends AbstractController
                 $this->mcnBlacklistService->deleteFromBlacklist($calling->getClient()->getPhone());
             }
         } catch (Exception) {
-
         }
+    }
+
+    private function handleArrivedStatus(Calling $calling): void
+    {
+        $this->updateAmoCRMLeads($calling, 62358398);
+
+        $calling->setArrived(new DateTimeImmutable());
+
+        $this->wsClient->sendUpdateOffer($calling->getId());
+    }
+
+    private function handleDispatchedStatus(Calling $calling): void
+    {
+        $this->updateAmoCRMLeads($calling, 38187418);
+
+        $calling->setDispatched(new DateTimeImmutable());
+
+        $this->wsClient->sendUpdateOffer($calling->getId());
+    }
+
+    private function handleTreatingStatus(Calling $calling): void
+    {
+        $this->updateAmoCRMLeads($calling, 38187418);
+
+        $this->wsClient->sendUpdateOffer($calling->getId());
     }
 
     private function handleCompletedStatus(Calling $calling): void
     {
-
         $price = $this->calculateTotalPrice($calling);
 
         $calling->setPrice($price['total']);
@@ -284,7 +279,6 @@ class PatchAction extends AbstractController
 
         /** @var Row $serviceRow */
         foreach ($calling->getServices() as $serviceRow) {
-
             if ($serviceRow->getService()->getType() === 'replay') {
                 $message .= 'Повтор' . ($serviceRow->getPlannedAt() ? ' - ' . $serviceRow->getPlannedAt()->format('d.m.y H:m') : '') . PHP_EOL;
                 $message .= $serviceRow->getPrice() ? 'Предоплата ' . $serviceRow->getPrice() . PHP_EOL : '';
@@ -296,10 +290,10 @@ class PatchAction extends AbstractController
 
         /** @var Row $serviceRow */
         foreach ($calling->getServices() as $serviceRow) {
-
             if ($serviceRow->isStationary()) {
                 continue;
-            } elseif ($serviceRow->isHospital()) {
+            }
+            if ($serviceRow->isHospital()) {
                 $message .= 'Госпитализация' . ($serviceRow->getPrice() ? ' - ' . $serviceRow->getPrice() : '') . PHP_EOL;
                 $message .= $serviceRow->getDescription() ?
                     'Комментарий: ' . $serviceRow->getDescription() . PHP_EOL : '';
@@ -380,7 +374,6 @@ class PatchAction extends AbstractController
         $filter = new EntitiesLinksFilter([$calling->getNumberCalling()]);
         $allLinks = $linksService->get($filter);
 
-
         $contactId = null;
         $companyId = null;
         /** @var LinkModel $link */
@@ -398,7 +391,6 @@ class PatchAction extends AbstractController
             }
         }
 
-
         if (!$contactId) {
             throw new NotFoundHttpException('Не найден контакт при создании повтора');
         }
@@ -407,7 +399,7 @@ class PatchAction extends AbstractController
 
         $customFieldsValues = new CustomFieldsValuesCollection();
         foreach ($lead->getCustomFieldsValues() as $customFieldsValue) {
-            //Время прибытия, бригаду, админа и врача не переносим в повтор
+            // Время прибытия, бригаду, админа и врача не переносим в повтор
             if (
                 $customFieldsValue->getFieldId() === 880453 ||
                 $customFieldsValue->getFieldId() === 875863 ||
@@ -525,7 +517,6 @@ class PatchAction extends AbstractController
         if ($hospital) {
             $this->cancelStationary($call, $hospital);
         }
-
     }
 
     private function createStationary(Calling $calling, ?Clinic $clinic, ?int $price, ?string $externalId): void
@@ -535,7 +526,6 @@ class PatchAction extends AbstractController
         }
 
         if (!$this->hospitals->findOneByExternal($externalId)) {
-
             $hospital = new Hospital();
             $hospital->setExternal($externalId);
             $hospital->setStatus('assigned');
@@ -573,7 +563,6 @@ class PatchAction extends AbstractController
 
         $filter = new EntitiesLinksFilter([(int)$calling->getNumberCalling()]);
         $allLinks = $linksService->get($filter);
-
 
         $contactId = null;
         $companyId = null;
@@ -624,7 +613,6 @@ class PatchAction extends AbstractController
                     )
             );
 
-
         if ($companyId) {
             $newLead->setCompany(
                 (new CompanyModel())
@@ -656,7 +644,6 @@ class PatchAction extends AbstractController
                 $changedImages = true;
             }
         }
-
 
         if (
             $hospital->getPhone() === $call->getOriginalPhone() &&
@@ -707,7 +694,7 @@ class PatchAction extends AbstractController
         );
     }
 
-    private function handleRejectedStatus(Calling $calling)
+    private function handleRejectedStatus(Calling $calling): void
     {
         $filter = new LeadsFilter();
         $filter->setIds([$calling->getNumberCalling()]);
@@ -718,11 +705,9 @@ class PatchAction extends AbstractController
             throw new NotFoundHttpException('Не найден лид №' . $calling->getNumberCalling() . ' в AmoCRM');
         }
 
-
         $message = 'Информация от бригады' . PHP_EOL;
         $message .= 'Отмена заявки №' . $calling->getNumberCalling() . PHP_EOL;
         $message .= $calling->getRejectedComment() ? 'Причина отмены ' . $calling->getRejectedComment() . PHP_EOL : '';
-
 
         $entityId = null;
         $currentDate = new DateTimeImmutable('now', new DateTimeZone('Europe/Moscow'));
@@ -760,6 +745,5 @@ class PatchAction extends AbstractController
         $this->wsClient->sendUpdateOffer($calling->getId());
 
         $this->handleAsteriskDelete($calling);
-
     }
 }

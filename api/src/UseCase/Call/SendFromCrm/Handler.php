@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\UseCase\Call\SendFromCrm;
 
 use App\Entity\Calling\Status;
@@ -12,6 +14,7 @@ use App\Services\Call\TeamAssignmentService;
 use DateTimeImmutable;
 use Doctrine\ORM\NonUniqueResultException;
 use DomainException;
+use Exception;
 
 class Handler
 {
@@ -22,13 +25,11 @@ class Handler
         private readonly DistanceDeterminant $determinant,
         private readonly TeamAssignmentService $teamAssignment,
         private readonly Flusher $flusher,
-    )
-    {
-    }
+    ) {}
 
     /**
      * @throws NonUniqueResultException
-     * @throws \Exception
+     * @throws Exception
      */
     public function handle(Command $command): void
     {
@@ -68,10 +69,10 @@ class Handler
         $call->setNoBusinessCards($lead->noBusinessCards);
 
         if ($lead->dateTime) {
-            //$call->setDateTime(new DateTimeImmutable($lead->dateTime));
+            // $call->setDateTime(new DateTimeImmutable($lead->dateTime));
         }
 
-       $this->determinant->toDetermine($call);
+        $this->determinant->toDetermine($call);
 
         $this->flusher->flush();
 

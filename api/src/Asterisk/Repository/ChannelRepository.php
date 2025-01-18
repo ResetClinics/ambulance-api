@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Asterisk\Repository;
 
 use Doctrine\Persistence\ManagerRegistry;
@@ -8,8 +10,7 @@ readonly class ChannelRepository
 {
     public function __construct(
         private ManagerRegistry $doctrine
-    )
-    {}
+    ) {}
 
     public function hasChannelByClientPhoneNumber(string $clientPhoneNumber): bool
     {
@@ -18,7 +19,6 @@ readonly class ChannelRepository
             'SELECT 1 FROM channels WHERE client = :clientPhoneNumber',
             ['clientPhoneNumber' => $clientPhoneNumber]
         );
-
     }
 
     public function create(string $clientPhoneNumber, string $teamNumber): void

@@ -14,15 +14,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api/amo-crm/lead-on-set-assigned-team', name: 'amo-crm.lead-on-set-assigned-team', methods: ["POST"])]
+#[Route('/api/amo-crm/lead-on-set-assigned-team', name: 'amo-crm.lead-on-set-assigned-team', methods: ['POST'])]
 class LeadOnSetAssignedTeamAction extends AbstractController
 {
-
     public function __construct(
         private readonly Handler $handler,
-    )
-    {
-    }
+    ) {}
 
     public function __invoke(Request $request): JsonResponse
     {
@@ -41,7 +38,6 @@ class LeadOnSetAssignedTeamAction extends AbstractController
         return $this->json(null, Response::HTTP_OK);
     }
 
-
     private function getLeadId($data)
     {
         if (
@@ -56,5 +52,3 @@ class LeadOnSetAssignedTeamAction extends AbstractController
         return $data['leads']['status'][0]['id'];
     }
 }
-
-

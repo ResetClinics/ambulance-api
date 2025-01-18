@@ -1,20 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Serializer\Call;
 
-use AmoCRM\Exceptions\InvalidArgumentException;
-use AmoCRM\Models\CustomFieldsValues\ValueModels\BaseEnumCodeCustomFieldValueModel;
-use AmoCRM\Models\LeadModel;
 use App\UseCase\Call\SendFromCrm\Lead;
-use Carbon\Carbon;
 use DomainException;
-use Symfony\Component\HttpFoundation\Response;
 
 class AmoCrmToAppDenormalizer implements CrmToAppDenormalizerInterface
 {
-    public function denormalize(mixed $data, string $type, string $format = null, array $context = []): Lead
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): Lead
     {
-
         if (isset($data['leads']['update'][0])) {
             $lead = $data['leads']['update'][0];
         } elseif (isset($data['leads']['add'][0])) {
@@ -30,14 +26,12 @@ class AmoCrmToAppDenormalizer implements CrmToAppDenormalizerInterface
             $lead['name'],
         );
 
-
-        if (array_key_exists('responsible_user_id', $lead) && !is_null($lead['responsible_user_id'])) {
+        if (\array_key_exists('responsible_user_id', $lead) && null !== $lead['responsible_user_id']) {
             $leadDto->setOperatorId((int)$lead['responsible_user_id']);
         }
 
         if (!empty($lead['custom_fields'])) {
             foreach ($lead['custom_fields'] as $field) {
-
                 if ((int)$field['id'] === 880453) {
                     $leadDto->dateTime = $field['values'][0] ?? null;
                 }
@@ -93,8 +87,8 @@ class AmoCrmToAppDenormalizer implements CrmToAppDenormalizerInterface
         return $leadDto;
     }
 
-    public function supportsDenormalization(mixed $data, string $type, string $format = null): bool
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null): bool
     {
-        return is_array($data) && is_a($type, Lead::class, true);
+        return \is_array($data) && is_a($type, Lead::class, true);
     }
 }

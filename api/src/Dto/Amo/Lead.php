@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Dto\Amo;
 
 class Lead
@@ -28,8 +30,6 @@ class Lead
     public ?Employee $admin = null;
     public ?Employee $doctor = null;
     public ?int $operatorId = null;
-
-
 
     public function __construct(int $id, string $clientName, string $clientPhone)
     {

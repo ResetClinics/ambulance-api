@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Dto\Amo\Lead;
 
 use DateTimeImmutable;
@@ -30,7 +32,6 @@ class Lead
      */
     private DateTimeImmutable $updatedAt;
 
-
     /**
      * @var Field[]
      * @SerializedName("custom_fields")
@@ -53,25 +54,20 @@ class Lead
         $this->fields = $fields;
     }
 
-
     public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-
     public function setCreatedAt(string $createdAt): void
     {
         $datetime = new DateTimeImmutable();
 
-        $datetime = $datetime->setTimestamp($createdAt);
+        $datetime = $datetime->setTimestamp((int)$createdAt);
 
         $this->createdAt = $datetime;
     }
 
-    /**
-     * @return DateTimeImmutable
-     */
     public function getUpdatedAt(): DateTimeImmutable
     {
         return $this->updatedAt;
@@ -81,7 +77,7 @@ class Lead
     {
         $datetime = new DateTimeImmutable();
 
-        $datetime = $datetime->setTimestamp($updatedAt);
+        $datetime = $datetime->setTimestamp((int)$updatedAt);
 
         $this->updatedAt = $datetime;
     }

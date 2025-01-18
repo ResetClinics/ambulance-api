@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command\Role\Permission;
 
 use App\Entity\Role\Permission;
@@ -17,449 +19,446 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class InitCommand extends Command
 {
-
     private $data = [
-        //Расчет зп
-        //Метрики
+        // Расчет зп
+        // Метрики
         [
             'id' => 'payroll-metrics-view',
-            'description' => 'Расчет ЗП Метрики: просмотр'
+            'description' => 'Расчет ЗП Метрики: просмотр',
         ],
         [
             'id' => 'payroll-metrics-update',
-            'description' => 'Расчет ЗП Метрики: изменение'
+            'description' => 'Расчет ЗП Метрики: изменение',
         ],
-        //KPI
+        // KPI
         [
             'id' => 'payroll-kpis-view',
-            'description' => 'Расчет ЗП KPI: просмотр'
+            'description' => 'Расчет ЗП KPI: просмотр',
         ],
         [
             'id' => 'payroll-kpis-update',
-            'description' => 'Расчет ЗП KPI: изменение'
+            'description' => 'Расчет ЗП KPI: изменение',
         ],
-        //Транспортные
+        // Транспортные
         [
             'id' => 'payroll-transports-view',
-            'description' => 'Расчет ЗП Транспортные: просмотр'
+            'description' => 'Расчет ЗП Транспортные: просмотр',
         ],
         [
             'id' => 'payroll-transports-update',
-            'description' => 'Расчет ЗП Транспортные: изменение'
+            'description' => 'Расчет ЗП Транспортные: изменение',
         ],
 
-        //вызовы
+        // вызовы
         [
             'id' => 'calls-index',
-            'description' => 'Вызовы: просмотр списка'
+            'description' => 'Вызовы: просмотр списка',
         ],
         [
             'id' => 'calls-create',
-            'description' => 'Вызовы: добавление'
+            'description' => 'Вызовы: добавление',
         ],
         [
             'id' => 'calls-view',
-            'description' => 'Вызовы: просмотр детально'
+            'description' => 'Вызовы: просмотр детально',
         ],
         [
             'id' => 'calls-edit',
-            'description' => 'Вызовы: изменение'
+            'description' => 'Вызовы: изменение',
         ],
         [
             'id' => 'calls-delete',
-            'description' => 'Вызовы: удаление'
+            'description' => 'Вызовы: удаление',
         ],
         [
             'id' => 'calls-index-owner',
-            'description' => 'Вызовы: просмотр списка своих заказов'
+            'description' => 'Вызовы: просмотр списка своих заказов',
         ],
         [
             'id' => 'calls-view-owner',
-            'description' => 'Вызовы: просмотр детально своих заказов'
+            'description' => 'Вызовы: просмотр детально своих заказов',
         ],
         [
             'id' => 'calls-address-full',
-            'description' => 'Вызовы: просмотр полного адреса'
+            'description' => 'Вызовы: просмотр полного адреса',
         ],
         [
             'id' => 'calls-phone-full',
-            'description' => 'Вызовы: просмотр полного телефона'
+            'description' => 'Вызовы: просмотр полного телефона',
         ],
-        //Партнеры
+        // Партнеры
         [
             'id' => 'partners-index',
-            'description' => 'Партнеры: просмотр списка'
+            'description' => 'Партнеры: просмотр списка',
         ],
         [
             'id' => 'partners-create',
-            'description' => 'Партнеры: добавление'
+            'description' => 'Партнеры: добавление',
         ],
         [
             'id' => 'partners-view',
-            'description' => 'Партнеры: просмотр детально'
+            'description' => 'Партнеры: просмотр детально',
         ],
         [
             'id' => 'partners-view-calls',
-            'description' => 'Партнеры: просмотр вызовов'
+            'description' => 'Партнеры: просмотр вызовов',
         ],
         [
             'id' => 'partners-view-hospital',
-            'description' => 'Партнеры: просмотр стационаров'
+            'description' => 'Партнеры: просмотр стационаров',
         ],
         [
             'id' => 'partners-edit',
-            'description' => 'Партнеры: изменение'
+            'description' => 'Партнеры: изменение',
         ],
         [
             'id' => 'partners-delete',
-            'description' => 'Партнеры: удаление'
+            'description' => 'Партнеры: удаление',
         ],
         [
             'id' => 'partners-report',
-            'description' => 'Партнеры: скачать отчет'
+            'description' => 'Партнеры: скачать отчет',
         ],
         [
             'id' => 'partners-agreements-index',
-            'description' => 'Партнеры/Соглашения: просмотр списка'
+            'description' => 'Партнеры/Соглашения: просмотр списка',
         ],
         [
             'id' => 'partners-agreements-create',
-            'description' => 'Партнеры/Соглашения: добавление'
+            'description' => 'Партнеры/Соглашения: добавление',
         ],
         [
             'id' => 'partners-agreements-view',
-            'description' => 'Партнеры/Соглашения: просмотр детально'
+            'description' => 'Партнеры/Соглашения: просмотр детально',
         ],
         [
             'id' => 'partners-agreements-update',
-            'description' => 'Партнеры/Соглашения: изменение'
+            'description' => 'Партнеры/Соглашения: изменение',
         ],
         [
             'id' => 'partners-agreements-delete',
-            'description' => 'Партнеры/Соглашения: удаление'
+            'description' => 'Партнеры/Соглашения: удаление',
         ],
 
         [
             'id' => 'partners-users_access-index',
-            'description' => 'Партнеры/Пользователи партнеров: просмотр списка'
+            'description' => 'Партнеры/Пользователи партнеров: просмотр списка',
         ],
         [
             'id' => 'partners-users_access-create',
-            'description' => 'Партнеры/Пользователи партнеров: добавление'
+            'description' => 'Партнеры/Пользователи партнеров: добавление',
         ],
         [
             'id' => 'partners-users_access-view',
-            'description' => 'Партнеры/Пользователи партнеров: просмотр детально'
+            'description' => 'Партнеры/Пользователи партнеров: просмотр детально',
         ],
         [
             'id' => 'partners-users_access-update',
-            'description' => 'Партнеры/Пользователи партнеров: изменение'
+            'description' => 'Партнеры/Пользователи партнеров: изменение',
         ],
         [
             'id' => 'partners-users_access-delete',
-            'description' => 'Партнеры/Пользователи партнеров: удаление'
+            'description' => 'Партнеры/Пользователи партнеров: удаление',
         ],
 
-        //Пользователи
+        // Пользователи
         [
             'id' => 'users-index',
-            'description' => 'Пользователи: просмотр списка'
+            'description' => 'Пользователи: просмотр списка',
         ],
         [
             'id' => 'users-create',
-            'description' => 'Пользователи: добавление'
+            'description' => 'Пользователи: добавление',
         ],
         [
             'id' => 'users-view',
-            'description' => 'Пользователи: просмотр детально'
+            'description' => 'Пользователи: просмотр детально',
         ],
         [
             'id' => 'users-edit',
-            'description' => 'Пользователи: изменение'
+            'description' => 'Пользователи: изменение',
         ],
         [
             'id' => 'users-delete',
-            'description' => 'Пользователи: удаление'
+            'description' => 'Пользователи: удаление',
         ],
         [
             'id' => 'users-report-index',
-            'description' => 'Пользователи: просмотр полного отчета'
+            'description' => 'Пользователи: просмотр полного отчета',
         ],
-        //Карта
+        // Карта
         [
             'id' => 'maps-index',
-            'description' => 'Карта: просмотр карты'
+            'description' => 'Карта: просмотр карты',
         ],
-        //Бригады
+        // Бригады
         [
             'id' => 'med_teams-index',
-            'description' => 'Бригады: просмотр списка'
+            'description' => 'Бригады: просмотр списка',
         ],
         [
             'id' => 'med_teams-create',
-            'description' => 'Бригады: добавление'
+            'description' => 'Бригады: добавление',
         ],
         [
             'id' => 'med_teams-view',
-            'description' => 'Бригады: просмотр детально'
+            'description' => 'Бригады: просмотр детально',
         ],
         [
             'id' => 'med_teams-edit',
-            'description' => 'Бригады: изменение'
+            'description' => 'Бригады: изменение',
         ],
         [
             'id' => 'med_teams-delete',
-            'description' => 'Бригады: удаление'
+            'description' => 'Бригады: удаление',
         ],
-        //Стационар
+        // Стационар
         [
             'id' => 'hospitals-index',
-            'description' => 'Стационар: просмотр списка'
+            'description' => 'Стационар: просмотр списка',
         ],
         [
             'id' => 'hospitals-create',
-            'description' => 'Стационар: добавление'
+            'description' => 'Стационар: добавление',
         ],
         [
             'id' => 'hospitals-view',
-            'description' => 'Стационар: просмотр детально'
+            'description' => 'Стационар: просмотр детально',
         ],
         [
             'id' => 'hospitals-edit',
-            'description' => 'Стационар: изменение'
+            'description' => 'Стационар: изменение',
         ],
         [
             'id' => 'hospitals-delete',
-            'description' => 'Стационар: удаление'
+            'description' => 'Стационар: удаление',
         ],
-        //Роли
+        // Роли
         [
             'id' => 'roles-index',
-            'description' => 'Роли: просмотр списка'
+            'description' => 'Роли: просмотр списка',
         ],
         [
             'id' => 'roles-create',
-            'description' => 'Роли: добавление'
+            'description' => 'Роли: добавление',
         ],
         [
             'id' => 'roles-view',
-            'description' => 'Роли: просмотр детально'
+            'description' => 'Роли: просмотр детально',
         ],
         [
             'id' => 'roles-edit',
-            'description' => 'Роли: изменение'
+            'description' => 'Роли: изменение',
         ],
         [
             'id' => 'roles-delete',
-            'description' => 'Роли: удаление'
+            'description' => 'Роли: удаление',
         ],
-        //Разрешения
+        // Разрешения
         [
             'id' => 'permissions-index',
-            'description' => 'Разрешения: просмотр списка'
+            'description' => 'Разрешения: просмотр списка',
         ],
-        //Шаблоны соглашений
+        // Шаблоны соглашений
         [
             'id' => 'agreement_templates-index',
-            'description' => 'Шаблоны соглашений: просмотр списка'
+            'description' => 'Шаблоны соглашений: просмотр списка',
         ],
         [
             'id' => 'agreement_templates-create',
-            'description' => 'Шаблоны соглашений: добавление'
+            'description' => 'Шаблоны соглашений: добавление',
         ],
         [
             'id' => 'agreement_templates-view',
-            'description' => 'Шаблоны соглашений: просмотр детально'
+            'description' => 'Шаблоны соглашений: просмотр детально',
         ],
         [
             'id' => 'agreement_templates-edit',
-            'description' => 'Шаблоны соглашений: изменение'
+            'description' => 'Шаблоны соглашений: изменение',
         ],
         [
             'id' => 'agreement_templates-delete',
-            'description' => 'Шаблоны соглашений: удаление'
+            'description' => 'Шаблоны соглашений: удаление',
         ],
-        //Услуги
+        // Услуги
         [
             'id' => 'services-index',
-            'description' => 'Услуги: просмотр списка'
+            'description' => 'Услуги: просмотр списка',
         ],
         [
             'id' => 'services-create',
-            'description' => 'Услуги: добавление'
+            'description' => 'Услуги: добавление',
         ],
         [
             'id' => 'services-view',
-            'description' => 'Услуги: просмотр детально'
+            'description' => 'Услуги: просмотр детально',
         ],
         [
             'id' => 'services-edit',
-            'description' => 'Услуги: изменение'
+            'description' => 'Услуги: изменение',
         ],
         [
             'id' => 'services-delete',
-            'description' => 'Услуги: удаление'
+            'description' => 'Услуги: удаление',
         ],
-        //Категории услуг
+        // Категории услуг
         [
             'id' => 'service_categories-index',
-            'description' => 'Категории услуг: просмотр списка'
+            'description' => 'Категории услуг: просмотр списка',
         ],
         [
             'id' => 'service_categories-create',
-            'description' => 'Категории услуг: добавление'
+            'description' => 'Категории услуг: добавление',
         ],
         [
             'id' => 'service_categories-view',
-            'description' => 'Категории услуг: просмотр детально'
+            'description' => 'Категории услуг: просмотр детально',
         ],
         [
             'id' => 'service_categories-edit',
-            'description' => 'Категории услуг: изменение'
+            'description' => 'Категории услуг: изменение',
         ],
         [
             'id' => 'service_categories-delete',
-            'description' => 'Категории услуг: удаление'
+            'description' => 'Категории услуг: удаление',
         ],
-        //Телефонные аппараты
+        // Телефонные аппараты
         [
             'id' => 'phones-index',
-            'description' => 'Телефонные аппараты: просмотр списка'
+            'description' => 'Телефонные аппараты: просмотр списка',
         ],
         [
             'id' => 'phones-create',
-            'description' => 'Телефонные аппараты: добавление'
+            'description' => 'Телефонные аппараты: добавление',
         ],
         [
             'id' => 'phones-view',
-            'description' => 'Телефонные аппараты: просмотр детально'
+            'description' => 'Телефонные аппараты: просмотр детально',
         ],
         [
             'id' => 'phones-edit',
-            'description' => 'Телефонные аппараты: изменение'
+            'description' => 'Телефонные аппараты: изменение',
         ],
         [
             'id' => 'phones-delete',
-            'description' => 'Телефонные аппараты: удаление'
+            'description' => 'Телефонные аппараты: удаление',
         ],
-        //Базы
+        // Базы
         [
             'id' => 'bases-index',
-            'description' => 'Базы: просмотр списка'
+            'description' => 'Базы: просмотр списка',
         ],
         [
             'id' => 'bases-create',
-            'description' => 'Базы: добавление'
+            'description' => 'Базы: добавление',
         ],
         [
             'id' => 'bases-view',
-            'description' => 'Базы: просмотр детально'
+            'description' => 'Базы: просмотр детально',
         ],
         [
             'id' => 'bases-edit',
-            'description' => 'Базы: изменение'
+            'description' => 'Базы: изменение',
         ],
         [
             'id' => 'bases-delete',
-            'description' => 'Базы: удаление'
+            'description' => 'Базы: удаление',
         ],
-        //Автомобили
+        // Автомобили
         [
             'id' => 'cars-index',
-            'description' => 'Автомобили: просмотр списка'
+            'description' => 'Автомобили: просмотр списка',
         ],
         [
             'id' => 'cars-create',
-            'description' => 'Автомобили: добавление'
+            'description' => 'Автомобили: добавление',
         ],
         [
             'id' => 'cars-view',
-            'description' => 'Автомобили: просмотр детально'
+            'description' => 'Автомобили: просмотр детально',
         ],
         [
             'id' => 'cars-edit',
-            'description' => 'Автомобили: изменение'
+            'description' => 'Автомобили: изменение',
         ],
         [
             'id' => 'cars-delete',
-            'description' => 'Автомобили: удаление'
+            'description' => 'Автомобили: удаление',
         ],
 
-
-        //Настройки
+        // Настройки
         [
             'id' => 'settings-index',
-            'description' => 'Настройки: просмотр списка'
+            'description' => 'Настройки: просмотр списка',
         ],
         [
             'id' => 'settings-create',
-            'description' => 'Настройки: добавление'
+            'description' => 'Настройки: добавление',
         ],
         [
             'id' => 'settings-view',
-            'description' => 'Настройки: просмотр детально'
+            'description' => 'Настройки: просмотр детально',
         ],
         [
             'id' => 'settings-edit',
-            'description' => 'Настройки: изменение'
+            'description' => 'Настройки: изменение',
         ],
         [
             'id' => 'settings-delete',
-            'description' => 'Настройки: удаление'
+            'description' => 'Настройки: удаление',
         ],
 
-        //профессиональные навыки
+        // профессиональные навыки
         [
             'id' => 'can_be-admin',
-            'description' => 'Может быть администратором бригады'
+            'description' => 'Может быть администратором бригады',
         ],
         [
             'id' => 'can_be-doctor',
-            'description' => 'Может быть доктором бригады'
+            'description' => 'Может быть доктором бригады',
         ],
         [
             'id' => 'can_be-driver',
-            'description' => 'Может быть водителем бригады'
+            'description' => 'Может быть водителем бригады',
         ],
 
-        //Отчеты администратора
+        // Отчеты администратора
         [
             'id' => 'administrator_reports-index',
-            'description' => 'Отчеты администратора: просмотр списка'
+            'description' => 'Отчеты администратора: просмотр списка',
         ],
         [
             'id' => 'administrator_reports-create',
-            'description' => 'Отчеты администратора: добавление'
+            'description' => 'Отчеты администратора: добавление',
         ],
         [
             'id' => 'administrator_reports-view',
-            'description' => 'Отчеты администратора: просмотр детально'
+            'description' => 'Отчеты администратора: просмотр детально',
         ],
         [
             'id' => 'administrator_reports-edit',
-            'description' => 'Отчеты администратора: изменение'
+            'description' => 'Отчеты администратора: изменение',
         ],
         [
             'id' => 'administrator_reports-delete',
-            'description' => 'Отчеты администратора: удаление'
+            'description' => 'Отчеты администратора: удаление',
         ],
 
-        //Страница логиста
+        // Страница логиста
         [
             'id' => 'logistics-index',
-            'description' => 'Интерфейс логиста: просмотр'
+            'description' => 'Интерфейс логиста: просмотр',
         ],
         [
             'id' => 'logistics-set_team',
-            'description' => 'Интерфейс логиста: назначение бригады'
+            'description' => 'Интерфейс логиста: назначение бригады',
         ],
     ];
 
     public function __construct(
         private readonly PermissionRepository $permissions,
         private readonly Flusher $flusher,
-    )
-    {
+    ) {
         parent::__construct();
     }
 
@@ -467,15 +466,15 @@ class InitCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        foreach ($this->data as $dto){
+        foreach ($this->data as $dto) {
             $permission = $this->permissions->find($dto['id']);
-            if (!$permission){
+            if (!$permission) {
                 $permission = new Permission(
                     $dto['id'],
                     $dto['description']
                 );
                 $this->permissions->add($permission);
-            }else{
+            } else {
                 $permission->setDescription($dto['description']);
             }
         }

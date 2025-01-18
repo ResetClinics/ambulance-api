@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Controller\App;
+declare(strict_types=1);
 
+namespace App\Controller\App;
 
 use App\Entity\Calling\Calling;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
@@ -12,25 +13,17 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeCrudActionEvent;
-use EasyCorp\Bundle\EasyAdminBundle\Exception\ForbiddenActionException;
 use EasyCorp\Bundle\EasyAdminBundle\Factory\FilterFactory;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
-use EasyCorp\Bundle\EasyAdminBundle\Security\Permission;
-use Symfony\Component\HttpFoundation\StreamedResponse;
-
-
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-
-
-
-
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CallingCrudController extends AbstractCrudController
 {
@@ -49,28 +42,27 @@ class CallingCrudController extends AbstractCrudController
             ->add('admin')
             ->add('doctor')
             ->add(DateTimeFilter::new('createdAt'))
-            ->add(DateTimeFilter::new('completedAt'))
-            ;
+            ->add(DateTimeFilter::new('completedAt'));
     }
 
     public function configureFields(string $pageName): iterable
     {
         return [
             TextField::new('numberCalling'),
-           // TextField::new('title'),
+            // TextField::new('title'),
             TextField::new('name'),
             TextField::new('address'),
             TextField::new('status'),
             TextField::new('title'),
-            //TextField::new('chronicDiseases'),
+            // TextField::new('chronicDiseases'),
             TextField::new('nosology'),
             TextField::new('age'),
             TextField::new('leadType'),
-          //  TextField::new('partnerName'),
+            //  TextField::new('partnerName'),
             TextField::new('rejectedComment'),
             DateTimeField::new('createdAt'),
-          //  DateTimeField::new('acceptedAt'),
-          //  DateTimeField::new('completedAt'),
+            //  DateTimeField::new('acceptedAt'),
+            //  DateTimeField::new('completedAt'),
             AssociationField::new('admin'),
             AssociationField::new('doctor'),
             AssociationField::new('partner'),
@@ -78,7 +70,7 @@ class CallingCrudController extends AbstractCrudController
             IntegerField::new('estimated'),
             IntegerField::new('prepayment'),
             IntegerField::new('coastHospital'),
-           // TextField::new('price'),
+            // TextField::new('price'),
         ];
     }
 
@@ -92,15 +84,12 @@ class CallingCrudController extends AbstractCrudController
             ->add(Crud::PAGE_INDEX, $viewInvoice)
             ->disable(Action::NEW)
             ->disable(Action::DELETE)
-            ->disable(Action::BATCH_DELETE)
-        ;
+            ->disable(Action::BATCH_DELETE);
         return $actions;
     }
 
     public function downloadExcel(AdminContext $context)
     {
-
-
         $event = new BeforeCrudActionEvent($context);
         $this->container->get('event_dispatcher')->dispatch($event);
         if ($event->isPropagationStopped()) {
@@ -126,23 +115,22 @@ class CallingCrudController extends AbstractCrudController
 
         $entities = [];
         /** @var Calling $calling */
-        foreach ($callings as $calling){
-
+        foreach ($callings as $calling) {
             $name = $calling->getTitle();
             $name = preg_replace('/[.,\d]/', '', $name);
-            $name = str_replace('ПОВТОР', '' , $name);
+            $name = str_replace('ПОВТОР', '', $name);
             $name = preg_replace('/\s+/', ' ', $name);
             $name = preg_replace('/\s*\([^)]*\)/', '', $name);
             $name = trim($name);
 
             $entities[] = [
-              'number' => $calling->getNumberCalling(),
-              'name' => $name,
-              'address' => $calling->getAddress(),
-              'partner' => $calling->getPartner()?->getName(),
-              'created' => $calling->getCreatedAt()?->format('d.m.y'),
-              'completed' => $calling->getCompletedAt()?->format('d.m.y'),
-              'price' => $calling->getPrice() ?? 0,
+                'number' => $calling->getNumberCalling(),
+                'name' => $name,
+                'address' => $calling->getAddress(),
+                'partner' => $calling->getPartner()?->getName(),
+                'created' => $calling->getCreatedAt()?->format('d.m.y'),
+                'completed' => $calling->getCompletedAt()?->format('d.m.y'),
+                'price' => $calling->getPrice() ?? 0,
             ];
         }
 
@@ -160,13 +148,12 @@ class CallingCrudController extends AbstractCrudController
             ]];
 
         $spreadsheet->getActiveSheet()
-            ->getStyle(Coordinate::stringFromColumnIndex(1) .'1:'. Coordinate::stringFromColumnIndex(count($headers)) .'1')
+            ->getStyle(Coordinate::stringFromColumnIndex(1) . '1:' . Coordinate::stringFromColumnIndex(\count($headers)) . '1')
             ->applyFromArray($styleArray)
-            ->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('066885')
-        ;
+            ->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('066885');
 
         foreach ($entities as $entry) {
-            $row++;
+            ++$row;
             $values = array_values($entry);
 
             foreach ($values as $i => $value) {
@@ -190,7 +177,7 @@ class CallingCrudController extends AbstractCrudController
 
         $streamedResponse = new StreamedResponse();
 
-        $streamedResponse->setCallback(function () use ($spreadsheet) {
+        $streamedResponse->setCallback(static function () use ($spreadsheet): void {
             $writer =  new Xlsx($spreadsheet);
             $writer->save('php://output');
         });

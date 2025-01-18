@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\MkadDistance\Geometry;
 
 class DistanceBetweenPoints
@@ -13,15 +15,13 @@ class DistanceBetweenPoints
      */
     private $to;
     /**
-     * Расстояние
+     * Расстояние.
      * @var float
      */
     private $distance;
+
     /**
      * DistanceBetweenPoints constructor.
-     * @param Point $from
-     * @param Point $to
-     * @param float $distance
      */
     public function __construct(Point $from, Point $to, float $distance)
     {
@@ -30,25 +30,16 @@ class DistanceBetweenPoints
         $this->distance = $distance;
     }
 
-    /**
-     * @return float
-     */
     public function getDistance(): float
     {
         return $this->distance;
     }
 
-    /**
-     * @return Point
-     */
     public function getFrom(): Point
     {
         return $this->from;
     }
 
-    /**
-     * @return Point
-     */
     public function getTo(): Point
     {
         return $this->to;

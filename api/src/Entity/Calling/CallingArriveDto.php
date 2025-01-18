@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\Calling;
 
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -22,5 +24,4 @@ class CallingArriveDto
     public ?string $endOfServiceDateTime = null;
     #[Groups(['calling:write'])]
     public ?string $dateOfBirth = null;
-
 }

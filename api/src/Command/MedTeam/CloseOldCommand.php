@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command\MedTeam;
 
 use App\Entity\MedTeam\MedTeam;
@@ -22,11 +24,9 @@ class CloseOldCommand extends Command
     public function __construct(
         private readonly MedTeamRepository $teams,
         private readonly Flusher $flusher
-    )
-    {
+    ) {
         parent::__construct();
     }
-
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -36,23 +36,22 @@ class CloseOldCommand extends Command
 
         $count = 0;
 
-        /** @var  $team MedTeam */
+        /** @var MedTeam $team */
         foreach ($teams as $team) {
             $mskTimeZone = new DateTimeZone('Europe/Moscow');
 
             if ($team->getPlannedFinishAt() < (new DateTimeImmutable('now', $mskTimeZone))->modify('-3 hours')) {
                 $team->setCompletedAt($team->getPlannedFinishAt());
                 $team->setStatus('completed');
-                $count++;
+                ++$count;
             }
-
         }
 
         $this->flusher->flush();
 
         if ($count > 0) {
             $io->warning('Закрыто ' . $count . ' смен');
-        }else {
+        } else {
             $io->success('Нет открытых смен');
         }
 

@@ -16,15 +16,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api/amo-crm/cel-lead', name: 'amo-crm_cel_lead', methods: ["POST"])]
+#[Route('/api/amo-crm/cel-lead', name: 'amo-crm_cel_lead', methods: ['POST'])]
 class CelLeadAction extends AbstractController
 {
     private AmoCRMApiClient $client;
 
     public function __construct(
-        AmoCRM                                       $amoCRM,
-    )
-    {
+        AmoCRM $amoCRM,
+    ) {
         $this->client = $amoCRM->getClient();
     }
 
@@ -33,10 +32,10 @@ class CelLeadAction extends AbstractController
         $data = $request->request->all();
 
         try {
-            //todo: вынести в handler
+            // todo: вынести в handler
             $leadId = $this->getLeadId($data);
             $this->celLeadById($leadId);
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return $this->json([
                 'error' =>  $e->getMessage(),
             ], Response::HTTP_OK);
@@ -44,7 +43,6 @@ class CelLeadAction extends AbstractController
 
         return $this->json(null, Response::HTTP_OK);
     }
-
 
     private function getLeadId($data)
     {
@@ -60,10 +58,8 @@ class CelLeadAction extends AbstractController
         return $data['leads']['status'][0]['id'];
     }
 
-
     private function celLeadById($leadId): void
     {
-
         if (!$leadId) {
             throw new DomainException('CelLeadAction: Не определен идентификатор заявки');
         }
@@ -92,7 +88,7 @@ class CelLeadAction extends AbstractController
 
         $newStatus = null;
 
-        //todo: статусы с константы
+        // todo: статусы с константы
         switch ($customerRequest) {
             case 'Выезд на дом':
             case 'Психиатр на дом':
@@ -118,10 +114,8 @@ class CelLeadAction extends AbstractController
             $this->client->leads()->update($leads);
         } catch (Exception $e) {
             throw new DomainException(
-                'Ошибка записи статуса '.$newStatus. ' заявки ID: ' . $leadId . ' ' . $e->getMessage()
+                'Ошибка записи статуса ' . $newStatus . ' заявки ID: ' . $leadId . ' ' . $e->getMessage()
             );
         }
     }
 }
-
-

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
@@ -12,15 +14,13 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 readonly class UserHashPasswordProcessor implements ProcessorInterface
 {
     public function __construct(
-        private ProcessorInterface          $innerProcessor,
+        private ProcessorInterface $innerProcessor,
         private UserPasswordHasherInterface $passwordHasher,
-    )
-    {
-    }
+    ) {}
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
     {
-        if ($data instanceof  User && $data->getPlainPassword()){
+        if ($data instanceof User && $data->getPlainPassword()) {
             $data->setPassword($this->passwordHasher->hashPassword($data, $data->getPlainPassword()));
         }
 

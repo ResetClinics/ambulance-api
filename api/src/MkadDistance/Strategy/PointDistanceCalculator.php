@@ -1,27 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\MkadDistance\Strategy;
 
-use Exception;
-use InvalidArgumentException;
 use App\MkadDistance\Exception\DistanceRequestException;
 use App\MkadDistance\Exception\InnerPolygonException;
 use App\MkadDistance\Geometry\DistanceBetweenPoints;
 use App\MkadDistance\Geometry\Point;
 use App\MkadDistance\Iterface\DistanceCalculatorStrategy;
+use Exception;
+use InvalidArgumentException;
 use Psr\SimpleCache\CacheException;
 
 class PointDistanceCalculator extends AbstractDistanceCalculate implements DistanceCalculatorStrategy
 {
     /**
-     * Лимит ближайших (по расстоянию по прямой) развязок для расчета расстояний от них
+     * Лимит ближайших (по расстоянию по прямой) развязок для расчета расстояний от них.
      */
     private const JUNCTIONS_LIMIT = 6;
 
     /**
      * @param Point $target
-     * @param bool $calcByRoutes
-     * @return DistanceBetweenPoints
      * @throws DistanceRequestException
      * @throws InnerPolygonException
      */
@@ -29,14 +29,14 @@ class PointDistanceCalculator extends AbstractDistanceCalculate implements Dista
     {
         if (!$target instanceof Point) {
             throw new InvalidArgumentException(
-                sprintf('Target param most be %s type', Point::class)
+                \sprintf('Target param most be %s type', Point::class)
             );
         }
         $isInner = $this->basePolygon->isInner($target);
 
         if ($isInner) {
             throw new InnerPolygonException(
-                sprintf('Target point located inside the %s.', $this->basePolygon)
+                \sprintf('Target point located inside the %s.', $this->basePolygon)
             );
         }
 
@@ -54,8 +54,8 @@ class PointDistanceCalculator extends AbstractDistanceCalculate implements Dista
         }
 
         // Сортируем массив расстояний до развязок по возрастанию
-        usort($lineDistancesToJunctions, function (DistanceBetweenPoints $distance1, DistanceBetweenPoints $distance2) {
-            if ($distance1->getDistance() == $distance2->getDistance()) {
+        usort($lineDistancesToJunctions, static function (DistanceBetweenPoints $distance1, DistanceBetweenPoints $distance2) {
+            if ($distance1->getDistance() === $distance2->getDistance()) {
                 return 0;
             }
             return ($distance1->getDistance() < $distance2->getDistance()) ? -1 : 1;
@@ -67,10 +67,10 @@ class PointDistanceCalculator extends AbstractDistanceCalculate implements Dista
                     $lineDistance->getFrom(),
                     $lineDistance->getTo()
                 );
-            } catch (Exception|CacheException $e) {
+            } catch (CacheException|Exception $e) {
                 throw new DistanceRequestException($e->getMessage(), $e->getCode(), $e, $minLineDistance);
             }
-            $current++;
+            ++$current;
             if ($current >= self::JUNCTIONS_LIMIT) {
                 break;
             }

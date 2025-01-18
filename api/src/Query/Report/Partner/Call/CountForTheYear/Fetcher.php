@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Query\Report\Partner\Call\CountForTheYear;
 
 use DateTimeImmutable;
@@ -17,7 +19,6 @@ class Fetcher
      */
     public function fetch(Query $query): array
     {
-
         $sql = 'SELECT COUNT(c.id) AS amount, MONTH(c.completed_at) as month, YEAR(c.completed_at) as year
             FROM calling c
             WHERE c.completed_at BETWEEN :start_date AND :end_date
@@ -35,9 +36,6 @@ class Fetcher
             'partner_id' => $query->partnerId,
         ]);
 
-        $result = $statement->fetchAllAssociative();
-
-        return $result;
-
+        return $statement->fetchAllAssociative();
     }
 }

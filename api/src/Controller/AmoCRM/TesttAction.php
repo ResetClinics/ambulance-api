@@ -19,6 +19,8 @@ use App\Repository\AmoCrmTokenRepository;
 use App\Repository\CallingRepository;
 use App\Repository\UserRepository;
 use Carbon\Carbon;
+use DateTimeImmutable;
+use DomainException;
 use League\OAuth2\Client\Token\AccessTokenInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -26,10 +28,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api/amo-crm/testt', name: 'amo-crm_testt', methods: ["GET"])]
+#[Route('/api/amo-crm/testt', name: 'amo-crm_testt', methods: ['GET'])]
 class TesttAction extends AbstractController
 {
-
     private AmoCRMApiClient $client;
     private CallingRepository $callings;
     private UserRepository $users;
@@ -40,9 +41,7 @@ class TesttAction extends AbstractController
         CallingRepository $callings,
         UserRepository $users,
         Flusher $flusher
-
-    )
-    {
+    ) {
         $apiClient = new AmoCRMApiClient(
             'd80b0f1f-1687-4b1e-8abd-9f3cbbe7a19e',
             'fCUzh7hiQ1bcuKQSrdJVp7Mnwnwi4b2vsK4W7yzhBCcumEkvRcHl3wX3hVxglhmK',
@@ -54,7 +53,7 @@ class TesttAction extends AbstractController
         $apiClient->setAccessToken($token)
             ->setAccountBaseDomain('af4040148.amocrm.ru')
             ->onAccessTokenRefresh(
-                function (AccessTokenInterface $accessToken, string $baseDomain) use ($tokens) {
+                static function (AccessTokenInterface $accessToken, string $baseDomain) use ($tokens): void {
                     $tokens->update($accessToken, $baseDomain);
                 }
             );
@@ -94,7 +93,7 @@ class TesttAction extends AbstractController
     private function getAmoUser(LeadModel $lead): void
     {
         $badStatuses = [142, 143];
-        if (in_array($lead->getStatusId(), $badStatuses, true)) {
+        if (\in_array($lead->getStatusId(), $badStatuses, true)) {
             return;
         }
         if (!$lead->getTags()) {
@@ -117,26 +116,24 @@ class TesttAction extends AbstractController
 
         /** @var StatusModel $status */
         foreach ($pipeline->getStatuses() as $status) {
-            if (in_array($status->getId(), $statuses, true)) {
+            if (\in_array($status->getId(), $statuses, true)) {
                 continue;
             }
-            $number = (int)preg_replace("/[^0-9]/", '', $status->getName());
+            $number = (int)preg_replace('/[^0-9]/', '', $status->getName());
             dump($status->getId());
             dump($status->getName());
             dump($number);
         }
     }
 
-
     private function getTeamUser(int $teamId): void
     {
         $filter = new LeadsFilter();
 
-
-       $filter->setStatuses([[
-           'pipeline_id' => 4105087,
-           'status_id' => $teamId
-       ]]);
+        $filter->setStatuses([[
+            'pipeline_id' => 4105087,
+            'status_id' => $teamId,
+        ]]);
 
         $leads = $this->client->leads()->get($filter);
 
@@ -149,23 +146,22 @@ class TesttAction extends AbstractController
     private function getLeadInfo(int $leadId): Lead
     {
         $lead = $this->client->leads()->getOne($leadId, [LeadModel::CONTACTS, LeadModel::CATALOG_ELEMENTS]);
-        if (!$lead){
-            throw new \DomainException('Не найден лид');
+        if (!$lead) {
+            throw new DomainException('Не найден лид');
         }
 
-        if (!$lead->getCustomFieldsValues()){
-            throw new \DomainException('Не заполнены поля');
+        if (!$lead->getCustomFieldsValues()) {
+            throw new DomainException('Не заполнены поля');
         }
 
-
-        if (!$lead->getMainContact()){
-            throw new \DomainException('Не указан контакт');
+        if (!$lead->getMainContact()) {
+            throw new DomainException('Не указан контакт');
         }
 
         $contact = $this->client->contacts()->getOne($lead->getMainContact()->getId());
 
-        if (!$contact){
-            throw new \DomainException('Не найден контакт');
+        if (!$contact) {
+            throw new DomainException('Не найден контакт');
         }
 
         $name = $contact->getName();
@@ -173,29 +169,28 @@ class TesttAction extends AbstractController
         $phone = null;
 
         /** @var MultitextCustomFieldValuesModel $field */
-        foreach ($contact->getCustomFieldsValues() as $field){
-            if ($field->getFieldId() === 604157){
+        foreach ($contact->getCustomFieldsValues() as $field) {
+            if ($field->getFieldId() === 604157) {
                 $phone = $field->getValues()?->first()->getValue();
             }
         }
 
-        if (!$phone){
-            throw new \DomainException('Не найден телефон');
+        if (!$phone) {
+            throw new DomainException('Не найден телефон');
         }
 
         $leadDto = new Lead($leadId, $name, $phone);
 
         $leadDto->name = $lead->getName();
 
-        foreach ($lead->getCustomFieldsValues() as $field){
-
+        foreach ($lead->getCustomFieldsValues() as $field) {
             if ($field->getFieldId() === 879807) {
                 $leadDto->numberCalling = $field->getValues()?->first()->getValue();
             }
             if ($field->getFieldId() === 880453) {
                 /** @var Carbon $dateTime */
                 $leadDto->dateTime = $field->getValues()?->first()->getValue()?->toString();
-                //$date_time = date("d.m.Y H:i:s", $one_field['values'][0]['value']);
+                // $date_time = date("d.m.Y H:i:s", $one_field['values'][0]['value']);
             }
             if ($field->getFieldId() === 870903) {
                 $leadDto->address = $field->getValues()?->first()->getValue();
@@ -239,34 +234,32 @@ class TesttAction extends AbstractController
 
             $filter->setStatuses([[
                 'pipeline_id' => 4105087,
-                'status_id' => $teamId
+                'status_id' => $teamId,
             ]]);
 
             $leads = $this->client->leads()->get($filter);
             /** @var LeadModel $lead */
-            foreach ($leads as $lead){
+            foreach ($leads as $lead) {
                 /** @var TagModel $tag */
-                foreach ($lead->getTags() as $tag){
-                    if ($tag->getId() === 62145){
+                foreach ($lead->getTags() as $tag) {
+                    if ($tag->getId() === 62145) {
                         $leadDto->admin = new Employee($lead->getId(), $lead->getName(), 'ROLE_ADMIN');
                     }
-                    if ($tag->getId() === 62135){
+                    if ($tag->getId() === 62135) {
                         $leadDto->doctor = new Employee($lead->getId(), $lead->getName(), 'ROLE_DOCTOR');
                     }
                 }
             }
-        }catch (AmoCRMApiNoContentException $e){
-            throw new \DomainException('Ошибка получения персонала, Не сформирована бригада');
+        } catch (AmoCRMApiNoContentException $e) {
+            throw new DomainException('Ошибка получения персонала, Не сформирована бригада');
         }
 
-        if (!$leadDto->doctor || !$leadDto->admin){
-            throw new \DomainException('Не установлен персонал');
+        if (!$leadDto->doctor || !$leadDto->admin) {
+            throw new DomainException('Не установлен персонал');
         }
 
-        return  $leadDto;
+        return $leadDto;
     }
-
-
 
     private function getTeamIdByNumber($number): int
     {
@@ -289,25 +282,22 @@ class TesttAction extends AbstractController
             '16' => ['Бригада 16', '61417270'],
         ];
 
-        if (array_key_exists($number, $teams)){
+        if (\array_key_exists($number, $teams)) {
             return (int)$teams[$number][1];
         }
-        throw new \DomainException('Нет бригады с таким номером');
+        throw new DomainException('Нет бригады с таким номером');
     }
 
-    private function onSetTeam(Lead $lead)
+    private function onSetTeam(Lead $lead): void
     {
-
         $calling = $this->callings->findOneByNumber($lead->numberCalling);
 
         $admin = $this->users->getByExternalId($lead->admin->getId());
         $doctor = $this->users->getByExternalId($lead->doctor->getId());
 
-
-        if ($calling){
-
+        if ($calling) {
             if ($lead->dateTime) {
-                $calling->setDateTime(new \DateTimeImmutable($lead->dateTime));
+                $calling->setDateTime(new DateTimeImmutable($lead->dateTime));
             }
 
             $calling->setNosology($lead->nosology);
@@ -318,8 +308,7 @@ class TesttAction extends AbstractController
             $calling->setSendPhone($lead->sendPhone);
 
             $this->flusher->flush();
-
-        }else{
+        } else {
             $calling = new Calling(
                 $lead->numberCalling,
                 $lead->name,
@@ -332,7 +321,7 @@ class TesttAction extends AbstractController
             );
 
             if ($lead->dateTime) {
-                $calling->setDateTime(new \DateTimeImmutable($lead->dateTime));
+                $calling->setDateTime(new DateTimeImmutable($lead->dateTime));
             }
 
             $calling->setNosology($lead->nosology);

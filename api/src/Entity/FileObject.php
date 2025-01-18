@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiProperty;
@@ -9,6 +12,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\OpenApi\Model;
 use App\Controller\FileObject\GetAction;
+use ArrayObject;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -30,18 +34,18 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             inputFormats: ['multipart' => ['multipart/form-data']],
             openapi: new Model\Operation(
                 requestBody: new Model\RequestBody(
-                    content: new \ArrayObject([
+                    content: new ArrayObject([
                         'multipart/form-data' => [
                             'schema' => [
                                 'type' => 'object',
                                 'properties' => [
                                     'file' => [
                                         'type' => 'string',
-                                        'format' => 'binary'
-                                    ]
-                                ]
-                            ]
-                        ]
+                                        'format' => 'binary',
+                                    ],
+                                ],
+                            ],
+                        ],
                     ])
                 )
             )
@@ -56,10 +60,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 )]
 class FileObject
 {
-    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
-    #[Groups(['media_object:read:image'])]
-    private ?int $id = null;
-
     #[ApiProperty(writable: false, types: ['https://schema.org/contentUrl'])]
     public ?string $contentUrl = null;
 
@@ -70,6 +70,10 @@ class FileObject
     #[ApiProperty(writable: false)]
     #[ORM\Column(nullable: true)]
     public ?string $filePath = null;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    #[Groups(['media_object:read:image'])]
+    private ?int $id = null;
+
     public function getId(): ?int
     {
         return $this->id;

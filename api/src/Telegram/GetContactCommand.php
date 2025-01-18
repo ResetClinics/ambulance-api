@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Telegram;
 
 use App\Entity\TgChat;
@@ -14,12 +16,10 @@ use TelegramBot\Api\Types\Update;
 readonly class GetContactCommand implements CommandInterface
 {
     public function __construct(
-        private UserRepository   $users,
+        private UserRepository $users,
         private TgChatRepository $tgChatRepository,
-        private Flusher          $flusher,
-    )
-    {
-    }
+        private Flusher $flusher,
+    ) {}
 
     public function execute(BotApi $api, Update $update): void
     {
@@ -36,10 +36,10 @@ readonly class GetContactCommand implements CommandInterface
                 null,
                 new ReplyKeyboardRemove()
             );
-        }else {
+        } else {
             $chat = $this->tgChatRepository->findOneByChatId((string)$chatId);
 
-            if (!$chat){
+            if (!$chat) {
                 $chat = new TgChat();
                 $chat->setChatId((string)$chatId);
                 $this->tgChatRepository->add($chat);
@@ -49,7 +49,7 @@ readonly class GetContactCommand implements CommandInterface
 
             $this->flusher->flush();
 
-            $message = "Привет, " . $chat->getUser()->getName() . ". Все получилось!\nВ этот чат тебе будут приходить уведомления о предстоящей смене";
+            $message = 'Привет, ' . $chat->getUser()->getName() . ". Все получилось!\nВ этот чат тебе будут приходить уведомления о предстоящей смене";
 
             $api->sendMessage(
                 $update->getMessage()->getChat()->getId(),
@@ -64,9 +64,9 @@ readonly class GetContactCommand implements CommandInterface
 
     public function isApplicable(Update $update): bool
     {
-       if (!$update->getMessage()?->getContact()) {
-           return false;
-       }
+        if (!$update->getMessage()?->getContact()) {
+            return false;
+        }
 
         return true;
     }

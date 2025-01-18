@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api/calls/{id}/set-team/{teamId}', name: 'call.set-team', methods: ["POST"])]
+#[Route('/api/calls/{id}/set-team/{teamId}', name: 'call.set-team', methods: ['POST'])]
 class SetTeamAction extends AbstractController
 {
     private AmoCRMApiClient $client;
@@ -25,10 +25,9 @@ class SetTeamAction extends AbstractController
     public function __construct(
         private readonly CallingRepository $calls,
         private readonly MedTeamRepository $teams,
-        private readonly Flusher           $flusher,
-        AmoCRM                             $amoCRM,
-    )
-    {
+        private readonly Flusher $flusher,
+        AmoCRM $amoCRM,
+    ) {
         $this->client = $amoCRM->getClient();
     }
 
@@ -52,7 +51,6 @@ class SetTeamAction extends AbstractController
             $this->client->leads()->update($leads);
 
             $this->flusher->flush();
-
         } catch (Exception $exception) {
             return $this->json(['error' => $exception->getMessage(), $exception], Response::HTTP_ACCEPTED);
         }

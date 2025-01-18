@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use Exception;
@@ -9,9 +11,7 @@ class WSClient
 {
     public function __construct(
         private readonly string $url
-    )
-    {
-    }
+    ) {}
 
     public function send(string $message): void
     {
@@ -29,8 +29,8 @@ class WSClient
                 json_encode([
                     'event' => 'calls_updated',
                     'data' => [
-                        'id' => $id
-                    ]
+                        'id' => $id,
+                    ],
                 ])
             );
         } catch (Exception) {
@@ -44,8 +44,8 @@ class WSClient
                 json_encode([
                     'event' => 'queue_calls_added',
                     'data' => [
-                        'id' => $id
-                    ]
+                        'id' => $id,
+                    ],
                 ])
             );
         } catch (Exception) {
@@ -59,8 +59,8 @@ class WSClient
                 json_encode([
                     'event' => 'teams_updated',
                     'data' => [
-                        'id' => $id
-                    ]
+                        'id' => $id,
+                    ],
                 ])
             );
         } catch (Exception) {

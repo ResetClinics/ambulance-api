@@ -60,7 +60,6 @@ class TeamRepository extends ServiceEntityRepository
         return $checkWordstat;
     }
 
-
     public function remove(Team $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);

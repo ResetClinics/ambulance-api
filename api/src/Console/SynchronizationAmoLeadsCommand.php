@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console;
 
 use AmoCRM\Client\AmoCRMApiClient;
@@ -26,24 +28,19 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class SynchronizationAmoLeadsCommand extends Command
 {
-
     private AmoCRMApiClient $client;
 
     public function __construct(
-        AmoCRM                             $amoCRM,
+        AmoCRM $amoCRM,
         private readonly CallingRepository $callings,
         private readonly PartnerRepository $partners,
-        private readonly Flusher           $flusher,
-    )
-    {
+        private readonly Flusher $flusher,
+    ) {
         parent::__construct();
         $this->client = $amoCRM->getClient();
     }
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return int
      * @throws NonUniqueResultException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -52,23 +49,20 @@ class SynchronizationAmoLeadsCommand extends Command
 
         foreach ($this->callings->findAll() as $calling) {
             $this->updateCalling($calling);
-            //dd(1);
+            // dd(1);
         }
-
 
         $io->success('Synchronization completed.');
 
         return Command::SUCCESS;
     }
 
-
     /**
-     * @param Calling $calling
      * @throws NonUniqueResultException
      */
     private function updateCalling(Calling $calling): void
     {
-        if ($calling->isDeleted()){
+        if ($calling->isDeleted()) {
             return;
         }
         try {
@@ -84,7 +78,6 @@ class SynchronizationAmoLeadsCommand extends Command
             foreach ($lead->getCustomFieldsValues() as $field) {
                 $this->updateCallingPartner($calling, $field);
             }
-
         } catch (AmoCRMApiException $exception) {
             if ($exception->getCode() === 204) {
                 $calling->setDeleted(true);
@@ -106,7 +99,7 @@ class SynchronizationAmoLeadsCommand extends Command
         if (!$first) {
             return;
         }
-        if (!($first instanceof BaseEnumCodeCustomFieldValueModel)) {
+        if (!$first instanceof BaseEnumCodeCustomFieldValueModel) {
             return;
         }
         if (!$first->getEnumId()) {
@@ -124,10 +117,10 @@ class SynchronizationAmoLeadsCommand extends Command
             $partner->setExternalId($partnerExternalId);
             $this->partners->save($partner);
         }
-         $partner->setName($partnerName);
-         $calling->setPartner($partner);
-         $calling->setPartnerName($partnerName);
+        $partner->setName($partnerName);
+        $calling->setPartner($partner);
+        $calling->setPartnerName($partnerName);
 
-         $this->flusher->flush();
+        $this->flusher->flush();
     }
 }

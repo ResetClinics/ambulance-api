@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Partner;
@@ -67,10 +69,9 @@ class PartnerRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
 
         if (!$entity) {
-            throw new DomainException(sprintf('Партнер id: %s не найден.', $id));
+            throw new DomainException(\sprintf('Партнер id: %s не найден.', $id));
         }
 
         return $entity;
     }
-
 }

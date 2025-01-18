@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filter\User;
 
 use ApiPlatform\Doctrine\Orm\Filter\AbstractFilter;
@@ -27,15 +29,14 @@ final class SearchByNameAndPhoneAndEmailFilter extends AbstractFilter
 
     /** @param string $value */
     protected function filterProperty(
-        string                      $property,
-                                    $value,
-        QueryBuilder                $queryBuilder,
+        string $property,
+        $value,
+        QueryBuilder $queryBuilder,
         QueryNameGeneratorInterface $queryNameGenerator,
-        string                      $resourceClass,
-        Operation                   $operation = null,
-        array                       $context = []
-    ): void
-    {
+        string $resourceClass,
+        ?Operation $operation = null,
+        array $context = []
+    ): void {
         if ('search' !== $property) {
             return;
         }
@@ -50,7 +51,7 @@ final class SearchByNameAndPhoneAndEmailFilter extends AbstractFilter
         );
 
         $parameters = [];
-        foreach ($queryBuilder->getParameters() as $parameter){
+        foreach ($queryBuilder->getParameters() as $parameter) {
             $parameters[$parameter->getName()] = $parameter->getValue();
         }
 

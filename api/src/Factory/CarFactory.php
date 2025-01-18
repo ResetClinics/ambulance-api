@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Factory;
 
 use App\Entity\Car;
@@ -10,7 +12,6 @@ use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
  */
 final class CarFactory extends PersistentProxyObjectFactory
 {
-
     public static function class(): string
     {
         return Car::class;
@@ -26,8 +27,7 @@ final class CarFactory extends PersistentProxyObjectFactory
 
     protected function initialize(): static
     {
-        return $this
-            // ->afterInstantiate(function(Car $car): void {})
-        ;
+        return $this;
+        // ->afterInstantiate(function(Car $car): void {})
     }
 }

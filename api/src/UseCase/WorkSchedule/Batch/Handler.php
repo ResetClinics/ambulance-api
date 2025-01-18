@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\UseCase\WorkSchedule\Batch;
 
 use App\Entity\WorkSchedule;
@@ -11,9 +13,7 @@ class Handler
     public function __construct(
         private readonly WorkScheduleRepository $schedules,
         private readonly UserRepository $users,
-    )
-    {
-    }
+    ) {}
 
     public function handle(Command $command): void
     {
@@ -26,11 +26,11 @@ class Handler
             $command->city
         );
 
-        foreach ($schedules as $schedule){
+        foreach ($schedules as $schedule) {
             $this->schedules->remove($schedule, true);
         }
 
-        if ($command->type === 'clear'){
+        if ($command->type === 'clear') {
             return;
         }
 
@@ -42,7 +42,7 @@ class Handler
             $tempDate = $tempDate->modify('+1 day');
         }
 
-        foreach ($dateList as $date){
+        foreach ($dateList as $date) {
             $schedule = new WorkSchedule();
             $schedule->setEmployee($user);
             $schedule->setRole($command->role);
