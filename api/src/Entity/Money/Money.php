@@ -11,11 +11,11 @@ class Money
 {
     #[ORM\Column(type: 'money_currency', length: 3, nullable: false)]
     public Currency $currency;
+
     public function __construct(
         #[ORM\Column(nullable: false)]
-        public int      $amount,
-    )
-    {
+        public int $amount,
+    ) {
         $this->currency = new Currency('RUB');
     }
 }

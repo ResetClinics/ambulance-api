@@ -7,7 +7,6 @@ namespace App\Entity\Money;
 use JsonSerializable;
 use Webmozart\Assert\Assert;
 
-
 readonly class Currency implements JsonSerializable
 {
     private string $code;
@@ -22,19 +21,19 @@ readonly class Currency implements JsonSerializable
         $this->code = $code;
     }
 
+    public function __toString(): string
+    {
+        return $this->code;
+    }
+
     public function getCode(): string
     {
         return $this->code;
     }
 
-    public function isEqual(Currency $other): bool
+    public function isEqual(self $other): bool
     {
         return $this->code === $other->code;
-    }
-
-    public function __toString(): string
-    {
-        return $this->code;
     }
 
     public function jsonSerialize(): string

@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\Payroll;
 
 use App\Entity\MedTeam\MedTeam;
 use App\Entity\Money\Money;
 use App\Entity\User\User;
 use App\Repository\Payroll\ShiftPayrollRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -23,7 +26,7 @@ class ShiftPayroll
     private ?Money $accrued = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $accruedAt = null;
+    private ?DateTimeImmutable $accruedAt = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -52,12 +55,12 @@ class ShiftPayroll
         $this->accrued = $value;
     }
 
-    public function getAccruedAt(): ?\DateTimeImmutable
+    public function getAccruedAt(): ?DateTimeImmutable
     {
         return $this->accruedAt;
     }
 
-    public function setAccruedAt(\DateTimeImmutable $accruedAt): static
+    public function setAccruedAt(DateTimeImmutable $accruedAt): static
     {
         $this->accruedAt = $accruedAt;
 
