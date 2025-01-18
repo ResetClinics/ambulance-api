@@ -15,7 +15,7 @@ readonly class ChannelRepository
     public function hasChannelByClientPhoneNumber(string $clientPhoneNumber): bool
     {
         $connection = $this->doctrine->getConnection('asterisk');
-        return $connection->fetchOne(
+        return (bool)$connection->fetchOne(
             'SELECT 1 FROM channels WHERE client = :clientPhoneNumber',
             ['clientPhoneNumber' => $clientPhoneNumber]
         );
