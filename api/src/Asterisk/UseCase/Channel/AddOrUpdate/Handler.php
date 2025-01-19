@@ -15,8 +15,8 @@ readonly class Handler
     public function handle(Command $command): void
     {
         // TODO надо вынести валидации в модель Phone
-        $clientPhone = preg_replace('/[^0-9]/', '', $command->clientPhone);
-        $teamPhone = preg_replace('/[^0-9]/', '', $command->teamPhone);
+        $clientPhone = preg_replace('/[^0-9]/', '', (string)$command->clientPhone);
+        $teamPhone = preg_replace('/[^0-9]/', '', (string)$command->teamPhone);
 
         $hasChannel = $this->channels->hasChannelByClientPhoneNumber($clientPhone);
         if ($hasChannel) {
