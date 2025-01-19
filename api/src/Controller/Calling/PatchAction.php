@@ -37,6 +37,7 @@ use App\Services\ATS\BlacklistService\McnBlacklistService;
 use App\Services\Call\OperatorReward;
 use App\Services\Call\PartnerReward;
 use App\Services\CallingSender;
+use App\Services\Payroll\CallPayrollCalculator;
 use App\Services\WSClient;
 use App\UseCase\Call\AddOrUpdateRepeat\Command;
 use App\UseCase\Call\AddOrUpdateRepeat\Handler;
@@ -65,6 +66,7 @@ class PatchAction extends AbstractController
         private readonly Flusher $flusher,
         private readonly PartnerReward $partnerReward,
         private readonly OperatorReward $operatorReward,
+        private readonly CallPayrollCalculator $employeePayrollCalculator,
         private readonly Handler $handler,
         private readonly HospitalRepository $hospitals,
     ) {
@@ -357,6 +359,7 @@ class PatchAction extends AbstractController
 
         $this->partnerReward->calculate($calling);
         $this->operatorReward->calculate($calling);
+        $this->employeePayrollCalculator->calculate($calling);
 
         $this->flusher->flush();
     }

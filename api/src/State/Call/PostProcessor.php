@@ -30,6 +30,7 @@ use App\Services\AmoCRM;
 use App\Services\Call\PartnerReward;
 use App\Services\CallingSender;
 use App\Services\File\UploadedBase64File;
+use App\Services\Payroll\CallPayrollCalculator;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -43,6 +44,7 @@ class PostProcessor implements ProcessorInterface
         private readonly CallingSender $sender,
         private readonly HospitalRepository $hospitals,
         private readonly ProcessorInterface $processor,
+        private readonly CallPayrollCalculator $employeePayrollCalculator,
     ) {
         $this->client = $amoCRM->getClient();
     }
@@ -73,6 +75,7 @@ class PostProcessor implements ProcessorInterface
 
         if ($data->getStatus() === Status::COMPLETED) {
             $this->partnerReward->calculate($data);
+            $this->employeePayrollCalculator->calculate($data);
         }
 
         return $this->processor->process($data, $operation, $uriVariables, $context);

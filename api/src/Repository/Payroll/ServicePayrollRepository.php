@@ -18,28 +18,18 @@ class ServicePayrollRepository extends ServiceEntityRepository
         parent::__construct($registry, ServicePayroll::class);
     }
 
-    //    /**
-    //     * @return ServicePayroll[] Returns an array of ServicePayroll objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('s.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function removeByCallServiceId(?int $callServiceIdd): void
+    {
+        $this->createQueryBuilder('s')
+            ->delete()
+            ->where('s.callService = :callService')
+            ->setParameter('callService', $callServiceIdd)
+            ->getQuery()
+            ->execute();
+    }
 
-    //    public function findOneBySomeField($value): ?ServicePayroll
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function add(ServicePayroll $entity): void
+    {
+        $this->getEntityManager()->persist($entity);
+    }
 }
