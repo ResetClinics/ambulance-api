@@ -6,6 +6,7 @@ namespace App\Entity\Service;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Entity\Calling\Row;
+use App\Entity\Payroll\PayrollCalculator;
 use App\Repository\Service\ServiceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -57,6 +58,11 @@ class Service
     #[ORM\Column(nullable: true)]
     #[Groups(['service:item:read', 'service:write', 'exchange_calling:read'])]
     private ?int $coastPrice = 0;
+
+    #[ORM\ManyToOne]
+    #[Groups(['service:item:read', 'service:write'])]
+    #[Assert\NotNull]
+    private ?PayrollCalculator $employeePayrollCalculator = null;
 
     public function __construct()
     {
@@ -161,5 +167,17 @@ class Service
     public function isRepeatDesign(): bool
     {
         return $this->type === 'replay';
+    }
+
+    public function getEmployeePayrollCalculator(): ?PayrollCalculator
+    {
+        return $this->employeePayrollCalculator;
+    }
+
+    public function setEmployeePayrollCalculator(?PayrollCalculator $employeePayrollCalculator): static
+    {
+        $this->employeePayrollCalculator = $employeePayrollCalculator;
+
+        return $this;
     }
 }

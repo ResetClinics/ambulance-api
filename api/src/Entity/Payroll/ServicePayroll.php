@@ -36,10 +36,6 @@ class ServicePayroll
     #[ORM\JoinColumn(nullable: false)]
     private ?Row $callService = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?PayrollStrategy $strategy = null;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -87,18 +83,6 @@ class ServicePayroll
     public function setCallService(?Row $callService): static
     {
         $this->callService = $callService;
-
-        return $this;
-    }
-
-    public function getStrategy(): ?PayrollStrategy
-    {
-        return $this->strategy;
-    }
-
-    public function setStrategy(?PayrollStrategy $strategy): static
-    {
-        $this->strategy = $strategy;
 
         return $this;
     }

@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace App\Repository\Payroll;
 
-use App\Entity\Payroll\PayrollStrategy;
+use App\Entity\Payroll\PayrollCalculator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<PayrollStrategy>
+ * @extends ServiceEntityRepository<PayrollCalculator>
  */
 class PayrollStrategyRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, PayrollStrategy::class);
+        parent::__construct($registry, PayrollCalculator::class);
     }
 
     //    /**

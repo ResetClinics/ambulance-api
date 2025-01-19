@@ -38,7 +38,7 @@ class ShiftPayroll
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?PayrollStrategy $strategy = null;
+    private ?PayrollCalculator $calculator = null;
 
     public function getId(): ?int
     {
@@ -91,14 +91,14 @@ class ShiftPayroll
         return $this;
     }
 
-    public function getStrategy(): ?PayrollStrategy
+    public function getCalculator(): ?PayrollCalculator
     {
-        return $this->strategy;
+        return $this->calculator;
     }
 
-    public function setStrategy(?PayrollStrategy $strategy): static
+    public function setCalculator(?PayrollCalculator $calculator): static
     {
-        $this->strategy = $strategy;
+        $this->calculator = $calculator;
 
         return $this;
     }
