@@ -76,36 +76,36 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        #- { path: ^/partner/login, roles: PUBLIC_ACCESS }
-        #- { path: ^/partner, roles: IS_AUTHENTICATED_FULLY }
-        #- { path: ^/exchange/login, roles: PUBLIC_ACCESS }
-        #- { path: ^/exchange, roles: IS_AUTHENTICATED_FULLY }
-        #- { path: ^/sing-in, roles: PUBLIC_ACCESS }
-        #- { path: ^/app, roles: IS_AUTHENTICATED_FULLY }
-        #- { path: ^/api/login, roles: PUBLIC_ACCESS }
-        ##- { path: ^/api/uploads, roles: IS_AUTHENTICATED_FULLY }
-        #- { path: ^/api/callings, roles: IS_AUTHENTICATED_FULLY }
-        #- { path: ^/api/calls, roles: IS_AUTHENTICATED_FULLY }
-        #- { path: ^/api/medicines, roles: IS_AUTHENTICATED_FULLY }
-        #- { path: ^/api/teams, roles: IS_AUTHENTICATED_FULLY }
-        #- { path: ^/api/med_teams, roles: IS_AUTHENTICATED_FULLY }
-        #- { path: ^/api/med_teams/report-user-list, roles: IS_AUTHENTICATED_FULLY }
-        #- { path: ^/api/users, roles: IS_AUTHENTICATED_FULLY }
-        #- { path: ^/api/roles, roles: IS_AUTHENTICATED_FULLY }
-        #- { path: ^/api/permissions, roles: IS_AUTHENTICATED_FULLY }
-        #- { path: ^/api/partners, roles: IS_AUTHENTICATED_FULLY }
-        #- { path: ^/api/administrator_reports, roles: IS_AUTHENTICATED_FULLY }
-        #- { path: ^/api/v1/files/, roles: PUBLIC_ACCESS }
-        #- { path: ^/api/v1/block_descriptions, roles: IS_AUTHENTICATED_FULLY }
-        #- { path: ^/api/v1/payroll, roles: IS_AUTHENTICATED_FULLY }
-        #- { path: ^/api/v1/files, roles: IS_AUTHENTICATED_FULLY }
-        #- { path: ^/api/v1/shifts, roles: IS_AUTHENTICATED_FULLY }
-        #- { path: ^/api/v1/transport_reports, roles: IS_AUTHENTICATED_FULLY }
-        #- { path: ^/api/v1/reason_for_cancellations, roles: IS_AUTHENTICATED_FULLY }
-        #- { path: ^/api/amo-crm, roles: PUBLIC_ACCESS }
-        #- { path: ^/api/leads, roles: PUBLIC_ACCESS }
-        #- { path: ^/api, roles: PUBLIC_ACCESS }
-        ##- { path: ^/, roles: ROLE_APP }
+        - { path: ^/partner/login, roles: PUBLIC_ACCESS }
+        - { path: ^/partner, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/exchange/login, roles: PUBLIC_ACCESS }
+        - { path: ^/exchange, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/sing-in, roles: PUBLIC_ACCESS }
+        - { path: ^/app, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        #- { path: ^/api/uploads, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/callings, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/calls, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/medicines, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/teams, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/med_teams, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/med_teams/report-user-list, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/users, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/roles, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/permissions, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/partners, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/administrator_reports, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/v1/files/, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/block_descriptions, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/v1/payroll, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/v1/files, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/v1/shifts, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/v1/transport_reports, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/v1/reason_for_cancellations, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/amo-crm, roles: PUBLIC_ACCESS }
+        - { path: ^/api/leads, roles: PUBLIC_ACCESS }
+        - { path: ^/api, roles: PUBLIC_ACCESS }
+        #- { path: ^/, roles: ROLE_APP }
 
 when@test:
     security:
