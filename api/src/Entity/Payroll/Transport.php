@@ -15,19 +15,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TransportRepository::class)]
 #[ORM\Table(name: 'payroll_transport')]
-#[ApiResource(
-    shortName: 'Payroll/Transport',
-    operations: [
-        new GetCollection(),
-        new Get(),
-        new Patch(),
-    ],
-    routePrefix: '/api/v1',
-    normalizationContext: ['groups' => ['payroll_transport:read']],
-    denormalizationContext: ['groups' => ['payroll_transport:write']],
-    paginationClientEnabled: true,
-    paginationClientItemsPerPage: true,
-)]
 class Transport
 {
     #[ORM\Id]

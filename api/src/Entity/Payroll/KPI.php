@@ -15,19 +15,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: KPIRepository::class)]
 #[ORM\Table(name: 'payroll_kpi')]
-#[ApiResource(
-    shortName: 'Payroll/Kpi',
-    operations: [
-        new GetCollection(),
-        new Get(),
-        new Patch(),
-    ],
-    routePrefix: '/api/v1',
-    normalizationContext: ['groups' => ['payroll_kpi:read']],
-    denormalizationContext: ['groups' => ['payroll_kpi:write']],
-    paginationClientEnabled: true,
-    paginationClientItemsPerPage: true,
-)]
 class KPI
 {
     #[ORM\Id]

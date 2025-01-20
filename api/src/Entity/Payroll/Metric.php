@@ -15,19 +15,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: MetricRepository::class)]
 #[ORM\Table(name: 'payroll_metric')]
-#[ApiResource(
-    shortName: 'Payroll/Metric',
-    operations: [
-        new GetCollection(),
-        new Get(),
-        new Patch(),
-    ],
-    routePrefix: '/api/v1',
-    normalizationContext: ['groups' => ['payroll_metric:read']],
-    denormalizationContext: ['groups' => ['payroll_metric:write']],
-    paginationClientEnabled: true,
-    paginationClientItemsPerPage: true,
-)]
 class Metric
 {
     #[ORM\Id]

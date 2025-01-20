@@ -11,13 +11,13 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
-use App\Repository\Payroll\PayrollStrategyRepository;
+use App\Repository\Payroll\PayrollCalculatorRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: PayrollStrategyRepository::class)]
+#[ORM\Entity(repositoryClass: PayrollCalculatorRepository::class)]
 #[ORM\Table(name: 'payroll_calculator')]
 #[ApiResource(
     shortName: 'Payroll/Calculator',
