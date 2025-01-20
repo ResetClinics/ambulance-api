@@ -17,6 +17,7 @@ use App\Entity\Partner;
 use App\Entity\PaymentSetting\PaymentSetting;
 use App\Entity\Payroll\KPI;
 use App\Entity\Payroll\Metric;
+use App\Entity\Payroll\PayrollCalculator;
 use App\Entity\Payroll\Transport;
 use App\Entity\ReasonForCancellation;
 use App\Entity\Service\Category;
@@ -70,6 +71,7 @@ class PaginateJsonSubscriber implements EventSubscriberInterface
             $apiResourceClass !== PaymentSetting::class &&
             $apiResourceClass !== ReasonForCancellation::class &&
             $apiResourceClass !== Metric::class &&
+            $apiResourceClass !== PayrollCalculator::class &&
             $apiResourceClass !== KPI::class &&
             $apiResourceClass !== Transport::class &&
             $apiResourceClass !== MedTeam::class
