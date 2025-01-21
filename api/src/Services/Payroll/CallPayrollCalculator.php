@@ -45,7 +45,7 @@ readonly class CallPayrollCalculator
             $value = $callService->getService()?->getEmployeePayrollCalculator()?->getValue();
 
             // TODO убрать удаление в калькулятор
-            $this->servicePayrolls->removeByCallServiceId($callService->getService()->getId());
+            $this->servicePayrolls->removeByCallServiceId($callService->getId());
 
             $processor = $this->serviceCalculatorStrategy->getProcessor($calculator);
 
