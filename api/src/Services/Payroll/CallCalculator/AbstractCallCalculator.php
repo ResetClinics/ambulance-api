@@ -64,7 +64,7 @@ class AbstractCallCalculator implements CallCalculatorInterface
 
         foreach ($call->getServices() as $callService) {
             if (
-                $callService->getService()->getEmployeePayrollCalculator()->getProcessor()
+                $callService->getService()?->getEmployeePayrollCalculator()?->getProcessor()
                 === 'service_therapy_calculator'
             ) {
                 $amount += (float)$callService->getPrice();
