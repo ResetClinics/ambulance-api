@@ -28,11 +28,11 @@ readonly class CallPayrollCalculator
         private ServicePayrollRepository $servicePayrolls,
     ) {
         $this->processors = [
-            TherapyPayrollCalculatorProcessor::class => $this->therapyPayrollCalculatorProcessor,
-            CoddingPayrollCalculatorProcessor::class => $this->coddingPayrollCalculatorProcessor,
-            TransportationPayrollCalculatorProcessor::class => $this->transportationPayrollCalculatorProcessor,
-            SewingPayrollCalculatorProcessor::class => $this->sewingPayrollCalculatorProcessor,
-            HospitalizationPayrollCalculatorProcessor::class => $this->hospitalizationPayrollCalculatorProcessor,
+            'service_therapy_calculator' => $this->therapyPayrollCalculatorProcessor,
+            'service_codding_calculator' => $this->coddingPayrollCalculatorProcessor,
+            'service_transportation_calculator' => $this->transportationPayrollCalculatorProcessor,
+            'service_sewing_calculator' => $this->sewingPayrollCalculatorProcessor,
+            'service_hospitalization_calculator' => $this->hospitalizationPayrollCalculatorProcessor,
         ];
     }
 
