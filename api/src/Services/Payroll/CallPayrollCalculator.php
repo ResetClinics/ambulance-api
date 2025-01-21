@@ -11,6 +11,7 @@ use App\Repository\Payroll\PayrollCalculatorRepository;
 use App\Repository\Payroll\ServicePayrollRepository;
 use App\Services\Payroll\CallCalculator\CallCalculatorStrategy;
 use App\Services\Payroll\ServiceCalculator\ServiceCalculatorStrategy;
+use Exception;
 
 readonly class CallPayrollCalculator
 {
@@ -24,12 +25,14 @@ readonly class CallPayrollCalculator
 
     public function calculate(Calling $call): void
     {
-        if ($call->getStatus() !== Status::COMPLETED) {
-            return;
+        try {
+            if ($call->getStatus() !== Status::COMPLETED) {
+                return;
+            }
+            $this->calculateService($call);
+            $this->calculateCall($call);
+        } catch (Exception) {
         }
-
-        $this->calculateService($call);
-        $this->calculateCall($call);
     }
 
     private function calculateService(Calling $call): void
