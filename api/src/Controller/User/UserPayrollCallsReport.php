@@ -5,15 +5,11 @@ declare(strict_types=1);
 namespace App\Controller\User;
 
 use App\Entity\Calling\Calling;
-use App\Entity\MedTeam\MedTeam;
 use App\Entity\Payroll\CallPayroll;
 use App\Entity\Payroll\ServicePayroll;
-use App\Entity\Payroll\ShiftPayroll;
 use App\Repository\CallingRepository;
-use App\Repository\MedTeam\MedTeamRepository;
 use App\Repository\Payroll\CallPayrollRepository;
 use App\Repository\Payroll\ServicePayrollRepository;
-use App\Repository\Payroll\ShiftPayrollRepository;
 use DateInterval;
 use DatePeriod;
 use DateTimeImmutable;
@@ -27,12 +23,10 @@ use Symfony\Component\Serializer\Exception\ExceptionInterface;
 class UserPayrollCallsReport extends AbstractController
 {
     public function __construct(
-        private readonly CallingRepository        $calls,
-        private readonly CallPayrollRepository    $callPayrolls,
+        private readonly CallingRepository $calls,
+        private readonly CallPayrollRepository $callPayrolls,
         private readonly ServicePayrollRepository $servicePayrolls
-    )
-    {
-    }
+    ) {}
 
     /**
      * @throws Exception
@@ -107,7 +101,6 @@ class UserPayrollCallsReport extends AbstractController
 
         /** @var CallPayroll $callPayroll */
         foreach ($callPayrolls as $callPayroll) {
-
             if (!isset($callsItems[$callPayroll->getCall()->getId()])) {
                 $call = $this->calls->getById($callPayroll->getCall()->getId());
 
@@ -128,7 +121,6 @@ class UserPayrollCallsReport extends AbstractController
                     'reward' => 0,
                     'subRows' => [],
                 ];
-
             }
             $reward = (float)($callPayroll->getAccrued()->amount / 100);
 
@@ -142,7 +134,7 @@ class UserPayrollCallsReport extends AbstractController
         }
 
         foreach ($callsItems as $callItem) {
-            if (!isset($items[$callItem['completedDate']])){
+            if (!isset($items[$callItem['completedDate']])) {
                 $items[$callItem['completedDate']] = [
                     'name' => $callItem['completedDate'],
                     'amount' => '',

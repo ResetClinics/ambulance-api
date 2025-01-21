@@ -160,8 +160,7 @@ class CallingRepository extends ServiceEntityRepository
         DateTimeImmutable $completedAfter,
         DateTimeImmutable $completedBefore,
         int $employeeId
-    ): array
-    {
+    ): array {
         $qb = $this->createQueryBuilder('c');
 
         return $qb
@@ -176,7 +175,6 @@ class CallingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-
 
     public function findAllByClientNull(): array
     {
