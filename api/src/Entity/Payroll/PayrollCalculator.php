@@ -53,9 +53,9 @@ class PayrollCalculator
     #[Groups(['payroll_calculator:read', 'service:item:read'])]
     private ?string $name = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['payroll_calculator:read', 'payroll_calculator:write'])]
-    private ?float $value = null;
+    private ?string $value = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['payroll_calculator:read', 'payroll_calculator:write'])]
@@ -108,12 +108,12 @@ class PayrollCalculator
         return $this;
     }
 
-    public function getValue(): ?float
+    public function getValue(): ?string
     {
         return $this->value;
     }
 
-    public function setValue(?float $value): static
+    public function setValue(?string $value): static
     {
         $this->value = $value;
 
