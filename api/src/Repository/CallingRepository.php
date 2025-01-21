@@ -10,6 +10,7 @@ use App\Entity\Partner;
 use App\Entity\Team\Team;
 use App\Entity\User\User;
 use DatePeriod;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -154,6 +155,28 @@ class CallingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findAllCompletedOfTheEmployeeByCompletionDateIncludedInPeriod(
+        DateTimeImmutable $completedAfter,
+        DateTimeImmutable $completedBefore,
+        int $employeeId
+    ): array
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        return $qb
+            ->andWhere('c.completedAt >= :after')
+            ->andWhere('c.completedAt < :before')
+            ->andWhere('c.status = :status')
+            ->andWhere('(c.admin = :employeeId OR c.doctor = :employeeId)')
+            ->setParameter('after', $completedAfter)
+            ->setParameter('before', $completedBefore)
+            ->setParameter('employeeId', $employeeId)
+            ->setParameter('status', Status::COMPLETED)
+            ->getQuery()
+            ->getResult();
+    }
+
 
     public function findAllByClientNull(): array
     {

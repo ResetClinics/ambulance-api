@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository\Payroll;
 
 use App\Entity\Payroll\ServicePayroll;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -31,5 +32,19 @@ class ServicePayrollRepository extends ServiceEntityRepository
     public function add(ServicePayroll $entity): void
     {
         $this->getEntityManager()->persist($entity);
+    }
+
+    public function findByPlannedEmployee(DateTimeImmutable $accruedAfter, DateTimeImmutable $accruedBefore, int $employeeId)
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.accruedAt >= :accruedAtAfter')
+            ->andWhere('c.accruedAt < :accruedAtBefore')
+            ->andWhere('(c.employee = :employee)')
+            ->setParameter('accruedAtAfter', $accruedAfter)
+            ->setParameter('accruedAtBefore', $accruedBefore)
+            ->setParameter('employee', $employeeId)
+            ->orderBy('c.accruedAt')
+            ->getQuery()
+            ->getResult();
     }
 }
