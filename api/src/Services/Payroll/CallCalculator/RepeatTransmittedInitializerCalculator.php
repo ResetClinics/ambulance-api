@@ -15,22 +15,21 @@ class RepeatTransmittedInitializerCalculator extends AbstractCallCalculator
         PayrollCalculator $payrollCalculator,
         Money $accrued,
     ): void {
-
-        if ($call->getCountRepeat() < 1){
+        if ($call->getCountRepeat() < 1) {
             return;
         }
 
         $admin = $call->getAdmin();
         $adminInitializer = $call->getOwner()?->getAdmin();
 
-        if ($adminInitializer->getId() !== $admin->getId()){
+        if ($adminInitializer->getId() !== $admin->getId()) {
             $this->createPayrollForEmployee($call, $accrued, $adminInitializer, $payrollCalculator);
         }
 
         $doctor = $call->getDoctor();
         $doctorInitializer = $call->getOwner()?->getDoctor();
 
-        if ($doctorInitializer->getId() !== $doctor->getId()){
+        if ($doctorInitializer->getId() !== $doctor->getId()) {
             $this->createPayrollForEmployee($call, $accrued, $doctorInitializer, $payrollCalculator);
         }
     }

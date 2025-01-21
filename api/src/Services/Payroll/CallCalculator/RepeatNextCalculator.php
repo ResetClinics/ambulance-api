@@ -15,20 +15,19 @@ class RepeatNextCalculator extends AbstractCallCalculator
         PayrollCalculator $payrollCalculator,
         Money $accrued,
     ): void {
-
-        if ($call->getCountRepeat() < 2){
+        if ($call->getCountRepeat() < 2) {
             return;
         }
 
         $admin = $call->getAdmin();
 
-        if ($call->getOwner()?->getAdmin() === $admin){
+        if ($call->getOwner()?->getAdmin() === $admin) {
             $this->createPayrollForEmployee($call, $accrued, $admin, $payrollCalculator);
         }
 
         $doctor = $call->getDoctor();
 
-        if ($call->getOwner()?->getDoctor() === $doctor){
+        if ($call->getOwner()?->getDoctor() === $doctor) {
             $this->createPayrollForEmployee($call, $accrued, $doctor, $payrollCalculator);
         }
     }

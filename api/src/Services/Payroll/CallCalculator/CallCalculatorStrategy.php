@@ -11,10 +11,10 @@ class CallCalculatorStrategy
     private array $strategies;
 
     public function __construct(
-        RepeatCalculator                       $repeat,
-        RepeatNextCalculator                   $repeatNextCalculator,
+        RepeatCalculator $repeat,
+        RepeatNextCalculator $repeatNextCalculator,
         RepeatTransmittedInitializerCalculator $transmittedInitializerCalculator,
-        RepeatTransmittedExecutorCalculator    $transmittedExecutorCalculator
+        RepeatTransmittedExecutorCalculator $transmittedExecutorCalculator
     ) {
         $this->strategies = [
             'call_repeat' => $repeat,

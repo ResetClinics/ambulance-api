@@ -32,6 +32,7 @@ use App\Services\CallingSender;
 use App\Services\File\UploadedBase64File;
 use App\Services\Payroll\CallPayrollCalculator;
 use Doctrine\ORM\NonUniqueResultException;
+use Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PostProcessor implements ProcessorInterface
@@ -75,7 +76,10 @@ class PostProcessor implements ProcessorInterface
 
         if ($data->getStatus() === Status::COMPLETED) {
             $this->partnerReward->calculate($data);
-            $this->employeePayrollCalculator->calculate($data);
+            try {
+                $this->employeePayrollCalculator->calculate($data);
+            } catch (Exception) {
+            }
         }
 
         return $this->processor->process($data, $operation, $uriVariables, $context);

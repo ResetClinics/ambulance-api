@@ -359,7 +359,11 @@ class PatchAction extends AbstractController
 
         $this->partnerReward->calculate($calling);
         $this->operatorReward->calculate($calling);
-        $this->employeePayrollCalculator->calculate($calling);
+
+        try {
+            $this->employeePayrollCalculator->calculate($calling);
+        } catch (Exception $e) {
+        }
 
         $this->flusher->flush();
     }
