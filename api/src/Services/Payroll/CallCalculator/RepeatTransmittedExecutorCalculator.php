@@ -25,7 +25,7 @@ class RepeatTransmittedExecutorCalculator extends AbstractCallCalculator
         if (
             $adminInitializer &&
             $admin &&
-            $call->getOwner()?->getAdmin()->getId() !== $admin->getId()
+            $adminInitializer->getId() !== $admin->getId()
         ) {
             $this->createPayrollForEmployee($call, $accrued, $admin, $payrollCalculator);
         }
@@ -36,7 +36,7 @@ class RepeatTransmittedExecutorCalculator extends AbstractCallCalculator
         if (
             $doctorInitializer &&
             $doctor &&
-            $call->getOwner()?->getDoctor()->getId() !== $doctor->getId()
+            $doctorInitializer->getId() !== $doctor->getId()
         ) {
             $this->createPayrollForEmployee($call, $accrued, $doctor, $payrollCalculator);
         }
