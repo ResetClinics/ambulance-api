@@ -29,9 +29,12 @@ readonly class CallPayrollCalculator
             if ($call->getStatus() !== Status::COMPLETED) {
                 return;
             }
+
             $this->calculateService($call);
             $this->calculateCall($call);
-        } catch (Exception) {
+
+        } catch (Exception $exception) {
+            dd($exception->getMessage());
         }
     }
 
@@ -64,7 +67,7 @@ readonly class CallPayrollCalculator
 
         foreach ($payrollCalculators as $payrollCalculator) {
             $processor = $this->callCalculatorStrategy->getStrategy(
-                $payrollCalculator->getTarget()
+                $payrollCalculator->getProcessor()
             );
             $processor->calculate($call, $payrollCalculator);
         }

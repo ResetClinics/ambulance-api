@@ -8,7 +8,7 @@ use App\Entity\Calling\Calling;
 use App\Entity\Money\Money;
 use App\Entity\Payroll\PayrollCalculator;
 
-class RepeatTransmittedCalculator extends AbstractCallCalculator
+class RepeatTransmittedExecutorCalculator extends AbstractCallCalculator
 {
     protected function process(
         Calling $call,

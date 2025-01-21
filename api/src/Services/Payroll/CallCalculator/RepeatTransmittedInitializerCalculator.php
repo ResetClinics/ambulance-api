@@ -8,18 +8,13 @@ use App\Entity\Calling\Calling;
 use App\Entity\Money\Money;
 use App\Entity\Payroll\PayrollCalculator;
 
-class RepeatCalculator extends AbstractCallCalculator
+class RepeatTransmittedInitializerCalculator extends AbstractCallCalculator
 {
     protected function process(
         Calling $call,
         PayrollCalculator $payrollCalculator,
         Money $accrued,
     ): void {
-
-        if ($call->getCountRepeat() !== 1){
-            return;
-        }
-
         $admin = $call->getAdmin();
 
         $this->createPayrollForEmployee($call, $accrued, $admin, $payrollCalculator);

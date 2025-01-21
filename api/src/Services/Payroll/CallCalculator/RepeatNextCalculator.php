@@ -8,7 +8,7 @@ use App\Entity\Calling\Calling;
 use App\Entity\Money\Money;
 use App\Entity\Payroll\PayrollCalculator;
 
-class RepeatCalculator extends AbstractCallCalculator
+class RepeatNextCalculator extends AbstractCallCalculator
 {
     protected function process(
         Calling $call,
@@ -16,7 +16,7 @@ class RepeatCalculator extends AbstractCallCalculator
         Money $accrued,
     ): void {
 
-        if ($call->getCountRepeat() !== 1){
+        if ($call->getCountRepeat() < 2){
             return;
         }
 
