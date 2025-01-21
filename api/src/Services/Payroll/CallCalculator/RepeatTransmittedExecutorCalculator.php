@@ -16,6 +16,11 @@ class RepeatTransmittedExecutorCalculator extends AbstractCallCalculator
         Money $accrued,
     ): void {
 
+        if ($call->getCountRepeat() < 1){
+            return;
+        }
+
+
         $admin = $call->getAdmin();
 
         if ($call->getOwner()?->getAdmin()->getId() !== $admin->getId()){
