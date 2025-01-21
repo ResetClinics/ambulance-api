@@ -18,28 +18,18 @@ class ShiftPayrollRepository extends ServiceEntityRepository
         parent::__construct($registry, ShiftPayroll::class);
     }
 
-    //    /**
-    //     * @return ShiftPayroll[] Returns an array of ShiftPayroll objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('s.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function removeByShiftId(?int $shiftId): void
+    {
+        $this->createQueryBuilder('sh')
+            ->delete()
+            ->where('sh.shift = :shift')
+            ->setParameter('shift', $shiftId)
+            ->getQuery()
+            ->execute();
+    }
 
-    //    public function findOneBySomeField($value): ?ShiftPayroll
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function add(ShiftPayroll $entity): void
+    {
+        $this->getEntityManager()->persist($entity);
+    }
 }

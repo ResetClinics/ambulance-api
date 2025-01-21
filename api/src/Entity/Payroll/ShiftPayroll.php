@@ -50,9 +50,11 @@ class ShiftPayroll
         return $this->accrued;
     }
 
-    public function setAccrued(Money $value): void
+    public function setAccrued(Money $value): static
     {
         $this->accrued = $value;
+
+        return $this;
     }
 
     public function getAccruedAt(): ?DateTimeImmutable
