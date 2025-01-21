@@ -27,8 +27,12 @@ readonly class CoddingPayrollCalculatorProcessor implements CallPayrollCalculato
         $this->createPayrollForEmployee($callService, $rate, $doctor);
     }
 
-    public function createPayrollForEmployee(Row $callService, mixed $rate, ?User $admin): void
+    public function createPayrollForEmployee(Row $callService, mixed $rate, ?User $employee): void
     {
+        if (!$employee) {
+            return;
+        }
+
         $profit = $callService->getPrice() - $callService->getService()->getCoastPrice();
         $accrued = new Money(
             (int)(($profit * $rate) * 100)
@@ -37,7 +41,7 @@ readonly class CoddingPayrollCalculatorProcessor implements CallPayrollCalculato
         $payroll = new ServicePayroll();
         $payroll->setAccruedAt($callService->getCalling()->getCompletedAt());
         $payroll->setCallService($callService);
-        $payroll->setEmployee($admin);
+        $payroll->setEmployee($employee);
         $payroll->setAccrued($accrued);
 
         $this->servicePayrolls->add($payroll);

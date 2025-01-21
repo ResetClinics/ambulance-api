@@ -27,8 +27,12 @@ readonly class TransportationPayrollCalculatorProcessor implements CallPayrollCa
         $this->createPayrollForEmployee($callService, $rate, $doctor);
     }
 
-    public function createPayrollForEmployee(Row $callService, mixed $rate, ?User $admin): void
+    public function createPayrollForEmployee(Row $callService, mixed $rate, ?User $employee): void
     {
+        if (!$employee) {
+            return;
+        }
+
         $accrued = new Money(
             (int)(($callService->getPrice() * $rate) * 100)
         );
@@ -36,7 +40,7 @@ readonly class TransportationPayrollCalculatorProcessor implements CallPayrollCa
         $payroll = new ServicePayroll();
         $payroll->setAccruedAt($callService->getCalling()->getCompletedAt());
         $payroll->setCallService($callService);
-        $payroll->setEmployee($admin);
+        $payroll->setEmployee($employee);
         $payroll->setAccrued($accrued);
 
         $this->servicePayrolls->add($payroll);
