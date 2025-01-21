@@ -15,12 +15,17 @@ class RepeatTransmittedExecutorCalculator extends AbstractCallCalculator
         PayrollCalculator $payrollCalculator,
         Money $accrued,
     ): void {
+
         $admin = $call->getAdmin();
 
-        $this->createPayrollForEmployee($call, $accrued, $admin, $payrollCalculator);
+        if ($call->getOwner()?->getAdmin()->getId() !== $admin->getId()){
+            $this->createPayrollForEmployee($call, $accrued, $admin, $payrollCalculator);
+        }
 
         $doctor = $call->getDoctor();
 
-        $this->createPayrollForEmployee($call, $accrued, $doctor, $payrollCalculator);
+        if ($call->getOwner()?->getDoctor()->getId() !== $doctor->getId()){
+            $this->createPayrollForEmployee($call, $accrued, $doctor, $payrollCalculator);
+        }
     }
 }

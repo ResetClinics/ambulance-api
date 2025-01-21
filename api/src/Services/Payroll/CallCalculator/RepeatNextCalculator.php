@@ -22,10 +22,14 @@ class RepeatNextCalculator extends AbstractCallCalculator
 
         $admin = $call->getAdmin();
 
-        $this->createPayrollForEmployee($call, $accrued, $admin, $payrollCalculator);
+        if ($call->getOwner()?->getAdmin() === $admin){
+            $this->createPayrollForEmployee($call, $accrued, $admin, $payrollCalculator);
+        }
 
         $doctor = $call->getDoctor();
 
-        $this->createPayrollForEmployee($call, $accrued, $doctor, $payrollCalculator);
+        if ($call->getOwner()?->getDoctor() === $doctor){
+            $this->createPayrollForEmployee($call, $accrued, $doctor, $payrollCalculator);
+        }
     }
 }
