@@ -29,7 +29,10 @@ class ServiceCalculatorStrategy
     public function getProcessor($processor): CallPayrollCalculatorProcessorInterface
     {
         if (!isset($this->processors[$processor])) {
-            throw new DomainException('Unknown payroll service processor');
+            throw new DomainException(
+                'Unknown payroll service processor ' .
+                $processor
+            );
         }
 
         return $this->processors[$processor];

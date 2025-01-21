@@ -23,7 +23,10 @@ class CallCalculatorStrategy
     public function getStrategy($processor): CallCalculatorInterface
     {
         if (!isset($this->strategies[$processor])) {
-            throw new DomainException('Unknown payroll call strategy');
+            throw new DomainException(
+                'Unknown payroll call strategy ' .
+                $processor
+            );
         }
         return $this->strategies[$processor];
     }
