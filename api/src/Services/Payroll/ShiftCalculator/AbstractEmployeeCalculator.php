@@ -55,6 +55,7 @@ abstract class AbstractEmployeeCalculator implements ShiftCalculatorInterface
                 ->setAccrued($accrued)
                 ->setCalculator($payrollCalculator)
                 ->setEmployee($employee)
+                ->setAmount($hours)
                 ->setShift($shift);
 
             $this->shiftPayrolls->add($shiftPayroll);

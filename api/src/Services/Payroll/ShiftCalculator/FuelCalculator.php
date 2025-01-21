@@ -52,6 +52,7 @@ readonly class FuelCalculator implements ShiftCalculatorInterface
             ->setAccrued($accrued)
             ->setCalculator($payrollCalculator)
             ->setEmployee($employee)
+            ->setAmount($report->getMileage())
             ->setShift($shift);
 
         $this->shiftPayrolls->add($shiftPayroll);

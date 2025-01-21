@@ -52,6 +52,7 @@ readonly class ParkingCalculator implements ShiftCalculatorInterface
             ->setAccrued($accrued)
             ->setCalculator($payrollCalculator)
             ->setEmployee($employee)
+            ->setAmount($report->getParkingFees())
             ->setShift($shift);
 
         $this->shiftPayrolls->add($shiftPayroll);

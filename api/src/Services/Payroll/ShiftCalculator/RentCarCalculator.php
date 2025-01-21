@@ -49,6 +49,7 @@ readonly class RentCarCalculator implements ShiftCalculatorInterface
             ->setAccrued($accrued)
             ->setCalculator($payrollCalculator)
             ->setEmployee($employee)
+            ->setAmount($hours)
             ->setShift($shift);
 
         $this->shiftPayrolls->add($shiftPayroll);
