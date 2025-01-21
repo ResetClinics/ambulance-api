@@ -20,14 +20,24 @@ class RepeatTransmittedExecutorCalculator extends AbstractCallCalculator
         }
 
         $admin = $call->getAdmin();
+        $adminInitializer = $call->getOwner()?->getAdmin();
 
-        if ($call->getOwner()?->getAdmin()->getId() !== $admin->getId()) {
+        if (
+            $adminInitializer &&
+            $admin &&
+            $call->getOwner()?->getAdmin()->getId() !== $admin->getId()
+        ) {
             $this->createPayrollForEmployee($call, $accrued, $admin, $payrollCalculator);
         }
 
         $doctor = $call->getDoctor();
+        $doctorInitializer = $call->getOwner()?->getDoctor();
 
-        if ($call->getOwner()?->getDoctor()->getId() !== $doctor->getId()) {
+        if (
+            $doctorInitializer &&
+            $doctor &&
+            $call->getOwner()?->getDoctor()->getId() !== $doctor->getId()
+        ) {
             $this->createPayrollForEmployee($call, $accrued, $doctor, $payrollCalculator);
         }
     }
