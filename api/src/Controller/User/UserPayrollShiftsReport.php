@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
-class UserPayrollReport extends AbstractController
+class UserPayrollShiftsReport extends AbstractController
 {
     public function __construct(
         private readonly MedTeamRepository $shifts,
@@ -38,11 +38,27 @@ class UserPayrollReport extends AbstractController
             $id
         );
 
-        $result = [];
+        $items = [];
+        $total = 0;
 
         /** @var MedTeam $shift */
         foreach ($shifts as $shift) {
-            $result[$shift->getId()] = [
+            $items[$shift->getId()] = [
+                'id' => $shift->getId(),
+                'startedAt' => $shift->getPlannedStartAt()->format('d.m.Y H:i'),
+                'finishedAt' => $shift->getPlannedFinishAt()->format('d.m.Y H:i'),
+                'car' => $shift->getCar() ? [
+                    'id' => $shift->getCar()->getId(),
+                    'name' => $shift->getCar()->getName(),
+                ] : null,
+                'admin' => $shift->getAdmin() ? [
+                    'id' => $shift->getAdmin()->getId(),
+                    'name' => $shift->getAdmin()->getName(),
+                ] : null,
+                'doctor' => $shift->getDoctor() ? [
+                    'id' => $shift->getDoctor()->getId(),
+                    'name' => $shift->getDoctor()->getName(),
+                ] : null,
                 'name' => $shift->getPlannedStartAt()->format('d.m.Y'),
                 'amount' => '',
                 'reward' => 0,
@@ -60,15 +76,19 @@ class UserPayrollReport extends AbstractController
         foreach ($shiftPayrolls as $shiftPayroll) {
             $reward = (float)($shiftPayroll->getAccrued()->amount / 100);
 
-            $result[$shiftPayroll->getShift()->getId()]['reward'] += $reward;
+            $items[$shiftPayroll->getShift()->getId()]['reward'] += $reward;
+            $total += $reward;
 
-            $result[$shiftPayroll->getShift()->getId()]['subRows'][] = [
+            $items[$shiftPayroll->getShift()->getId()]['subRows'][] = [
                 'name' => $shiftPayroll->getCalculator()->getName(),
                 'amount' => $shiftPayroll->getAmount(),
                 'reward' => $reward,
             ];
         }
 
-        return $this->json($result);
+        return $this->json([
+            'items' => array_values($items),
+            'total' => $total,
+        ]);
     }
 }

@@ -29,7 +29,7 @@ abstract class AbstractEmployeeCalculator implements ShiftCalculatorInterface
             return;
         }
 
-        $employee = $shift->getAdmin();
+        $employee = $this->getEmployee($shift);
         if (!$employee) {
             return;
         }
