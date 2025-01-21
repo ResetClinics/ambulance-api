@@ -19,6 +19,7 @@ class StrategyFactory
     }
 
     /**
+     * @param mixed $target
      * @throws InvalidArgumentException
      */
     public function create(

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Services\Payroll\Processor;
+namespace App\Services\Payroll\ServiceCalculator;
 
 use App\Entity\Calling\Row;
 use App\Entity\Money\Money;
@@ -10,27 +10,27 @@ use App\Entity\Payroll\ServicePayroll;
 use App\Entity\User\User;
 use App\Repository\Payroll\ServicePayrollRepository;
 
-readonly class TransportationPayrollCalculatorProcessor implements CallPayrollCalculatorProcessorInterface
+readonly class TherapyPayrollCalculatorProcessor implements CallPayrollCalculatorProcessorInterface
 {
     public function __construct(
         private ServicePayrollRepository $servicePayrolls,
     ) {}
 
-    public function calculate(Row $callService, mixed $value): void
+    public function calculate(Row $callService, mixed $rate): void
     {
         $admin = $callService->getCalling()->getAdmin();
 
-        $this->createPayrollForEmployee($callService, $value, $admin);
+        $this->createPayrollForEmployee($callService, $rate, $admin);
 
         $doctor = $callService->getCalling()->getDoctor();
 
-        $this->createPayrollForEmployee($callService, $value, $doctor);
+        $this->createPayrollForEmployee($callService, $rate, $doctor);
     }
 
-    public function createPayrollForEmployee(Row $callService, mixed $value, ?User $admin): void
+    public function createPayrollForEmployee(Row $callService, mixed $rate, ?User $admin): void
     {
         $accrued = new Money(
-            (int)(($callService->getPrice() * $value) * 100)
+            (int)(($callService->getPrice() * $rate) * 100)
         );
 
         $payroll = new ServicePayroll();

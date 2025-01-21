@@ -6,35 +6,21 @@ namespace App\Services\Payroll;
 
 use App\Entity\Calling\Calling;
 use App\Entity\Calling\Status;
+use App\Repository\Payroll\CallPayrollRepository;
+use App\Repository\Payroll\PayrollCalculatorRepository;
 use App\Repository\Payroll\ServicePayrollRepository;
-use App\Services\Payroll\Processor\CallPayrollCalculatorProcessorInterface;
-use App\Services\Payroll\Processor\CoddingPayrollCalculatorProcessor;
-use App\Services\Payroll\Processor\HospitalizationPayrollCalculatorProcessor;
-use App\Services\Payroll\Processor\SewingPayrollCalculatorProcessor;
-use App\Services\Payroll\Processor\TherapyPayrollCalculatorProcessor;
-use App\Services\Payroll\Processor\TransportationPayrollCalculatorProcessor;
-use Exception;
+use App\Services\Payroll\CallCalculator\CallCalculatorStrategy;
+use App\Services\Payroll\ServiceCalculator\ServiceCalculatorStrategy;
 
 readonly class CallPayrollCalculator
 {
-    private array $processors;
-
     public function __construct(
-        private TherapyPayrollCalculatorProcessor $therapyPayrollCalculatorProcessor,
-        private CoddingPayrollCalculatorProcessor $coddingPayrollCalculatorProcessor,
-        private TransportationPayrollCalculatorProcessor $transportationPayrollCalculatorProcessor,
-        private SewingPayrollCalculatorProcessor $sewingPayrollCalculatorProcessor,
-        private HospitalizationPayrollCalculatorProcessor $hospitalizationPayrollCalculatorProcessor,
         private ServicePayrollRepository $servicePayrolls,
-    ) {
-        $this->processors = [
-            'service_therapy_calculator' => $this->therapyPayrollCalculatorProcessor,
-            'service_codding_calculator' => $this->coddingPayrollCalculatorProcessor,
-            'service_transportation_calculator' => $this->transportationPayrollCalculatorProcessor,
-            'service_sewing_calculator' => $this->sewingPayrollCalculatorProcessor,
-            'service_hospitalization_calculator' => $this->hospitalizationPayrollCalculatorProcessor,
-        ];
-    }
+        private PayrollCalculatorRepository $payrollCalculators,
+        private CallCalculatorStrategy $callCalculatorStrategy,
+        private ServiceCalculatorStrategy $serviceCalculatorStrategy,
+        private CallPayrollRepository $callPayrolls,
+    ) {}
 
     public function calculate(Calling $call): void
     {
@@ -42,6 +28,12 @@ readonly class CallPayrollCalculator
             return;
         }
 
+        $this->calculateService($call);
+        $this->calculateCall($call);
+    }
+
+    private function calculateService(Calling $call): void
+    {
         foreach ($call->getServices() as $callService) {
             /** @var string|null $calculator */
             $calculator = $callService->getService()?->getEmployeePayrollCalculator()?->getProcessor();
@@ -52,21 +44,26 @@ readonly class CallPayrollCalculator
             /** @var mixed $value */
             $value = $callService->getService()?->getEmployeePayrollCalculator()?->getValue();
 
-            // TODO убрать в калькулятор
+            // TODO убрать удаление в калькулятор
             $this->servicePayrolls->removeByCallServiceId($callService->getService()->getId());
 
-            $processor = $this->getProcessor($calculator);
+            $processor = $this->serviceCalculatorStrategy->getProcessor($calculator);
 
             $processor->calculate($callService, $value);
         }
     }
 
-    private function getProcessor($processor): CallPayrollCalculatorProcessorInterface
+    private function calculateCall(Calling $call): void
     {
-        if (!isset($this->processors[$processor])) {
-            throw new Exception('Unknown processor');
-        }
+        // TODO убрать удаление в калькулятор
+        $this->callPayrolls->removeByCallServiceId($call->getId());
+        $payrollCalculators = $this->payrollCalculators->findByTarget('call');
 
-        return $this->processors[$processor];
+        foreach ($payrollCalculators as $payrollCalculator) {
+            $processor = $this->callCalculatorStrategy->getStrategy(
+                $payrollCalculator->getTarget()
+            );
+            $processor->calculate($call, $payrollCalculator);
+        }
     }
 }

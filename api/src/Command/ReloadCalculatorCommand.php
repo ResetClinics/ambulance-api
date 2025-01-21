@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use App\Flusher;
 use App\Repository\Payroll\PayrollCalculatorRepository;
-use App\Services\Payroll\Processor\CoddingPayrollCalculatorProcessor;
-use App\Services\Payroll\Processor\HospitalizationPayrollCalculatorProcessor;
-use App\Services\Payroll\Processor\SewingPayrollCalculatorProcessor;
-use App\Services\Payroll\Processor\TherapyPayrollCalculatorProcessor;
-use App\Services\Payroll\Processor\TransportationPayrollCalculatorProcessor;
+use App\Services\Payroll\ServiceCalculator\CoddingPayrollCalculatorProcessor;
+use App\Services\Payroll\ServiceCalculator\HospitalizationPayrollCalculatorProcessor;
+use App\Services\Payroll\ServiceCalculator\SewingPayrollCalculatorProcessor;
+use App\Services\Payroll\ServiceCalculator\TherapyPayrollCalculatorProcessor;
+use App\Services\Payroll\ServiceCalculator\TransportationPayrollCalculatorProcessor;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,9 +24,8 @@ class ReloadCalculatorCommand extends Command
 {
     public function __construct(
         private readonly PayrollCalculatorRepository $calculators,
-        private readonly Flusher                     $flusher,
-    )
-    {
+        private readonly Flusher $flusher,
+    ) {
         parent::__construct();
     }
 
@@ -34,11 +35,11 @@ class ReloadCalculatorCommand extends Command
         foreach ($calculators as $calculator) {
             if ($calculator->getTarget() === 'call') {
                 $calculator->setProcessor('call_default_calculator');
-            }elseif ($calculator->getTarget() === 'payroll') {
+            } elseif ($calculator->getTarget() === 'payroll') {
                 $calculator->setProcessor('payroll_default_calculator');
-            }elseif ($calculator->getTarget() === 'shift') {
+            } elseif ($calculator->getTarget() === 'shift') {
                 $calculator->setProcessor('shift_default_calculator');
-            }elseif ($calculator->getTarget() === 'service') {
+            } elseif ($calculator->getTarget() === 'service') {
                 $newProcessor  = $this->getProcessor($calculator);
                 $calculator->setProcessor($newProcessor);
             }

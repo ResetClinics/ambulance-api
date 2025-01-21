@@ -18,8 +18,17 @@ class PayrollCalculatorRepository extends ServiceEntityRepository
         parent::__construct($registry, PayrollCalculator::class);
     }
 
-    public function add(PayrollCalculator $entity)
+    public function add(PayrollCalculator $entity): void
     {
         $this->getEntityManager()->persist($entity);
+    }
+
+    public function findByTarget(string $target)
+    {
+        return $this->createQueryBuilder('d')
+            ->andWhere('d.target = :target')
+            ->setParameter('target', $target)
+            ->getQuery()
+            ->getResult();
     }
 }

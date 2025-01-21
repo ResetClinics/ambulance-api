@@ -40,6 +40,7 @@ class Distance
     }
 
     /**
+     * @param mixed $target
      * @return static
      * @throws InvalidArgumentException
      */
@@ -53,6 +54,7 @@ class Distance
     }
 
     /**
+     * @param mixed $target
      * @throws InvalidArgumentException
      */
     public static function createSpbKadCalculator($target, array $options = []): self

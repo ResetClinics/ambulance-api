@@ -13,6 +13,7 @@ use InvalidArgumentException;
 class ArrayDistanceCalculator extends PointDistanceCalculator
 {
     /**
+     * @param mixed $target
      * @throws DistanceRequestException
      * @throws InnerPolygonException
      */

@@ -17,4 +17,19 @@ class CallPayrollRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, CallPayroll::class);
     }
+
+    public function removeByCallServiceId(?int $callId): void
+    {
+        $this->createQueryBuilder('c')
+            ->delete()
+            ->where('c.call = :call')
+            ->setParameter('call', $callId)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function add(CallPayroll $entity): void
+    {
+        $this->getEntityManager()->persist($entity);
+    }
 }
