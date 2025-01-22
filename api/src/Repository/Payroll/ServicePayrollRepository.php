@@ -47,4 +47,16 @@ class ServicePayrollRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findByAccruedAt(DateTimeImmutable $accruedAfter, DateTimeImmutable $accruedBefore)
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.accruedAt >= :accruedAtAfter')
+            ->andWhere('s.accruedAt < :accruedAtBefore')
+            ->setParameter('accruedAtAfter', $accruedAfter)
+            ->setParameter('accruedAtBefore', $accruedBefore)
+            ->orderBy('s.accruedAt')
+            ->getQuery()
+            ->getResult();
+    }
 }

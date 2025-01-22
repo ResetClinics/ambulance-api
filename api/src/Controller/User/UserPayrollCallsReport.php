@@ -10,8 +10,6 @@ use App\Entity\Payroll\ServicePayroll;
 use App\Repository\CallingRepository;
 use App\Repository\Payroll\CallPayrollRepository;
 use App\Repository\Payroll\ServicePayrollRepository;
-use DateInterval;
-use DatePeriod;
 use DateTimeImmutable;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,11 +35,6 @@ class UserPayrollCallsReport extends AbstractController
     {
         ini_set('memory_limit', '-1');
 
-        $period = new DatePeriod(
-            new DateTimeImmutable('2024-12-01T00:00:00.000Z'),
-            new DateInterval('P1D'),
-            new DateTimeImmutable('2025-01-01T00:00:00.000Z')
-        );
         $calls = $this->calls->findAllCompletedOfTheEmployeeByCompletionDateIncludedInPeriod(
             new DateTimeImmutable('2024-12-01T00:00:00.000Z'),
             new DateTimeImmutable('2025-01-01T00:00:00.000Z'),
