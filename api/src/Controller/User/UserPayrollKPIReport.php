@@ -24,7 +24,7 @@ class UserPayrollKPIReport extends AbstractController
      * @throws Exception
      * @throws ExceptionInterface
      */
-    #[Route(path: '/api/users/{id}/payroll-report/shifts', name: 'api_user_payroll_report_kpi', methods: 'GET', priority: 10)]
+    #[Route(path: '/api/users/{id}/payroll-report/kpis', name: 'api_user_payroll_report_kpi', methods: 'GET', priority: 10)]
     public function __invoke(int $id, Request $request): JsonResponse
     {
         ini_set('memory_limit', '-1');
