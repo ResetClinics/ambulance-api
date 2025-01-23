@@ -169,3 +169,6 @@ try-testing-e2e:
 
 try-testing-down-clear:
 	REGISTRY=localhost IMAGE_TAG=0 make testing-down-clear
+
+swagger:
+	docker-compose run --rm api-php-cli php bin/console api:openapi:export --yaml --output=swagger.yaml
