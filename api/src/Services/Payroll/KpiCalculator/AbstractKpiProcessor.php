@@ -84,6 +84,14 @@ abstract readonly class AbstractKpiProcessor implements KpiProcessorInterface
 
     protected function getRates(PayrollCalculator $calculator): array
     {
-        throw new Exception('Not implemented getRates in ' . static::class);
+        $value = json_decode($calculator->getValue(), true);
+
+        return array_map(function($item) {
+            return [
+                'min' => (float) $item['min'],
+                'max' => (float) $item['max'],
+                'rate' => (float) $item['rate'],
+            ];
+        }, $value);
     }
 }

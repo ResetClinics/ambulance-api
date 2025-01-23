@@ -33,14 +33,4 @@ readonly class RepeatRate extends AbstractKpiProcessor
 
         return (float)($countRepeat > 0 ? $countCalls / $countRepeat : 100);
     }
-
-    protected function getRates(PayrollCalculator $calculator): array
-    {
-        return [
-            ['min' => 1, 'max' => 2, 'rate' => 1.3],
-            ['min' => 2, 'max' => 3, 'rate' => 1],
-            ['min' => 3, 'max' => 4, 'rate' => 0.7],
-            ['min' => 4, 'max' => 100, 'rate' => 0],
-        ];
-    }
 }

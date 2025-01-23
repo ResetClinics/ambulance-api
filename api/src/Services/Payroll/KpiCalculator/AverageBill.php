@@ -29,14 +29,4 @@ final readonly class AverageBill extends AbstractKpiProcessor
 
         return (float)($count > 0 ? $price / $count : 0);
     }
-
-    protected function getRates(PayrollCalculator $calculator): array
-    {
-        return [
-            ['min' => 0, 'max' => 20500, 'rate' => 0],
-            ['min' => 20500, 'max' => 21500, 'rate' => 0.7],
-            ['min' => 21.500, 'max' => 22500, 'rate' => 1],
-            ['min' => 22500, 'max' => 100000, 'rate' => 1.3],
-        ];
-    }
 }

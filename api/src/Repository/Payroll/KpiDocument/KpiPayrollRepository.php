@@ -22,14 +22,13 @@ class KpiPayrollRepository extends ServiceEntityRepository
 
     public function findByPlannedEmployee(DateTimeImmutable $accruedAfter, DateTimeImmutable $accruedBefore, int $employeeId)
     {
-
         return $this->createQueryBuilder('kp')
             ->leftJoin('kp.record', 'r')
-            //->andWhere('kp.accruedAt >= :accruedAtAfter')
-            //->andWhere('kp.accruedAt < :accruedAtBefore')
+            // ->andWhere('kp.accruedAt >= :accruedAtAfter')
+            // ->andWhere('kp.accruedAt < :accruedAtBefore')
             ->andWhere('(r.employee = :employee)')
-           //->setParameter('accruedAtAfter', $accruedAfter)
-            //->setParameter('accruedAtBefore', $accruedBefore)
+           // ->setParameter('accruedAtAfter', $accruedAfter)
+            // ->setParameter('accruedAtBefore', $accruedBefore)
             ->setParameter('employee', $employeeId)
             ->orderBy('kp.accruedAt')
             ->getQuery()
