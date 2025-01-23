@@ -20,7 +20,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 #[ORM\Entity(repositoryClass: KpiDocumentRepository::class)]
 #[ORM\Table(name: 'payroll_kpi_documents')]
 #[ApiResource(
-    shortName: 'Payroll/Calculator',
+    shortName: 'Payroll/KpiDocument',
     operations: [
         new GetCollection(),
         new Get(
