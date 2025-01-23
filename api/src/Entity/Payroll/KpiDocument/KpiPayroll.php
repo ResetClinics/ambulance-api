@@ -6,13 +6,13 @@ namespace App\Entity\Payroll\KpiDocument;
 
 use App\Entity\Money\Money;
 use App\Entity\Payroll\PayrollCalculator;
-use App\Repository\Payroll\ShiftPayrollRepository;
+use App\Repository\Payroll\KpiDocument\KpiPayrollRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: ShiftPayrollRepository::class)]
+#[ORM\Entity(repositoryClass: KpiPayrollRepository::class)]
 #[ORM\Table(name: 'payroll_employee_kpis')]
 class KpiPayroll
 {
