@@ -35,6 +35,8 @@ class UserPayrollKPIReport extends AbstractController
             $id
         );
 
+        dd($shiftPayrolls);
+
         $items = [];
         $total = 0;
 
