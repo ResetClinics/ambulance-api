@@ -176,6 +176,23 @@ class CallingRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findAllCompletedByCompletionDateIncludedInPeriod(
+        DateTimeImmutable $completedAfter,
+        DateTimeImmutable $completedBefore,
+    ): array {
+        $qb = $this->createQueryBuilder('c');
+
+        return $qb
+            ->andWhere('c.completedAt >= :after')
+            ->andWhere('c.completedAt < :before')
+            ->andWhere('c.status = :status')
+            ->setParameter('after', $completedAfter)
+            ->setParameter('before', $completedBefore)
+            ->setParameter('status', Status::COMPLETED)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findAllByClientNull(): array
     {
         $qb = $this->createQueryBuilder('c');

@@ -27,7 +27,12 @@ class KpiRecord
     #[ORM\JoinColumn(nullable: false)]
     private User $employee;
 
-    #[ORM\OneToMany(mappedBy: 'record', targetEntity: KpiPayroll::class, orphanRemoval: true)]
+    #[ORM\OneToMany(
+        mappedBy: 'record',
+        targetEntity: KpiPayroll::class,
+        cascade: ['persist', 'remove'],
+        orphanRemoval: true
+    )]
     private Collection $kpiPayrolls;
 
     public function __construct(KpiDocument $document, User $employee)
