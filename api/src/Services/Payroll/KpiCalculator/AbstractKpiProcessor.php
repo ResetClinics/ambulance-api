@@ -11,7 +11,6 @@ use App\Entity\Payroll\PayrollCalculator;
 use App\Repository\CallingRepository;
 use App\Repository\Payroll\CallPayrollRepository;
 use App\Repository\Payroll\ServicePayrollRepository;
-use App\Repository\Payroll\ShiftPayrollRepository;
 use Exception;
 
 abstract readonly class AbstractKpiProcessor implements KpiProcessorInterface
@@ -20,7 +19,6 @@ abstract readonly class AbstractKpiProcessor implements KpiProcessorInterface
         protected CallingRepository $calls,
         private CallPayrollRepository $callPayrolls,
         private ServicePayrollRepository $servicePayrolls,
-        private ShiftPayrollRepository $shiftPayrolls,
     ) {}
 
     final public function calculate(KpiRecord $kpiRecord, PayrollCalculator $calculator): void
@@ -61,12 +59,6 @@ abstract readonly class AbstractKpiProcessor implements KpiProcessorInterface
 
     protected function getTheInitialAmountByKPI(KpiRecord $kpiRecord): int
     {
-        $shiftPayrollSum = $this->shiftPayrolls->findAccruedSumByAccruedAt(
-            $kpiRecord->getDocument()->getPeriodStart(),
-            $kpiRecord->getDocument()->getPeriodEnd(),
-            $kpiRecord->getEmployee()->getId()
-        );
-
         $servicesPayrollSum = $this->servicePayrolls->findAccruedSumByAccruedAt(
             $kpiRecord->getDocument()->getPeriodStart(),
             $kpiRecord->getDocument()->getPeriodEnd(),
@@ -79,7 +71,7 @@ abstract readonly class AbstractKpiProcessor implements KpiProcessorInterface
             $kpiRecord->getEmployee()->getId()
         );
 
-        return $shiftPayrollSum + $servicesPayrollSum + $callsPayrollSum;
+        return $servicesPayrollSum + $callsPayrollSum;
     }
 
     protected function getRates(PayrollCalculator $calculator): array
