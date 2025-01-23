@@ -129,8 +129,9 @@ class UserPayrollReport extends AbstractController
             new DateTimeImmutable('2025-01-01T00:00:00.000Z'),
         );
 
-        /** @var KpiPayroll $kpiPayrolls */
+        /** @var KpiPayroll $kpiPayroll */
         foreach ($kpiPayrolls as $kpiPayroll) {
+
             if (!isset($items[$kpiPayroll->getRecord()->getEmployee()->getId()])) {
                 $items[$kpiPayroll->getRecord()->getEmployee()->getId()] = [
                     'employee' => [
@@ -144,7 +145,7 @@ class UserPayrollReport extends AbstractController
                 ];
             }
 
-            $reward = (float)($kpiPayroll->getAccrued()->amount / 100);
+            $reward = (float)($kpiPayroll->getAccrued() / 100);
             $items[$kpiPayroll->getRecord()->getEmployee()->getId()]['kpis'] += $reward;
             $items[$kpiPayroll->getRecord()->getEmployee()->getId()]['total'] += $reward;
             $kpisTotal += $reward;
