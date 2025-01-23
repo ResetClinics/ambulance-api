@@ -30,7 +30,6 @@ class CreateKpiDocumentCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-
         $document = $this->documents->findById(1);
 
         if (!$document) {

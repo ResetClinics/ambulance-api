@@ -28,7 +28,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
                 'groups' => [
                     'kpi_document:item:read',
                     'kpi_document:read',
-                ]
+                ],
             ]
         ),
     ],
@@ -76,16 +76,14 @@ class KpiDocument
     #[Groups(['kpi_document:read'])]
     private Collection $records;
 
-
     public function __construct(
         DateTimeImmutable $periodStart,
-        DateTimeImmutable $periodEnd)
-    {
+        DateTimeImmutable $periodEnd
+    ) {
         $this->periodStart = $periodStart;
         $this->periodEnd = $periodEnd;
         $this->records = new ArrayCollection();
     }
-
 
     public function getId(): ?int
     {

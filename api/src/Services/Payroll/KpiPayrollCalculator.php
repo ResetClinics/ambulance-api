@@ -28,7 +28,7 @@ readonly class KpiPayrollCalculator
         $users = [];
 
         /** @var Calling $call */
-        foreach ($calls as $call){
+        foreach ($calls as $call) {
             $user = $call->getAdmin();
 
             if ($user && !isset($users[$user->getId()])) {

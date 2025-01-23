@@ -38,5 +38,4 @@ class KpiDocumentRepository extends ServiceEntityRepository
         }
         return $result;
     }
-
 }
