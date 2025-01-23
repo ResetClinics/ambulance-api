@@ -67,6 +67,12 @@ class KpiPayroll
         return $this->id;
     }
 
+    #[Groups(['kpi_document:read'])]
+    public function getName(): ?string
+    {
+        return $this->calculator->getName();
+    }
+
     public function getAccrued(): float
     {
         return $this->accrued->amount / 100;
