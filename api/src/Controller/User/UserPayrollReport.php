@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Controller\User;
 
+use App\Entity\Payroll\KpiDocument\KpiPayroll;
 use App\Entity\Payroll\ServicePayroll;
 use App\Entity\Payroll\ShiftPayroll;
 use App\Repository\Payroll\CallPayrollRepository;
+use App\Repository\Payroll\KpiDocument\KpiPayrollRepository;
 use App\Repository\Payroll\ServicePayrollRepository;
 use App\Repository\Payroll\ShiftPayrollRepository;
 use DateTimeImmutable;
@@ -23,6 +25,7 @@ class UserPayrollReport extends AbstractController
         private readonly CallPayrollRepository $callPayrolls,
         private readonly ServicePayrollRepository $servicePayrolls,
         private readonly ShiftPayrollRepository $shiftPayrolls,
+        private readonly KpiPayrollRepository $kpiPayrolls,
     ) {}
 
     /**
@@ -118,6 +121,33 @@ class UserPayrollReport extends AbstractController
             $items[$shiftPayroll->getEmployee()->getId()]['shifts'] += $reward;
             $items[$shiftPayroll->getEmployee()->getId()]['total'] += $reward;
             $shiftsTotal += $reward;
+            $total += $reward;
+        }
+
+        $kpiPayrolls = $this->kpiPayrolls->findByAccruedAt(
+            new DateTimeImmutable('2024-12-01T00:00:00.000Z'),
+            new DateTimeImmutable('2025-01-01T00:00:00.000Z'),
+        );
+
+        /** @var KpiPayroll $kpiPayrolls */
+        foreach ($kpiPayrolls as $kpiPayroll) {
+            if (!isset($items[$kpiPayroll->getRecord()->getEmployee()->getId()])) {
+                $items[$kpiPayroll->getRecord()->getEmployee()->getId()] = [
+                    'employee' => [
+                        'id' => $kpiPayroll->getRecord()->getEmployee()->getId(),
+                        'name' => $kpiPayroll->getRecord()->getEmployee()->getName(),
+                    ],
+                    'calls' => 0,
+                    'shifts' => 0,
+                    'kpis' => 0,
+                    'total' => 0,
+                ];
+            }
+
+            $reward = (float)($kpiPayroll->getAccrued()->amount / 100);
+            $items[$kpiPayroll->getRecord()->getEmployee()->getId()]['kpis'] += $reward;
+            $items[$kpiPayroll->getRecord()->getEmployee()->getId()]['total'] += $reward;
+            $kpisTotal += $reward;
             $total += $reward;
         }
 

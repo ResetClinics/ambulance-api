@@ -34,4 +34,16 @@ class KpiPayrollRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findByAccruedAt(DateTimeImmutable $param, DateTimeImmutable $param1)
+    {
+        return $this->createQueryBuilder('kp')
+            // ->andWhere('kp.accruedAt >= :accruedAtAfter')
+            // ->andWhere('kp.accruedAt < :accruedAtBefore')
+            // ->setParameter('accruedAtAfter', $accruedAfter)
+            // ->setParameter('accruedAtBefore', $accruedBefore)
+            ->orderBy('kp.accruedAt')
+            ->getQuery()
+            ->getResult();
+    }
 }
