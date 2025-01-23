@@ -34,7 +34,7 @@ readonly class SewingPayrollCalculatorProcessor implements CallPayrollCalculator
         }
 
         $accrued = new Money(
-            (int)(($callService->getPrice() * $rate) * 100)
+            (int)($rate * 100)
         );
 
         $payroll = new ServicePayroll();
