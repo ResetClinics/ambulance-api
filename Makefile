@@ -83,6 +83,7 @@ api-fixtures:
 api-test-fixtures:
 	docker-compose run --rm api-php-cli composer app hautelook:fixtures:load -- --no-interaction --env=test
 
+
 api-check: api-validate-schema api-lint api-analyze api-test
 
 api-validate-schema:
