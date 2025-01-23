@@ -37,6 +37,7 @@ class KpiRecord
         orphanRemoval: true
     )]
     #[Groups(['kpi_document:read'])]
+    #[ORM\OrderBy(['calculator' => 'ASC'])]
     private Collection $kpiPayrolls;
 
     public function __construct(KpiDocument $document, User $employee)
@@ -44,6 +45,16 @@ class KpiRecord
         $this->document = $document;
         $this->employee = $employee;
         $this->kpiPayrolls = new ArrayCollection();
+    }
+
+    #[Groups(['kpi_document:read'])]
+    public function getAccrue(): float
+    {
+        $result = 0;
+        foreach ($this->kpiPayrolls as $kpiPayroll) {
+            $result += $kpiPayroll->getAccrued();
+        }
+        return $result;
     }
 
     public function getId(): ?int
