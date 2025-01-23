@@ -9,6 +9,7 @@ use App\Repository\Payroll\KpiDocument\KpiRecordRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: KpiRecordRepository::class)]
 #[ORM\Table(name: 'payroll_kpi_documents_records')]
@@ -17,6 +18,7 @@ class KpiRecord
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['kpi_document:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'records')]
@@ -25,6 +27,7 @@ class KpiRecord
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['kpi_document:read'])]
     private User $employee;
 
     #[ORM\OneToMany(
@@ -33,6 +36,7 @@ class KpiRecord
         cascade: ['persist', 'remove'],
         orphanRemoval: true
     )]
+    #[Groups(['kpi_document:read'])]
     private Collection $kpiPayrolls;
 
     public function __construct(KpiDocument $document, User $employee)

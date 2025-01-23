@@ -73,6 +73,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         'v1:shift:item:read',
         'v1:shift:write',
         'v1-call:read',
+        'kpi_document:read',
     ])]
     private ?int $id = null;
 
@@ -102,6 +103,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         'work-schedule:read',
         'v1:shift:item:read',
         'v1-call:read',
+        'kpi_document:read',
     ])]
     #[Assert\NotBlank]
     private ?string $name = null;
