@@ -79,6 +79,7 @@ jwt-generate-keypair:
 api-fixtures:
 	docker-compose run --rm api-php-cli composer app hautelook:fixtures:load -- --no-interaction
 
+
 api-test-fixtures:
 	docker-compose run --rm api-php-cli composer app hautelook:fixtures:load -- --no-interaction --env=test
 
