@@ -145,7 +145,7 @@ class UserPayrollReport extends AbstractController
                 ];
             }
 
-            $reward = (float)($kpiPayroll->getAccrued() / 100);
+            $reward = $kpiPayroll->getAccrued();
             $items[$kpiPayroll->getRecord()->getEmployee()->getId()]['kpis'] += $reward;
             $items[$kpiPayroll->getRecord()->getEmployee()->getId()]['total'] += $reward;
             $kpisTotal += $reward;
