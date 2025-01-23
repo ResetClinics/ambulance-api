@@ -9,6 +9,7 @@ use App\Entity\Payroll\PayrollCalculator;
 use App\Repository\Payroll\ShiftPayrollRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ShiftPayrollRepository::class)]
@@ -18,17 +19,21 @@ class KpiPayroll
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['kpi_document:read'])]
     private ?int $id = null;
 
     #[ORM\Embedded]
     #[Assert\NotNull]
+    #[Groups(['kpi_document:read'])]
     private Money $original;
 
     #[ORM\Column(nullable: false)]
+    #[Groups(['kpi_document:read'])]
     private float $kpi;
 
     #[ORM\Embedded]
     #[Assert\NotNull]
+    #[Groups(['kpi_document:read'])]
     private Money $accrued;
 
     #[ORM\Column(nullable: false)]
@@ -62,9 +67,9 @@ class KpiPayroll
         return $this->id;
     }
 
-    public function getAccrued(): ?Money
+    public function getAccrued(): float
     {
-        return $this->accrued;
+        return $this->accrued->amount / 100;
     }
 
     public function getAccruedAt(): DateTimeImmutable
@@ -87,8 +92,8 @@ class KpiPayroll
         return $this->record;
     }
 
-    public function getOriginal(): Money
+    public function getOriginal(): float
     {
-        return $this->original;
+        return $this->original->amount / 100;
     }
 }

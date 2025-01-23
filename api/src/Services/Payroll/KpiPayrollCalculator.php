@@ -9,11 +9,15 @@ use App\Entity\Payroll\KpiDocument\KpiDocument;
 use App\Entity\Payroll\KpiDocument\KpiRecord;
 use App\Entity\User\User;
 use App\Repository\CallingRepository;
+use App\Repository\Payroll\PayrollCalculatorRepository;
+use App\Services\Payroll\KpiCalculator\KpiProcessorStrategy;
 
 readonly class KpiPayrollCalculator
 {
     public function __construct(
-        private readonly CallingRepository $calls
+        private CallingRepository $calls,
+        private PayrollCalculatorRepository $payrollCalculators,
+        private KpiProcessorStrategy $processorStrategy
     ) {}
 
     public function calculate(KpiDocument $document): void
@@ -46,6 +50,19 @@ readonly class KpiPayrollCalculator
         foreach ($users as $user) {
             $record = new KpiRecord($document, $user);
             $document->addRecord($record);
+            $this->calculateKpi($record);
+        }
+    }
+
+    private function calculateKpi(KpiRecord $record): void
+    {
+        $payrollCalculators = $this->payrollCalculators->findByTarget('payroll');
+
+        foreach ($payrollCalculators as $payrollCalculator) {
+            $processor = $this->processorStrategy->getProcessor(
+                $payrollCalculator->getProcessor()
+            );
+            $processor->calculate($record, $payrollCalculator);
         }
     }
 }

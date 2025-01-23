@@ -30,6 +30,7 @@ class CreateKpiDocumentCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        ini_set('memory_limit', '-1');
         $document = $this->documents->findById(1);
 
         if (!$document) {

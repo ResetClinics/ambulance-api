@@ -7,6 +7,8 @@ namespace App\Repository\Payroll;
 use App\Entity\Payroll\ServicePayroll;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,7 +16,10 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ServicePayrollRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(
+        private readonly Connection $connection,
+        ManagerRegistry $registry
+    )
     {
         parent::__construct($registry, ServicePayroll::class);
     }
@@ -58,5 +63,32 @@ class ServicePayrollRepository extends ServiceEntityRepository
             ->orderBy('s.accruedAt')
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function findAccruedSumByAccruedAt(
+        DateTimeImmutable $accruedAfter,
+        DateTimeImmutable $accruedBefore,
+        int               $employeeId
+    ): int
+    {
+        $sql = 'SELECT SUM(s.accrued_amount) AS amount
+            FROM payroll_employee_call_services s
+            WHERE s.accrued_at BETWEEN :start_date AND :end_date
+            AND s.employee_id = :employee_id';
+
+        $startDate = $accruedAfter->format('Y-m-d H:i:s');
+        $endDate = $accruedBefore->format('Y-m-d H:i:s');
+
+        $statement = $this->connection->executeQuery($sql, [
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'employee_id' => $employeeId,
+        ]);
+
+        $result = $statement->fetchAllAssociative();
+        return $result[0]['amount'] ? (int)$result[0]['amount'] : 0;
     }
 }
