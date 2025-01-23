@@ -11,6 +11,7 @@ use App\Entity\User\User;
 use App\Repository\CallingRepository;
 use App\Repository\Payroll\PayrollCalculatorRepository;
 use App\Services\Payroll\KpiCalculator\KpiProcessorStrategy;
+use DateTimeImmutable;
 
 readonly class KpiPayrollCalculator
 {
@@ -52,6 +53,7 @@ readonly class KpiPayrollCalculator
             $document->addRecord($record);
             $this->calculateKpi($record);
         }
+        $document->setUpdatedAt(new DateTimeImmutable());
     }
 
     private function calculateKpi(KpiRecord $record): void
