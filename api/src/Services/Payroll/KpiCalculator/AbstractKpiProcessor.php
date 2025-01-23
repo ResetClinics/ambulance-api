@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Payroll\KpiCalculator;
 
 use App\Entity\Money\Money;
@@ -15,15 +17,13 @@ use Exception;
 abstract readonly class AbstractKpiProcessor implements KpiProcessorInterface
 {
     public function __construct(
-        protected CallingRepository      $calls,
-        private CallPayrollRepository    $callPayrolls,
+        protected CallingRepository $calls,
+        private CallPayrollRepository $callPayrolls,
         private ServicePayrollRepository $servicePayrolls,
-        private ShiftPayrollRepository   $shiftPayrolls,
-    )
-    {
-    }
+        private ShiftPayrollRepository $shiftPayrolls,
+    ) {}
 
-    public function calculate(KpiRecord $kpiRecord, PayrollCalculator $calculator): void
+    final public function calculate(KpiRecord $kpiRecord, PayrollCalculator $calculator): void
     {
         $kpi = $this->getKPI($kpiRecord);
 
@@ -47,16 +47,14 @@ abstract readonly class AbstractKpiProcessor implements KpiProcessorInterface
         $kpiRecord->addKpiPayroll($payroll);
     }
 
-    protected function getKPI(KpiRecord $kpiRecord,): float
+    protected function getKPI(KpiRecord $kpiRecord): float
     {
         throw new Exception('Not implemented getKPI in ' . static::class);
     }
 
     protected function getRate(array $rates, float $averageBill): float
     {
-        $rate = array_filter($rates, function ($range) use ($averageBill) {
-            return $averageBill >= $range['min'] && $averageBill <= $range['max'];
-        });
+        $rate = array_filter($rates, static fn ($range) => $averageBill >= $range['min'] && $averageBill <= $range['max']);
 
         return (float)(reset($rate)['rate'] ?? 0);
     }

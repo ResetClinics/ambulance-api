@@ -19,8 +19,7 @@ class CallPayrollRepository extends ServiceEntityRepository
     public function __construct(
         private readonly Connection $connection,
         ManagerRegistry $registry
-    )
-    {
+    ) {
         parent::__construct($registry, CallPayroll::class);
     }
 
@@ -71,9 +70,8 @@ class CallPayrollRepository extends ServiceEntityRepository
     public function findAccruedSumByAccruedAt(
         DateTimeImmutable $accruedAfter,
         DateTimeImmutable $accruedBefore,
-        int               $employeeId
-    ): int
-    {
+        int $employeeId
+    ): int {
         $sql = 'SELECT SUM(c.accrued_amount) AS amount
             FROM payroll_employee_calls c
             WHERE c.accrued_at BETWEEN :start_date AND :end_date

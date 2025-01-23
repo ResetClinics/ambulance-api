@@ -18,9 +18,8 @@ class ShiftPayrollRepository extends ServiceEntityRepository
 {
     public function __construct(
         private readonly Connection $connection,
-        ManagerRegistry             $registry
-    )
-    {
+        ManagerRegistry $registry
+    ) {
         parent::__construct($registry, ShiftPayroll::class);
     }
 
@@ -71,9 +70,8 @@ class ShiftPayrollRepository extends ServiceEntityRepository
     public function findAccruedSumByAccruedAt(
         DateTimeImmutable $accruedAfter,
         DateTimeImmutable $accruedBefore,
-        int               $employeeId
-    ): int
-    {
+        int $employeeId
+    ): int {
         $sql = 'SELECT SUM(s.accrued_amount) AS amount
             FROM payroll_employee_shifts s
             WHERE s.accrued_at BETWEEN :start_date AND :end_date

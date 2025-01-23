@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Payroll\KpiCalculator;
 
 use App\Entity\Calling\Calling;
@@ -8,7 +10,7 @@ use App\Entity\Payroll\PayrollCalculator;
 
 readonly class RepeatRate extends AbstractKpiProcessor
 {
-    protected function getKPI(KpiRecord $kpiRecord,): float
+    protected function getKPI(KpiRecord $kpiRecord): float
     {
         $calls = $this->calls->findAllCompletedOfTheEmployeeByCompletionDateIncludedInPeriod(
             $kpiRecord->getDocument()->getPeriodStart(),
@@ -23,10 +25,10 @@ readonly class RepeatRate extends AbstractKpiProcessor
         foreach ($calls as $call) {
             foreach ($call->getServices() as $callService) {
                 if ($callService->isReplay()) {
-                    $countRepeat++;
+                    ++$countRepeat;
                 }
             }
-            $countCalls++;
+            ++$countCalls;
         }
 
         return (float)($countRepeat > 0 ? $countCalls / $countRepeat : 100);
@@ -38,7 +40,7 @@ readonly class RepeatRate extends AbstractKpiProcessor
             ['min' => 1, 'max' => 2, 'rate' => 1.3],
             ['min' => 2, 'max' => 3, 'rate' => 1],
             ['min' => 3, 'max' => 4, 'rate' => 0.7],
-            ['min' => 4, 'max' => 100, 'rate' => 0]
+            ['min' => 4, 'max' => 100, 'rate' => 0],
         ];
     }
 }
