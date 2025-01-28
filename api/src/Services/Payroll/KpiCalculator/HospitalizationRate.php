@@ -6,7 +6,6 @@ namespace App\Services\Payroll\KpiCalculator;
 
 use App\Entity\Calling\Calling;
 use App\Entity\Payroll\KpiDocument\KpiRecord;
-use App\Entity\Payroll\PayrollCalculator;
 
 final readonly class HospitalizationRate extends AbstractKpiProcessor
 {

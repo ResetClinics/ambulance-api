@@ -82,6 +82,7 @@ abstract class AbstractEmployeeCalculator implements ShiftCalculatorInterface
             $nextDay = $currentDate->modify('+1 day');
             $startOfDay = $currentDate->setTime(6, 0);
             $endOfDay = $currentDate->setTime(22, 0);
+            $endOfCalendarDay = $nextDay->setTime(0, 0);
             $weFinishOnTheCurrentDay = $currentDate->format('d') === $finishDate->format('d');
 
             $dayHours = 0;
@@ -132,7 +133,7 @@ abstract class AbstractEmployeeCalculator implements ShiftCalculatorInterface
                 } else {
                     $interval = $currentDate->diff($endOfDay);
                     $dayHours += $interval->h;
-                    $interval = $endOfDay->diff($finishDate);
+                    $interval = $endOfDay->diff($endOfCalendarDay);
                     $nightHours += $interval->h;
                 }
             }

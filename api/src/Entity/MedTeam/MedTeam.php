@@ -584,7 +584,7 @@ class MedTeam
         }
         $diff = $this->completedAt->diff($this->startedAt);
 
-        return $diff->h;
+        return $diff->days * 24 + $diff->h;
     }
 
     public function isSendSms(): bool

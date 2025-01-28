@@ -131,7 +131,6 @@ class UserPayrollReport extends AbstractController
 
         /** @var KpiPayroll $kpiPayroll */
         foreach ($kpiPayrolls as $kpiPayroll) {
-
             if (!isset($items[$kpiPayroll->getRecord()->getEmployee()->getId()])) {
                 $items[$kpiPayroll->getRecord()->getEmployee()->getId()] = [
                     'employee' => [

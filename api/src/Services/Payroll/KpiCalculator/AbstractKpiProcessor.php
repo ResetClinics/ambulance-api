@@ -78,11 +78,11 @@ abstract readonly class AbstractKpiProcessor implements KpiProcessorInterface
     {
         $value = json_decode($calculator->getValue(), true);
 
-        return array_map(function($item) {
+        return array_map(static function ($item) {
             return [
-                'min' => (float) $item['min'],
-                'max' => (float) $item['max'],
-                'rate' => (float) $item['rate'],
+                'min' => (float)$item['min'],
+                'max' => (float)$item['max'],
+                'rate' => (float)$item['rate'],
             ];
         }, $value);
     }
