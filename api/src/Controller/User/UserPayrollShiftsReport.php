@@ -33,7 +33,7 @@ class UserPayrollShiftsReport extends AbstractController
         ini_set('memory_limit', '-1');
 
         $shifts = $this->shifts->findByPlannedEmployee(
-            new DateTimeImmutable('2024-12-01T00:00:00.000Z'),
+            new DateTimeImmutable('2024-11-30T00:00:00.000Z'),
             new DateTimeImmutable('2025-01-01T00:00:00.000Z'),
             $id
         );
