@@ -82,7 +82,7 @@ class UserPayrollCallsReport extends AbstractController
 
             $callsItems[$servicePayroll->getCallService()->getCalling()->getId()]['subRows'][] = [
                 'name' => $servicePayroll->getCallService()->getService()->getName(),
-                'amount' => '',
+                'amount' => $servicePayroll->getCallService()->getPrice(),
                 'reward' => $reward,
             ];
         }
