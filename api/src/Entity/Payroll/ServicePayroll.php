@@ -36,6 +36,9 @@ class ServicePayroll
     #[ORM\JoinColumn(nullable: false)]
     private ?Row $callService = null;
 
+    #[ORM\Column]
+    private ?float $amount = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -83,6 +86,18 @@ class ServicePayroll
     public function setCallService(?Row $callService): static
     {
         $this->callService = $callService;
+
+        return $this;
+    }
+
+    public function getAmount(): ?float
+    {
+        return $this->amount;
+    }
+
+    public function setAmount(float $amount): static
+    {
+        $this->amount = $amount;
 
         return $this;
     }

@@ -42,7 +42,7 @@ readonly class HospitalizationPayrollCalculatorProcessor implements CallPayrollC
         $payroll->setCallService($callService);
         $payroll->setEmployee($employee);
         $payroll->setAccrued($accrued);
-
+        $payroll->setAmount($callService->getPrice());
         $this->servicePayrolls->add($payroll);
     }
 }

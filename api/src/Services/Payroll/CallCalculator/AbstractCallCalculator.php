@@ -54,6 +54,7 @@ class AbstractCallCalculator implements CallCalculatorInterface
         $payroll->setEmployee($employee);
         $payroll->setAccrued($accrued);
         $payroll->setCalculator($payrollCalculator);
+        $payroll->setAmount($this->getAmount($call));
 
         $this->callPayrolls->add($payroll);
     }

@@ -40,6 +40,9 @@ class CallPayroll
     #[ORM\JoinColumn(nullable: false)]
     private ?PayrollCalculator $calculator = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $amount = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -99,6 +102,18 @@ class CallPayroll
     public function setCalculator(?PayrollCalculator $calculator): static
     {
         $this->calculator = $calculator;
+
+        return $this;
+    }
+
+    public function getAmount(): ?float
+    {
+        return $this->amount;
+    }
+
+    public function setAmount(?float $amount): static
+    {
+        $this->amount = $amount;
 
         return $this;
     }

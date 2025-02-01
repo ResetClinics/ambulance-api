@@ -43,6 +43,8 @@ readonly class TherapyPayrollCalculatorProcessor implements CallPayrollCalculato
         $payroll->setEmployee($employee);
         $payroll->setAccrued($accrued);
 
+        $payroll->setAmount($callService->getPrice());
+
         $this->servicePayrolls->add($payroll);
     }
 }
