@@ -181,6 +181,7 @@ class AdministratorReport
     ])]
     private Collection $files;
 
+    #[Groups(['administrator_report:read'])]
     #[ORM\OneToOne(mappedBy: 'transportReport', cascade: ['persist', 'remove'])]
     private ?MedTeam $shift = null;
 

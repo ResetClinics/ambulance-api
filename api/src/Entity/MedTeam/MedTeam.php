@@ -131,6 +131,7 @@ class MedTeam
         'calling:read',
         'exchange_calling:read',
         'v1:shift:item:read',
+        'administrator_report:read'
     ])]
     private ?int $id = null;
 
@@ -143,6 +144,7 @@ class MedTeam
         'med-team:write',
         'administrator_report:detail:read',
         'v1:shift:item:read',
+        'administrator_report:read'
     ])]
     #[Assert\NotNull]
     private ?DateTimeImmutable $plannedStartAt = null;
@@ -186,6 +188,7 @@ class MedTeam
         'exchange_calling:read',
         'v1:shift:item:read',
         'v1:shift:write',
+        'administrator_report:read'
     ])]
     #[Assert\Choice(choices: [
         'draft',
@@ -203,6 +206,7 @@ class MedTeam
         'med-team:write',
         'administrator_report:read',
         'v1:shift:item:read',
+        'administrator_report:read'
     ])]
     #[ApiFilter(SearchFilter::class, properties: ['admin.id' => 'exact'])]
     private ?User $admin = null;
@@ -228,7 +232,7 @@ class MedTeam
     private ?Phone $phone = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['med-team:read', 'med-team:write', 'v1:shift:item:read'])]
+    #[Groups(['med-team:read', 'med-team:write', 'v1:shift:item:read','administrator_report:read'])]
     #[Assert\NotNull]
     private ?DateTimeImmutable $plannedFinishAt = null;
 
