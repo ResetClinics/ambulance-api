@@ -40,6 +40,10 @@ class UserPayrollShiftsReport extends AbstractController
 
         $items = [];
         $total = 0;
+        $fuel = 0;
+        $parking = 0;
+        $rentCar = 0;
+        $time = 0;
 
         /** @var MedTeam $shift */
         foreach ($shifts as $shift) {
@@ -79,6 +83,16 @@ class UserPayrollShiftsReport extends AbstractController
             $items[$shiftPayroll->getShift()->getId()]['reward'] += $reward;
             $total += $reward;
 
+            if ($shiftPayroll->getCalculator()->getProcessor() === 'shift_fuel') {
+                $fuel += $reward;
+            }elseif ($shiftPayroll->getCalculator()->getProcessor() === 'shift_parking') {
+                $parking += $reward;
+            }elseif ($shiftPayroll->getCalculator()->getProcessor() === 'shift_rent_car') {
+                $rentCar += $reward;
+            }else {
+                $time += $reward;
+            }
+
             $items[$shiftPayroll->getShift()->getId()]['subRows'][] = [
                 'name' => $shiftPayroll->getCalculator()->getName(),
                 'amount' => $shiftPayroll->getAmount(),
@@ -89,6 +103,10 @@ class UserPayrollShiftsReport extends AbstractController
         return $this->json([
             'items' => array_values($items),
             'total' => $total,
+            'fuel' => $fuel,
+            'parking' => $parking,
+            'rentCar' => $rentCar,
+            'time' => $time,
         ]);
     }
 }
