@@ -92,8 +92,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
     paginationClientItemsPerPage: true
 )]
 #[ApiFilter(OrderFilter::class, properties: ['createdAt', 'updatedAt'], arguments: ['orderParameterName' => 'order'])]
-#[ApiFilter(SearchFilter::class, properties: ['team.id' => 'exact'])]
-#[ApiFilter(SearchFilter::class, properties: ['team.admin.id' => 'exact'])]
+#[ApiFilter(SearchFilter::class, properties: ['shift.admin.id' => 'exact'])]
 #[ApiFilter(
     DateFilter::class,
     properties: [
