@@ -42,7 +42,10 @@ class UserPayrollKPIReport extends AbstractController
             $items[$shiftPayroll->getId()] = [
                 'id' => $shiftPayroll->getId(),
                 'name' => $shiftPayroll->getCalculator()->getName(),
-                'base' => $shiftPayroll->getOriginal(),
+                'base' => $shiftPayroll->getBase(),
+                'metric' => $shiftPayroll->getMetric(),
+                'baseKpi' => $shiftPayroll->getBaseKpi(),
+                'original' => $shiftPayroll->getOriginal(),
                 'kpi' => $shiftPayroll->getKpi(),
                 'accrued' => $shiftPayroll->getAccrued(),
             ];
