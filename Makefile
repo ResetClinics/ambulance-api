@@ -172,3 +172,6 @@ try-testing-down-clear:
 
 swagger:
 	docker-compose run --rm api-php-cli php bin/console api:openapi:export --yaml --output=swagger.yaml
+
+sh:
+	docker-compose run --rm api-php-cli sh

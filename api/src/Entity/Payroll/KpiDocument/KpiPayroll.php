@@ -46,10 +46,25 @@ class KpiPayroll
     #[ORM\JoinColumn(nullable: false)]
     private KpiRecord $record;
 
+    #[ORM\Column(nullable: true)]
+    #[Groups(['kpi_document:read'])]
+    private ?float $base;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['kpi_document:read'])]
+    private ?float $metric;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['kpi_document:read'])]
+    private ?float $baseKpi;
+
     public function __construct(
         KpiRecord $record,
         PayrollCalculator $calculator,
         DateTimeImmutable $accruedAt,
+        float $base,
+        float $metric,
+        float $baseKpi,
         Money $original,
         float $kpi,
         Money $accrued,
@@ -60,6 +75,9 @@ class KpiPayroll
         $this->original = $original;
         $this->kpi = $kpi;
         $this->accrued = $accrued;
+        $this->base = $base;
+        $this->metric = $metric;
+        $this->baseKpi = $baseKpi;
     }
 
     public function getId(): ?int
@@ -101,5 +119,19 @@ class KpiPayroll
     public function getOriginal(): float
     {
         return $this->original->amount / 100;
+    }
+
+    public function getBase(): ?float
+    {
+        return $this->base;
+    }
+    public function getMetric(): ?float
+    {
+        return $this->metric;
+    }
+
+    public function getBaseKpi(): ?float
+    {
+        return $this->baseKpi;
     }
 }

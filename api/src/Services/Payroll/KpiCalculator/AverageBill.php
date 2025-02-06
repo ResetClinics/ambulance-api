@@ -9,7 +9,7 @@ use App\Entity\Payroll\KpiDocument\KpiRecord;
 
 final readonly class AverageBill extends AbstractKpiProcessor
 {
-    protected function getKPI(KpiRecord $kpiRecord): float
+    protected function getKPI(KpiRecord $kpiRecord): KpiResult
     {
         $calls = $this->calls->findAllCompletedOfTheEmployeeByCompletionDateIncludedInPeriod(
             $kpiRecord->getDocument()->getPeriodStart(),
@@ -26,6 +26,10 @@ final readonly class AverageBill extends AbstractKpiProcessor
             ++$count;
         }
 
-        return (float)($count > 0 ? $price / $count : 0);
+        return  new KpiResult(
+            $price,
+            $count,
+            (float)($count > 0 ? $price / $count : 0)
+        );
     }
 }

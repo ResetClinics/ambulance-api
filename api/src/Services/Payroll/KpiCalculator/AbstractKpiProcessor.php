@@ -23,11 +23,11 @@ abstract readonly class AbstractKpiProcessor implements KpiProcessorInterface
 
     final public function calculate(KpiRecord $kpiRecord, PayrollCalculator $calculator): void
     {
-        $kpi = $this->getKPI($kpiRecord);
+        $kpiResult = $this->getKPI($kpiRecord);
 
         $rates = $this->getRates($calculator);
 
-        $rate = $this->getRate($rates, $kpi);
+        $rate = $this->getRate($rates, $kpiResult->kpi);
 
         $initialAmountByKPI = $this->getTheInitialAmountByKPI($kpiRecord);
 
@@ -37,6 +37,9 @@ abstract readonly class AbstractKpiProcessor implements KpiProcessorInterface
             $kpiRecord,
             $calculator,
             $kpiRecord->getDocument()->getPeriodEnd(),
+            $kpiResult->base,
+            $kpiResult->metric,
+            $kpiResult->kpi,
             new Money($initialAmountByKPI),
             $rate,
             new Money($accrued)
@@ -45,7 +48,7 @@ abstract readonly class AbstractKpiProcessor implements KpiProcessorInterface
         $kpiRecord->addKpiPayroll($payroll);
     }
 
-    protected function getKPI(KpiRecord $kpiRecord): float
+    protected function getKPI(KpiRecord $kpiRecord): KpiResult
     {
         throw new Exception('Not implemented getKPI in ' . static::class);
     }

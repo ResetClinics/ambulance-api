@@ -9,7 +9,7 @@ use App\Entity\Payroll\KpiDocument\KpiRecord;
 
 final readonly class HospitalizationRate extends AbstractKpiProcessor
 {
-    protected function getKPI(KpiRecord $kpiRecord): float
+    protected function getKPI(KpiRecord $kpiRecord): KpiResult
     {
         $calls = $this->calls->findAllCompletedOfTheEmployeeByCompletionDateIncludedInPeriod(
             $kpiRecord->getDocument()->getPeriodStart(),
@@ -32,7 +32,10 @@ final readonly class HospitalizationRate extends AbstractKpiProcessor
             }
             ++$countCalls;
         }
-
-        return (float)($countStationary > 0 ? $countCalls / $countStationary : 100);
+        return  new KpiResult(
+            $countCalls,
+            $countStationary,
+            (float)($countStationary > 0 ? $countCalls / $countStationary : 100)
+        );
     }
 }

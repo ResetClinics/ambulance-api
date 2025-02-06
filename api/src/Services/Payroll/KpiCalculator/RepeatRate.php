@@ -9,7 +9,7 @@ use App\Entity\Payroll\KpiDocument\KpiRecord;
 
 readonly class RepeatRate extends AbstractKpiProcessor
 {
-    protected function getKPI(KpiRecord $kpiRecord): float
+    protected function getKPI(KpiRecord $kpiRecord): KpiResult
     {
         $calls = $this->calls->findAllCompletedOfTheEmployeeByCompletionDateIncludedInPeriod(
             $kpiRecord->getDocument()->getPeriodStart(),
@@ -30,6 +30,10 @@ readonly class RepeatRate extends AbstractKpiProcessor
             ++$countCalls;
         }
 
-        return (float)($countRepeat > 0 ? $countCalls / $countRepeat : 100);
+        return new KpiResult(
+            $countCalls,
+            $countRepeat,
+            (float)($countRepeat > 0 ? $countCalls / $countRepeat : 100)
+        );
     }
 }
