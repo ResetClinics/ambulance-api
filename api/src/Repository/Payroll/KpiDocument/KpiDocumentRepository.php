@@ -24,6 +24,11 @@ class KpiDocumentRepository extends ServiceEntityRepository
         $this->getEntityManager()->persist($entity);
     }
 
+    public function remove(KpiDocument $entity): void
+    {
+        $this->getEntityManager()->remove($entity);
+    }
+
     public function findById($id): ?KpiDocument
     {
         return $this->find($id);
