@@ -35,9 +35,16 @@ class UserPayrollCallsReport extends AbstractController
     {
         ini_set('memory_limit', '-1');
 
+        $startDate = $request->query->get('startDate', '2024-12-01T00:00:00.000Z');
+        $endDate = $request->query->get('endDate', '2025-01-01T00:00:00.000Z');
+        $startDate = new DateTimeImmutable($startDate);
+        $endDate = new DateTimeImmutable($endDate);
+
+
+
         $calls = $this->calls->findAllCompletedOfTheEmployeeByCompletionDateIncludedInPeriod(
-            new DateTimeImmutable('2024-12-01T00:00:00.000Z'),
-            new DateTimeImmutable('2025-01-01T00:00:00.000Z'),
+            $startDate,
+            $endDate,
             $id
         );
 
@@ -69,8 +76,8 @@ class UserPayrollCallsReport extends AbstractController
         }
 
         $servicePayrolls = $this->servicePayrolls->findByPlannedEmployee(
-            new DateTimeImmutable('2024-12-01T00:00:00.000Z'),
-            new DateTimeImmutable('2025-01-01T00:00:00.000Z'),
+            $startDate,
+            $endDate,
             $id
         );
 
@@ -88,8 +95,8 @@ class UserPayrollCallsReport extends AbstractController
         }
 
         $callPayrolls = $this->callPayrolls->findByPlannedEmployee(
-            new DateTimeImmutable('2024-12-01T00:00:00.000Z'),
-            new DateTimeImmutable('2025-01-01T00:00:00.000Z'),
+            $startDate,
+            $endDate,
             $id
         );
 
