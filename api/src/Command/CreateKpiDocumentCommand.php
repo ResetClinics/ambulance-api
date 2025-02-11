@@ -46,6 +46,21 @@ class CreateKpiDocumentCommand extends Command
 
         $this->flusher->flush();
 
+        $document = $this->documents->findById(2);
+
+        if (!$document) {
+            $document = new KpiDocument(
+                new DateTimeImmutable('2024-01-01T00:00:00.000Z'),
+                new DateTimeImmutable('2025-02-01T00:00:00.000Z'),
+            );
+
+            $this->documents->add($document);
+        }
+
+        $this->kpiCalculator->calculate($document);
+
+        $this->flusher->flush();
+
         return Command::SUCCESS;
     }
 }
