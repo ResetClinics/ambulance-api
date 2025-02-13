@@ -37,12 +37,17 @@ class UserPayrollReport extends AbstractController
     {
         ini_set('memory_limit', '-1');
 
-        $startDate = $request->query->get('startDate', '2024-12-01T00:00:00.000Z');
-        $endDate = $request->query->get('endDate', '2025-01-01T00:00:00.000Z');
+        $startDate = $request->query->get('startDate', '2024-12-01');
+        $endDate = $request->query->get('endDate', '2025-12-31');
+
+        $startDate = new DateTimeImmutable($startDate);
+        $startDate = $startDate->modify('midnight');
+        $endDate = new DateTimeImmutable($endDate);
+        $endDate = $endDate->modify('+1 day midnight');
 
         $servicePayrolls = $this->callPayrolls->findByAccruedAt(
-            new DateTimeImmutable($startDate),
-            new DateTimeImmutable($endDate),
+            $startDate,
+            $endDate,
         );
 
         $items = [];
@@ -74,8 +79,8 @@ class UserPayrollReport extends AbstractController
         }
 
         $servicePayrolls = $this->servicePayrolls->findByAccruedAt(
-            new DateTimeImmutable('2024-12-01T00:00:00.000Z'),
-            new DateTimeImmutable('2025-01-01T00:00:00.000Z'),
+            $startDate,
+            $endDate,
         );
 
         /** @var ServicePayroll $servicePayroll */
@@ -101,8 +106,8 @@ class UserPayrollReport extends AbstractController
         }
 
         $shiftPayrolls = $this->shiftPayrolls->findByAccruedAt(
-            new DateTimeImmutable('2024-12-01T00:00:00.000Z'),
-            new DateTimeImmutable('2025-01-01T00:00:00.000Z'),
+            $startDate,
+            $endDate,
         );
 
         /** @var ShiftPayroll $shiftPayroll */
@@ -128,8 +133,8 @@ class UserPayrollReport extends AbstractController
         }
 
         $kpiPayrolls = $this->kpiPayrolls->findByAccruedAt(
-            new DateTimeImmutable('2024-12-01T00:00:00.000Z'),
-            new DateTimeImmutable('2025-01-01T00:00:00.000Z'),
+            $startDate,
+            $endDate,
         );
 
         /** @var KpiPayroll $kpiPayroll */
