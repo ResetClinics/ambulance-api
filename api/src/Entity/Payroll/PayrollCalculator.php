@@ -91,6 +91,10 @@ class PayrollCalculator
     #[Groups(['payroll_calculator:read', 'payroll_calculator:write'])]
     private int $sort = 0;
 
+    #[ORM\Column(options: ['default' => 100])]
+    #[Groups(['payroll_calculator:read', 'payroll_calculator:write'])]
+    private ?int $weight = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -176,6 +180,18 @@ class PayrollCalculator
     public function setSort(int $sort): static
     {
         $this->sort = $sort;
+
+        return $this;
+    }
+
+    public function getWeight(): ?int
+    {
+        return $this->weight;
+    }
+
+    public function setWeight(int $weight): static
+    {
+        $this->weight = $weight;
 
         return $this;
     }

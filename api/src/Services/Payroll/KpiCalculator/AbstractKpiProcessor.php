@@ -29,7 +29,9 @@ abstract readonly class AbstractKpiProcessor implements KpiProcessorInterface
 
         $rate = $this->getRate($rates, $kpiResult->kpi);
 
-        $initialAmountByKPI = $this->getTheInitialAmountByKPI($kpiRecord);
+        $initialAmount = $this->getTheInitialAmountByKPI($kpiRecord);
+
+        $initialAmountByKPI = (int)($initialAmount / 100 * $calculator->getWeight());
 
         $accrued = (int)($initialAmountByKPI * $rate);
 
