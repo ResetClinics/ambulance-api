@@ -33,8 +33,10 @@ class UserPayrollKPIReport extends AbstractController
 
         $startDate = $request->query->get('startDate', '2024-12-01T00:00:00.000Z');
         $endDate = $request->query->get('endDate', '2025-01-01T00:00:00.000Z');
+
         $startDate = new DateTimeImmutable($startDate);
         $endDate = new DateTimeImmutable($endDate);
+        $endDate = $endDate->modify('+1 day midnight');
 
         $shiftPayrolls = $this->kpiPayrolls->findByPlannedEmployee(
             $startDate,
