@@ -28,14 +28,18 @@ class KpiPayrollRecalculateAction extends AbstractController
         ini_set('memory_limit', '-1');
 
         try {
-            $document = $this->documents->findById(1);
+            $documents = $this->documents->findAll();
+            $count = 0;
 
-            $this->kpiCalculator->calculate($document);
+            foreach ($documents as $document) {
+                $this->kpiCalculator->calculate($document);
 
-            $this->flusher->flush();
+                $this->flusher->flush();
+                $count++;
+            }
 
             return $this->json([
-                'countSuccess' => 1,
+                'countSuccess' => $count,
                 'errors' => 0,
             ]);
         } catch (Exception $exception) {
