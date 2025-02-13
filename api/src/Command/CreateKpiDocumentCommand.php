@@ -39,8 +39,6 @@ class CreateKpiDocumentCommand extends Command
                 new DateTimeImmutable('2025-01-01T00:00:00.000Z'),
             );
 
-            $document->setId(1);
-
             $this->documents->add($document);
         }
 
@@ -55,8 +53,6 @@ class CreateKpiDocumentCommand extends Command
                 new DateTimeImmutable('2025-01-01T00:00:00.000Z'),
                 new DateTimeImmutable('2025-02-01T00:00:00.000Z'),
             );
-
-            $document->setId(2);
 
             $this->documents->add($document);
         }
