@@ -35,7 +35,7 @@ class UserPayrollKPIReport extends AbstractController
         $endDate = $request->query->get('endDate', '2024-12-31');
 
         $startDate = new DateTimeImmutable($startDate);
-        $startDate = $startDate->modify('midnight');
+        $startDate = $startDate->modify('+1 day midnight');
         $endDate = new DateTimeImmutable($endDate);
         $endDate = $endDate->modify('+1 day midnight');
 
