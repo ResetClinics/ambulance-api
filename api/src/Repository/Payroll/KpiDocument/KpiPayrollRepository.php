@@ -24,7 +24,7 @@ class KpiPayrollRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('kp')
             ->leftJoin('kp.record', 'r')
-            ->andWhere('kp.accruedAt >= :accruedAtAfter')
+            ->andWhere('kp.accruedAt > :accruedAtAfter')
             ->andWhere('kp.accruedAt <= :accruedAtBefore')
             ->andWhere('(r.employee = :employee)')
            ->setParameter('accruedAtAfter', $accruedAfter)
