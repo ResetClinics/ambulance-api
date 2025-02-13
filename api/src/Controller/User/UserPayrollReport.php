@@ -38,7 +38,7 @@ class UserPayrollReport extends AbstractController
         ini_set('memory_limit', '-1');
 
         $startDate = $request->query->get('startDate', '2024-12-01');
-        $endDate = $request->query->get('endDate', '2025-12-31');
+        $endDate = $request->query->get('endDate', '2024-12-31');
 
         $startDate = new DateTimeImmutable($startDate);
         $startDate = $startDate->modify('midnight');
