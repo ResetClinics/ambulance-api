@@ -51,7 +51,7 @@ class AverageBillForYearAction extends AbstractController
                 ++$count;
             }
 
-            $monthlyAverages[] = (float)($count > 0 ? $price / $count : 0);
+            $monthlyAverages[] = (int)($count > 0 ? $price / $count : 0);
         }
 
         return $this->json([
