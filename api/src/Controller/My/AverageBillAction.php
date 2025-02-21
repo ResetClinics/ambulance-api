@@ -65,7 +65,7 @@ class AverageBillAction extends AbstractController
         return $this->json([
             'value' => (int)$averageBill,
             'rates' => json_decode($payrollCalculator->getValue(), true),
-            'rate' => $payrollCalculator->getRate($averageBill),
+            'rate' => round($payrollCalculator->getRate($averageBill),1),
         ]);
     }
 

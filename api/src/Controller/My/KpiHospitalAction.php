@@ -66,7 +66,7 @@ class KpiHospitalAction extends AbstractController
         return $this->json([
             'value' =>  $kpiValue,
             'rates' => json_decode($payrollCalculator->getValue(), true),
-            'rate' => $payrollCalculator->getRate($kpiValue),
+            'rate' => round($payrollCalculator->getRate($kpiValue),1)
         ]);
     }
 }
