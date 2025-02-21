@@ -6,7 +6,9 @@ namespace App\Controller\My;
 
 use App\Entity\Calling\Calling;
 use App\Repository\CallingRepository;
+use App\Repository\Payroll\PayrollCalculatorRepository;
 use DateTimeImmutable;
+use DomainException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,13 +20,20 @@ class KpiRepeatAction extends AbstractController
 {
     public function __construct(
         private readonly CallingRepository $calls,
+        private readonly PayrollCalculatorRepository $payrollCalculators,
     ) {}
 
     public function __invoke(Request $request, KernelInterface $kernel): JsonResponse
     {
         $userId = $this->getUser()?->getId();
         if (!$userId) {
-            throw new \DomainException('User not found');
+            throw new DomainException('User not found');
+        }
+
+        $payrollCalculator = $this->payrollCalculators->findOneByProcessor('kpi_repeat_rate');
+
+        if (!$payrollCalculator) {
+            throw new DomainException('Payroll calculator not found');
         }
 
         $startOfMonth = new DateTimeImmutable('first day of this month 00:00:00');
@@ -49,8 +58,12 @@ class KpiRepeatAction extends AbstractController
             ++$countCalls;
         }
 
+        $kpiValue = (float)($countRepeat > 0 ? $countCalls / $countRepeat : 100);
+
         return $this->json([
-            'value' =>  (float)($countRepeat > 0 ? $countCalls / $countRepeat : 100)
+            'value' =>  $kpiValue,
+            'rates' => json_decode($payrollCalculator->getValue(), true),
+            'rate' => $payrollCalculator->getRate($kpiValue),
         ]);
     }
 }

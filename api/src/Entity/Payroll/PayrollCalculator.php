@@ -195,4 +195,27 @@ class PayrollCalculator
 
         return $this;
     }
+
+    public function getRates(): array
+    {
+        $value = json_decode($this->getValue(), true);
+
+        return array_map(static function ($item) {
+            return [
+                'min' => (float)$item['min'],
+                'max' => (float)$item['max'],
+                'rate' => (float)$item['rate'],
+            ];
+        }, $value);
+    }
+
+    public function getRate(float $value): float
+    {
+        $rate = array_filter(
+            $this->getRates(),
+            static fn ($range) => $value >= $range['min'] && $value <= $range['max']
+        );
+
+        return (float)(reset($rate)['rate'] ?? 0);
+    }
 }

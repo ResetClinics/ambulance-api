@@ -31,4 +31,15 @@ class PayrollCalculatorRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findOneByProcessor(string $processor):?PayrollCalculator
+    {
+        $calculators = $this->createQueryBuilder('d')
+            ->andWhere('d.processor = :processor')
+            ->setParameter('processor', $processor)
+            ->getQuery()
+            ->getResult();
+
+        return array_shift($calculators);
+    }
 }
