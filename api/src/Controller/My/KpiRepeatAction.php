@@ -63,7 +63,10 @@ class KpiRepeatAction extends AbstractController
         return $this->json([
             'value' =>  $kpiValue,
             'rates' => json_decode($payrollCalculator->getValue(), true),
-            'rate' => round($payrollCalculator->getRate($kpiValue),1),
+            'rate' => number_format(
+                $payrollCalculator->getRate($kpiValue),
+                1, '.', ''
+            ),
         ]);
     }
 }
