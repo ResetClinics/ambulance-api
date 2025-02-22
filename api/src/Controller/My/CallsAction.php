@@ -38,6 +38,10 @@ class CallsAction extends AbstractController
             $userId
         );
 
+        usort($calls, function ($a, $b) {
+            return $b->getCompletedAt() <=> $a->getCompletedAt();
+        });
+
         return $this->json(array_map(function (Calling $call) {
             return [
                 'id' => $call->getId(),
