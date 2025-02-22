@@ -14,6 +14,7 @@ use App\Repository\CallingRepository;
 use App\Repository\MedTeam\MedTeamRepository;
 use App\Repository\Payroll\CallPayrollRepository;
 use App\Repository\Payroll\KpiDocument\KpiPayrollRepository;
+use App\Repository\Payroll\PayrollCalculatorRepository;
 use App\Repository\Payroll\ServicePayrollRepository;
 use App\Repository\Payroll\ShiftPayrollRepository;
 use DateTimeImmutable;
@@ -28,11 +29,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class PayrollAction extends AbstractController
 {
     public function __construct(
-        private readonly MedTeamRepository      $shifts,
-        private readonly ShiftPayrollRepository $shiftPayrolls,
-        private readonly CallingRepository        $calls,
-        private readonly CallPayrollRepository    $callPayrolls,
-        private readonly ServicePayrollRepository $servicePayrolls
+        private readonly MedTeamRepository           $shifts,
+        private readonly ShiftPayrollRepository      $shiftPayrolls,
+        private readonly CallingRepository           $calls,
+        private readonly CallPayrollRepository       $callPayrolls,
+        private readonly ServicePayrollRepository    $servicePayrolls,
+        private readonly PayrollCalculatorRepository $payrollCalculators,
     )
     {
     }
@@ -43,9 +45,6 @@ class PayrollAction extends AbstractController
         if (!$userId) {
             throw new DomainException('User not found');
         }
-
-        $kpiPayroll = 0;
-        $totalPayroll = 0;
 
         $startOfMonth = new DateTimeImmutable('first day of this month 00:00:00');
         $endOfMonth = new DateTimeImmutable('first day of next month 00:00:00');
@@ -61,6 +60,10 @@ class PayrollAction extends AbstractController
 
         $payrollPayroll = $hoursPayroll + $callsPayroll;
 
+        $kpiPayroll = $this->calcKpiPayroll($startOfMonth, $endOfMonth, $userId, $payrollPayroll);
+
+        $totalPayroll = $payrollPayroll + $kpiPayroll + $fuelPayroll + $parkingPayroll + $rentCarPayroll;
+
         return $this->json([
             'hoursPayroll' => $hoursPayroll,
             'fuelPayroll' => $fuelPayroll,
@@ -71,6 +74,58 @@ class PayrollAction extends AbstractController
             'kpiPayroll' => $kpiPayroll,
             'totalPayroll' => $totalPayroll,
         ]);
+    }
+
+    private function calcKpiPayroll(
+        DateTimeImmutable $startOfMonth,
+        DateTimeImmutable $endOfMonth,
+        int               $userId,
+                          $payrollPayroll
+    ): float|int
+    {
+        $kpiPayroll = 0;
+
+        $kpiPayroll += $this->getKpiAverageBillPayroll($startOfMonth, $endOfMonth, $userId, $payrollPayroll);
+
+
+        return $kpiPayroll;
+    }
+
+    private function getKpiAverageBillPayroll(
+        DateTimeImmutable $startOfMonth,
+        DateTimeImmutable $endOfMonth,
+        int               $userId,
+                          $payrollPayroll
+    ): int
+    {
+        $payrollCalculator = $this->payrollCalculators->findOneByProcessor('kpi_average_bill');
+
+        if (!$payrollCalculator) {
+            throw new DomainException('Payroll calculator not found');
+        }
+
+        $calls = $this->calls->findAllCompletedOfTheEmployeeByCompletionDateIncludedInPeriod(
+            $startOfMonth,
+            $endOfMonth,
+            $userId
+        );
+
+        $count = 0;
+        $price = 0;
+
+        /** @var Calling $call */
+        foreach ($calls as $call) {
+            $price += $call->getPrice() ?: 0;
+            ++$count;
+        }
+
+        $averageBill = (float)($count > 0 ? $price / $count : 0);
+
+        $rate = $payrollCalculator->getRate($averageBill);
+
+        $initialAmountByKPI = (int)($payrollPayroll / 100 * $payrollCalculator->getWeight());
+
+        return (int)($initialAmountByKPI * $rate);
     }
 
     private function calcCalls(DateTimeImmutable $startOfMonth, DateTimeImmutable $endOfMonth, int $userId): float|int

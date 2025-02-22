@@ -43,7 +43,7 @@ class AverageBillAction extends AbstractController
         }
 
         $startOfMonth = new DateTimeImmutable('first day of this month 00:00:00');
-        $endOfMonth = new DateTimeImmutable('last day of this month 23:59:59');
+        $endOfMonth = new DateTimeImmutable('first day of next month 00:00:00');
 
         $calls = $this->calls->findAllCompletedOfTheEmployeeByCompletionDateIncludedInPeriod(
             $startOfMonth,
