@@ -95,8 +95,8 @@ class MedTeamRepository extends ServiceEntityRepository
             ),
             // Смены, которые начались до периода, но закончились в нём
             $qb->expr()->andX(
-                't.plannedEndAt > :startDate',
-                't.plannedEndAt <= :endDate',
+                't.plannedFinishAt > :startDate',
+                't.plannedFinishAt <= :endDate',
                 't.plannedStartAt < :startDate'
             )
         );
