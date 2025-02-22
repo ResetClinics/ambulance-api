@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Controller\My;
 
+use App\Entity\MedTeam\MedTeam;
 use App\Entity\Payroll\KpiDocument\KpiPayroll;
 use App\Entity\Payroll\ServicePayroll;
 use App\Entity\Payroll\ShiftPayroll;
+use App\Repository\MedTeam\MedTeamRepository;
 use App\Repository\Payroll\CallPayrollRepository;
 use App\Repository\Payroll\KpiDocument\KpiPayrollRepository;
 use App\Repository\Payroll\ServicePayrollRepository;
@@ -23,11 +25,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class PayrollAction extends AbstractController
 {
     public function __construct(
-        private readonly CallPayrollRepository $callPayrolls,
-        private readonly ServicePayrollRepository $servicePayrolls,
+        private readonly MedTeamRepository      $shifts,
         private readonly ShiftPayrollRepository $shiftPayrolls,
-        private readonly KpiPayrollRepository $kpiPayrolls,
-    ) {}
+    )
+    {
+    }
 
     public function __invoke(Request $request, KernelInterface $kernel): JsonResponse
     {
@@ -36,91 +38,86 @@ class PayrollAction extends AbstractController
             throw new DomainException('User not found');
         }
 
+        $callsPayroll = 0;
+        $payrollPayroll = 0;
+        $kpiPayroll = 0;
+        $totalPayroll = 0;
 
-        $startDate = new DateTimeImmutable();
-        $startDate = $startDate->modify('midnight');
-        $endDate = new DateTimeImmutable();
-        $endDate = $endDate->modify('+1 day midnight');
+        $startOfMonth = new DateTimeImmutable('first day of this month 00:00:00');
+        $endOfMonth = new DateTimeImmutable('first day of next month 00:00:00');
 
-        $total = 0;
-        $callsTotal = 0;
-        $shiftsTotal = 0;
-        $kpisTotal = 0;
+        [
+            $hoursPayroll,
+            $fuelPayroll,
+            $parkingPayroll,
+            $rentCarPayroll
+        ] = $this->calcShifts($startOfMonth, $endOfMonth, $userId);
 
 
-        $servicePayrolls = $this->callPayrolls->findByPlannedEmployee(
-            $startDate,
-            $endDate,
+        return $this->json([
+            'hoursPayroll' => $hoursPayroll,
+            'fuelPayroll' => $fuelPayroll,
+            'parkingPayroll' => $parkingPayroll,
+            'rentCarPayroll' => $rentCarPayroll,
+            'callsPayroll' => $callsPayroll,
+            'payrollPayroll' => $payrollPayroll,
+            'kpiPayroll' => $kpiPayroll,
+            'totalPayroll' => $totalPayroll,
+        ]);
+    }
+
+    private function calcShifts(DateTimeImmutable $startOfMonth, DateTimeImmutable $endOfMonth, int $userId): array
+    {
+        $hoursPayroll = 0;
+        $fuelPayroll = 0;
+        $parkingPayroll = 0;
+        $rentCarPayroll = 0;
+
+        $shifts = $this->shifts->findByPlannedEmployee(
+            $startOfMonth,
+            $endOfMonth,
             $userId
         );
 
-        /** @var ServicePayroll $servicePayroll */
-        foreach ($servicePayrolls as $servicePayroll) {
-            $reward = (float)($servicePayroll->getAccrued()->amount / 100);
-            $callsTotal += $reward;
-            $total += $reward;
+        $shiftIds = [];
+
+        /** @var MedTeam $shift */
+        foreach ($shifts as $shift) {
+            $shiftIds[] = $shift->getId();
         }
 
-        $servicePayrolls = $this->servicePayrolls->findByPlannedEmployee(
-            $startDate,
-            $endDate,
-            $userId
-        );
 
-        /** @var ServicePayroll $servicePayroll */
-        foreach ($servicePayrolls as $servicePayroll) {
-            $reward = (float)($servicePayroll->getAccrued()->amount / 100);
-            $callsTotal += $reward;
-            $total += $reward;
-        }
-
-        $shiftPayrolls = $this->shiftPayrolls->findByPlannedEmployee(
-            $startDate,
-            $endDate,
+        $shiftPayrolls = $this->shiftPayrolls->findByShiftIds(
+            $shiftIds,
             $userId
         );
 
         /** @var ShiftPayroll $shiftPayroll */
         foreach ($shiftPayrolls as $shiftPayroll) {
-
-            $reward = (float)($shiftPayroll->getAccrued()->amount / 100);
-            $shiftsTotal += $reward;
-            $total += $reward;
-        }
-
-        $kpiPayrolls = $this->kpiPayrolls->findByPlannedEmployee(
-            $startDate,
-            $endDate,
-            $userId
-        );
-
-        /** @var KpiPayroll $kpiPayroll */
-        foreach ($kpiPayrolls as $kpiPayroll) {
-            if (!isset($items[$kpiPayroll->getRecord()->getEmployee()->getId()])) {
-                $items[$kpiPayroll->getRecord()->getEmployee()->getId()] = [
-                    'employee' => [
-                        'id' => $kpiPayroll->getRecord()->getEmployee()->getId(),
-                        'name' => $kpiPayroll->getRecord()->getEmployee()->getName(),
-                    ],
-                    'calls' => 0,
-                    'shifts' => 0,
-                    'kpis' => 0,
-                    'total' => 0,
-                ];
+            if ($shiftPayroll->getAccruedAt() < $startOfMonth || $shiftPayroll->getAccruedAt() > $endOfMonth) {
+                continue;
             }
+            if ($shiftPayroll->getAmount() == 0) {
+                continue;
+            }
+            $reward = (float)($shiftPayroll->getAccrued()->amount / 100);
 
-            $reward = $kpiPayroll->getAccrued();
-            $items[$kpiPayroll->getRecord()->getEmployee()->getId()]['kpis'] += $reward;
-            $items[$kpiPayroll->getRecord()->getEmployee()->getId()]['total'] += $reward;
-            $kpisTotal += $reward;
-            $total += $reward;
+            if ($shiftPayroll->getCalculator()->getProcessor() === 'shift_fuel') {
+                $fuelPayroll += $reward;
+            } elseif ($shiftPayroll->getCalculator()->getProcessor() === 'shift_parking') {
+                $parkingPayroll += $reward;
+            } elseif ($shiftPayroll->getCalculator()->getProcessor() === 'shift_rent_car') {
+                $rentCarPayroll += $reward;
+            } else {
+                $hoursPayroll += $reward;
+            }
         }
 
-        return $this->json([
-            'total' => $total,
-            'calls' => $callsTotal,
-            'shifts' => $shiftsTotal,
-            'kpis' => $kpisTotal,
-        ]);
+        return [
+            $hoursPayroll,
+            $fuelPayroll,
+            $parkingPayroll,
+            $rentCarPayroll
+        ];
     }
 }
