@@ -52,6 +52,8 @@ class ShiftsAction extends AbstractController
         $rentCar = 0;
         $time = 0;
 
+        $shiftIds = [];
+
         /** @var MedTeam $shift */
         foreach ($shifts as $shift) {
             $items[$shift->getId()] = [
@@ -75,11 +77,13 @@ class ShiftsAction extends AbstractController
                 'reward' => 0,
                 'subRows' => [],
             ];
+
+            $shiftIds[] = $shift->getId();
         }
 
-        $shiftPayrolls = $this->shiftPayrolls->findByPlannedEmployee(
-            $startOfMonth,
-            $endOfMonth,
+
+        $shiftPayrolls = $this->shiftPayrolls->findByShiftIds(
+            $shiftIds,
             $userId
         );
 
@@ -114,6 +118,7 @@ class ShiftsAction extends AbstractController
             'parking' => $parking,
             'rentCar' => $rentCar,
             'time' => $time,
+            'shiftPayrolls' => $shiftPayrolls,
         ]);
     }
 }

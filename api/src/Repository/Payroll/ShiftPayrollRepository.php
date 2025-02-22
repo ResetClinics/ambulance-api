@@ -52,6 +52,17 @@ class ShiftPayrollRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findByShiftIds(array $shiftIds, int $employeeId): array
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.shift IN (:shiftIds)')
+            ->andWhere('(s.employee = :employee)')
+            ->setParameter('shiftIds', $shiftIds)
+            ->setParameter('employee', $employeeId)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findByAccruedAt(DateTimeImmutable $accruedAfter, DateTimeImmutable $accruedBefore)
     {
         return $this->createQueryBuilder('s')
