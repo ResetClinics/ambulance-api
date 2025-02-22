@@ -45,6 +45,7 @@ class CallsAction extends AbstractController
         );
 
         $items = [];
+        $count = 0;
         $total = 0;
 
         $callsItems = [];
@@ -68,7 +69,7 @@ class CallsAction extends AbstractController
                 ] : null,
                 'callId' => $call->getId(),
                 'name' => $call->getAddress(),
-                'amount' => '',
+                'amount' => $call->getPrice(),
                 'reward' => 0,
                 'subRows' => [],
             ];
@@ -76,6 +77,7 @@ class CallsAction extends AbstractController
             foreach ($call->getServices() as $row) {
                 $rowIds[] = $row->getId();
             }
+            $total++;
         }
 
         $servicePayrolls = $this->servicePayrolls->findByRowIds($rowIds);
@@ -87,11 +89,13 @@ class CallsAction extends AbstractController
             $row = $servicePayroll->getCallService();
 
             $callsItems[$row->getCalling()->getId()]['reward'] += $reward;
+            $callsItems[$row->getCalling()->getId()]['amount'] += $row->getPrice();
 
             $callsItems[$row->getCalling()->getId()]['subRows'][] = [
                 'name' => $row->getService()->getName(),
                 'amount' => $row->getPrice(),
                 'reward' => $reward,
+                'type' => 'service',
             ];
         }
 
@@ -105,8 +109,9 @@ class CallsAction extends AbstractController
 
             $callsItems[$callPayroll->getCall()->getId()]['subRows'][] = [
                 'name' => $callPayroll->getCalculator()->getName(),
-                'amount' => '',
+                'amount' => 0,
                 'reward' => $reward,
+                'type' => 'added',
             ];
         }
 
@@ -114,13 +119,14 @@ class CallsAction extends AbstractController
             if (!isset($items[$callItem['completedDate']])) {
                 $items[$callItem['completedDate']] = [
                     'name' => $callItem['completedDate'],
-                    'amount' => '',
+                    'amount' => 0,
                     'reward' => 0,
                     'subRows' => [],
                 ];
             }
 
             $items[$callItem['completedDate']]['reward'] += $callItem['reward'];
+            $items[$callItem['completedDate']]['amount'] += $callItem['amount'];
 
             $items[$callItem['completedDate']]['subRows'][] = $callItem;
             $total += $callItem['reward'];
@@ -129,6 +135,7 @@ class CallsAction extends AbstractController
         return $this->json([
             'items' => array_values($items),
             'total' => $total,
+            'count' => $count,
         ]);
     }
 }
