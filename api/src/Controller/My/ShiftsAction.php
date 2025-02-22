@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api/my/calls', name: 'api_my_calls', methods: ['GET'])]
+#[Route('/api/my/shifts', name: 'api_my_shifts', methods: ['GET'])]
 class ShiftsAction extends AbstractController
 {
     public function __construct(
