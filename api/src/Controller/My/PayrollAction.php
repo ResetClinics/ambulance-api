@@ -86,7 +86,7 @@ class PayrollAction extends AbstractController
         $kpiPayroll = 0;
 
         $kpiPayroll += $this->getKpiAverageBillPayroll($startOfMonth, $endOfMonth, $userId, $payrollPayroll);
-
+        $kpiPayroll += $this->getKpiRepeatPayroll($startOfMonth, $endOfMonth, $userId, $payrollPayroll);
 
         return $kpiPayroll;
     }
@@ -122,6 +122,46 @@ class PayrollAction extends AbstractController
         $averageBill = (float)($count > 0 ? $price / $count : 0);
 
         $rate = $payrollCalculator->getRate($averageBill);
+
+        $initialAmountByKPI = (int)($payrollPayroll / 100 * $payrollCalculator->getWeight());
+
+        return (int)($initialAmountByKPI * $rate);
+    }
+
+    private function getKpiRepeatPayroll(
+        DateTimeImmutable $startOfMonth,
+        DateTimeImmutable $endOfMonth,
+        int               $userId,
+                          $payrollPayroll
+    ): int
+    {
+        $payrollCalculator = $this->payrollCalculators->findOneByProcessor('kpi_repeat_rate');
+
+        if (!$payrollCalculator) {
+            throw new DomainException('Payroll calculator not found');
+        }
+
+        $calls = $this->calls->findAllCompletedOfTheEmployeeByCompletionDateIncludedInPeriod(
+            $startOfMonth,
+            $endOfMonth,
+            $userId
+        );
+
+        $countCalls = 0;
+        $countRepeat = 0;
+
+        /** @var Calling $call */
+        foreach ($calls as $call) {
+            foreach ($call->getServices() as $callService) {
+                if ($callService->isReplay()) {
+                    ++$countRepeat;
+                }
+            }
+            ++$countCalls;
+        }
+
+        $kpiValue = (float)($countRepeat > 0 ? $countCalls / $countRepeat : 100);
+        $rate = $payrollCalculator->getRate($kpiValue);
 
         $initialAmountByKPI = (int)($payrollPayroll / 100 * $payrollCalculator->getWeight());
 
