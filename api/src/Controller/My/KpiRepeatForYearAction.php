@@ -59,7 +59,7 @@ class KpiRepeatForYearAction extends AbstractController
                 ++$countCalls;
             }
 
-            $monthlyKpiRepeat[] = (float)($countRepeat > 0 ? $countCalls / $countRepeat : 100);
+            $monthlyKpiRepeat[] = (int)($countRepeat > 0 ? $countCalls / $countRepeat : 100);
         }
 
         return $this->json([

@@ -61,7 +61,7 @@ class KpiHospitalForYearAction extends AbstractController
                 ++$countCalls;
             }
 
-            $monthlyKpiHospital[] = (float)($countStationary > 0 ? $countCalls / $countStationary : 100);
+            $monthlyKpiHospital[] = (int)($countStationary > 0 ? $countCalls / $countStationary : 100);
         }
 
         return $this->json([
