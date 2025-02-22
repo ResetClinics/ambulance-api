@@ -83,44 +83,37 @@ class CallsAction extends AbstractController
         $servicePayrolls = $this->servicePayrolls->findByRowIds($rowIds);
 
         /** @var ServicePayroll $servicePayroll */
-        foreach ($servicePayrolls as $servicePayroll) {
-            $reward = (float)($servicePayroll->getAccrued()->amount / 100);
+    //   foreach ($servicePayrolls as $servicePayroll) {
+    //       $reward = (float)($servicePayroll->getAccrued()->amount / 100);
 
-            $row = $servicePayroll->getCallService();
+    //       $row = $servicePayroll->getCallService();
 
-            $callsItems[$row->getCalling()->getId()]['reward'] += $reward;
-            $callsItems[$row->getCalling()->getId()]['amount'] += $row->getPrice();
+    //       $callsItems[$row->getCalling()->getId()]['reward'] += $reward;
+    //       $callsItems[$row->getCalling()->getId()]['amount'] += $row->getPrice();
 
-            $callsItems[$row->getCalling()->getId()]['subRows'][] = [
-                'name' => $row->getService()->getName(),
-                'amount' => $row->getPrice(),
-                'reward' => $reward,
-                'type' => 'service',
-            ];
-        }
+    //       $callsItems[$row->getCalling()->getId()]['subRows'][] = [
+    //           'name' => $row->getService()->getName(),
+    //           'amount' => $row->getPrice(),
+    //           'reward' => $reward,
+    //           'type' => 'service',
+    //       ];
+    //   }
 
         $callPayrolls = $this->callPayrolls->findByCallIds($callIds);
 
         /** @var CallPayroll $callPayroll */
-        foreach ($callPayrolls as $callPayroll) {
-            $reward = (float)($callPayroll->getAccrued()->amount / 100);
-
-            $callsItems[$callPayroll->getCall()->getId()]['reward'] += $reward;
-
-            $callsItems[$callPayroll->getCall()->getId()]['subRows'][] = [
-                'name' => $callPayroll->getCalculator()->getName(),
-                'amount' => 0,
-                'reward' => $reward,
-                'type' => 'added',
-            ];
-        }
-
-        return $this->json([
-            'items' => array_values($items),
-            'total' => $total,
-            'count' => $count,
-            'servicePayrolls' => $servicePayrolls,
-        ]);
+      //  foreach ($callPayrolls as $callPayroll) {
+      //      $reward = (float)($callPayroll->getAccrued()->amount / 100);
+//
+      //      $callsItems[$callPayroll->getCall()->getId()]['reward'] += $reward;
+//
+      //      $callsItems[$callPayroll->getCall()->getId()]['subRows'][] = [
+      //          'name' => $callPayroll->getCalculator()->getName(),
+      //          'amount' => 0,
+      //          'reward' => $reward,
+      //          'type' => 'added',
+      //      ];
+      //  }
 
         foreach ($callsItems as $callItem) {
             if (!isset($items[$callItem['completedDate']])) {
@@ -145,7 +138,6 @@ class CallsAction extends AbstractController
             'items' => array_values($items),
             'total' => $total,
             'count' => $count,
-            'servicePayrolls' => $servicePayrolls,
         ]);
     }
 }
