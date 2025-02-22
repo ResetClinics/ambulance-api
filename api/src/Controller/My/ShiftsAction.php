@@ -46,11 +46,8 @@ class ShiftsAction extends AbstractController
         );
 
         $items = [];
+        $count = 0;
         $total = 0;
-        $fuel = 0;
-        $parking = 0;
-        $rentCar = 0;
-        $time = 0;
 
         $shiftIds = [];
 
@@ -78,6 +75,7 @@ class ShiftsAction extends AbstractController
                 'subRows' => [],
             ];
 
+            $count++;
             $shiftIds[] = $shift->getId();
         }
 
@@ -89,20 +87,16 @@ class ShiftsAction extends AbstractController
 
         /** @var ShiftPayroll $shiftPayroll */
         foreach ($shiftPayrolls as $shiftPayroll) {
+            if ($shiftPayroll->getAccruedAt() < $startOfMonth || $shiftPayroll->getAccruedAt() > $endOfMonth) {
+                continue;
+            }
+            if ($shiftPayroll->getAccrued() === 0) {
+                continue;
+            }
             $reward = (float)($shiftPayroll->getAccrued()->amount / 100);
 
             $items[$shiftPayroll->getShift()->getId()]['reward'] += $reward;
             $total += $reward;
-
-            if ($shiftPayroll->getCalculator()->getProcessor() === 'shift_fuel') {
-                $fuel += $reward;
-            }elseif ($shiftPayroll->getCalculator()->getProcessor() === 'shift_parking') {
-                $parking += $reward;
-            }elseif ($shiftPayroll->getCalculator()->getProcessor() === 'shift_rent_car') {
-                $rentCar += $reward;
-            }else {
-                $time += $reward;
-            }
 
             $items[$shiftPayroll->getShift()->getId()]['subRows'][] = [
                 'name' => $shiftPayroll->getCalculator()->getName(),
@@ -114,11 +108,7 @@ class ShiftsAction extends AbstractController
         return $this->json([
             'items' => array_values($items),
             'total' => $total,
-            'fuel' => $fuel,
-            'parking' => $parking,
-            'rentCar' => $rentCar,
-            'time' => $time,
-            'shiftPayrolls' => $shiftPayrolls,
+            'count' => $count,
         ]);
     }
 }
