@@ -138,6 +138,7 @@ class CallsAction extends AbstractController
             'items' => array_values($items),
             'total' => $total,
             'count' => $count,
+            'servicePayrolls' => $servicePayrolls,
         ]);
     }
 }
