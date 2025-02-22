@@ -7,13 +7,11 @@ namespace App\Controller\My;
 use App\Entity\Calling\Calling;
 use App\Entity\MedTeam\MedTeam;
 use App\Entity\Payroll\CallPayroll;
-use App\Entity\Payroll\KpiDocument\KpiPayroll;
 use App\Entity\Payroll\ServicePayroll;
 use App\Entity\Payroll\ShiftPayroll;
 use App\Repository\CallingRepository;
 use App\Repository\MedTeam\MedTeamRepository;
 use App\Repository\Payroll\CallPayrollRepository;
-use App\Repository\Payroll\KpiDocument\KpiPayrollRepository;
 use App\Repository\Payroll\PayrollCalculatorRepository;
 use App\Repository\Payroll\ServicePayrollRepository;
 use App\Repository\Payroll\ShiftPayrollRepository;
@@ -87,8 +85,53 @@ class PayrollAction extends AbstractController
 
         $kpiPayroll += $this->getKpiAverageBillPayroll($startOfMonth, $endOfMonth, $userId, $payrollPayroll);
         $kpiPayroll += $this->getKpiRepeatPayroll($startOfMonth, $endOfMonth, $userId, $payrollPayroll);
+        $kpiPayroll += $this->getKpiHospitalPayroll($startOfMonth, $endOfMonth, $userId, $payrollPayroll);
 
         return $kpiPayroll;
+    }
+
+    private function getKpiHospitalPayroll(
+        DateTimeImmutable $startOfMonth,
+        DateTimeImmutable $endOfMonth,
+        int               $userId,
+                          $payrollPayroll
+    ): int
+    {
+        $payrollCalculator = $this->payrollCalculators->findOneByProcessor('kpi_hospitalization_rate');
+
+        if (!$payrollCalculator) {
+            throw new DomainException('Payroll calculator not found');
+        }
+
+        $calls = $this->calls->findAllCompletedOfTheEmployeeByCompletionDateIncludedInPeriod(
+            $startOfMonth,
+            $endOfMonth,
+            $userId
+        );
+
+        $countCalls = 0;
+        $countStationary = 0;
+
+        /** @var Calling $call */
+        foreach ($calls as $call) {
+            foreach ($call->getServices() as $callService) {
+                if (
+                    $callService->isStationary() &&
+                    ($callService->getClinic()?->getId() === 1 || $callService->getClinic()?->getId() === 2)
+                ) {
+                    ++$countStationary;
+                }
+            }
+            ++$countCalls;
+        }
+
+        $kpiValue = (float)($countStationary > 0 ? $countCalls / $countStationary : 100);
+
+        $rate = $payrollCalculator->getRate($kpiValue);
+
+        $initialAmountByKPI = (int)($payrollPayroll / 100 * $payrollCalculator->getWeight());
+
+        return (int)($initialAmountByKPI * $rate);
     }
 
     private function getKpiAverageBillPayroll(
