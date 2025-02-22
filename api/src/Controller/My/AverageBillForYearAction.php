@@ -35,16 +35,9 @@ class AverageBillForYearAction extends AbstractController
 
         $monthlyAverages = [];
 
-        $dates = [];
-
         for ($i = 0; $i < 12; $i++) {
             $startOfMonth = $startOfYear->modify("+$i month");
             $endOfMonth = $startOfMonth->modify('first day of next month 00:00:00');
-
-            $dates[] = [
-                'start' => $startOfMonth->format('Y-m-d H:i:s'),
-                'end' => $endOfMonth->format('Y-m-d H:i:s')
-            ];
 
             $calls = $this->calls->findAllCompletedOfTheEmployeeByCompletionDateIncludedInPeriod(
                 $startOfMonth,
@@ -65,9 +58,7 @@ class AverageBillForYearAction extends AbstractController
         }
 
         return $this->json([
-            'startOfYear' => $startOfYear->format('Y-m-d H:i:s'),
             'values' => $monthlyAverages,
-            'dates' => $dates
         ]);
     }
 }
