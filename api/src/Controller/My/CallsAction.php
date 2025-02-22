@@ -150,6 +150,7 @@ class CallsAction extends AbstractController
         return $this->json([
             'items' => array_values($items),
             'total' => $total,
+            'calls' => $calls
         ]);
     }
 }
