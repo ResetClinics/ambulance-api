@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ShiftsAction extends AbstractController
 {
     public function __construct(
-        private readonly MedTeamRepository $shifts,
+        private readonly MedTeamRepository      $shifts,
         private readonly ShiftPayrollRepository $shiftPayrolls,
     )
     {
@@ -69,7 +69,7 @@ class ShiftsAction extends AbstractController
                     'id' => $shift->getDoctor()->getId(),
                     'name' => $shift->getDoctor()->getName(),
                 ] : null,
-                'name' => $shift->getPlannedStartAt()->format('d.m.Y'),
+                'name' => $shift->getPlannedStartAt()->format('d.m.Y H:i') . ' - ' . $shift->getPlannedFinishAt()->format('d.m.Y H:i'),
                 'amount' => '',
                 'reward' => 0,
                 'subRows' => [],
