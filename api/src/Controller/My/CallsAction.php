@@ -77,7 +77,7 @@ class CallsAction extends AbstractController
             foreach ($call->getServices() as $row) {
                 $rowIds[] = $row->getId();
             }
-            $total++;
+            $count++;
         }
 
         $servicePayrolls = $this->servicePayrolls->findByRowIds($rowIds);
