@@ -52,6 +52,15 @@ class ServicePayrollRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findByRowIds(array $rowIds): array
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.callService.id IN (:rowIds)')
+            ->setParameter('rowIds', $rowIds)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findByAccruedAt(DateTimeImmutable $accruedAfter, DateTimeImmutable $accruedBefore)
     {
         return $this->createQueryBuilder('s')

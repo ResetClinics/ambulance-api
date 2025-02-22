@@ -52,6 +52,15 @@ class CallPayrollRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findByCallIds(array $callIds): array
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.call IN (:callIds)')
+            ->setParameter('callIds', $callIds)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findByAccruedAt(DateTimeImmutable $accruedAfter, DateTimeImmutable $accruedBefore)
     {
         return $this->createQueryBuilder('c')

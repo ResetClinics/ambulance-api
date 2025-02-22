@@ -21,8 +21,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class CallsAction extends AbstractController
 {
     public function __construct(
-        private readonly CallingRepository $calls,
-        private readonly CallPayrollRepository $callPayrolls,
+        private readonly CallingRepository        $calls,
+        private readonly CallPayrollRepository    $callPayrolls,
         private readonly ServicePayrollRepository $servicePayrolls
     )
     {
@@ -49,6 +49,9 @@ class CallsAction extends AbstractController
 
         $callsItems = [];
 
+        $callIds = [];
+        $rowIds = [];
+
         /** @var Calling $call */
         foreach ($calls as $call) {
             $callsItems[$call->getId()] = [
@@ -69,57 +72,33 @@ class CallsAction extends AbstractController
                 'reward' => 0,
                 'subRows' => [],
             ];
+            $callIds[] = $call->getId();
+            foreach ($call->getServices() as $row) {
+                $rowIds[] = $row->getId();
+            }
         }
 
-        $servicePayrolls = $this->servicePayrolls->findByPlannedEmployee(
-            $startOfMonth,
-            $endOfMonth,
-            $userId
-        );
+        $servicePayrolls = $this->servicePayrolls->findByRowIds($rowIds);
 
         /** @var ServicePayroll $servicePayroll */
         foreach ($servicePayrolls as $servicePayroll) {
             $reward = (float)($servicePayroll->getAccrued()->amount / 100);
 
-            $callsItems[$servicePayroll->getCallService()->getCalling()->getId()]['reward'] += $reward;
+            $row = $servicePayroll->getCallService();
 
-            $callsItems[$servicePayroll->getCallService()->getCalling()->getId()]['subRows'][] = [
-                'name' => $servicePayroll->getCallService()->getService()->getName(),
-                'amount' => $servicePayroll->getCallService()->getPrice(),
+            $callsItems[$row->getCalling()->getId()]['reward'] += $reward;
+
+            $callsItems[$row->getCalling()->getId()]['subRows'][] = [
+                'name' => $row->getService()->getName(),
+                'amount' => $row->getPrice(),
                 'reward' => $reward,
             ];
         }
 
-        $callPayrolls = $this->callPayrolls->findByPlannedEmployee(
-            $startOfMonth,
-            $endOfMonth,
-            $userId
-        );
+        $callPayrolls = $this->callPayrolls->findByCallIds($callIds);
 
         /** @var CallPayroll $callPayroll */
         foreach ($callPayrolls as $callPayroll) {
-            if (!isset($callsItems[$callPayroll->getCall()->getId()])) {
-                $call = $this->calls->getById($callPayroll->getCall()->getId());
-
-                $callsItems[$call->getId()] = [
-                    'id' => $call->getId(),
-                    'completedAt' => $call->getCompletedAt()->format('d.m.Y H:i'),
-                    'completedDate' => $call->getCompletedAt()->format('d.m.Y'),
-                    'admin' => $call->getAdmin() ? [
-                        'id' => $call->getAdmin()->getId(),
-                        'name' => $call->getAdmin()->getName(),
-                    ] : null,
-                    'doctor' => $call->getDoctor() ? [
-                        'id' => $call->getDoctor()->getId(),
-                        'name' => $call->getDoctor()->getName(),
-                    ] : null,
-                    'callId' => $call->getId(),
-                    'name' => $call->getAddress(),
-                    'amount' => '',
-                    'reward' => 0,
-                    'subRows' => [],
-                ];
-            }
             $reward = (float)($callPayroll->getAccrued()->amount / 100);
 
             $callsItems[$callPayroll->getCall()->getId()]['reward'] += $reward;
@@ -150,8 +129,6 @@ class CallsAction extends AbstractController
         return $this->json([
             'items' => array_values($items),
             'total' => $total,
-            'calls' => $calls,
-            'servicePayrolls' => $servicePayrolls,
         ]);
     }
 }
