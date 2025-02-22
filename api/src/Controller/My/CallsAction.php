@@ -44,7 +44,7 @@ class CallsAction extends AbstractController
                 'date' => $call->getCompletedAt()?->format('d.m.Y H:i'),
                 'address' => $call->getAddress(),
                 'price' => $call->getPrice(),
-                'status' => $call->getStatus()->value,
+                'status' => $call->getStatus(),
             ];
         }, $calls));
     }
