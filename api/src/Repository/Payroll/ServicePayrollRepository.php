@@ -55,7 +55,7 @@ class ServicePayrollRepository extends ServiceEntityRepository
     public function findByRowIds(array $rowIds): array
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.callService.id IN (:rowIds)')
+            ->andWhere('c.callService IN (:rowIds)')
             ->setParameter('rowIds', $rowIds)
             ->getQuery()
             ->getResult();
