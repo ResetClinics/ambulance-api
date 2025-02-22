@@ -59,6 +59,7 @@ class CallsAction extends AbstractController
                 'id' => $call->getId(),
                 'completedAt' => $call->getCompletedAt()->format('d.m.Y H:i'),
                 'completedDate' => $call->getCompletedAt()->format('d.m.Y'),
+                'completedTime' => $call->getCompletedAt()->format('H:i'),
                 'admin' => $call->getAdmin() ? [
                     'id' => $call->getAdmin()->getId(),
                     'name' => $call->getAdmin()->getName(),
@@ -83,21 +84,21 @@ class CallsAction extends AbstractController
         $servicePayrolls = $this->servicePayrolls->findByRowIds($rowIds);
 
         /** @var ServicePayroll $servicePayroll */
-    //   foreach ($servicePayrolls as $servicePayroll) {
-    //       $reward = (float)($servicePayroll->getAccrued()->amount / 100);
+     foreach ($servicePayrolls as $servicePayroll) {
+         $reward = (float)($servicePayroll->getAccrued()->amount / 100);
 
-    //       $row = $servicePayroll->getCallService();
+         $row = $servicePayroll->getCallService();
 
-    //       $callsItems[$row->getCalling()->getId()]['reward'] += $reward;
-    //       $callsItems[$row->getCalling()->getId()]['amount'] += $row->getPrice();
+         $callsItems[$row->getCalling()->getId()]['reward'] += $reward;
+         $callsItems[$row->getCalling()->getId()]['amount'] += $row->getPrice();
 
-    //       $callsItems[$row->getCalling()->getId()]['subRows'][] = [
-    //           'name' => $row->getService()->getName(),
-    //           'amount' => $row->getPrice(),
-    //           'reward' => $reward,
-    //           'type' => 'service',
-    //       ];
-    //   }
+         $callsItems[$row->getCalling()->getId()]['subRows'][] = [
+             'name' => $row->getService()->getName(),
+             'amount' => $row->getPrice(),
+             'reward' => $reward,
+             'type' => 'service',
+         ];
+     }
 
         $callPayrolls = $this->callPayrolls->findByCallIds($callIds);
 
