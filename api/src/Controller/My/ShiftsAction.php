@@ -90,7 +90,7 @@ class ShiftsAction extends AbstractController
             if ($shiftPayroll->getAccruedAt() < $startOfMonth || $shiftPayroll->getAccruedAt() > $endOfMonth) {
                 continue;
             }
-            if ($shiftPayroll->getAccrued() == 0) {
+            if ($shiftPayroll->getAmount() == 0) {
                 continue;
             }
             $reward = (float)($shiftPayroll->getAccrued()->amount / 100);
