@@ -6,8 +6,10 @@ namespace App\Controller\My;
 
 use App\Entity\Calling\Calling;
 use App\Entity\MedTeam\MedTeam;
+use App\Entity\Payroll\ShiftPayroll;
 use App\Repository\CallingRepository;
 use App\Repository\MedTeam\MedTeamRepository;
+use App\Repository\Payroll\ShiftPayrollRepository;
 use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,19 +22,22 @@ class ShiftsAction extends AbstractController
 {
     public function __construct(
         private readonly MedTeamRepository $shifts,
+        private readonly ShiftPayrollRepository $shiftPayrolls,
     )
     {
     }
 
     public function __invoke(Request $request, KernelInterface $kernel): JsonResponse
     {
+        ini_set('memory_limit', '-1');
+
         $userId = $this->getUser()?->getId();
         if (!$userId) {
             throw new \DomainException('User not found');
         }
 
         $startOfMonth = new DateTimeImmutable('first day of this month 00:00:00');
-        $endOfMonth = new DateTimeImmutable('last day of this month 23:59:59');
+        $endOfMonth = new DateTimeImmutable('first day of next month 00:00:00');
 
         $shifts = $this->shifts->findByPlannedEmployee(
             $startOfMonth,
@@ -40,13 +45,75 @@ class ShiftsAction extends AbstractController
             $userId
         );
 
-        return $this->json(array_map(function (MedTeam $shift) {
-            return [
+        $items = [];
+        $total = 0;
+        $fuel = 0;
+        $parking = 0;
+        $rentCar = 0;
+        $time = 0;
+
+        /** @var MedTeam $shift */
+        foreach ($shifts as $shift) {
+            $items[$shift->getId()] = [
                 'id' => $shift->getId(),
-                'startAt' => $shift->getPlannedStartAt()->format('d.m.Y H:i'),
-                'finishAt' => $shift->getPlannedFinishAt()->format('d.m.Y H:i'),
-                'status' => $shift->getStatus(),
+                'startedAt' => $shift->getPlannedStartAt()->format('d.m.Y H:i'),
+                'finishedAt' => $shift->getPlannedFinishAt()->format('d.m.Y H:i'),
+                'car' => $shift->getCar() ? [
+                    'id' => $shift->getCar()->getId(),
+                    'name' => $shift->getCar()->getName(),
+                ] : null,
+                'admin' => $shift->getAdmin() ? [
+                    'id' => $shift->getAdmin()->getId(),
+                    'name' => $shift->getAdmin()->getName(),
+                ] : null,
+                'doctor' => $shift->getDoctor() ? [
+                    'id' => $shift->getDoctor()->getId(),
+                    'name' => $shift->getDoctor()->getName(),
+                ] : null,
+                'name' => $shift->getPlannedStartAt()->format('d.m.Y'),
+                'amount' => '',
+                'reward' => 0,
+                'subRows' => [],
             ];
-        }, $shifts));
+        }
+
+        $shiftPayrolls = $this->shiftPayrolls->findByPlannedEmployee(
+            $startOfMonth,
+            $endOfMonth,
+            $userId
+        );
+
+        /** @var ShiftPayroll $shiftPayroll */
+        foreach ($shiftPayrolls as $shiftPayroll) {
+            $reward = (float)($shiftPayroll->getAccrued()->amount / 100);
+
+            $items[$shiftPayroll->getShift()->getId()]['reward'] += $reward;
+            $total += $reward;
+
+            if ($shiftPayroll->getCalculator()->getProcessor() === 'shift_fuel') {
+                $fuel += $reward;
+            }elseif ($shiftPayroll->getCalculator()->getProcessor() === 'shift_parking') {
+                $parking += $reward;
+            }elseif ($shiftPayroll->getCalculator()->getProcessor() === 'shift_rent_car') {
+                $rentCar += $reward;
+            }else {
+                $time += $reward;
+            }
+
+            $items[$shiftPayroll->getShift()->getId()]['subRows'][] = [
+                'name' => $shiftPayroll->getCalculator()->getName(),
+                'amount' => $shiftPayroll->getAmount(),
+                'reward' => $reward,
+            ];
+        }
+
+        return $this->json([
+            'items' => array_values($items),
+            'total' => $total,
+            'fuel' => $fuel,
+            'parking' => $parking,
+            'rentCar' => $rentCar,
+            'time' => $time,
+        ]);
     }
 }

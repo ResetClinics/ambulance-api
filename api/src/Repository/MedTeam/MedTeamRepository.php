@@ -85,13 +85,28 @@ class MedTeamRepository extends ServiceEntityRepository
 
     public function findByPlannedEmployee(DateTimeInterface $startDate, DateTimeInterface $endDate, int $employeeId)
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.plannedStartAt >= :plannedStartAtAfter')
-            ->andWhere('t.plannedStartAt < :plannedStartAtBefore')
+        $qb = $this->createQueryBuilder('t');
+
+        $orConditions = $qb->expr()->orX(
+        // Смены, которые начались в заданном периоде
+            $qb->expr()->andX(
+                't.plannedStartAt >= :startDate',
+                't.plannedStartAt < :endDate'
+            ),
+            // Смены, которые начались до периода, но закончились в нём
+            $qb->expr()->andX(
+                't.plannedEndAt > :startDate',
+                't.plannedEndAt <= :endDate',
+                't.plannedStartAt < :startDate'
+            )
+        );
+
+        return $qb
+            ->andWhere($orConditions)
             ->andWhere('t.status = :status')
             ->andWhere('(t.admin = :employeeId OR t.doctor = :employeeId)')
-            ->setParameter('plannedStartAtAfter', $startDate)
-            ->setParameter('plannedStartAtBefore', $endDate)
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate)
             ->setParameter('status', 'completed')
             ->setParameter('employeeId', $employeeId)
             ->orderBy('t.plannedStartAt')
