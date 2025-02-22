@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controller\My;
 
+use App\Entity\Calling\Calling;
 use App\Entity\MedTeam\MedTeam;
+use App\Entity\Payroll\CallPayroll;
 use App\Entity\Payroll\KpiDocument\KpiPayroll;
 use App\Entity\Payroll\ServicePayroll;
 use App\Entity\Payroll\ShiftPayroll;
+use App\Repository\CallingRepository;
 use App\Repository\MedTeam\MedTeamRepository;
 use App\Repository\Payroll\CallPayrollRepository;
 use App\Repository\Payroll\KpiDocument\KpiPayrollRepository;
@@ -27,6 +30,9 @@ class PayrollAction extends AbstractController
     public function __construct(
         private readonly MedTeamRepository      $shifts,
         private readonly ShiftPayrollRepository $shiftPayrolls,
+        private readonly CallingRepository        $calls,
+        private readonly CallPayrollRepository    $callPayrolls,
+        private readonly ServicePayrollRepository $servicePayrolls
     )
     {
     }
@@ -38,8 +44,6 @@ class PayrollAction extends AbstractController
             throw new DomainException('User not found');
         }
 
-        $callsPayroll = 0;
-        $payrollPayroll = 0;
         $kpiPayroll = 0;
         $totalPayroll = 0;
 
@@ -53,6 +57,9 @@ class PayrollAction extends AbstractController
             $rentCarPayroll
         ] = $this->calcShifts($startOfMonth, $endOfMonth, $userId);
 
+        $callsPayroll = $this->calcCalls($startOfMonth, $endOfMonth, $userId);
+
+        $payrollPayroll = $hoursPayroll + $callsPayroll;
 
         return $this->json([
             'hoursPayroll' => $hoursPayroll,
@@ -64,6 +71,43 @@ class PayrollAction extends AbstractController
             'kpiPayroll' => $kpiPayroll,
             'totalPayroll' => $totalPayroll,
         ]);
+    }
+
+    private function calcCalls(DateTimeImmutable $startOfMonth, DateTimeImmutable $endOfMonth, int $userId): float|int
+    {
+        $calls = $this->calls->findAllCompletedOfTheEmployeeByCompletionDateIncludedInPeriod(
+            $startOfMonth,
+            $endOfMonth,
+            $userId
+        );
+
+        $total = 0;
+        $callIds = [];
+        $rowIds = [];
+
+        /** @var Calling $call */
+        foreach ($calls as $call) {
+            $callIds[] = $call->getId();
+            foreach ($call->getServices() as $row) {
+                $rowIds[] = $row->getId();
+            }
+        }
+
+        $servicePayrolls = $this->servicePayrolls->findByRowIds($rowIds, $userId);
+
+        /** @var ServicePayroll $servicePayroll */
+        foreach ($servicePayrolls as $servicePayroll) {
+            $total += (float)($servicePayroll->getAccrued()->amount / 100);
+        }
+
+        $callPayrolls = $this->callPayrolls->findByCallIds($callIds, $userId);
+
+        /** @var CallPayroll $callPayroll */
+        foreach ($callPayrolls as $callPayroll) {
+            $total += (float)($callPayroll->getAccrued()->amount / 100);
+        }
+
+        return $total;
     }
 
     private function calcShifts(DateTimeImmutable $startOfMonth, DateTimeImmutable $endOfMonth, int $userId): array
