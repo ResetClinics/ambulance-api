@@ -41,7 +41,7 @@ class CallsAction extends AbstractController
         return $this->json(array_map(function (Calling $call) {
             return [
                 'id' => $call->getId(),
-                'date' => $call->getCompletionDate()->format('d.m.Y H:i'),
+                'date' => $call->getCompletionDate()?->format('d.m.Y H:i'),
                 'address' => $call->getAddress(),
                 'price' => $call->getPrice(),
                 'status' => $call->getStatus()->value,
