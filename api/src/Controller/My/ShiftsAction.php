@@ -45,7 +45,7 @@ class ShiftsAction extends AbstractController
                 'id' => $shift->getId(),
                 'startAt' => $shift->getPlannedStartAt()->format('d.m.Y H:i'),
                 'finishAt' => $shift->getPlannedFinishAt()->format('d.m.Y H:i'),
-                'status' => $shift->getStatus()->value,
+                'status' => $shift->getStatus(),
             ];
         }, $shifts));
     }
