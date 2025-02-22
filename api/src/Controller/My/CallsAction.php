@@ -121,12 +121,14 @@ class CallsAction extends AbstractController
                     'name' => $callItem['completedDate'],
                     'amount' => 0,
                     'reward' => 0,
+                    'count' => 0,
                     'subRows' => [],
                 ];
             }
 
             $items[$callItem['completedDate']]['reward'] += $callItem['reward'];
             $items[$callItem['completedDate']]['amount'] += $callItem['amount'];
+            $items[$callItem['completedDate']]['count'] += 1;
 
             $items[$callItem['completedDate']]['subRows'][] = $callItem;
             $total += $callItem['reward'];
