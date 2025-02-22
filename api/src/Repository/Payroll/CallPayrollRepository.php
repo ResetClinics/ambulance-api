@@ -52,11 +52,13 @@ class CallPayrollRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findByCallIds(array $callIds): array
+    public function findByCallIds(array $callIds, int $employeeId): array
     {
         return $this->createQueryBuilder('c')
             ->andWhere('c.call IN (:callIds)')
+            ->andWhere('(c.employee = :employee)')
             ->setParameter('callIds', $callIds)
+            ->setParameter('employee', $employeeId)
             ->getQuery()
             ->getResult();
     }
