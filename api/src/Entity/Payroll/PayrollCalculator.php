@@ -200,6 +200,10 @@ class PayrollCalculator
     {
         $value = json_decode($this->getValue(), true);
 
+        if (!is_array($value)){
+            return [];
+        }
+
         return array_map(static function ($item) {
             return [
                 'min' => (float)$item['min'],
