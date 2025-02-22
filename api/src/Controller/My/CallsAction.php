@@ -115,6 +115,13 @@ class CallsAction extends AbstractController
             ];
         }
 
+        return $this->json([
+            'items' => array_values($items),
+            'total' => $total,
+            'count' => $count,
+            'servicePayrolls' => $servicePayrolls,
+        ]);
+
         foreach ($callsItems as $callItem) {
             if (!isset($items[$callItem['completedDate']])) {
                 $items[$callItem['completedDate']] = [
