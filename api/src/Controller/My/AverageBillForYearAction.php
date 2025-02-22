@@ -28,7 +28,10 @@ class AverageBillForYearAction extends AbstractController
         }
 
         $now = new DateTimeImmutable();
-        $startOfYear = $now->modify('-1 year')->modify('first day of this month 00:00:00');
+        $startOfYear = $now
+            ->modify('-1 year')
+            ->modify('+1 month')
+            ->modify('first day of this month 00:00:00');
 
         $monthlyAverages = [];
 
@@ -36,7 +39,7 @@ class AverageBillForYearAction extends AbstractController
 
         for ($i = 0; $i < 12; $i++) {
             $startOfMonth = $startOfYear->modify("+$i month");
-            $endOfMonth = $startOfMonth->modify('last day of this month 23:59:59');
+            $endOfMonth = $startOfMonth->modify('first day of next month 00:00:00');
 
             $dates[] = [
                 'start' => $startOfMonth->format('Y-m-d H:i:s'),
