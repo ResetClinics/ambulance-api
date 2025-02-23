@@ -98,8 +98,18 @@ class ShiftsAction extends AbstractController
             $items[$shiftPayroll->getShift()->getId()]['reward'] += $reward;
             $total += $reward;
 
+            $addedName = '';
+
+            if (
+                $shiftPayroll->getCalculator()->getProcessor() !== 'shift_fuel' &&
+                $shiftPayroll->getCalculator()->getProcessor() === 'shift_parking' &&
+                $shiftPayroll->getCalculator()->getProcessor() === 'shift_rent_car'
+            ) {
+                $addedName = ' ' . $shiftPayroll->getAccruedAt()->format('d.m.Y');
+            }
+
             $items[$shiftPayroll->getShift()->getId()]['subRows'][] = [
-                'name' => $shiftPayroll->getCalculator()->getName(),
+                'name' => $shiftPayroll->getCalculator()->getName() . $addedName,
                 'amount' => $shiftPayroll->getAmount(),
                 'reward' => $reward,
             ];
