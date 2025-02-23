@@ -101,8 +101,8 @@ class ShiftsAction extends AbstractController
 
             if (
                 $shiftPayroll->getCalculator()->getProcessor() !== 'shift_fuel' &&
-                $shiftPayroll->getCalculator()->getProcessor() === 'shift_parking' &&
-                $shiftPayroll->getCalculator()->getProcessor() === 'shift_rent_car'
+                $shiftPayroll->getCalculator()->getProcessor() !== 'shift_parking' &&
+                $shiftPayroll->getCalculator()->getProcessor() !== 'shift_rent_car'
             ) {
                 $addedName = ' ' . $shiftPayroll->getAccruedAt()->format('d.m.Y');
             }
