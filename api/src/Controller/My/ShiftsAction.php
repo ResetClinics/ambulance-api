@@ -9,6 +9,7 @@ use App\Entity\Payroll\ShiftPayroll;
 use App\Repository\MedTeam\MedTeamRepository;
 use App\Repository\Payroll\ShiftPayrollRepository;
 use DateTimeImmutable;
+use DomainException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,7 +32,7 @@ class ShiftsAction extends AbstractController
 
         $userId = $this->getUser()?->getId();
         if (!$userId) {
-            throw new \DomainException('User not found');
+            throw new DomainException('User not found');
         }
 
         $startOfMonth = new DateTimeImmutable('first day of this month 00:00:00');
