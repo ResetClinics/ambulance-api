@@ -3,7 +3,6 @@ api_platform:
   version: 1.0.0
   description: 'API выездной службы'
   show_webby: false
-  enable_docs: '%env(bool:ENABLE_API_DOCS)%'
   enable_entrypoint: '%env(bool:ENABLE_API_DOCS)%'
   enable_swagger: '%env(bool:ENABLE_API_DOCS)%'
   enable_swagger_ui: '%env(bool:ENABLE_API_DOCS)%'
