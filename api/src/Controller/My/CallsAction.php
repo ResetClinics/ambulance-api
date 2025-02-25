@@ -69,7 +69,7 @@ class CallsAction extends AbstractController
                     'name' => $call->getDoctor()->getName(),
                 ] : null,
                 'callId' => $call->getId(),
-                'name' => $call->getAddress(),
+                'name' => substr($call->getAddress(), 0, -6) . '...',
                 'amount' => $call->getPrice(),
                 'reward' => 0,
                 'subRows' => [],
