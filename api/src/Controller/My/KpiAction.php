@@ -115,7 +115,7 @@ class KpiAction extends AbstractController
 
         return [
             'id' => 'kpi_repeat',
-            'name' => 'KPI за повтор',
+            'name' => 'KPI за госпитализацию',
             'base' => $countCalls,
             'metric' => $countStationary,
             'baseKpi' => $kpiValue,
