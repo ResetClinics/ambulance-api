@@ -53,7 +53,7 @@ class KpiHospitalForYearAction extends AbstractController
                 foreach ($call->getServices() as $callService) {
                     if (
                         $callService->isStationary() &&
-                        ($callService->getClinic()?->getId() === 1 || $callService->getClinic()?->getId() === 2)
+                        ($callService->getClinic()?->getId() !== 3)
                     ) {
                         ++$countStationary;
                     }
