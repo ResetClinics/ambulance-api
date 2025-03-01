@@ -33,8 +33,8 @@ class PayrollCalculateCommand extends Command
         ini_set('memory_limit', '-1');
 
         $shifts = $this->shifts->findByPlanned(
-            new DateTimeImmutable('2024-11-30T00:00:00.000Z'),
-            new DateTimeImmutable('2025-01-01T00:00:00.000Z'),
+            new DateTimeImmutable('2025-02-01T00:00:00.000Z'),
+            new DateTimeImmutable('2025-03-01T00:00:00.000Z'),
         );
 
         /** @var MedTeam $shift */

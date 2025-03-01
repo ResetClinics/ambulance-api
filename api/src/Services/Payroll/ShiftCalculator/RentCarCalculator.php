@@ -18,6 +18,7 @@ readonly class RentCarCalculator implements ShiftCalculatorInterface
 
     public function calculate(MedTeam $shift, PayrollCalculator $payrollCalculator): void
     {
+
         $accruedAt = $shift->getPlannedFinishAt();
 
         if (!$accruedAt) {
@@ -35,7 +36,7 @@ readonly class RentCarCalculator implements ShiftCalculatorInterface
         }
 
         $diff = $shift->getPlannedFinishAt()->diff($shift->getPlannedStartAt());
-        $hours = $diff->h;
+        $hours = $diff->days * 24 + $diff->h;
 
         $rate = (float)$payrollCalculator->getValue();
 
