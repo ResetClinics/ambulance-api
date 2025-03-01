@@ -31,31 +31,31 @@ class CreateKpiDocumentCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         ini_set('memory_limit', '-1');
-        $document = $this->documents->findById(1);
+       // $document = $this->documents->findById(1);
+//
+       // if (!$document) {
+       //     $document = new KpiDocument(
+       //         new DateTimeImmutable('2024-12-01T00:00:00.000Z'),
+       //         new DateTimeImmutable('2025-01-01T00:00:00.000Z'),
+       //     );
+//
+       //     $this->documents->add($document);
+       // }
+//
+       // $this->kpiCalculator->calculate($document);
+//
+       // $this->flusher->flush();
+//
+       // $document = $this->documents->findById(2);
 
-        if (!$document) {
+
             $document = new KpiDocument(
-                new DateTimeImmutable('2024-12-01T00:00:00.000Z'),
-                new DateTimeImmutable('2025-01-01T00:00:00.000Z'),
-            );
-
-            $this->documents->add($document);
-        }
-
-        $this->kpiCalculator->calculate($document);
-
-        $this->flusher->flush();
-
-        $document = $this->documents->findById(2);
-
-        if (!$document) {
-            $document = new KpiDocument(
-                new DateTimeImmutable('2025-01-01T00:00:00.000Z'),
                 new DateTimeImmutable('2025-02-01T00:00:00.000Z'),
+                new DateTimeImmutable('2025-03-01T00:00:00.000Z'),
             );
 
             $this->documents->add($document);
-        }
+
 
         $this->kpiCalculator->calculate($document);
 
