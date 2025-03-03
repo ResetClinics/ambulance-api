@@ -239,7 +239,15 @@ class CallingRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findAllForPartnerApi(Partner $partner, ?string $sort, ?string $direction, ?string $search): array
+    public function findAllForPartnerApi(
+        Partner $partner,
+        ?string $sort,
+        ?string $direction,
+        ?string $search,
+        ?string $statuses,
+        ?string $completedAtAfter,
+        ?string $completedAtBefore,
+    ): array
     {
         $qb = $this->createQueryBuilder('c');
 
@@ -254,6 +262,18 @@ class CallingRepository extends ServiceEntityRepository
 
         if ($sort) {
             $qb->orderBy('c.' . $sort, $direction);
+        }
+
+        if ($statuses) {
+            $statuses = explode(',', $statuses);
+            $qb->andWhere($qb->expr()->in('c.status', $statuses));
+        }
+
+        if ($completedAtAfter && $completedAtBefore) {
+            $qb->andWhere('c.completedAt >= :completedAtAfter')
+                ->andWhere('c.completedAt < :completedAtBefore')
+                ->setParameter('completedAtAfter', $completedAtAfter)
+                ->setParameter('completedAtBefore', $completedAtBefore);
         }
 
         return $qb

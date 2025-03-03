@@ -39,7 +39,19 @@ class PartnerHospitalsAction extends AbstractController
         /** @var string $direction */
         $direction = $request->query->get('direction', 'desc');
         $search = $request->query->get('search');
-        $hospitals = $this->hospitals->findAllForPartnerApi($user->getPartner(), $sort, $direction, $search);
+        $statuses = $request->query->get('status');
+        $dischargedAtAfter = $request->query->get('dischargedAt[after]');
+        $dischargedAtBefore = $request->query->get('dischargedAt[before]');
+
+        $hospitals = $this->hospitals->findAllForPartnerApi(
+            $user->getPartner(),
+            $sort,
+            $direction,
+            $search,
+            $statuses,
+            $dischargedAtAfter,
+            $dischargedAtBefore
+        );
 
         $pagination = $this->paginator->paginate($hospitals, $page, $perPage);
 
@@ -49,7 +61,7 @@ class PartnerHospitalsAction extends AbstractController
                     return [
                         'id' => $hospital->getId(),
                         'number' => $hospital->getExternal(),
-                        'amount' => $hospital->getAmount(),
+                        'amount' => $hospital->getMainAmount(),
                         'fio' => $hospital->getFio(),
                         'status' => $hospital->getStatus(),
                         'hospitalizedAt' => $hospital->getHospitalized()?->format('d.m.Y H:i'),

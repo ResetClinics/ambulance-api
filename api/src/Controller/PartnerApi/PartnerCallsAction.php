@@ -41,7 +41,19 @@ class PartnerCallsAction extends AbstractController
 
         $search = $request->query->get('search');
 
-        $calls = $this->calls->findAllForPartnerApi($user->getPartner(), $sort, $direction, $search);
+        $statuses = $request->query->get('status');
+        $completedAtAfter = $request->query->get('completedAt[after]');
+        $completedAtAtBefore = $request->query->get('completedAt[before]');
+
+        $calls = $this->calls->findAllForPartnerApi(
+            $user->getPartner(),
+            $sort,
+            $direction,
+            $search,
+            $statuses,
+            $completedAtAfter,
+            $completedAtAtBefore
+        );
 
         $pagination = $this->paginator->paginate($calls, $page, $perPage);
 

@@ -120,7 +120,15 @@ class HospitalRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findAllForPartnerApi(Partner $partner, ?string $sort, ?string $direction, ?string $search)
+    public function findAllForPartnerApi(
+        Partner $partner,
+        ?string $sort,
+        ?string $direction,
+        ?string $search,
+        ?string $statuses,
+        ?string $dischargedAtAfter,
+        ?string $dischargedAtBefore
+    )
     {
         $qb = $this->createQueryBuilder('h');
 
@@ -135,6 +143,18 @@ class HospitalRepository extends ServiceEntityRepository
 
         if ($sort) {
             $qb->orderBy('h.' . $sort, $direction);
+        }
+
+        if ($statuses) {
+            $statuses = explode(',', $statuses);
+            $qb->andWhere($qb->expr()->in('h.status', $statuses));
+        }
+
+        if ($dischargedAtAfter && $dischargedAtBefore) {
+            $qb->andWhere('h.dischargedAt >= :dischargedAtAfter')
+                ->andWhere('h.dischargedAt < :dischargedAtBefore')
+                ->setParameter('dischargedAtAfter', $dischargedAtAfter)
+                ->setParameter('dischargedAtBefore', $dischargedAtBefore);
         }
 
         return $qb
