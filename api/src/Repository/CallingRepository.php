@@ -281,4 +281,32 @@ class CallingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function existsByPhoneInWorkingStatuses(string $phone): ?Calling
+    {
+
+        $workingStatuses = [
+            Status::NOT_READY,
+            Status::WAITING,
+            Status::ASSIGNED,
+            Status::ACCEPTED,
+            Status::DISPATCHED,
+            Status::ARRIVED,
+            Status::TREATING,
+        ];
+
+        $calls =  $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->leftJoin('c.client', 'cl')
+            ->where('cl.phone = :phone')
+            ->andWhere('c.status IN (:statuses)')
+            ->setParameters([
+                'phone' => $phone,
+                'statuses' => $workingStatuses
+            ])
+            ->getQuery()
+            ->getResult();
+
+        return array_shift($calls);
+    }
 }

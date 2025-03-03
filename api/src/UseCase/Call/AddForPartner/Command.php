@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\UseCase\Call\AddForPartner;
 
+use App\Validator\Constraints\UniqueCallPhone;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
 {
     public int $partnerId;
     #[Assert\NotBlank]
+    #[UniqueCallPhone]
     public ?string $phone = null;
     #[Assert\NotBlank]
     public ?string $description = null;

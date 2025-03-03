@@ -49,7 +49,7 @@ class PartnerCallsCreateAction extends AbstractController
             return new JsonResponse($json, 424, [], true);
         }
 
-        $this->handler->handle($command);
+        //$this->handler->handle($command);
 
         return $this->json([], Response::HTTP_CREATED);
     }
