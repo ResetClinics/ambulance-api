@@ -25,15 +25,9 @@ class UniqueCallPhoneValidator extends ConstraintValidator
             return;
         }
 
-        $phone = preg_replace('/[^\d+]/', '',(string) $value);
-
-        dump($phone);
+        $phone = preg_replace('/\D/', '', (string) $value);
 
         $call = $this->calls->findActiveCallByPhone($phone);
-
-        dd($call);
-
-
 
         if ($call) {
             $this->context->buildViolation($constraint->message)
