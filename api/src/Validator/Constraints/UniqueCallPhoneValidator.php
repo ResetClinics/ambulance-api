@@ -25,7 +25,7 @@ class UniqueCallPhoneValidator extends ConstraintValidator
             return;
         }
 
-        $call = $this->calls->existsByPhoneInWorkingStatuses((string) $value);
+        $call = $this->calls->findActiveCallByPhone((string) $value);
 
         if ($call) {
             $this->context->buildViolation($constraint->message)

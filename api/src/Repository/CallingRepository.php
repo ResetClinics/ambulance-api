@@ -159,8 +159,9 @@ class CallingRepository extends ServiceEntityRepository
     public function findAllCompletedOfTheEmployeeByCompletionDateIncludedInPeriod(
         DateTimeImmutable $completedAfter,
         DateTimeImmutable $completedBefore,
-        int $employeeId
-    ): array {
+        int               $employeeId
+    ): array
+    {
         $qb = $this->createQueryBuilder('c');
 
         return $qb
@@ -179,7 +180,8 @@ class CallingRepository extends ServiceEntityRepository
     public function findAllCompletedByCompletionDateIncludedInPeriod(
         DateTimeImmutable $completedAfter,
         DateTimeImmutable $completedBefore,
-    ): array {
+    ): array
+    {
         $qb = $this->createQueryBuilder('c');
 
         return $qb
@@ -282,9 +284,11 @@ class CallingRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function existsByPhoneInWorkingStatuses(string $phone): ?Calling
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findActiveCallByPhone(string $phone): ?Calling
     {
-
         $workingStatuses = [
             Status::NOT_READY,
             Status::WAITING,
@@ -295,8 +299,7 @@ class CallingRepository extends ServiceEntityRepository
             Status::TREATING,
         ];
 
-        $calls =  $this->createQueryBuilder('c')
-            ->select('COUNT(c.id)')
+        return $this->createQueryBuilder('c')
             ->leftJoin('c.client', 'cl')
             ->where('cl.phone = :phone')
             ->andWhere('c.status IN (:statuses)')
@@ -304,9 +307,8 @@ class CallingRepository extends ServiceEntityRepository
                 'phone' => $phone,
                 'statuses' => $workingStatuses
             ])
+            ->setMaxResults(1)
             ->getQuery()
-            ->getResult();
-
-        return array_shift($calls);
+            ->getOneOrNullResult();
     }
 }
