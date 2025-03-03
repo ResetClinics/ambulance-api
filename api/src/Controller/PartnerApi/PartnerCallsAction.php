@@ -43,9 +43,9 @@ class PartnerCallsAction extends AbstractController
 
         $statuses = $request->query->get('status');
 
-        $completedAt = $request->query->get('completedAt');
-        $completedAtAfter = $completedAt['after'] ?? null;
-        $completedAtAtBefore = $completedAt['before'] ?? null;
+        $query = $request->query->all();
+        $completedAtAfter = $query['completedAt']['after'] ?? null;
+        $completedAtAtBefore = $query['completedAt']['before'] ?? null;
 
         $calls = $this->calls->findAllForPartnerApi(
             $user->getPartner(),
