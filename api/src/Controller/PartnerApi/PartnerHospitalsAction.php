@@ -42,6 +42,9 @@ class PartnerHospitalsAction extends AbstractController
         $statuses = $request->query->get('status');
 
         $dischargedAt = $request->query->get('dischargedAt');
+
+        dd($dischargedAt);
+
         $dischargedAtAfter = $dischargedAt['after'] ?? null;
         $dischargedAtBefore = $dischargedAt['before'] ?? null;
 
