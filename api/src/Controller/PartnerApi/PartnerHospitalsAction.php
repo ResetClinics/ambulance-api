@@ -40,8 +40,10 @@ class PartnerHospitalsAction extends AbstractController
         $direction = $request->query->get('direction', 'desc');
         $search = $request->query->get('search');
         $statuses = $request->query->get('status');
-        $dischargedAtAfter = $request->query->get('dischargedAt[after]');
-        $dischargedAtBefore = $request->query->get('dischargedAt[before]');
+
+        $dischargedAt = $request->query->get('dischargedAt');
+        $dischargedAtAfter = $dischargedAt['after'] ?? null;
+        $dischargedAtBefore = $dischargedAt['before'] ?? null;
 
         $hospitals = $this->hospitals->findAllForPartnerApi(
             $user->getPartner(),
