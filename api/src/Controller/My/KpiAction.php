@@ -47,13 +47,9 @@ class KpiAction extends AbstractController
         $startOfMonth = new DateTimeImmutable('first day of this month 00:00:00');
         $endOfMonth = new DateTimeImmutable('first day of next month 00:00:00');
 
-        [
-            $hoursPayroll,
-        ] = $this->calcShifts($startOfMonth, $endOfMonth, $userId);
-
         $callsPayroll = $this->calcCalls($startOfMonth, $endOfMonth, $userId);
 
-        $payrollPayroll = $hoursPayroll + $callsPayroll;
+        $payrollPayroll = $callsPayroll;
 
         $kpiAverageBill = $this->getKpiAverageBill($startOfMonth, $endOfMonth, $userId, $payrollPayroll);
         $kpiHospital = $this->getKpiHospitalPayroll($startOfMonth, $endOfMonth, $userId, $payrollPayroll);
