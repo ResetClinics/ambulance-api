@@ -110,6 +110,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     private ?string $name = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups([
+        'user:read',
+        'user:item:read',
+        'user:write',
+    ])]
+    #[Assert\NotBlank]
+    private ?string $firstName = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups([
+        'user:read',
+        'user:item:read',
+        'user:write',
+    ])]
+    #[Assert\NotBlank]
+    private ?string $lastName = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups([
+        'user:read',
+        'user:item:read',
+        'user:write',
+    ])]
+    private ?string $patronymic = null;
+
     #[ORM\Column(nullable: true)]
     #[Groups(['user:read', 'user:write', 'team:item:get'])]
     private ?string $position = null;
@@ -503,6 +529,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCarNumber(string $carNumber): static
     {
         $this->carNumber = $carNumber;
+
+        return $this;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(?string $firstName): static
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(?string $lastName): static
+    {
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function getPatronymic(): ?string
+    {
+        return $this->patronymic;
+    }
+
+    public function setPatronymic(?string $patronymic): static
+    {
+        $this->patronymic = $patronymic;
 
         return $this;
     }
