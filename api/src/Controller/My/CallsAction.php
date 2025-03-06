@@ -90,7 +90,6 @@ class CallsAction extends AbstractController
             $row = $servicePayroll->getCallService();
 
             $callsItems[$row->getCalling()->getId()]['reward'] += $reward;
-            $callsItems[$row->getCalling()->getId()]['amount'] += $row->getPrice();
 
             $callsItems[$row->getCalling()->getId()]['subRows'][] = [
                 'name' => $row->getService()->getName(),
