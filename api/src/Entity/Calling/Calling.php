@@ -698,6 +698,10 @@ class Calling
 
     public function getRejectedComment(): ?string
     {
+        if ($this->reasonForCancellation){
+            return $this->reasonForCancellation->getName();
+        }
+
         return $this->rejectedComment;
     }
 
