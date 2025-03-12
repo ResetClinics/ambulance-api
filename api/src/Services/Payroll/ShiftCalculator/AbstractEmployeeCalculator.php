@@ -91,50 +91,36 @@ abstract class AbstractEmployeeCalculator implements ShiftCalculatorInterface
             if ($weFinishOnTheCurrentDay) {
                 if ($currentDate <= $startOfDay) {
                     if ($finishDate <= $startOfDay) {
-                        $interval = $currentDate->diff($finishDate);
-                        $nightHours += $interval->h;
+                        $nightHours += $this->calculateHoursDiff($currentDate, $finishDate);
                     } else {
-                        $interval = $currentDate->diff($startOfDay);
-                        $nightHours += $interval->h;
+                        $nightHours += $this->calculateHoursDiff($currentDate, $startOfDay);
                         if ($finishDate <= $endOfDay) {
-                            $interval = $startOfDay->diff($finishDate);
-                            $dayHours += $interval->h;
+                            $dayHours += $this->calculateHoursDiff($startOfDay, $finishDate);
                         } else {
-                            $interval = $startOfDay->diff($endOfDay);
-                            $dayHours += $interval->h;
-                            $interval = $endOfDay->diff($finishDate);
-                            $nightHours += $interval->h;
+                            $dayHours += $this->calculateHoursDiff($startOfDay, $endOfDay);
+                            $nightHours += $this->calculateHoursDiff($endOfDay, $finishDate);
                         }
                     }
                 } else {
                     if ($finishDate <= $endOfDay) {
-                        $interval = $currentDate->diff($finishDate);
-                        $dayHours += $interval->h;
+                        $dayHours += $this->calculateHoursDiff($currentDate, $finishDate);
                     } else {
-                        $interval = $currentDate->diff($endOfDay);
-                        $dayHours += $interval->h;
-                        $interval = $endOfDay->diff($finishDate);
-                        $nightHours += $interval->h;
+                        $dayHours += $this->calculateHoursDiff($currentDate, $endOfDay);
+                        $nightHours += $this->calculateHoursDiff($endOfDay, $finishDate);
                     }
                 }
             } else {
                 if ($currentDate <= $startOfDay) {
-                    $interval = $currentDate->diff($startOfDay);
-                    $nightHours += $interval->h;
+                    $nightHours += $this->calculateHoursDiff($currentDate, $startOfDay);
                     if ($finishDate <= $endOfDay) {
-                        $interval = $startOfDay->diff($finishDate);
-                        $dayHours += $interval->h;
+                        $dayHours += $this->calculateHoursDiff($startOfDay, $finishDate);
                     } else {
-                        $interval = $startOfDay->diff($endOfDay);
-                        $dayHours += $interval->h;
-                        $interval = $endOfDay->diff($finishDate);
-                        $nightHours += $interval->h;
+                        $dayHours += $this->calculateHoursDiff($startOfDay, $endOfDay);
+                        $nightHours += $this->calculateHoursDiff($endOfDay, $finishDate);
                     }
                 } else {
-                    $interval = $currentDate->diff($endOfDay);
-                    $dayHours += $interval->h;
-                    $interval = $endOfDay->diff($endOfCalendarDay);
-                    $nightHours += $interval->h;
+                    $dayHours += $this->calculateHoursDiff($currentDate, $endOfDay);
+                    $nightHours += $this->calculateHoursDiff($endOfDay, $endOfCalendarDay);
                 }
             }
 
@@ -147,5 +133,12 @@ abstract class AbstractEmployeeCalculator implements ShiftCalculatorInterface
         }
 
         return $workHours;
+    }
+
+    private function calculateHoursDiff(DateTimeImmutable $start, DateTimeImmutable $end): float
+    {
+        //$interval = $start->diff($end);
+        //return (float)$interval->h;
+        return ($end->getTimestamp() - $start->getTimestamp()) / 3600;
     }
 }
