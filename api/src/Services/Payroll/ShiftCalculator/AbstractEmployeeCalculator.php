@@ -39,14 +39,15 @@ abstract class AbstractEmployeeCalculator implements ShiftCalculatorInterface
             $shift->getPlannedFinishAt(),
         );
 
+
         foreach ($workHours as $date => $allHours) {
             $accruedAt = new DateTimeImmutable($date);
 
             $rate = (float)$payrollCalculator->getValue();
-            $hours = (int)$allHours[$this->getHoursKey()];
+            $hours = (float)$allHours[$this->getHoursKey()];
 
             $accrued = new Money(
-                (int)(((float)$hours * $rate) * 100)
+                (int)(($hours * $rate) * 100)
             );
 
             $shiftPayroll = new ShiftPayroll();
