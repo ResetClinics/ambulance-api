@@ -29,6 +29,9 @@ class ReasonForCancellation
     #[Groups(['reason:read', 'reason:write', 'v1-call:read'])]
     private ?string $name = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isReassignmentRequired = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -42,6 +45,18 @@ class ReasonForCancellation
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function isReassignmentRequired(): ?bool
+    {
+        return $this->isReassignmentRequired;
+    }
+
+    public function setReassignmentRequired(?bool $isReassignmentRequired): static
+    {
+        $this->isReassignmentRequired = $isReassignmentRequired;
 
         return $this;
     }
