@@ -9,6 +9,7 @@ use App\Repository\CallingRepository;
 use App\Services\AmoCRM;
 use App\Services\CallingSender;
 use App\Services\TrackerToMkad;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,6 +43,29 @@ class AmoWebHookAction extends AbstractController
         }
 
         $customFields = $leadData['custom_fields'];
+
+        try {
+            $projectDir = $this->getParameter('kernel.project_dir');
+            $logDirectory = $projectDir . '/var/log/custom_logs/';
+
+            if (!is_dir($logDirectory)) {
+                mkdir($logDirectory, 0777, true);
+            }
+
+            $logContent = sprintf(
+                "[%s] CustomFields data:\n%s\n\n",
+                date('Y-m-d H:i:s'),
+                print_r($customFields, true)
+            );
+
+            file_put_contents(
+                $logDirectory . 'custom_fields.log',
+                $logContent,
+                FILE_APPEND
+            );
+        }catch (Exception $e) {
+
+        }
 
         if (!is_array($customFields)){
             return $this->json(null, Response::HTTP_OK);
