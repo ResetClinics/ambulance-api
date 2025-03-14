@@ -81,11 +81,36 @@ class AmoWebHookAction extends AbstractController
                 if (!isset($customField['values'][0]['value'])) {
                     $partnerComment = $customField['values'][0]['value'];
                     $call->setCommentForPartner($partnerComment);
+
+                    try {
+                        $projectDir = $this->getParameter('kernel.project_dir');
+                        $logDirectory = $projectDir . '/var/log/custom_logs/';
+
+                        if (!is_dir($logDirectory)) {
+                            mkdir($logDirectory, 0777, true);
+                        }
+
+                        $logContent = sprintf(
+                            "[%s] CustomFields data:\n%s\n\n",
+                            date('Y-m-d H:i:s'),
+                            print_r($partnerComment, true)
+                        );
+
+                        file_put_contents(
+                            $logDirectory . 'custom_fields.log',
+                            $logContent,
+                            FILE_APPEND
+                        );
+                    }catch (Exception $e) {
+
+                    }
+
+
+                    $this->flusher->flush();
+                    return $this->json(null, Response::HTTP_OK);
                 }
             }
         }
-
-        $this->flusher->flush();
 
         return $this->json(null, Response::HTTP_OK);
     }
