@@ -53,7 +53,7 @@ class AmoWebHookAction extends AbstractController
         }
 
         foreach ($customFields as $customField) {
-            if ($customField['id'] == '870945') {
+            if ($customField['id'] == '971503') {
                 if (!isset($customField['values'][0]['value'])) {
                     $partnerComment = $customField['values'][0]['value'];
                     $call->setCommentForPartner($partnerComment);
