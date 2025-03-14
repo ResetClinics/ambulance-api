@@ -97,7 +97,7 @@ class AmoWebHookAction extends AbstractController
                         );
 
                         file_put_contents(
-                            $logDirectory . 'custom_fields.log',
+                            $logDirectory . 'custom_fields1.log',
                             $logContent,
                             FILE_APPEND
                         );
