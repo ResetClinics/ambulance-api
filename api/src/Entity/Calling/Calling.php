@@ -582,6 +582,9 @@ class Calling
     #[Groups(['v1-call:read', 'v1-call:write'])]
     private ?ReasonForCancellation $reasonForCancellation = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $commentForPartner = null;
+
     public function __construct(
         string $numberCalling,
         string $title,
@@ -1581,5 +1584,17 @@ class Calling
         }
 
         return $this->getOwner()->allOwnerHaveTheSameDoctor();
+    }
+
+    public function getCommentForPartner(): ?string
+    {
+        return $this->commentForPartner;
+    }
+
+    public function setCommentForPartner(?string $commentForPartner): static
+    {
+        $this->commentForPartner = $commentForPartner;
+
+        return $this;
     }
 }

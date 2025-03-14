@@ -69,6 +69,7 @@ class PartnerCallsAction extends AbstractController
                         'address' => $call->getAddress(),
                         'price' => $call->getPrice(),
                         'reward' => $call->getPartnerReward(),
+                        'comment' => $call->getCommentForPartner(),
                         'status' => $call->getStatus(),
                         'dateTime' => $call->getDateTime()?->format('d.m.Y H:i'),
                         'createdAt' => $call->getCreatedAt()?->format('d.m.Y H:i'),
