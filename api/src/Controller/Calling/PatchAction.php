@@ -123,7 +123,11 @@ class PatchAction extends AbstractController
         }
 
         if ($newStatus === Status::REJECTED) {
-            $this->handleRejectedStatus($calling);
+            if ($calling->getReasonForCancellation()?->isReassignmentRequired()){
+                $this->handleReassignment($calling);
+            }else{
+                $this->handleRejectedStatus($calling);
+            }
         }
     }
 
@@ -714,14 +718,14 @@ class PatchAction extends AbstractController
 
         $message = 'Информация от бригады' . PHP_EOL;
         $message .= 'Отмена заявки №' . $calling->getNumberCalling() . PHP_EOL;
-        $message .= $calling->getRejectedComment() ? 'Причина отмены ' . $calling->getRejectedComment() . PHP_EOL : '';
+        $message .= $calling->getReasonForCancellation() ? 'Причина отмены ' . $calling->getReasonForCancellation()->getName() . PHP_EOL : '';
 
         $entityId = null;
         $currentDate = new DateTimeImmutable('now', new DateTimeZone('Europe/Moscow'));
         /** @var LeadModel $lead */
         foreach ($leads as $lead) {
             $entityId = $lead->getId();
-            $lead->setStatusId(143);
+            $lead->setStatusId(74882710);
             $lead->setName('Неуспех ' . $currentDate->format('d.m.y') . ' ' . $calling->getName());
         }
 
@@ -752,5 +756,59 @@ class PatchAction extends AbstractController
         $this->wsClient->sendUpdateOffer($calling->getId());
 
         $this->handleAsteriskDelete($calling);
+    }
+
+    private function handleReassignment(Calling $calling): void
+    {
+        $filter = new LeadsFilter();
+        $filter->setIds([$calling->getNumberCalling()]);
+
+        $leads = $this->client->leads()->get($filter);
+
+        if (!$leads) {
+            throw new NotFoundHttpException('Не найден лид №' . $calling->getNumberCalling() . ' в AmoCRM');
+        }
+
+        $message = 'Информация от бригады' . PHP_EOL;
+        $message .= 'Отмена заявки №' . $calling->getNumberCalling() . PHP_EOL;
+        $message .= $calling->getReasonForCancellation() ? 'Причина отмены ' . $calling->getReasonForCancellation()->getName() . PHP_EOL : '';
+        $message .= 'Заявка отправлена на переназначение';
+
+        $entityId = null;
+        /** @var LeadModel $lead */
+        foreach ($leads as $lead) {
+            $entityId = $lead->getId();
+            $lead->setStatusId(38307946);
+        }
+
+        $this->client->leads()->update($leads);
+
+        $notesCollection = new NotesCollection();
+        $messageNote = new CommonNote();
+        $messageNote->setEntityId($entityId)
+            ->setText($message)
+            ->setCreatedBy(0);
+
+        $notesCollection->add($messageNote);
+
+        try {
+            $leadNotesService = $this->client->notes(EntityTypesInterface::LEADS);
+            $leadNotesService->add($notesCollection);
+        } catch (AmoCRMApiException $e) {
+        }
+
+        $calling->setStatus(Status::waiting());
+
+        $calling->setTeam(null);
+        $calling->setAdmin(null);
+        $calling->setDoctor(null);
+
+        $this->sender->sendToAdmin(
+            $calling,
+            'Вызов N ' . $calling->getNumberCalling() . ' отправлен на переназначение',
+            'Спасибо за информацию!'
+        );
+
+        $this->wsClient->sendUpdateOffer($calling->getId());
     }
 }
