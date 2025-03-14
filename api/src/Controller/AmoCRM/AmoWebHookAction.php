@@ -44,62 +44,19 @@ class AmoWebHookAction extends AbstractController
 
         $customFields = $leadData['custom_fields'];
 
-
         if (!is_array($customFields)){
             return $this->json(null, Response::HTTP_OK);
         }
-
-
-
-
-
 
         $call = $this->callings->findOneByNumber($leadData['id']);
         if (!$call) {
             return $this->json(null, Response::HTTP_OK);
         }
 
-
-
-
-
         foreach ($customFields as $customField) {
-
-
-
-
-
-
-
-
-
             if ($customField['id'] == '971503') {
 
-                try {
-                    $projectDir = $this->getParameter('kernel.project_dir');
-                    $logDirectory = $projectDir . '/var/log/custom_logs8/';
-
-                    if (!is_dir($logDirectory)) {
-                        mkdir($logDirectory, 0777, true);
-                    }
-
-                    $logContent = sprintf(
-                        "[%s] CustomFields data:\n%s\n\n",
-                        date('Y-m-d H:i:s'),
-                        print_r($customField, true)
-                    );
-
-                    file_put_contents(
-                        $logDirectory . 'custom_fields.log',
-                        $logContent,
-                        FILE_APPEND
-                    );
-                }catch (Exception $e) {
-
-                }
-
-
-                if (!isset($customField['values'][0]['value'])) {
+                if (isset($customField['values'][0]['value'])) {
                     $partnerComment = $customField['values'][0]['value'];
                     $call->setCommentForPartner($partnerComment);
 
