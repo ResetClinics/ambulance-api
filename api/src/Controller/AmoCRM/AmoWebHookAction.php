@@ -51,9 +51,19 @@ class AmoWebHookAction extends AbstractController
 
 
 
+
+
+
+        $call = $this->callings->findOneByNumber($leadData['id']);
+        if (!$call) {
+            return $this->json(null, Response::HTTP_OK);
+        }
+
+
+
         try {
             $projectDir = $this->getParameter('kernel.project_dir');
-            $logDirectory = $projectDir . '/var/log/custom_logs0/';
+            $logDirectory = $projectDir . '/var/log/custom_logs1/';
 
             if (!is_dir($logDirectory)) {
                 mkdir($logDirectory, 0777, true);
@@ -76,11 +86,6 @@ class AmoWebHookAction extends AbstractController
 
 
 
-
-        $call = $this->callings->findOneByNumber($leadData['id']);
-        if (!$call) {
-            return $this->json(null, Response::HTTP_OK);
-        }
 
         foreach ($customFields as $customField) {
             if ($customField['id'] == '971503') {
