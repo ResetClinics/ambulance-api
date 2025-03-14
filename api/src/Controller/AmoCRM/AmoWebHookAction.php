@@ -44,9 +44,16 @@ class AmoWebHookAction extends AbstractController
 
         $customFields = $leadData['custom_fields'];
 
+
+        if (!is_array($customFields)){
+            return $this->json(null, Response::HTTP_OK);
+        }
+
+
+
         try {
             $projectDir = $this->getParameter('kernel.project_dir');
-            $logDirectory = $projectDir . '/var/log/custom_logs/';
+            $logDirectory = $projectDir . '/var/log/custom_logs0/';
 
             if (!is_dir($logDirectory)) {
                 mkdir($logDirectory, 0777, true);
@@ -67,9 +74,8 @@ class AmoWebHookAction extends AbstractController
 
         }
 
-        if (!is_array($customFields)){
-            return $this->json(null, Response::HTTP_OK);
-        }
+
+
 
         $call = $this->callings->findOneByNumber($leadData['id']);
         if (!$call) {
@@ -82,7 +88,7 @@ class AmoWebHookAction extends AbstractController
                     $partnerComment = $customField['values'][0]['value'];
                     $call->setCommentForPartner($partnerComment);
 
-                    try {
+                   /* try {
                         $projectDir = $this->getParameter('kernel.project_dir');
                         $logDirectory = $projectDir . '/var/log/custom_logs/';
 
@@ -103,7 +109,7 @@ class AmoWebHookAction extends AbstractController
                         );
                     }catch (Exception $e) {
 
-                    }
+                    }*/
 
 
                     $this->flusher->flush();
