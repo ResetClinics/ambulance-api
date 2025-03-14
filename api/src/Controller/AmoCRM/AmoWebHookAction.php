@@ -61,66 +61,48 @@ class AmoWebHookAction extends AbstractController
 
 
 
-        try {
-            $projectDir = $this->getParameter('kernel.project_dir');
-            $logDirectory = $projectDir . '/var/log/custom_logs1/';
-
-            if (!is_dir($logDirectory)) {
-                mkdir($logDirectory, 0777, true);
-            }
-
-            $logContent = sprintf(
-                "[%s] CustomFields data:\n%s\n\n",
-                date('Y-m-d H:i:s'),
-                print_r($customFields, true)
-            );
-
-            file_put_contents(
-                $logDirectory . 'custom_fields.log',
-                $logContent,
-                FILE_APPEND
-            );
-        }catch (Exception $e) {
-
-        }
-
-
 
 
         foreach ($customFields as $customField) {
-            if ($customField['id'] == '971503') {
-                if (!isset($customField['values'][0]['value'])) {
-                    $partnerComment = $customField['values'][0]['value'];
-                    $call->setCommentForPartner($partnerComment);
-
-                   /* try {
-                        $projectDir = $this->getParameter('kernel.project_dir');
-                        $logDirectory = $projectDir . '/var/log/custom_logs/';
-
-                        if (!is_dir($logDirectory)) {
-                            mkdir($logDirectory, 0777, true);
-                        }
-
-                        $logContent = sprintf(
-                            "[%s] CustomFields data:\n%s\n\n",
-                            date('Y-m-d H:i:s'),
-                            print_r($partnerComment, true)
-                        );
-
-                        file_put_contents(
-                            $logDirectory . 'custom_fields1.log',
-                            $logContent,
-                            FILE_APPEND
-                        );
-                    }catch (Exception $e) {
-
-                    }*/
 
 
-                    $this->flusher->flush();
-                    return $this->json(null, Response::HTTP_OK);
+
+
+            try {
+                $projectDir = $this->getParameter('kernel.project_dir');
+                $logDirectory = $projectDir . '/var/log/custom_logs7/';
+
+                if (!is_dir($logDirectory)) {
+                    mkdir($logDirectory, 0777, true);
                 }
+
+                $logContent = sprintf(
+                    "[%s] CustomFields data:\n%s\n\n",
+                    date('Y-m-d H:i:s'),
+                    print_r($customField, true)
+                );
+
+                file_put_contents(
+                    $logDirectory . 'custom_fields.log',
+                    $logContent,
+                    FILE_APPEND
+                );
+            }catch (Exception $e) {
+
             }
+
+            return $this->json(null, Response::HTTP_OK);
+
+
+           // if ($customField['id'] == '971503') {
+           //     if (!isset($customField['values'][0]['value'])) {
+           //         $partnerComment = $customField['values'][0]['value'];
+           //         $call->setCommentForPartner($partnerComment);
+//
+           //         $this->flusher->flush();
+           //         return $this->json(null, Response::HTTP_OK);
+           //     }
+           // }
         }
 
         return $this->json(null, Response::HTTP_OK);
