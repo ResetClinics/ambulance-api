@@ -49,6 +49,8 @@ class AmoTestCommand extends Command
 
         $leads = $this->client->leads()->get($filter);
 
+        dump($leads);
+
         /** @var LeadModel $lead */
         foreach ($leads as $lead) {
            // $entityId = $lead->getId();
