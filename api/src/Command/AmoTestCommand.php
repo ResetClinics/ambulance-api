@@ -59,6 +59,12 @@ class AmoTestCommand extends Command
            // $lead->setPrice($calling->getPrice());
         }
 
+        try {
+            $this->client->leads()->update($leads);
+        }catch (Exception $exception) {
+            dd($exception);
+        }
+
         $ff =$this->client->leads()->update($leads);
 
 
