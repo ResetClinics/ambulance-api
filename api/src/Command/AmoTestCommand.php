@@ -49,10 +49,18 @@ class AmoTestCommand extends Command
 
         $leads = $this->client->leads()->get($filter);
 
+        /** @var LeadModel $lead */
+        foreach ($leads as $lead) {
+           // $entityId = $lead->getId();
+           // $lead->setStatusId(45084664);
+           // $lead->setName($currentDate->format('d.m.y') . ' ' . $calling->getFio());
+           // $lead->setPrice($calling->getPrice());
+        }
+
+        $ff =$this->client->leads()->update($leads);
 
 
-
-        dd($leads);
+        dd($ff);
         return Command::SUCCESS;
     }
 }
