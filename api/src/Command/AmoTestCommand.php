@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use AmoCRM\Client\AmoCRMApiClient;
+use AmoCRM\Filters\LeadsFilter;
 use AmoCRM\Models\LeadModel;
 use App\Services\AmoCRM;
 use Exception;
@@ -43,9 +44,15 @@ class AmoTestCommand extends Command
 
         $id = $input->getArgument('id');
 
-        $lead = $this->client->leads()->getOne($id, [LeadModel::CONTACTS, LeadModel::CATALOG_ELEMENTS]);
+        $filter = new LeadsFilter();
+        $filter->setIds([$id]);
 
-        dd($lead);
+        $leads = $this->client->leads()->get($filter);
+
+
+
+
+        dd($leads);
         return Command::SUCCESS;
     }
 }
