@@ -6,6 +6,7 @@ namespace App\Controller\Calling;
 
 use App\Entity\Calling\Calling;
 use App\Entity\Calling\ExchangeCallCreateDto;
+use App\Entity\Calling\Status;
 use App\Entity\Client;
 use App\Flusher;
 use App\Repository\CallingRepository;
@@ -86,6 +87,8 @@ class ExchangeCreateAction extends AbstractController
         $call->setDoNotHospitalize($dto->doNotHospitalize);
         $call->setBirthday($dto->birthday);
         $call->setBuh(true);
+
+        $call->setStatus(Status::notReady());
 
         $calls->add($call);
 
