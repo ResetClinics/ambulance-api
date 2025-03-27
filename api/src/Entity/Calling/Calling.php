@@ -22,6 +22,7 @@ use App\Controller\Calling\CoddingAction;
 use App\Controller\Calling\CompleteAction;
 use App\Controller\Calling\CurrentAction;
 use App\Controller\Calling\DispatchAction;
+use App\Controller\Calling\ExchangeCreateAction;
 use App\Controller\Calling\FinishAction;
 use App\Controller\Calling\HospitalizationAction;
 use App\Controller\Calling\HospitalizationWithoutTherapyAction;
@@ -109,6 +110,28 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
                     'client:item:read',
                 ],
             ],
+        ),
+        new Post(
+            uriTemplate: '/exchange/calls',
+            inputFormats: ['json' => ['application/json']],
+
+            outputFormats: ['json' => ['application/json']],
+            controller: ExchangeCreateAction::class,
+            normalizationContext: [
+                'groups' => [
+                    'exchange_calling:read',
+                    'partner:item:read',
+                    'user:item:read',
+                    'service:item:read',
+                    'client:item:read',
+                ],
+            ],
+            denormalizationContext: [
+                'groups' => [
+                    'exchange_calling:white',
+                ]
+            ],
+            input: ExchangeCallCreateDto::class,
         ),
         new Post(
             routePrefix: '/api',
@@ -584,6 +607,9 @@ class Calling
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $commentForPartner = null;
+
+    #[ORM\Column(nullable: false, options: ['default' => false])]
+    private ?bool $isBuh = false;
 
     public function __construct(
         string $numberCalling,
@@ -1594,6 +1620,18 @@ class Calling
     public function setCommentForPartner(?string $commentForPartner): static
     {
         $this->commentForPartner = $commentForPartner;
+
+        return $this;
+    }
+
+    public function isBuh(): ?bool
+    {
+        return $this->isBuh;
+    }
+
+    public function setBuh(bool $isBuh): static
+    {
+        $this->isBuh = $isBuh;
 
         return $this;
     }
