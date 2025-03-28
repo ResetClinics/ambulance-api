@@ -10,6 +10,7 @@ use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
@@ -101,6 +102,8 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
         ),
         new GetCollection(
             uriTemplate: '/exchange/calls',
+            inputFormats: ['json' => ['application/json']],
+            outputFormats: ['json' => ['application/json']],
             normalizationContext: [
                 'groups' => [
                     'exchange_calling:read',
@@ -114,7 +117,6 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
         new Post(
             uriTemplate: '/exchange/calls',
             inputFormats: ['json' => ['application/json']],
-
             outputFormats: ['json' => ['application/json']],
             controller: ExchangeCreateAction::class,
             normalizationContext: [
@@ -341,6 +343,9 @@ class Calling
     #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:item:read'])]
     private string $phone;
 
+    #[ApiProperty(
+        description: 'ФИО пациента',
+    )]
     #[ORM\Column(nullable: true)]
     #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:write'])]
     private ?string $fio = null;
@@ -357,6 +362,9 @@ class Calling
     #[ApiFilter(SearchFilter::class, strategy: 'exact')]
     private Status $status;
 
+    #[ApiProperty(
+        description: 'Описание',
+    )]
     #[ORM\Column(type: Types::TEXT)]
     #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read'])]
     private string $description;
@@ -365,10 +373,16 @@ class Calling
     #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read'])]
     private ?string $chronicDiseases = null;
 
+    #[ApiProperty(
+        description: 'Нозология',
+    )]
     #[ORM\Column(nullable: true)]
     #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read'])]
     private ?string $nosology = null;
 
+    #[ApiProperty(
+        description: 'Возраст пациента',
+    )]
     #[ORM\Column(nullable: true)]
     #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read'])]
     private ?string $age = null;
@@ -725,6 +739,10 @@ class Calling
         return $this->completedAt;
     }
 
+    #[ApiProperty(
+        description: 'Причина отмены',
+    )]
+    #[Groups(['exchange_calling:read',])]
     public function getRejectedComment(): ?string
     {
         if ($this->reasonForCancellation){
