@@ -626,15 +626,16 @@ class Calling
     private ?bool $isBuh = false;
 
     public function __construct(
-        string $numberCalling,
-        string $title,
-        string $name,
-        string $phone,
+        string  $numberCalling,
+        string  $title,
+        string  $name,
+        string  $phone,
         ?string $address = null,
         ?string $description = null,
-        ?User $admin = null,
-        ?User $doctor = null
-    ) {
+        ?User   $admin = null,
+        ?User   $doctor = null
+    )
+    {
         $this->name = $name;
         $this->phone = $phone;
         $this->address = $address ?: '';
@@ -714,6 +715,13 @@ class Calling
 
     public function getDescription(): ?string
     {
+        if (
+            $this->status === Status::assigned() ||
+            $this->status === Status::accepted() ||
+            $this->status === Status::dispatched()) {
+
+            return '';
+        }
         return $this->description;
     }
 
@@ -745,7 +753,7 @@ class Calling
     #[Groups(['exchange_calling:read',])]
     public function getRejectedComment(): ?string
     {
-        if ($this->reasonForCancellation){
+        if ($this->reasonForCancellation) {
             return $this->reasonForCancellation->getName();
         }
 
