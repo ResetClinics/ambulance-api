@@ -1662,4 +1662,10 @@ class Calling
 
         return $this;
     }
+
+    #[Groups(['v1-call:read'])]
+    public function getShiftIsOpen(): bool
+    {
+        return $this->team?->getStatus() === 'work';
+    }
 }
