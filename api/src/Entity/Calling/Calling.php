@@ -716,6 +716,7 @@ class Calling
     public function getDescription(): ?string
     {
         if (
+            $this->status === Status::notReady() ||
             $this->status === Status::assigned() ||
             $this->status === Status::accepted() ||
             $this->status === Status::dispatched()) {
