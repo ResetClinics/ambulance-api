@@ -1664,7 +1664,7 @@ class Calling
     }
 
     #[Groups(['v1-call:read'])]
-    public function getShiftIsOpen(): bool
+    public function getIsShiftOpen(): bool
     {
         return $this->team?->getStatus() === 'work';
     }
