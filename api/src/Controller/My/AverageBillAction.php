@@ -42,8 +42,10 @@ class AverageBillAction extends AbstractController
             throw new DomainException('Payroll calculator not found');
         }
 
-        $startOfMonth = new DateTimeImmutable('first day of this month 00:00:00');
-        $endOfMonth = new DateTimeImmutable('first day of next month 00:00:00');
+        //$startOfMonth = new DateTimeImmutable('first day of this month 00:00:00');
+        //$endOfMonth = new DateTimeImmutable('first day of next month 00:00:00');
+        $startOfMonth = new DateTimeImmutable('first day of last month 00:00:00');
+        $endOfMonth = new DateTimeImmutable('first day of this month 00:00:00');
 
         $calls = $this->calls->findAllCompletedOfTheEmployeeByCompletionDateIncludedInPeriod(
             $startOfMonth,

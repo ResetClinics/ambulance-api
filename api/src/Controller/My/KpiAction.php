@@ -44,8 +44,10 @@ class KpiAction extends AbstractController
             throw new DomainException('User not found');
         }
 
-        $startOfMonth = new DateTimeImmutable('first day of this month 00:00:00');
-        $endOfMonth = new DateTimeImmutable('first day of next month 00:00:00');
+        //$startOfMonth = new DateTimeImmutable('first day of this month 00:00:00');
+        //$endOfMonth = new DateTimeImmutable('first day of next month 00:00:00');
+        $startOfMonth = new DateTimeImmutable('first day of last month 00:00:00');
+        $endOfMonth = new DateTimeImmutable('first day of this month 00:00:00');
 
         $callsPayroll = $this->calcCalls($startOfMonth, $endOfMonth, $userId);
 
