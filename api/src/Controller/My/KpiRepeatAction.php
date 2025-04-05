@@ -36,10 +36,13 @@ class KpiRepeatAction extends AbstractController
             throw new DomainException('Payroll calculator not found');
         }
 
-        //$startOfMonth = new DateTimeImmutable('first day of this month 00:00:00');
-        //$endOfMonth = new DateTimeImmutable('first day of next month 00:00:00');
-        $startOfMonth = new DateTimeImmutable('first day of last month 00:00:00');
-        $endOfMonth = new DateTimeImmutable('first day of this month 00:00:00');
+        if ($request->query->get('period') === 'prev') {
+            $startOfMonth = new DateTimeImmutable('first day of last month 00:00:00');
+            $endOfMonth = new DateTimeImmutable('first day of this month 00:00:00');
+        }else{
+            $startOfMonth = new DateTimeImmutable('first day of this month 00:00:00');
+            $endOfMonth = new DateTimeImmutable('first day of next month 00:00:00');
+        }
 
         $calls = $this->calls->findAllCompletedOfTheEmployeeByCompletionDateIncludedInPeriod(
             $startOfMonth,
