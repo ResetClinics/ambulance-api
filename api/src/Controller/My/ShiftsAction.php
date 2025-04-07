@@ -91,7 +91,7 @@ class ShiftsAction extends AbstractController
 
         /** @var ShiftPayroll $shiftPayroll */
         foreach ($shiftPayrolls as $shiftPayroll) {
-            if ($shiftPayroll->getAccruedAt() < $startOfMonth || $shiftPayroll->getAccruedAt() > $endOfMonth) {
+            if ($shiftPayroll->getAccruedAt() < $startOfMonth || $shiftPayroll->getAccruedAt() >= $endOfMonth) {
                 continue;
             }
             if ($shiftPayroll->getAmount() == 0) {
