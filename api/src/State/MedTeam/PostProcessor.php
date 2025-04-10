@@ -13,6 +13,7 @@ use App\Entity\MedTeam\MedTeam;
 use App\Repository\AdministratorReportRepository;
 use App\Services\File\UploadedBase64File;
 use App\Services\MedTeam\EmployeeNotification;
+use App\Services\Payroll\ShiftPayrollCalculator;
 use App\Services\TelegramSender;
 use App\Services\WSClient;
 use Exception;
@@ -27,6 +28,7 @@ readonly class PostProcessor implements ProcessorInterface
         private WSClient $wsClient,
         private EmployeeNotification $employeeNotification,
         private TelegramSender $tgSender,
+        private ShiftPayrollCalculator $calculator,
     ) {}
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
@@ -133,6 +135,8 @@ readonly class PostProcessor implements ProcessorInterface
                 $this->tgSender->sendByRoleId(13, $messageDoctor);
             } catch (Exception $e) {
             }
+
+            $this->calculator->calculate($data);
         }
 
         return $this->processor->process($data, $operation, $uriVariables, $context);
