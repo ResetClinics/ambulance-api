@@ -108,7 +108,7 @@ class AdministratorReport
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['administrator_report:read'])]
+    #[Groups(['administrator_report:read', 'v1:shift:item:read',])]
     private ?int $id = null;
 
     #[ORM\ManyToOne]
@@ -123,6 +123,7 @@ class AdministratorReport
     #[Groups([
         'administrator_report:read',
         'administrator_report:write',
+        'v1:shift:item:read',
         'v1:shift:read',
         'v1:shift:write',
     ])]
@@ -139,6 +140,7 @@ class AdministratorReport
     #[Groups([
         'administrator_report:read',
         'administrator_report:write',
+        'v1:shift:item:read',
         'v1:shift:read',
         'v1:shift:write',
     ])]
@@ -157,6 +159,7 @@ class AdministratorReport
         'administrator_report:write',
         'v1:shift:read',
         'v1:shift:write',
+        'v1:shift:item:read',
     ])]
     private ?int $parkingFees = null;
 
