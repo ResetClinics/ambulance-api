@@ -232,7 +232,7 @@ class MedTeam
     private ?Phone $phone = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['med-team:read', 'med-team:write', 'v1:shift:item:read','administrator_report:read'])]
+    #[Groups(['med-team:read', 'med-team:write', 'v1:shift:item:read', 'administrator_report:read'])]
     #[Assert\NotNull]
     private ?DateTimeImmutable $plannedFinishAt = null;
 
@@ -310,6 +310,7 @@ class MedTeam
 
     #[Groups([
         'v1:shift:read',
+        'v1:shift:item:read',
         'v1:shift:write',
     ])]
     #[ORM\OneToOne(inversedBy: 'shift', cascade: ['persist', 'remove'])]
