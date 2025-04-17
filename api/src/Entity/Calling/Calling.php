@@ -114,6 +114,16 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
                 ],
             ],
         ),
+        new Get(
+            uriTemplate: '/exchange/calls/{id}',
+            inputFormats: ['json' => ['application/json']],
+            outputFormats: ['json' => ['application/json']],
+            normalizationContext: [
+                'groups' => [
+                    'v1-call:read',
+                    'client:item:read',
+                ]],
+        ),
         new Post(
             uriTemplate: '/exchange/calls',
             inputFormats: ['json' => ['application/json']],
