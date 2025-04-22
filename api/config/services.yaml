@@ -58,6 +58,10 @@ services:
         bind:
             $processor: '@api_platform.doctrine.orm.state.persist_processor'
 
+    App\State\MedTeam\PatchProcessor:
+        bind:
+            $processor: '@api_platform.doctrine.orm.state.persist_processor'
+
     App\Serializer\Call\CrmToAppDenormalizerInterface:
         class: App\Serializer\Call\AmoCrmToAppDenormalizer
 
