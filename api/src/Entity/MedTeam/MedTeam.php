@@ -25,6 +25,7 @@ use App\Entity\Car;
 use App\Entity\City;
 use App\Entity\User\User;
 use App\Repository\MedTeam\MedTeamRepository;
+use App\State\MedTeam\PatchProcessor;
 use App\State\MedTeam\PostProcessor;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -63,6 +64,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             shortName: 'Shift',
             normalizationContext: ['groups' => ['v1:shift:item:read', 'v1:shift:read', 'media_object:read']],
             denormalizationContext: ['groups' => ['v1:shift:write']],
+            processor: PatchProcessor::class,
         ),
         new Delete(
             routePrefix: '/api/v1',
