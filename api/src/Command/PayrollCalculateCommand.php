@@ -33,20 +33,17 @@ class PayrollCalculateCommand extends Command
         ini_set('memory_limit', '-1');
 
         $shifts = $this->shifts->findByPlanned(
-            new DateTimeImmutable('2025-02-25T00:00:00.000Z'),
-            new DateTimeImmutable('2025-04-17T00:00:00.000Z'),
+            new DateTimeImmutable('2025-04-01T00:00:00.000Z'),
+            new DateTimeImmutable('2025-05-01T00:00:00.000Z'),
         );
 
         /** @var MedTeam $shift */
         foreach ($shifts as $shift) {
-            if ($shift->getPlannedStartAt() >= $shift->getPlannedFinishAt()){
-                dump($shift->getId());
+            if ($shift->getStatus() !== 'completed') {
+                continue;
             }
-           // if ($shift->getStatus() !== 'completed') {
-           //     continue;
-           // }
-           // $this->shiftPayrollCalculator->calculate($shift);
-           // $this->flusher->flush();
+            $this->shiftPayrollCalculator->calculate($shift);
+            $this->flusher->flush();
         }
 
         return Command::SUCCESS;
