@@ -104,12 +104,12 @@ class CallsAction extends AbstractController
             ];
         }
 
-        //$callPayrolls = $this->callPayrolls->findByCallIds($callIds, $userId);
-        $callPayrolls = $this->callPayrolls->findByPlannedEmployee(
-            $startOfMonth,
-            $endOfMonth,
-            $userId
-        );
+        $callPayrolls = $this->callPayrolls->findByCallIds($callIds, $userId);
+        //$callPayrolls = $this->callPayrolls->findByPlannedEmployee(
+        //    $startOfMonth,
+        //    $endOfMonth,
+        //    $userId
+        //);
 
 
         /** @var CallPayroll $callPayroll */
