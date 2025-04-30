@@ -104,10 +104,38 @@ class CallsAction extends AbstractController
             ];
         }
 
-        $callPayrolls = $this->callPayrolls->findByCallIds($callIds, $userId);
+        //$callPayrolls = $this->callPayrolls->findByCallIds($callIds, $userId);
+        $callPayrolls = $this->callPayrolls->findByPlannedEmployee(
+            $startOfMonth,
+            $endOfMonth,
+            $userId
+        );
+
 
         /** @var CallPayroll $callPayroll */
         foreach ($callPayrolls as $callPayroll) {
+            if (!isset($callsItems[$callPayroll->getCall()->getId()])) {
+                $callsItems[$call->getId()] = [
+                    'id' => $call->getId(),
+                    'completedAt' => $call->getCompletedAt()->format('d.m.Y H:i'),
+                    'completedDate' => $call->getCompletedAt()->format('d.m.Y'),
+                    'completedTime' => $call->getCompletedAt()->format('H:i'),
+                    'admin' => $call->getAdmin() ? [
+                        'id' => $call->getAdmin()->getId(),
+                        'name' => $call->getAdmin()->getName(),
+                    ] : null,
+                    'doctor' => $call->getDoctor() ? [
+                        'id' => $call->getDoctor()->getId(),
+                        'name' => $call->getDoctor()->getName(),
+                    ] : null,
+                    'callId' => $call->getId(),
+                    'name' => mb_substr($call->getAddress(), 0, -20) . '...',
+                    'amount' => $call->getPrice(),
+                    'reward' => 0,
+                    'subRows' => [],
+                ];
+            }
+
             $reward = (float)($callPayroll->getAccrued()->amount / 100);
 
             $callsItems[$callPayroll->getCall()->getId()]['reward'] += $reward;
