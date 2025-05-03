@@ -243,7 +243,12 @@ class PayrollAction extends AbstractController
             $total += (float)($servicePayroll->getAccrued()->amount / 100);
         }
 
-        $callPayrolls = $this->callPayrolls->findByCallIds($callIds, $userId);
+        //$callPayrolls = $this->callPayrolls->findByCallIds($callIds, $userId);
+        $callPayrolls = $this->callPayrolls->findByPlannedEmployee(
+            $startOfMonth,
+            $endOfMonth,
+            $userId
+        );
 
         /** @var CallPayroll $callPayroll */
         foreach ($callPayrolls as $callPayroll) {
