@@ -15,10 +15,12 @@ use App\Entity\Calling\Calling;
 use App\Flusher;
 use App\Repository\CallingRepository;
 use App\Services\AmoCRM;
+use App\Services\BuhClient;
 use App\Services\CallingSender;
 use App\Services\WSClient;
 use DateTimeImmutable;
 use DateTimeZone;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,6 +36,7 @@ class CompleteAction extends AbstractController
         AmoCRM $amoCRM,
         CallingSender $sender,
         private readonly WSClient $wsClient,
+        private readonly BuhClient $buhClient,
     ) {
         $this->client = $amoCRM->getClient();
         $this->sender = $sender;
@@ -82,6 +85,12 @@ class CompleteAction extends AbstractController
 
         $calling->setComplete(new DateTimeImmutable());
         $flusher->flush();
+
+        try {
+            $this->buhClient->send($calling);
+        }catch (Exception $e) {
+
+        }
 
         $this->sender->sendToAdmin(
             $calling,

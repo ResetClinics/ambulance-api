@@ -21,6 +21,7 @@ use App\Repository\CallingRepository;
 use App\Repository\TeamRepository;
 use App\Services\AmoCRM;
 use App\Services\ATS\BlacklistService\McnBlacklistService;
+use App\Services\BuhClient;
 use App\Services\CallingSender;
 use App\Services\WSClient;
 use DateTimeImmutable;
@@ -43,6 +44,7 @@ class RejectAction extends AbstractController
         private readonly WSClient $wsClient,
         private readonly Handler $asteriskDeleteHandler,
         private readonly McnBlacklistService $mcnBlacklistService,
+        private readonly BuhClient $buhClient,
     ) {
         $this->client = $amoCRM->getClient();
     }
@@ -96,6 +98,12 @@ class RejectAction extends AbstractController
         $calling->setReject(new DateTimeImmutable(), $calling->getRejectedComment());
 
         $flusher->flush();
+
+        try {
+            $this->buhClient->send($calling);
+        }catch (Exception $e) {
+
+        }
 
         $this->sender->sendToAdmin(
             $calling,

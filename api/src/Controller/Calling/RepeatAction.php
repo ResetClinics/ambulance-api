@@ -18,6 +18,7 @@ use App\Entity\Calling\Row;
 use App\Flusher;
 use App\Repository\CallingRepository;
 use App\Services\AmoCRM;
+use App\Services\BuhClient;
 use App\Services\CallingSender;
 use App\Services\RepeatedCallScheduler;
 use DateTimeImmutable;
@@ -39,7 +40,8 @@ class RepeatAction extends AbstractController
     public function __construct(
         AmoCRM $amoCRM,
         CallingSender $sender,
-        RepeatedCallScheduler $scheduler
+        RepeatedCallScheduler $scheduler,
+        private readonly BuhClient $buhClient,
     ) {
         $this->client = $amoCRM->getClient();
         $this->sender = $sender;
@@ -114,6 +116,12 @@ class RepeatAction extends AbstractController
 
         $calling->setComplete(new DateTimeImmutable());
         $flusher->flush();
+
+        try {
+            $this->buhClient->send($calling);
+        }catch (Exception $e) {
+
+        }
 
         $this->scheduler->schedule($calling);
 

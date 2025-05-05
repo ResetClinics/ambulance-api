@@ -34,7 +34,7 @@ class BuhClient
             ],
         ]);
 
-        $response = $this->client->request(
+        $this->client->request(
             'POST',
             'http://78.37.191.232:45808/UMC_Union/hs/calls/UploadCalls',
             [
@@ -49,9 +49,5 @@ class BuhClient
                 ],
             ]
         );
-
-        dd($response->toArray(false));
-
-
     }
 }
