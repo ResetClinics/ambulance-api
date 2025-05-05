@@ -105,7 +105,7 @@ class PatchAction extends AbstractController
         }
 
         try {
-           // $this->buhClient->send($calling);
+          $this->buhClient->send($calling);
         }catch (Exception $e) {
 
         }
