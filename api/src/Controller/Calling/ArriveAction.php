@@ -13,8 +13,10 @@ use App\Flusher;
 use App\Repository\CallingRepository;
 use App\Repository\TeamRepository;
 use App\Services\AmoCRM;
+use App\Services\BuhClient;
 use App\Services\WSClient;
 use DateTimeImmutable;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,6 +30,7 @@ class ArriveAction extends AbstractController
     public function __construct(
         AmoCRM $amoCRM,
         private readonly WSClient $wsClient,
+        private readonly BuhClient $buhClient,
     ) {
         $this->client = $amoCRM->getClient();
     }
@@ -56,6 +59,12 @@ class ArriveAction extends AbstractController
         $flusher->flush();
 
         $this->wsClient->sendUpdateOffer($calling->getId());
+
+        try {
+            $this->buhClient->send($calling);
+        }catch (Exception $e) {
+
+        }
 
         return $this->json([
             'id' => $calling->getId(),

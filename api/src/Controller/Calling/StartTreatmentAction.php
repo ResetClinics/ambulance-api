@@ -10,8 +10,10 @@ use App\Entity\Calling\Status;
 use App\Flusher;
 use App\Repository\CallingRepository;
 use App\Repository\TeamRepository;
+use App\Services\BuhClient;
 use App\Services\WSClient;
 use DateTimeImmutable;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,6 +24,7 @@ class StartTreatmentAction extends AbstractController
 {
     public function __construct(
         private readonly WSClient $wsClient,
+        private readonly BuhClient $buhClient,
     ) {}
 
     public function __invoke(
@@ -45,6 +48,13 @@ class StartTreatmentAction extends AbstractController
         $calling->setStatus(Status::treating());
 
         $flusher->flush();
+
+        try {
+            $this->buhClient->send($calling);
+        }catch (Exception $e) {
+
+        }
+
 
         $this->wsClient->sendUpdateOffer($calling->getId());
 

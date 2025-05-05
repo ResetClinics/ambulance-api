@@ -27,6 +27,7 @@ use App\Flusher;
 use App\Repository\CallingRepository;
 use App\Services\AmoCRM;
 use App\Services\ATS\BlacklistService\McnBlacklistService;
+use App\Services\BuhClient;
 use App\Services\Call\OperatorReward;
 use App\Services\Call\PartnerReward;
 use App\Services\CallingSender;
@@ -57,6 +58,7 @@ class FinishAction extends AbstractController
         private readonly Handler $handler,
         private readonly \App\Asterisk\UseCase\Channel\DeleteByClientPhone\Handler $asteriskDeleteHandler,
         private readonly McnBlacklistService $mcnBlacklistService,
+        private readonly BuhClient $buhClient,
     ) {
         $this->client = $amoCRM->getClient();
     }
@@ -121,6 +123,13 @@ class FinishAction extends AbstractController
         );
 
         $this->wsClient->sendUpdateOffer($calling->getId());
+
+        try {
+            $this->buhClient->send($calling);
+        }catch (Exception $e) {
+
+        }
+
 
         try {
             $this->asteriskDeleteHandler->handle(
