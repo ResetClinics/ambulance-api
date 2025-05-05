@@ -17,7 +17,6 @@ use App\Entity\Calling\Calling;
 use App\Flusher;
 use App\Repository\CallingRepository;
 use App\Services\AmoCRM;
-use App\Services\BuhClient;
 use App\Services\CallingSender;
 use App\Services\HospitalizationScheduler;
 use DateTimeImmutable;
@@ -41,7 +40,6 @@ class HospitalizationAction extends AbstractController
         AmoCRM $amoCRM,
         CallingSender $sender,
         HospitalizationScheduler $scheduler,
-        private readonly BuhClient $buhClient,
     ) {
         $this->client = $amoCRM->getClient();
         $this->sender = $sender;
@@ -104,12 +102,6 @@ class HospitalizationAction extends AbstractController
 
         $calling->setComplete(new DateTimeImmutable());
         $flusher->flush();
-
-        try {
-            $this->buhClient->send($calling);
-        }catch (Exception $e) {
-
-        }
 
         $this->sender->sendToAdmin(
             $calling,

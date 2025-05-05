@@ -16,7 +16,6 @@ use App\Repository\CallingRepository;
 use App\Repository\TeamRepository;
 use App\Services\AmoCRM;
 use App\Services\ATS\BlacklistService\McnBlacklistService;
-use App\Services\BuhClient;
 use App\Services\WSClient;
 use DateTimeImmutable;
 use DomainException;
@@ -36,7 +35,6 @@ class AcceptAction extends AbstractController
         private readonly WSClient $wsClient,
         private readonly Handler $asteriskAddOrUpdateHandler,
         private readonly McnBlacklistService $mcnBlacklistService,
-        private readonly BuhClient $buhClient,
     ) {
         $this->client = $amoCRM->getClient();
     }
@@ -65,12 +63,6 @@ class AcceptAction extends AbstractController
         $calling->setAccepted(new DateTimeImmutable());
 
         $flusher->flush();
-
-        try {
-            $this->buhClient->send($calling);
-        }catch (Exception $e) {
-
-        }
 
         $this->wsClient->sendUpdateOffer($calling->getId());
 

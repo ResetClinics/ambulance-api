@@ -83,12 +83,6 @@ class CompleteAction extends AbstractController
         $calling->setComplete(new DateTimeImmutable());
         $flusher->flush();
 
-        try {
-            $this->buhClient->send($calling);
-        }catch (Exception $e) {
-
-        }
-
         $this->sender->sendToAdmin(
             $calling,
             'Вызов N ' . $calling->getNumberCalling() . ' завершен',

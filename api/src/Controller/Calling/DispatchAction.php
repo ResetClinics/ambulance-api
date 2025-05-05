@@ -13,10 +13,8 @@ use App\Flusher;
 use App\Repository\CallingRepository;
 use App\Repository\TeamRepository;
 use App\Services\AmoCRM;
-use App\Services\BuhClient;
 use App\Services\WSClient;
 use DateTimeImmutable;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +28,6 @@ class DispatchAction extends AbstractController
     public function __construct(
         AmoCRM $amoCRM,
         private readonly WSClient $wsClient,
-        private readonly BuhClient $buhClient,
     ) {
         $this->client = $amoCRM->getClient();
     }
@@ -61,12 +58,6 @@ class DispatchAction extends AbstractController
         $calling->setDispatched(new DateTimeImmutable());
 
         $flusher->flush();
-
-        try {
-            $this->buhClient->send($calling);
-        }catch (Exception $e) {
-
-        }
 
         $this->wsClient->sendUpdateOffer($calling->getId());
 
