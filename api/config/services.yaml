@@ -80,3 +80,8 @@ services:
     App\Services\ATS\BlacklistService\McnBlacklistService:
         arguments:
             $token : "%env(MCN_API_TOKEN)%"
+
+    App\Services\BuhClient:
+        arguments:
+            $buhUsername: '%env(BUH_USERNAME)%'
+            $buhPassword: '%env(BUH_PASSWORD)%'

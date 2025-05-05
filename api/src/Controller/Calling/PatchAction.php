@@ -34,6 +34,7 @@ use App\Flusher;
 use App\Repository\Hospital\HospitalRepository;
 use App\Services\AmoCRM;
 use App\Services\ATS\BlacklistService\McnBlacklistService;
+use App\Services\BuhClient;
 use App\Services\Call\OperatorReward;
 use App\Services\Call\PartnerReward;
 use App\Services\CallingSender;
@@ -69,6 +70,7 @@ class PatchAction extends AbstractController
         private readonly CallPayrollCalculator $employeePayrollCalculator,
         private readonly Handler $handler,
         private readonly HospitalRepository $hospitals,
+        private readonly BuhClient $buhClient,
     ) {
         $this->client = $amoCRM->getClient();
     }
@@ -100,6 +102,12 @@ class PatchAction extends AbstractController
         $originalStatus = $this->callPreDenormalizeListener->getStatus();
         if ($newStatus === $originalStatus) {
             return;
+        }
+
+        try {
+           // $this->buhClient->send($calling);
+        }catch (Exception $e) {
+
         }
 
         if ($newStatus === Status::ACCEPTED) {
