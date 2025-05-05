@@ -18,6 +18,10 @@ readonly class CoddingPayrollCalculatorProcessor implements CallPayrollCalculato
 
     public function calculate(Row $callService, mixed $rate): void
     {
+        if ($callService->getCalling()->getCountRepeat() > 0){
+            $rate = $rate + 0.05;
+        }
+
         $admin = $callService->getCalling()->getAdmin();
 
         $this->createPayrollForEmployee($callService, $rate, $admin);
