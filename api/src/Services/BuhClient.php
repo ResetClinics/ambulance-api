@@ -24,7 +24,7 @@ class BuhClient
     public function send(Calling $call): void
     {
 
-        $serializedData = $this->serializer->serialize($call, 'json', [
+        $data = $this->serializer->normalize($call, null, [
             'groups' => [
                 'exchange_calling:read',
                 'partner:item:read',
@@ -45,7 +45,7 @@ class BuhClient
                 ],
                 'auth_basic' => [$this->buhUsername, $this->buhPassword],
                 'json' => [
-                    $serializedData
+                    $data
                 ],
             ]
         );

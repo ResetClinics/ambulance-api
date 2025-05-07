@@ -31,7 +31,7 @@ class TestCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $call = $this->calls->getById(52831);
+        $call = $this->calls->getById(51730);
         $this->client->send($call);
 
         return Command::SUCCESS;
