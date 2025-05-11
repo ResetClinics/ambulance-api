@@ -36,7 +36,7 @@ readonly class ParkingCalculator implements ShiftCalculatorInterface
             return;
         }
 
-        if (!$report->getParkingFees()) {
+        if (!$report->getParkingFees() && !$report->getToolRoad()) {
             return;
         }
 
