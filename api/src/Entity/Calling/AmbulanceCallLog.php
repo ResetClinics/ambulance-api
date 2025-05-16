@@ -85,7 +85,7 @@ class AmbulanceCallLog
 
     #[ORM\Column]
     #[Groups(['ambulance_call_log:read',])]
-    #[Context(normalizationContext: [DateTimeNormalizer::FORMAT_KEY => 'd.m.Y H:m:s'])]
+    #[Context(normalizationContext: [DateTimeNormalizer::FORMAT_KEY => 'd.m.Y H:i:s'])]
     private DateTimeImmutable $changedAt;
 
     #[ORM\ManyToOne]
