@@ -75,6 +75,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         'v1-call:read',
         'kpi_document:read',
         'administrator_report:read',
+        'ambulance_call_log:read'
     ])]
     private ?int $id = null;
 
@@ -106,6 +107,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         'v1-call:read',
         'kpi_document:read',
         'administrator_report:read',
+        'ambulance_call_log:read'
     ])]
     #[Assert\NotBlank]
     private ?string $name = null;

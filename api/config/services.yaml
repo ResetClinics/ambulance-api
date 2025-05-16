@@ -85,3 +85,7 @@ services:
         arguments:
             $buhUsername: '%env(BUH_USERNAME)%'
             $buhPassword: '%env(BUH_PASSWORD)%'
+
+    App\EventSubscriber\AmbulanceCallSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber }

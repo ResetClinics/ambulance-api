@@ -133,7 +133,8 @@ class MedTeam
         'calling:read',
         'exchange_calling:read',
         'v1:shift:item:read',
-        'administrator_report:read'
+        'administrator_report:read',
+        'ambulance_call_log:read',
     ])]
     private ?int $id = null;
 
@@ -190,7 +191,8 @@ class MedTeam
         'exchange_calling:read',
         'v1:shift:item:read',
         'v1:shift:write',
-        'administrator_report:read'
+        'administrator_report:read',
+        'ambulance_call_log:read',
     ])]
     #[Assert\Choice(choices: [
         'draft',
@@ -208,7 +210,8 @@ class MedTeam
         'med-team:write',
         'administrator_report:read',
         'v1:shift:item:read',
-        'administrator_report:read'
+        'administrator_report:read',
+        'ambulance_call_log:read',
     ])]
     #[ApiFilter(SearchFilter::class, properties: ['admin.id' => 'exact'])]
     private ?User $admin = null;
@@ -219,6 +222,7 @@ class MedTeam
         'med-team:write',
         'administrator_report:detail:read',
         'v1:shift:item:read',
+        'ambulance_call_log:read',
     ])]
     #[ApiFilter(SearchFilter::class, properties: ['doctor.id' => 'exact'])]
     private ?User $doctor = null;
@@ -266,6 +270,7 @@ class MedTeam
         'med-team:write',
         'administrator_report:detail:read',
         'v1:shift:item:read',
+        'ambulance_call_log:read',
     ])]
     private ?User $driver = null;
 

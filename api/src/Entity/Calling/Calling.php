@@ -635,6 +635,12 @@ class Calling
     #[ORM\Column(nullable: false, options: ['default' => false])]
     private ?bool $isBuh = false;
 
+    /**
+     * @var Collection<int, AmbulanceCallLog>
+     */
+    #[ORM\OneToMany(mappedBy: 'ambulanceCall', targetEntity: AmbulanceCallLog::class, orphanRemoval: true)]
+    private Collection $ambulanceCallLogs;
+
     public function __construct(
         string  $numberCalling,
         string  $title,
@@ -668,6 +674,7 @@ class Calling
         $this->doNotHospitalize = false;
 
         $this->images = new ArrayCollection();
+        $this->ambulanceCallLogs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -1677,5 +1684,35 @@ class Calling
     public function getIsShiftOpen(): bool
     {
         return $this->team?->getStatus() === 'work';
+    }
+
+    /**
+     * @return Collection<int, AmbulanceCallLog>
+     */
+    public function getAmbulanceCallLogs(): Collection
+    {
+        return $this->ambulanceCallLogs;
+    }
+
+    public function addAmbulanceCallLog(AmbulanceCallLog $ambulanceCallLog): static
+    {
+        if (!$this->ambulanceCallLogs->contains($ambulanceCallLog)) {
+            $this->ambulanceCallLogs->add($ambulanceCallLog);
+            $ambulanceCallLog->setAmbulanceCall($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAmbulanceCallLog(AmbulanceCallLog $ambulanceCallLog): static
+    {
+        if ($this->ambulanceCallLogs->removeElement($ambulanceCallLog)) {
+            // set the owning side to null (unless already changed)
+            if ($ambulanceCallLog->getAmbulanceCall() === $this) {
+                $ambulanceCallLog->setAmbulanceCall(null);
+            }
+        }
+
+        return $this;
     }
 }
