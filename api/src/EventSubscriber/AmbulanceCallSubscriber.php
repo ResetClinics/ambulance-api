@@ -61,8 +61,8 @@ class AmbulanceCallSubscriber implements EventSubscriber
                     $statusChanged = false;
                 }
             }else {
-                $oldStatus = $entity->getStatus();
-                $newStatus = $entity->getStatus();
+                $oldStatus = new Status($entity->getStatus());
+                $newStatus = $oldStatus;
             }
 
             /** @var MedTeam|null $oldShift */
