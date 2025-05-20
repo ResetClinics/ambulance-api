@@ -14,13 +14,15 @@ readonly class CoddingPayrollCalculatorProcessor implements CallPayrollCalculato
 {
     public function __construct(
         private ServicePayrollRepository $servicePayrolls,
-    ) {}
+    )
+    {
+    }
 
     public function calculate(Row $callService, mixed $rate): void
     {
-        //if ($callService->getCalling()->getCountRepeat() > 0){
-        //    $rate = $rate + 0.05;
-        //}
+        if ($rate > 0 && $callService->getCalling()->getCountRepeat() > 0) {
+            $rate = $rate + 0.05;
+        }
 
         $admin = $callService->getCalling()->getAdmin();
 
