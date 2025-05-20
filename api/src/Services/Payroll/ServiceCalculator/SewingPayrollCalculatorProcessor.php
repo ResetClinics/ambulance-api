@@ -18,10 +18,6 @@ readonly class SewingPayrollCalculatorProcessor implements CallPayrollCalculator
 
     public function calculate(Row $callService, mixed $rate): void
     {
-        $admin = $callService->getCalling()->getAdmin();
-
-        $this->createPayrollForEmployee($callService, $rate, $admin);
-
         $doctor = $callService->getCalling()->getDoctor();
 
         $this->createPayrollForEmployee($callService, $rate, $doctor);
