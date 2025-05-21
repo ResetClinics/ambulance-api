@@ -118,7 +118,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         'user:item:read',
         'user:write',
     ])]
-    #[Assert\NotBlank]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -127,7 +126,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         'user:item:read',
         'user:write',
     ])]
-    #[Assert\NotBlank]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
