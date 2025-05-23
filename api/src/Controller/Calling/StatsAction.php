@@ -37,8 +37,9 @@ class StatsAction extends AbstractController
     private function applyFilters(QueryBuilder $queryBuilder, Request $request): void
     {
         $partnerId = $request->query->get('partner_id');
-        $completedAtAfter = $request->query->get('completedAt[after]');
-        $completedAtBefore = $request->query->get('completedAt[before]');
+        $completedAt = $request->query->all()['completedAt'] ?? [];
+        $completedAtAfter = $completedAt['after'] ?? null;
+        $completedAtBefore = $completedAt['before'] ?? null;
         $cityId = $request->query->get('city_id');
         $status = $request->query->get('status');
 
