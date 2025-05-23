@@ -22,7 +22,7 @@ class StatsAction extends AbstractController
         $queryBuilder = $this->callingRepository->createQueryBuilder('c');
         $this->applyFilters($queryBuilder, $request);
         $queryBuilder
-            ->select('SUM(c.partnerReward) as totalPartnerReward', 'SUM(c.totalAmount) as totalAmount');
+            ->select('SUM(c.partnerReward) as totalPartnerReward', 'SUM(c.price) as price');
 
         $this->applyFilters($queryBuilder, $request);
 
