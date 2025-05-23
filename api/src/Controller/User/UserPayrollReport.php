@@ -96,6 +96,9 @@ class UserPayrollReport extends AbstractController
                     'employee' => [
                         'id' => $servicePayroll->getEmployee()->getId(),
                         'name' => $servicePayroll->getEmployee()->getName(),
+                        'firstName' => $servicePayroll->getEmployee()->getFirstName(),
+                        'lastName' => $servicePayroll->getEmployee()->getLastName(),
+                        'patronymic' => $servicePayroll->getEmployee()->getPatronymic(),
                     ],
                     'calls' => 0,
                     'shifts' => 0,
@@ -123,6 +126,9 @@ class UserPayrollReport extends AbstractController
                     'employee' => [
                         'id' => $shiftPayroll->getEmployee()->getId(),
                         'name' => $shiftPayroll->getEmployee()->getName(),
+                        'firstName' => $shiftPayroll->getEmployee()->getFirstName(),
+                        'lastName' => $shiftPayroll->getEmployee()->getLastName(),
+                        'patronymic' => $shiftPayroll->getEmployee()->getPatronymic(),
                     ],
                     'calls' => 0,
                     'shifts' => 0,
@@ -150,6 +156,9 @@ class UserPayrollReport extends AbstractController
                     'employee' => [
                         'id' => $kpiPayroll->getRecord()->getEmployee()->getId(),
                         'name' => $kpiPayroll->getRecord()->getEmployee()->getName(),
+                        'firstName' => $kpiPayroll->getRecord()->getEmployee()->getFirstName(),
+                        'lastName' => $kpiPayroll->getRecord()->getEmployee()->getLastName(),
+                        'patronymic' => $kpiPayroll->getRecord()->getEmployee()->getPatronymic(),
                     ],
                     'calls' => 0,
                     'shifts' => 0,
