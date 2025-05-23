@@ -58,11 +58,17 @@ class UserPayrollReport extends AbstractController
 
         /** @var ServicePayroll $servicePayroll */
         foreach ($servicePayrolls as $servicePayroll) {
+            if ($servicePayroll->getEmployee()?->isHideInReports()){
+                continue;
+            }
             if (!isset($items[$servicePayroll->getEmployee()->getId()])) {
                 $items[$servicePayroll->getEmployee()->getId()] = [
                     'employee' => [
                         'id' => $servicePayroll->getEmployee()->getId(),
                         'name' => $servicePayroll->getEmployee()->getName(),
+                        'firstName' => $servicePayroll->getEmployee()->getFirstName(),
+                        'lastName' => $servicePayroll->getEmployee()->getLastName(),
+                        'patronymic' => $servicePayroll->getEmployee()->getPatronymic(),
                     ],
                     'calls' => 0,
                     'shifts' => 0,
