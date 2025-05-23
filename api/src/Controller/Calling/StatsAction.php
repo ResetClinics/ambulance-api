@@ -30,7 +30,7 @@ class StatsAction extends AbstractController
 
         return $this->json([
             'partnerReward' => (int)$result['totalPartnerReward'] ?? 0,
-            'amount' => (int)$result['totalAmount'] ?? 0,
+            'amount' => (int)$result['price'] ?? 0,
         ]);
     }
 
