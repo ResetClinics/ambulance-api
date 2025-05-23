@@ -36,7 +36,7 @@ class BuhClient
 
         $this->client->request(
             'POST',
-            'http://78.37.191.232:45808/UMC_Union/hs/calls/UploadCalls',
+            'https://f2df32f2-787f-4a0a-b0b2-f31d3dc32464.wc.ru-3.1c.selcloud.ru/umc_union/hs/calls/UploadCalls',
             [
                 'headers' => [
                     'Content-Type' => 'application/json',
