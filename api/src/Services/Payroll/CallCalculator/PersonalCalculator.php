@@ -31,4 +31,31 @@ class PersonalCalculator extends AbstractCallCalculator
 
         $this->createPayrollForEmployee($call, $accrued, $doctor, $payrollCalculator);
     }
+
+    protected function getAmount(Calling $call): float
+    {
+        $amount = 0;
+
+        foreach ($call->getServices() as $callService) {
+            if (
+                $callService->getService()?->getEmployeePayrollCalculator()?->getProcessor()
+                === 'service_therapy_calculator' ||
+                $callService->getService()?->getEmployeePayrollCalculator()?->getProcessor()
+                === 'service_hospitalization_calculator' ||
+                $callService->getService()?->getEmployeePayrollCalculator()?->getProcessor()
+                === 'service_transportation_calculator'
+            ) {
+                $amount += (float)$callService->getPrice();
+            }
+        }
+        foreach ($call->getServices() as $callService) {
+            if (
+                $callService->getService()?->getEmployeePayrollCalculator()?->getProcessor()
+                === 'service_codding_calculator'
+            ) {
+                $amount += (float)$callService->getPrice() - $callService->getService()->getCoastPrice();
+            }
+        }
+        return $amount;
+    }
 }
