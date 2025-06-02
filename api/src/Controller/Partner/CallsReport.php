@@ -69,6 +69,7 @@ class CallsReport extends AbstractController
                 $partners[$call->getPartner()->getId()] = [
                     'id' => $call->getPartner()->getId(),
                     'name' => $call->getPartner()->getName(),
+                    'isOur' => $call->getPartner()->isOur(),
                     'calls' => [],
                     'debit' => 0,
                     'callEntrance' => 0,
@@ -146,6 +147,7 @@ class CallsReport extends AbstractController
                 $partners[$hospital->getPartner()->getId()] = [
                     'id' => $hospital->getPartner()->getId(),
                     'name' => $hospital->getPartner()->getName(),
+                    'isOur' => $hospital->getPartner()->isOur(),
                     'calls' => [],
                     'debit' => 0,
                     'callEntrance' => 0,
