@@ -88,7 +88,7 @@ class ExchangeCreateAction extends AbstractController
         $call->setBirthday($dto->birthday);
         $call->setBuh(true);
 
-        $call->setStatus(Status::notReady());
+        $call->setStatus(Status::waiting());
 
         $calls->add($call);
 
