@@ -7,10 +7,17 @@ namespace App\Controller\Calling;
 use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Filters\LeadsFilter;
 use AmoCRM\Models\LeadModel;
+use App\Entity\Calling\Calling;
+use App\Entity\Calling\Status;
 use App\Flusher;
 use App\Repository\CallingRepository;
 use App\Repository\MedTeam\MedTeamRepository;
 use App\Services\AmoCRM;
+use App\Services\CallingSender;
+use App\Services\TelegramSender;
+use App\Services\TrackerToMkad;
+use App\Services\WSClient;
+use DateTimeImmutable;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -26,6 +33,10 @@ class SetTeamAction extends AbstractController
         private readonly CallingRepository $calls,
         private readonly MedTeamRepository $teams,
         private readonly Flusher $flusher,
+        private readonly TrackerToMkad $trackerToMkad,
+        private readonly CallingSender $sender,
+        private readonly WSClient $wsClient,
+        private readonly TelegramSender $tgSender,
         AmoCRM $amoCRM,
     ) {
         $this->client = $amoCRM->getClient();
@@ -38,17 +49,36 @@ class SetTeamAction extends AbstractController
             $team = $this->teams->getById($teamId);
             $call->setTeam($team);
 
-            $filter = new LeadsFilter();
-            $filter->setIds([$call->getNumberCalling()]);
+            if ($call->isBuh()) {
 
-            $leads = $this->client->leads()->get($filter);
+                $this->handle($call);
 
-            /** @var LeadModel $lead */
-            foreach ($leads as $lead) {
-                $lead->setStatusId(38874646);
+                $message = "‼️️️️ ВНИМАНИЕ ‼️\nУ вас новый вызов, зайдите в приложение";
+                $this->tgSender->send($call->getAdmin(), $message);
+                $this->tgSender->send($call->getDoctor(), $message);
+                $this->tgSender->send($call->getTeam()->getDriver(), $message);
+
+                $this->sender->sendToAdmin(
+                    $call,
+                    'Внимание новый заказ',
+                    $call->getAddress()
+                );
+
+                $this->wsClient->sendUpdateOffer($call->getId());
+
+            }else {
+                $filter = new LeadsFilter();
+                $filter->setIds([$call->getNumberCalling()]);
+
+                $leads = $this->client->leads()->get($filter);
+
+                /** @var LeadModel $lead */
+                foreach ($leads as $lead) {
+                    $lead->setStatusId(38874646);
+                }
+
+                $this->client->leads()->update($leads);
             }
-
-            $this->client->leads()->update($leads);
 
             $this->flusher->flush();
         } catch (Exception $exception) {
@@ -56,5 +86,20 @@ class SetTeamAction extends AbstractController
         }
 
         return $this->json([], Response::HTTP_ACCEPTED);
+    }
+
+    private function handle(Calling $call)
+    {
+        $call->setUpdatedAt(new DateTimeImmutable());
+
+        $distance = $this->trackerToMkad->getDistance(
+            (float)$call->getLat(),
+            (float)$call->getLon(),
+            $call->getCity()?->getId()
+        );
+
+        $call->setMkadDistance($distance);
+
+        $call->setStatus(Status::assigned());
     }
 }

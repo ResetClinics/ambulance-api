@@ -18,8 +18,12 @@ readonly class TelegramSender
         private UserRepository $users,
     ) {}
 
-    public function send(User $user, string $message): void
+    public function send(?User $user, string $message): void
     {
+        if (!$user) {
+            return;
+        }
+
         $chats = $this->tgChatRepository->findByUser($user);
         foreach ($chats as $chat) {
             $this->botApi->sendMessage(
