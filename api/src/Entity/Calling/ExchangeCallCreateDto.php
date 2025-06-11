@@ -137,5 +137,17 @@ class ExchangeCallCreateDto {
     )]
     #[Groups(['exchange_calling:white'])]
     public ?DateTimeImmutable $birthday = null;
+    #[ApiProperty(
+        description: 'Координаты: долгота',
+    )]
+    #[Groups(['exchange_calling:white'])]
+    #[Assert\NotNull]
+    public $lon;
+    #[ApiProperty(
+        description: 'Координаты: широта',
+    )]
+    #[Groups(['exchange_calling:white'])]
+    #[Assert\NotNull]
+    public $lat;
 
 }

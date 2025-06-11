@@ -87,6 +87,8 @@ class ExchangeCreateAction extends AbstractController
         $call->setDoNotHospitalize($dto->doNotHospitalize);
         $call->setBirthday($dto->birthday);
         $call->setBuh(true);
+        $call->setLon($dto->lon);
+        $call->setLat($dto->lat);
 
         $call->setStatus(Status::waiting());
 
