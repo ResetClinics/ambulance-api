@@ -57,21 +57,22 @@ class PatchAction extends AbstractController
     private AmoCRMApiClient $client;
 
     public function __construct(
-        private readonly CallPreDenormalizeListener $callPreDenormalizeListener,
-        AmoCRM $amoCRM,
-        private readonly WSClient $wsClient,
-        private readonly AsteriskChannel\AddOrUpdate\Handler $asteriskAddOrUpdateHandler,
+        private readonly CallPreDenormalizeListener                  $callPreDenormalizeListener,
+        AmoCRM                                                       $amoCRM,
+        private readonly WSClient                                    $wsClient,
+        private readonly AsteriskChannel\AddOrUpdate\Handler         $asteriskAddOrUpdateHandler,
         private readonly AsteriskChannel\DeleteByClientPhone\Handler $asteriskDeleteHandler,
-        private readonly McnBlacklistService $mcnBlacklistService,
-        private readonly CallingSender $sender,
-        private readonly Flusher $flusher,
-        private readonly PartnerReward $partnerReward,
-        private readonly OperatorReward $operatorReward,
-        private readonly CallPayrollCalculator $employeePayrollCalculator,
-        private readonly Handler $handler,
-        private readonly HospitalRepository $hospitals,
-        private readonly BuhClient $buhClient,
-    ) {
+        private readonly McnBlacklistService                         $mcnBlacklistService,
+        private readonly CallingSender                               $sender,
+        private readonly Flusher                                     $flusher,
+        private readonly PartnerReward                               $partnerReward,
+        private readonly OperatorReward                              $operatorReward,
+        private readonly CallPayrollCalculator                       $employeePayrollCalculator,
+        private readonly Handler                                     $handler,
+        private readonly HospitalRepository                          $hospitals,
+        private readonly BuhClient                                   $buhClient,
+    )
+    {
         $this->client = $amoCRM->getClient();
     }
 
@@ -104,12 +105,6 @@ class PatchAction extends AbstractController
             return;
         }
 
-        try {
-          $this->buhClient->send($calling);
-        }catch (Exception $e) {
-
-        }
-
         if ($newStatus === Status::ACCEPTED) {
             $this->handleAcceptedStatus($calling);
         }
@@ -131,11 +126,17 @@ class PatchAction extends AbstractController
         }
 
         if ($newStatus === Status::REJECTED) {
-            if ($calling->getReasonForCancellation()?->isReassignmentRequired()){
+            if ($calling->getReasonForCancellation()?->isReassignmentRequired()) {
                 $this->handleReassignment($calling);
-            }else{
+            } else {
                 $this->handleRejectedStatus($calling);
             }
+        }
+
+        try {
+            $this->buhClient->send($calling);
+        } catch (Exception $e) {
+
         }
     }
 
@@ -159,6 +160,10 @@ class PatchAction extends AbstractController
 
     public function updateAmoCRMLeads(Calling $calling, int $leadStatusId): void
     {
+        if ($calling->isBuh()) {
+            return;
+        }
+
         $filter = new LeadsFilter();
         $filter->setIds([$calling->getNumberCalling()]);
 
@@ -264,107 +269,110 @@ class PatchAction extends AbstractController
 
     private function completeCall(Calling $calling): void
     {
-        $filter = new LeadsFilter();
-        $filter->setIds([$calling->getNumberCalling()]);
+        if (!$calling->isBuh()) {
 
-        $leads = $this->client->leads()->get($filter);
+            $filter = new LeadsFilter();
+            $filter->setIds([$calling->getNumberCalling()]);
 
-        if (!$leads) {
-            throw new NotFoundHttpException('Не найден лид №' . $calling->getNumberCalling() . ' в AmoCRM');
-        }
+            $leads = $this->client->leads()->get($filter);
 
-        $price = 0;
-        /** @var Row $serviceRow */
-        foreach ($calling->getServices() as $serviceRow) {
-            if ($serviceRow->getService()->getType() === 'default' && !$serviceRow->isHospital()) {
-                $price += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
+            if (!$leads) {
+                throw new NotFoundHttpException('Не найден лид №' . $calling->getNumberCalling() . ' в AmoCRM');
             }
-        }
 
-        $message = 'Информация от бригады:' . PHP_EOL;
-
-        $message .= $calling->getPrice() ? 'Итого: ' . $price . PHP_EOL : '';
-        $message .= $calling->getOriginalPhone() ? 'Номер телефона заказчика: ' . $calling->getOriginalPhone() . PHP_EOL : '';
-        $message .= $calling->getFio() ? 'ФИО пациента: ' . $calling->getFio() . PHP_EOL : '';
-        $message .= $calling->getAge() ? 'Возраст пациента: ' . $calling->getAge() . PHP_EOL : '';
-        $message .= $calling->getMkadDistance() ? 'Расстояние до МКАД: ' . $calling->getMkadDistance() . PHP_EOL : '';
-        $message .= $calling->getAddress() ? 'Адрес: ' . $calling->getAddress() . PHP_EOL : '';
-        $message .= PHP_EOL;
-
-        /** @var Row $serviceRow */
-        foreach ($calling->getServices() as $serviceRow) {
-            if ($serviceRow->getService()->getType() === 'replay') {
-                $message .= 'Повтор' . ($serviceRow->getPlannedAt() ? ' - ' . $serviceRow->getPlannedAt()->format('d.m.y H:m') : '') . PHP_EOL;
-                $message .= $serviceRow->getPrice() ? 'Предоплата ' . $serviceRow->getPrice() . PHP_EOL : '';
-                $message .= $serviceRow->getDescription() ?
-                    'Комментарий: ' . $serviceRow->getDescription() . PHP_EOL : '';
-                $message .= PHP_EOL;
+            $price = 0;
+            /** @var Row $serviceRow */
+            foreach ($calling->getServices() as $serviceRow) {
+                if ($serviceRow->getService()->getType() === 'default' && !$serviceRow->isHospital()) {
+                    $price += $serviceRow->getPrice() !== null ? (int)$serviceRow->getPrice() : 0;
+                }
             }
-        }
 
-        /** @var Row $serviceRow */
-        foreach ($calling->getServices() as $serviceRow) {
-            if ($serviceRow->isStationary()) {
-                continue;
+            $message = 'Информация от бригады:' . PHP_EOL;
+
+            $message .= $calling->getPrice() ? 'Итого: ' . $price . PHP_EOL : '';
+            $message .= $calling->getOriginalPhone() ? 'Номер телефона заказчика: ' . $calling->getOriginalPhone() . PHP_EOL : '';
+            $message .= $calling->getFio() ? 'ФИО пациента: ' . $calling->getFio() . PHP_EOL : '';
+            $message .= $calling->getAge() ? 'Возраст пациента: ' . $calling->getAge() . PHP_EOL : '';
+            $message .= $calling->getMkadDistance() ? 'Расстояние до МКАД: ' . $calling->getMkadDistance() . PHP_EOL : '';
+            $message .= $calling->getAddress() ? 'Адрес: ' . $calling->getAddress() . PHP_EOL : '';
+            $message .= PHP_EOL;
+
+            /** @var Row $serviceRow */
+            foreach ($calling->getServices() as $serviceRow) {
+                if ($serviceRow->getService()->getType() === 'replay') {
+                    $message .= 'Повтор' . ($serviceRow->getPlannedAt() ? ' - ' . $serviceRow->getPlannedAt()->format('d.m.y H:m') : '') . PHP_EOL;
+                    $message .= $serviceRow->getPrice() ? 'Предоплата ' . $serviceRow->getPrice() . PHP_EOL : '';
+                    $message .= $serviceRow->getDescription() ?
+                        'Комментарий: ' . $serviceRow->getDescription() . PHP_EOL : '';
+                    $message .= PHP_EOL;
+                }
             }
-            if ($serviceRow->isHospital()) {
-                $message .= 'Госпитализация' . ($serviceRow->getPrice() ? ' - ' . $serviceRow->getPrice() : '') . PHP_EOL;
-                $message .= $serviceRow->getDescription() ?
-                    'Комментарий: ' . $serviceRow->getDescription() . PHP_EOL : '';
-                $message .= PHP_EOL;
-            } elseif ($serviceRow->getService()->getType() === 'replay') {
-                continue;
-            } else {
-                $message .= $serviceRow->getService()->getName() . ($serviceRow->getPrice() ? ' - ' . $serviceRow->getPrice() : '') . PHP_EOL;
-                $message .= $serviceRow->getDescription() ?
-                    'Комментарий: ' . $serviceRow->getDescription() . PHP_EOL : '';
-                $message .= PHP_EOL;
+
+            /** @var Row $serviceRow */
+            foreach ($calling->getServices() as $serviceRow) {
+                if ($serviceRow->isStationary()) {
+                    continue;
+                }
+                if ($serviceRow->isHospital()) {
+                    $message .= 'Госпитализация' . ($serviceRow->getPrice() ? ' - ' . $serviceRow->getPrice() : '') . PHP_EOL;
+                    $message .= $serviceRow->getDescription() ?
+                        'Комментарий: ' . $serviceRow->getDescription() . PHP_EOL : '';
+                    $message .= PHP_EOL;
+                } elseif ($serviceRow->getService()->getType() === 'replay') {
+                    continue;
+                } else {
+                    $message .= $serviceRow->getService()->getName() . ($serviceRow->getPrice() ? ' - ' . $serviceRow->getPrice() : '') . PHP_EOL;
+                    $message .= $serviceRow->getDescription() ?
+                        'Комментарий: ' . $serviceRow->getDescription() . PHP_EOL : '';
+                    $message .= PHP_EOL;
+                }
             }
-        }
 
-        /** @var Row $serviceRow */
-        foreach ($calling->getServices() as $serviceRow) {
-            if ($serviceRow->isStationary()) {
-                $message .= 'Стационар' . ($serviceRow->getPrice() ? ' - ' . $serviceRow->getPrice() : '') . PHP_EOL;
-                $message .= $serviceRow->getClinic() ? $serviceRow->getClinic()->getName() . PHP_EOL : '';
-                $message .= $serviceRow->getDescription() ?
-                    'Комментарий: ' . $serviceRow->getDescription() . PHP_EOL : '';
-                $message .= PHP_EOL;
+            /** @var Row $serviceRow */
+            foreach ($calling->getServices() as $serviceRow) {
+                if ($serviceRow->isStationary()) {
+                    $message .= 'Стационар' . ($serviceRow->getPrice() ? ' - ' . $serviceRow->getPrice() : '') . PHP_EOL;
+                    $message .= $serviceRow->getClinic() ? $serviceRow->getClinic()->getName() . PHP_EOL : '';
+                    $message .= $serviceRow->getDescription() ?
+                        'Комментарий: ' . $serviceRow->getDescription() . PHP_EOL : '';
+                    $message .= PHP_EOL;
+                }
             }
-        }
 
-        $message .= 'ВСЕГО:' . $calling->getTotalAmount() . PHP_EOL;
+            $message .= 'ВСЕГО:' . $calling->getTotalAmount() . PHP_EOL;
 
-        $message .= PHP_EOL;
+            $message .= PHP_EOL;
 
-        $message .= 'Заявка №' . $calling->getNumberCalling() . PHP_EOL;
+            $message .= 'Заявка №' . $calling->getNumberCalling() . PHP_EOL;
 
-        $currentDate = new DateTimeImmutable('now', new DateTimeZone('Europe/Moscow'));
+            $currentDate = new DateTimeImmutable('now', new DateTimeZone('Europe/Moscow'));
 
-        $entityId = null;
+            $entityId = null;
 
-        /** @var LeadModel $lead */
-        foreach ($leads as $lead) {
-            $entityId = $lead->getId();
-            $lead->setStatusId(45084664);
-            $lead->setName($currentDate->format('d.m.y') . ' ' . $calling->getFio());
-            $lead->setPrice($calling->getPrice());
-        }
+            /** @var LeadModel $lead */
+            foreach ($leads as $lead) {
+                $entityId = $lead->getId();
+                $lead->setStatusId(45084664);
+                $lead->setName($currentDate->format('d.m.y') . ' ' . $calling->getFio());
+                $lead->setPrice($calling->getPrice());
+            }
 
-        $this->client->leads()->update($leads);
+            $this->client->leads()->update($leads);
 
-        $notesCollection = new NotesCollection();
-        $messageNote = new CommonNote();
-        $messageNote->setEntityId($entityId)
-            ->setText($message)
-            ->setCreatedBy(0);
+            $notesCollection = new NotesCollection();
+            $messageNote = new CommonNote();
+            $messageNote->setEntityId($entityId)
+                ->setText($message)
+                ->setCreatedBy(0);
 
-        $notesCollection->add($messageNote);
+            $notesCollection->add($messageNote);
 
-        try {
-            $leadNotesService = $this->client->notes(EntityTypesInterface::LEADS);
-            $leadNotesService->add($notesCollection);
-        } catch (AmoCRMApiException $e) {
+            try {
+                $leadNotesService = $this->client->notes(EntityTypesInterface::LEADS);
+                $leadNotesService->add($notesCollection);
+            } catch (AmoCRMApiException $e) {
+            }
         }
 
         $calling->setComplete(new DateTimeImmutable());
@@ -507,6 +515,9 @@ class PatchAction extends AbstractController
 
     private function handleServicesChange(Calling $call): void
     {
+        if ($call->isBuh()) {
+            return;
+        }
         $hospital = $this->hospitals->findOneByOwnerId($call->getId());
 
         foreach ($call->getServices() as $row) {
@@ -715,42 +726,44 @@ class PatchAction extends AbstractController
 
     private function handleRejectedStatus(Calling $calling): void
     {
-        $filter = new LeadsFilter();
-        $filter->setIds([$calling->getNumberCalling()]);
+        if (!$calling->isBuh()) {
+            $filter = new LeadsFilter();
+            $filter->setIds([$calling->getNumberCalling()]);
 
-        $leads = $this->client->leads()->get($filter);
+            $leads = $this->client->leads()->get($filter);
 
-        if (!$leads) {
-            throw new NotFoundHttpException('Не найден лид №' . $calling->getNumberCalling() . ' в AmoCRM');
-        }
+            if (!$leads) {
+                throw new NotFoundHttpException('Не найден лид №' . $calling->getNumberCalling() . ' в AmoCRM');
+            }
 
-        $message = 'Информация от бригады' . PHP_EOL;
-        $message .= 'Отмена заявки №' . $calling->getNumberCalling() . PHP_EOL;
-        $message .= $calling->getReasonForCancellation() ? 'Причина отмены ' . $calling->getReasonForCancellation()->getName() . PHP_EOL : '';
+            $message = 'Информация от бригады' . PHP_EOL;
+            $message .= 'Отмена заявки №' . $calling->getNumberCalling() . PHP_EOL;
+            $message .= $calling->getReasonForCancellation() ? 'Причина отмены ' . $calling->getReasonForCancellation()->getName() . PHP_EOL : '';
 
-        $entityId = null;
-        $currentDate = new DateTimeImmutable('now', new DateTimeZone('Europe/Moscow'));
-        /** @var LeadModel $lead */
-        foreach ($leads as $lead) {
-            $entityId = $lead->getId();
-            $lead->setStatusId(74882710);
-            $lead->setName('Неуспех ' . $currentDate->format('d.m.y') . ' ' . $calling->getName());
-        }
+            $entityId = null;
+            $currentDate = new DateTimeImmutable('now', new DateTimeZone('Europe/Moscow'));
+            /** @var LeadModel $lead */
+            foreach ($leads as $lead) {
+                $entityId = $lead->getId();
+                $lead->setStatusId(74882710);
+                $lead->setName('Неуспех ' . $currentDate->format('d.m.y') . ' ' . $calling->getName());
+            }
 
-        $this->client->leads()->update($leads);
+            $this->client->leads()->update($leads);
 
-        $notesCollection = new NotesCollection();
-        $messageNote = new CommonNote();
-        $messageNote->setEntityId($entityId)
-            ->setText($message)
-            ->setCreatedBy(0);
+            $notesCollection = new NotesCollection();
+            $messageNote = new CommonNote();
+            $messageNote->setEntityId($entityId)
+                ->setText($message)
+                ->setCreatedBy(0);
 
-        $notesCollection->add($messageNote);
+            $notesCollection->add($messageNote);
 
-        try {
-            $leadNotesService = $this->client->notes(EntityTypesInterface::LEADS);
-            $leadNotesService->add($notesCollection);
-        } catch (AmoCRMApiException $e) {
+            try {
+                $leadNotesService = $this->client->notes(EntityTypesInterface::LEADS);
+                $leadNotesService->add($notesCollection);
+            } catch (AmoCRMApiException $e) {
+            }
         }
 
         $calling->setReject(new DateTimeImmutable(), $calling->getRejectedComment());
@@ -768,41 +781,43 @@ class PatchAction extends AbstractController
 
     private function handleReassignment(Calling $calling): void
     {
-        $filter = new LeadsFilter();
-        $filter->setIds([$calling->getNumberCalling()]);
+        if (!$calling->isBuh()) {
+            $filter = new LeadsFilter();
+            $filter->setIds([$calling->getNumberCalling()]);
 
-        $leads = $this->client->leads()->get($filter);
+            $leads = $this->client->leads()->get($filter);
 
-        if (!$leads) {
-            throw new NotFoundHttpException('Не найден лид №' . $calling->getNumberCalling() . ' в AmoCRM');
-        }
+            if (!$leads) {
+                throw new NotFoundHttpException('Не найден лид №' . $calling->getNumberCalling() . ' в AmoCRM');
+            }
 
-        $message = 'Информация от бригады' . PHP_EOL;
-        $message .= 'Отмена заявки №' . $calling->getNumberCalling() . PHP_EOL;
-        $message .= $calling->getReasonForCancellation() ? 'Причина отмены ' . $calling->getReasonForCancellation()->getName() . PHP_EOL : '';
-        $message .= 'Заявка отправлена на переназначение';
+            $message = 'Информация от бригады' . PHP_EOL;
+            $message .= 'Отмена заявки №' . $calling->getNumberCalling() . PHP_EOL;
+            $message .= $calling->getReasonForCancellation() ? 'Причина отмены ' . $calling->getReasonForCancellation()->getName() . PHP_EOL : '';
+            $message .= 'Заявка отправлена на переназначение';
 
-        $entityId = null;
-        /** @var LeadModel $lead */
-        foreach ($leads as $lead) {
-            $entityId = $lead->getId();
-            $lead->setStatusId(38307946);
-        }
+            $entityId = null;
+            /** @var LeadModel $lead */
+            foreach ($leads as $lead) {
+                $entityId = $lead->getId();
+                $lead->setStatusId(38307946);
+            }
 
-        $this->client->leads()->update($leads);
+            $this->client->leads()->update($leads);
 
-        $notesCollection = new NotesCollection();
-        $messageNote = new CommonNote();
-        $messageNote->setEntityId($entityId)
-            ->setText($message)
-            ->setCreatedBy(0);
+            $notesCollection = new NotesCollection();
+            $messageNote = new CommonNote();
+            $messageNote->setEntityId($entityId)
+                ->setText($message)
+                ->setCreatedBy(0);
 
-        $notesCollection->add($messageNote);
+            $notesCollection->add($messageNote);
 
-        try {
-            $leadNotesService = $this->client->notes(EntityTypesInterface::LEADS);
-            $leadNotesService->add($notesCollection);
-        } catch (AmoCRMApiException $e) {
+            try {
+                $leadNotesService = $this->client->notes(EntityTypesInterface::LEADS);
+                $leadNotesService->add($notesCollection);
+            } catch (AmoCRMApiException $e) {
+            }
         }
 
         $calling->setStatus(Status::waiting());
