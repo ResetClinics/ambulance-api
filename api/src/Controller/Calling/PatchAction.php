@@ -390,6 +390,9 @@ class PatchAction extends AbstractController
 
     private function repeat(Calling $calling, Row $row): void
     {
+        if ($calling->isBuh()) {
+            return;
+        }
         $lead = $this->client->leads()->getOne($calling->getNumberCalling());
 
         if (!$lead) {
