@@ -241,16 +241,18 @@ class PatchAction extends AbstractController
         $calling->setPaymentHospitalization($price['hospital']);
         $calling->setPaymentNextOrder($price['nextOrder']);
 
-        /** @var Row $serviceRow */
-        foreach ($calling->getServices() as $serviceRow) {
-            if ($serviceRow->isReplay()) {
-                $this->repeat($calling, $serviceRow);
+        if (!$calling->isBuh()) {
+            /** @var Row $serviceRow */
+            foreach ($calling->getServices() as $serviceRow) {
+                if ($serviceRow->isReplay()) {
+                    $this->repeat($calling, $serviceRow);
 
-                $this->sender->sendToAdmin(
-                    $calling,
-                    'Вызов N ' . $calling->getNumberCalling(),
-                    'Оформлен повтор'
-                );
+                    $this->sender->sendToAdmin(
+                        $calling,
+                        'Вызов N ' . $calling->getNumberCalling(),
+                        'Оформлен повтор'
+                    );
+                }
             }
         }
 
