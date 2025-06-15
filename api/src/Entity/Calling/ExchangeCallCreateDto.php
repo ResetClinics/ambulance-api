@@ -45,7 +45,7 @@ class ExchangeCallCreateDto {
         openapiContext: ['type' => 'string']
     )]
     #[Groups(['exchange_calling:white'])]
-    public ?string $parentNumber = null;
+    public ?string $parentNumberCall = null;
 
 
     #[ApiProperty(
