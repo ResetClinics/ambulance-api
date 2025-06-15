@@ -40,6 +40,15 @@ class ExchangeCallCreateDto {
     public ?string $numberCall = null;
 
     #[ApiProperty(
+        description: 'Номер вызова родителя',
+        example: 'CALL-54321',
+        openapiContext: ['type' => 'string']
+    )]
+    #[Groups(['exchange_calling:white'])]
+    public ?string $parentNumber = null;
+
+
+    #[ApiProperty(
         description: 'Имя клиента',
         example: 'Иванов Иван Иванович',
         openapiContext: ['type' => 'string']
