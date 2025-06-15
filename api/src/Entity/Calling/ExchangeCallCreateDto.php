@@ -67,7 +67,7 @@ class ExchangeCallCreateDto {
     public ?string $address = null;
 
     #[ApiProperty(
-        description: 'Дополнение к адресу',
+        description: 'Примечание к адресу',
         example: 'не шуметь, номер домофона 1235',
         openapiContext: ['type' => 'string']
     )]
@@ -76,8 +76,8 @@ class ExchangeCallCreateDto {
 
 
     #[ApiProperty(
-        description: 'Описание',
-        example: 'тут какое то описание',
+        description: 'Комментарий к вызову',
+        example: 'комментарий который оставляет КЦ для бригады',
     )]
     #[Groups(['exchange_calling:white'])]
     public ?string $description = null;

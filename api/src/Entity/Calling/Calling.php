@@ -470,7 +470,7 @@ class Calling
     private ?int $prepayment = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['calling:read', 'calling:write', 'v1-call:read', 'v1-call:write'])]
+    #[Groups(['calling:read', 'calling:write', 'v1-call:read', 'v1-call:write', 'exchange_calling:read' ])]
     private ?string $note = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
