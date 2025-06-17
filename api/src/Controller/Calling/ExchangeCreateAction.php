@@ -92,6 +92,11 @@ class ExchangeCreateAction extends AbstractController
 
         $call->setStatus(Status::waiting());
 
+        if ($dto->parentNumberCall){
+            $parentCall = $calls->findOneByNumber($dto->parentNumberCall);
+            $call->setOwner($parentCall);
+        }
+
         $calls->add($call);
 
         $flusher->flush();
