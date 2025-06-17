@@ -622,7 +622,7 @@ class Calling
     private ?DateTimeImmutable $endOfServiceDateTime = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
-    #[Groups(['v1-call:read', 'v1-call:write'])]
+    #[Groups(['v1-call:read', 'v1-call:write', 'exchange_calling:read'])]
     private ?DateTimeImmutable $birthday = null;
 
     #[ORM\ManyToOne]
