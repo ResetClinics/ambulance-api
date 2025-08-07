@@ -159,4 +159,11 @@ class ExchangeCallCreateDto {
     #[Assert\NotNull]
     public $lat;
 
+    #[Groups(['exchange_calling:white'])]
+    #[ApiProperty(
+        description: 'Тип вызова: "general_profile" - Общий профиль, "narcology" - Наркология. Если не указан, то "narcology"',
+        example: 'narcology',
+        openapiContext: ['type' => 'string']
+    )]
+    public ?string $type = null;
 }

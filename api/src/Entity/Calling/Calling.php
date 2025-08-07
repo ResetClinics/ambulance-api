@@ -34,6 +34,7 @@ use App\Controller\Calling\RecalculateOperatorReward;
 use App\Controller\Calling\RejectAction;
 use App\Controller\Calling\RepeatAction;
 use App\Controller\Calling\StartTreatmentAction;
+use App\Entity\CallType;
 use App\Entity\City;
 use App\Entity\Client;
 use App\Entity\MediaObject;
@@ -641,6 +642,10 @@ class Calling
     #[ORM\OneToMany(mappedBy: 'ambulanceCall', targetEntity: AmbulanceCallLog::class, orphanRemoval: true)]
     private Collection $ambulanceCallLogs;
 
+    #[ORM\Column(length: 255, options: ['default' => CallType::NARCOLOGY])]
+    #[Groups(['calling:read', 'calling:write', 'exchange_calling:read', 'v1-call:read', 'v1-call:item:read'])]
+    private ?string $type;
+
     public function __construct(
         string  $numberCalling,
         string  $title,
@@ -675,6 +680,8 @@ class Calling
 
         $this->images = new ArrayCollection();
         $this->ambulanceCallLogs = new ArrayCollection();
+
+        $this->type = CallType::NARCOLOGY;
     }
 
     public function getId(): ?int
@@ -1712,6 +1719,18 @@ class Calling
                 $ambulanceCallLog->setAmbulanceCall(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): static
+    {
+        $this->type = $type;
 
         return $this;
     }

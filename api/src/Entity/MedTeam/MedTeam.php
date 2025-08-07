@@ -21,6 +21,7 @@ use App\Controller\MedTeam\SendSms;
 use App\Entity\AdministratorReport;
 use App\Entity\Base;
 use App\Entity\Calling\Calling;
+use App\Entity\CallType;
 use App\Entity\Car;
 use App\Entity\City;
 use App\Entity\User\User;
@@ -323,10 +324,14 @@ class MedTeam
     #[ORM\OneToOne(inversedBy: 'shift', cascade: ['persist', 'remove'])]
     private ?AdministratorReport $transportReport = null;
 
+    #[ORM\Column(length: 255, options: ['default' => CallType::NARCOLOGY])]
+    private ?string $callType;
+
     public function __construct()
     {
         $this->locations = new ArrayCollection();
         $this->callings = new ArrayCollection();
+        $this->callType = CallType::NARCOLOGY;
     }
 
     public function getId(): ?int
@@ -728,5 +733,17 @@ class MedTeam
             return $titles[$this->type];
         }
         return 0;
+    }
+
+    public function getCallType(): ?string
+    {
+        return $this->callType;
+    }
+
+    public function setCallType(?string $callType): static
+    {
+        $this->callType = $callType;
+
+        return $this;
     }
 }

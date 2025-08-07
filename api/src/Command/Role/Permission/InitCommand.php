@@ -422,6 +422,24 @@ class InitCommand extends Command
             'description' => 'Может быть водителем бригады',
         ],
 
+        [
+            'id' => 'can_be-cmp_reanimator',
+            'description' => 'Может быть реаниматологом бригады СМП',
+        ],
+        [
+            'id' => 'can_be-smp_paramedic',
+            'description' => 'Может быть фельдшером бригады СМП',
+        ],
+        [
+            'id' => 'can_be-smp_doctor',
+            'description' => 'Может быть врачом бригады СМП',
+        ],
+        [
+            'id' => 'can_be-smp_driver',
+            'description' => 'Может быть водителем бригады СМП',
+        ],
+
+
         // Отчеты администратора
         [
             'id' => 'administrator_reports-index',

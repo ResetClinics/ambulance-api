@@ -7,6 +7,7 @@ namespace App\Controller\Calling;
 use App\Entity\Calling\Calling;
 use App\Entity\Calling\ExchangeCallCreateDto;
 use App\Entity\Calling\Status;
+use App\Entity\CallType;
 use App\Entity\Client;
 use App\Flusher;
 use App\Repository\CallingRepository;
@@ -89,6 +90,11 @@ class ExchangeCreateAction extends AbstractController
         $call->setBuh(true);
         $call->setLon($dto->lon);
         $call->setLat($dto->lat);
+        $call->setType($dto->type);
+
+        if ($dto->type && $dto->type !== CallType::NARCOLOGY && $dto->type !== CallType::GENERAL_PROFILE) {
+           $dto->type = CallType::NARCOLOGY;
+        }
 
         $call->setStatus(Status::waiting());
 
