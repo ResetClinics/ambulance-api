@@ -1730,6 +1730,11 @@ class Calling
 
     public function setType(?string $type): static
     {
+        if ($type === null) {
+            $this->type = CallType::NARCOLOGY;
+            return $this;
+        }
+
         $this->type = $type;
 
         return $this;
