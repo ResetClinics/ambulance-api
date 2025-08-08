@@ -36,16 +36,11 @@ class PbxTestCallCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $clientPhone = $input->getArgument('clientPhone');
         $adminPhone = $input->getArgument('adminPhone');
-
-        if ($clientPhone) {
-            $io->note(sprintf('You passed an argument: %s', $clientPhone));
-        }
-
         $clientPhone = preg_replace('/[^0-9]/', '', $clientPhone);
 
         $adminPhone = preg_replace('/[^0-9]/', '', $adminPhone);
 
-        $this->client->request('POST', 'https://pbx.reset-med.ru:8089/ari/channels', [
+        $response =$this->client->request('POST', 'https://pbx.reset-med.ru:8089/ari/channels', [
             'auth_basic' => 'ARI_user:G5heZ8ld03V1I3',
             'headers' => [
                 'Content-Type' => 'application/x-www-form-urlencoded',
@@ -57,6 +52,8 @@ class PbxTestCallCommand extends Command
                 'priority' => '1',
             ],
         ]);
+
+        dump($response->toArray(false));
 
         $io->success('Call sent.');
 
