@@ -325,6 +325,13 @@ class MedTeam
     private ?AdministratorReport $transportReport = null;
 
     #[ORM\Column(length: 255, options: ['default' => CallType::NARCOLOGY])]
+    #[Groups([
+        'v1:shift:read',
+        'v1:shift:item:read',
+        'v1:shift:write',
+        'med-team:read',
+        'med-team:write',
+    ])]
     private ?string $callType;
 
     public function __construct()
