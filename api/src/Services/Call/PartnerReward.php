@@ -6,6 +6,7 @@ namespace App\Services\Call;
 
 use App\Entity\Calling\Calling;
 use App\Entity\Calling\Status;
+use App\Entity\CallType;
 use App\Query\PartnerReward\Fetcher;
 use App\Query\PartnerReward\Query;
 
@@ -21,7 +22,9 @@ class PartnerReward
         if ($call->getStatus() !== Status::COMPLETED) {
             return;
         }
-
+        if ($call->getType() !== CallType::NARCOLOGY) {
+            return;
+        }
         foreach ($call->getServices() as $row) {
             $query = new Query(
                 $call->getCompletedAt(),
