@@ -30,6 +30,14 @@ class GetCollectionMonth extends AbstractController
             $permission = 'can_be-doctor';
         } elseif ($role === 'ROLE_DRIVER') {
             $permission = 'can_be-driver';
+        } elseif ($role === 'ROLE_SMP_DRIVER') {
+            $permission = 'can_be-smp_driver';
+        } elseif ($role === 'ROLE_SMP_REANIMATOR') {
+            $permission = 'can_be-cmp_reanimator';
+        } elseif ($role === 'ROLE_SMP_PARAMEDIC') {
+            $permission = 'can_be-smp_paramedic';
+        } elseif ($role === 'ROLE_SMP_DOCTOR') {
+            $permission = 'can_be-smp_doctor';
         }
 
         $cityId =  $request->get('city') ? (int)$request->get('city') : null;
