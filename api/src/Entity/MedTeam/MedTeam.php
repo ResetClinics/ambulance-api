@@ -332,6 +332,7 @@ class MedTeam
         'med-team:read',
         'med-team:write',
     ])]
+    #[ApiFilter(SearchFilter::class, properties: ['callType' => 'exact'])]
     private ?string $callType;
 
     public function __construct()
