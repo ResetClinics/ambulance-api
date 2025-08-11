@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Payroll;
 
+use App\Entity\CallType;
 use App\Entity\MedTeam\MedTeam;
 use App\Repository\Payroll\PayrollCalculatorRepository;
 use App\Repository\Payroll\ShiftPayrollRepository;
@@ -19,6 +20,10 @@ readonly class ShiftPayrollCalculator
 
     public function calculate(MedTeam $shift): void
     {
+        if ($shift->getCallType() !== CallType::NARCOLOGY) {
+            return;
+        }
+
         // TODO убрать удаление в калькулятор
         $this->shiftPayrolls->removeByShiftId($shift->getId());
 

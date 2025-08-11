@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Payroll;
 
 use App\Entity\Calling\Calling;
+use App\Entity\CallType;
 use App\Entity\Payroll\KpiDocument\KpiDocument;
 use App\Entity\Payroll\KpiDocument\KpiRecord;
 use App\Entity\User\User;
@@ -34,6 +35,10 @@ readonly class KpiPayrollCalculator
 
         /** @var Calling $call */
         foreach ($calls as $call) {
+            if ($call->getType() !== CallType::NARCOLOGY) {
+                continue;
+            }
+
             $user = $call->getAdmin();
 
             if ($user && !isset($users[$user->getId()])) {

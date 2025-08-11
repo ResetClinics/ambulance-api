@@ -6,6 +6,7 @@ namespace App\Services\Payroll;
 
 use App\Entity\Calling\Calling;
 use App\Entity\Calling\Status;
+use App\Entity\CallType;
 use App\Repository\Payroll\CallPayrollRepository;
 use App\Repository\Payroll\PayrollCalculatorRepository;
 use App\Repository\Payroll\ServicePayrollRepository;
@@ -25,6 +26,10 @@ readonly class CallPayrollCalculator
     public function calculate(Calling $call): void
     {
         if ($call->getStatus() !== Status::COMPLETED) {
+            return;
+        }
+
+        if ($call->getType() !== CallType::NARCOLOGY) {
             return;
         }
 
