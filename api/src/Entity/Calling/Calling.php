@@ -332,6 +332,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
     properties: [
         'team.id' => 'exact',
         'services.service.id' => 'exact',
+        'type' => 'exact',
     ]
 )]
 class Calling
