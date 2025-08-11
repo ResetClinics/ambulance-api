@@ -76,7 +76,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
         new GetCollection(
             routePrefix: '/api',
-            openapi: false,
+            openapi: true,
         ),
         new Post(
             routePrefix: '/api',
@@ -123,6 +123,15 @@ use Symfony\Component\Validator\Constraints as Assert;
     ]
 )]
 #[ApiFilter(OrderFilter::class, properties: ['plannedStartAt'], arguments: ['orderParameterName' => 'order'])]
+#[ApiFilter(
+    SearchFilter::class,
+    properties: [
+        'status' => 'exact',
+        'city.id' => 'exact',
+        'admin.id' => 'exact',
+        'doctor.id' => 'exact',
+        'callType' => 'exact',
+    ])]
 class MedTeam
 {
     #[ORM\Id]
@@ -202,7 +211,6 @@ class MedTeam
         'completed',
         'cancelled',
     ])]
-    #[ApiFilter(SearchFilter::class, properties: ['status' => 'exact'])]
     private string $status = 'scheduled';
 
     #[ORM\ManyToOne]
@@ -214,7 +222,6 @@ class MedTeam
         'administrator_report:read',
         'ambulance_call_log:read',
     ])]
-    #[ApiFilter(SearchFilter::class, properties: ['admin.id' => 'exact'])]
     private ?User $admin = null;
 
     #[ORM\ManyToOne]
@@ -225,7 +232,6 @@ class MedTeam
         'v1:shift:item:read',
         'ambulance_call_log:read',
     ])]
-    #[ApiFilter(SearchFilter::class, properties: ['doctor.id' => 'exact'])]
     private ?User $doctor = null;
 
     #[ORM\ManyToOne]
@@ -303,7 +309,6 @@ class MedTeam
         'day',     // суточная
         'arbitrary',     // произвольная
     ])]
-    #[ApiFilter(SearchFilter::class, properties: ['status' => 'exact'])]
     #[Groups(['med-team:read', 'med-team:write', 'v1:shift:item:read'])]
     #[ORM\Column(length: 32, nullable: true, options: ['default' => 'daytime'])]
     private ?string $type = 'daytime';
@@ -313,7 +318,6 @@ class MedTeam
 
     #[ORM\ManyToOne]
     #[Groups(['med-team:read', 'med-team:write', 'v1:shift:item:read'])]
-    #[ApiFilter(SearchFilter::class, properties: ['city.id' => 'exact'])]
     private ?City $city = null;
 
     #[Groups([
@@ -332,7 +336,6 @@ class MedTeam
         'med-team:read',
         'med-team:write',
     ])]
-    #[ApiFilter(SearchFilter::class, properties: ['callType' => 'exact'])]
     private ?string $callType;
 
     public function __construct()
