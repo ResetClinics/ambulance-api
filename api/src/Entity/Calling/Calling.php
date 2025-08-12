@@ -1644,7 +1644,7 @@ class Calling
             return true;
         }
 
-        if ($this->getOwner()->getAdmin()->getId() !== $this->getAdmin()->getId()) {
+        if ($this->getOwner()->getAdmin()?->getId() !== $this->getAdmin()?->getId()) {
             return false;
         }
 
