@@ -1657,7 +1657,7 @@ class Calling
             return true;
         }
 
-        if ($this->getOwner()->getDoctor()->getId() !== $this->getDoctor()->getId()) {
+        if ($this->getOwner()->getDoctor()?->getId() !== $this->getDoctor()?->getId()) {
             return false;
         }
 
