@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Controller\Partner\CreatePartner;
 use App\Entity\Calling\Calling;
 use App\Entity\Partner\Agreement\Agreement;
 use App\Filter\Partner\PartnerCallingCityFilter;
@@ -42,6 +44,12 @@ use Symfony\Component\Validator\Constraints as Assert;
             routePrefix: '/api',
             openapi: false,
         ),
+        new Post(
+            uriTemplate: '/exchange/partners',
+            inputFormats: ['json' => ['application/json']],
+            outputFormats: ['json' => ['application/json']],
+            controller: CreatePartner::class,
+        ),
         new Get(
             routePrefix: '/api',
             openapi: false,
@@ -62,6 +70,10 @@ use Symfony\Component\Validator\Constraints as Assert;
     SearchByFieldsFilter::class,
     properties: ['name']
 )]
+#[ApiFilter(
+    SearchFilter::class,
+    properties: ['externalId' => 'exact']
+)]
 class Partner
 {
     #[ORM\Id]
@@ -75,7 +87,7 @@ class Partner
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['partner:read', 'partner:write'])]
+    #[Groups(['partner:read', 'partner:write', 'exchange_partners:read'])]
     private ?string $externalId = null;
 
     #[ORM\OneToMany(mappedBy: 'partner', targetEntity: Calling::class)]
@@ -86,7 +98,7 @@ class Partner
     private Collection $agreements;
 
     #[ORM\Column(length: 11, nullable: true)]
-    #[Groups(['partner:read', 'partner:write'])]
+    #[Groups(['partner:read', 'partner:write', 'exchange_partners:read'])]
     #[Assert\Regex(
         pattern: '/\d{11}/',
         message: 'Номер телефона должен состоять из 11 цифр.'
@@ -94,7 +106,7 @@ class Partner
     private ?string $phone = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['partner:read', 'partner:write'])]
+    #[Groups(['partner:read', 'partner:write', 'exchange_partners:read'])]
     #[Assert\Email]
     private ?string $email = null;
 
@@ -107,21 +119,21 @@ class Partner
     private ?string $contactPerson = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['partner:item:read', 'partner:write'])]
+    #[Groups(['partner:item:read', 'partner:write', 'exchange_partners:read'])]
     private ?string $whatsappGroup = null;
 
     #[ORM\Column(nullable: false, options: ['default' => 0])]
-    #[Groups(['partner:read', 'partner:write'])]
+    #[Groups(['partner:read', 'partner:write', 'exchange_partners:read'])]
     #[ApiFilter(BooleanFilter::class)]
     private bool $noBusinessCards;
 
     #[ORM\Column(nullable: false, options: ['default' => 0])]
-    #[Groups(['partner:read', 'partner:write'])]
+    #[Groups(['partner:read', 'partner:write', 'exchange_partners:read'])]
     #[ApiFilter(BooleanFilter::class)]
     private bool $partnerHospitalization;
 
     #[ORM\Column(nullable: false, options: ['default' => 0])]
-    #[Groups(['partner:read', 'partner:write'])]
+    #[Groups(['partner:read', 'partner:write', 'exchange_partners:read'])]
     #[ApiFilter(BooleanFilter::class)]
     private bool $our;
 
