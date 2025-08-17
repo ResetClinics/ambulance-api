@@ -520,22 +520,22 @@ class PatchAction extends AbstractController
 
     private function handleServicesChange(Calling $call): void
     {
-        if ($call->isBuh()) {
-            return;
-        }
+       // if ($call->isBuh()) {
+       //     return;
+       // }
         $hospital = $this->hospitals->findOneByOwnerId($call->getId());
 
         foreach ($call->getServices() as $row) {
             if ($row->isStationary()) {
                 $price = $row->getPrice() !== null ? (int)$row->getPrice() : null;
                 if (!$hospital) {
-                    $leadModel = $this->createStationaryLead($call);
+                    //$leadModel = $this->createStationaryLead($call);
 
                     $this->createStationary(
                         $call,
                         $row->getClinic(),
                         $price,
-                        (string)$leadModel->getId()
+                        //(string)$leadModel->getId()
                     );
                 } else {
                     $this->updateStationary(
@@ -554,11 +554,11 @@ class PatchAction extends AbstractController
         }
     }
 
-    private function createStationary(Calling $calling, ?Clinic $clinic, ?int $price, ?string $externalId): void
+    private function createStationary(Calling $calling, ?Clinic $clinic, ?int $price, ?string $externalId = null): void
     {
-        if (!$externalId) {
-            return;
-        }
+        //if (!$externalId) {
+        //    return;
+        //}
 
         if (!$this->hospitals->findOneByExternal($externalId)) {
             $hospital = new Hospital();
