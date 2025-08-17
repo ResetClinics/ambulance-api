@@ -560,7 +560,7 @@ class PatchAction extends AbstractController
         //    return;
         //}
 
-        if (!$this->hospitals->findOneByExternal($externalId)) {
+        //if (!$this->hospitals->findOneByExternal($externalId)) {
             $hospital = new Hospital();
             $hospital->setExternal($externalId);
             $hospital->setStatus('assigned');
@@ -577,7 +577,7 @@ class PatchAction extends AbstractController
             }
 
             $this->hospitals->save($hospital, true);
-        }
+        //}
 
         $this->sender->sendToAdmin(
             $calling,
