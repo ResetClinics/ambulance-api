@@ -71,7 +71,7 @@ class FileObject
     #[ORM\Column(nullable: true)]
     public ?string $filePath = null;
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
-    #[Groups(['media_object:read:image'])]
+    #[Groups(['media_object:read:image', 'exchange_calling:read'])]
     private ?int $id = null;
 
     public function getId(): ?int
@@ -79,7 +79,7 @@ class FileObject
         return $this->id;
     }
 
-    #[Groups(['media_object:read:image'])]
+    #[Groups(['media_object:read:image', 'exchange_calling:read'])]
     #[SerializedName('url')]
     public function getIri(): string
     {

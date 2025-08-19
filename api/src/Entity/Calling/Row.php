@@ -84,6 +84,7 @@ class Row
     #[Groups([
         'v1-call:read',
         'v1-call:write',
+        'exchange_calling:read',
     ])]
     private Collection $files;
 
