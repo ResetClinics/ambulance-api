@@ -26,8 +26,13 @@ class CreatePartner extends AbstractController
             'json'
         );
 
-        $this->handler->handle($command);
+        $partner =$this->handler->handle($command);
 
-        return $this->json(null, Response::HTTP_CREATED);
+        return $this->json(
+            [
+                'id' => $partner->getId(),
+                'name' => $partner->getName(),
+                'externalId' => $partner->getExternalId(),
+            ], Response::HTTP_CREATED);
     }
 }

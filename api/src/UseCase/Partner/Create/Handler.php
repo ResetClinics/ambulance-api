@@ -25,7 +25,7 @@ class Handler
     /**
      * @throws NonUniqueResultException
      */
-    public function handle(Command $command): void
+    public function handle(Command $command): Partner
     {
         if ($command->getExternalId()) {
             $partner = $this->partners->findOneByExternalId($command->getExternalId());
@@ -57,5 +57,6 @@ class Handler
         $this->agreements->add($agreement);
 
         $this->flusher->flush();
+        return $partner;
     }
 }
