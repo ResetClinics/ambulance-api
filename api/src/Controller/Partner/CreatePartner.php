@@ -2,40 +2,32 @@
 
 namespace App\Controller\Partner;
 
-use App\Entity\Partner;
-use App\Flusher;
-use App\Repository\Partner\Agreement\AgreementRepository;
-use App\Repository\Partner\Agreement\AgreementTemplateRepository;
-use DateTimeImmutable;
+use App\UseCase\Partner\Create\Command;
+use App\UseCase\Partner\Create\Handler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class CreatePartner extends AbstractController
 {
     public function __construct(
-        private readonly AgreementTemplateRepository $templates,
-        private readonly AgreementRepository $agreements,
-        private readonly Flusher $flusher,
+        private readonly SerializerInterface $serializer,
+        private readonly Handler $handler
     ) {}
 
-    public function __invoke(Partner $partner): Partner
+    public function __invoke(Request $request): JsonResponse
     {
-        $agreement = new Partner\Agreement\Agreement();
-        $agreement->setPartner($partner);
-        $agreement->setStartsAt(new DateTimeImmutable('01.12.2023'));
-        foreach ($this->templates->findAll() as $template) {
-            $row = new Partner\Agreement\Row();
-            $row->setAgreement($agreement);
-            $row->setService($template->getService());
-            $row->setDistance($template->getDistance());
-            $row->setPercent($template->getPercent());
-            $row->setRepeatNumber($template->getRepeatNumber());
+        /** @var Command $command */
+        $command = $this->serializer->deserialize(
+            $request->getContent(),
+            Command::class,
+            'json'
+        );
 
-            $agreement->addRow($row);
-        }
-        $this->agreements->save($agreement);
+        $this->handler->handle($command);
 
-        $this->flusher->flush();
-
-        return $partner;
+        return $this->json(null, Response::HTTP_CREATED);
     }
 }
