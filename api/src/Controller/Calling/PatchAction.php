@@ -82,6 +82,12 @@ class PatchAction extends AbstractController
 
         $this->handleStatusChange($calling);
 
+        try {
+            $this->buhClient->send($calling);
+        } catch (Exception $e) {
+
+        }
+
         $this->flusher->flush();
 
         return $this->json(
@@ -133,11 +139,6 @@ class PatchAction extends AbstractController
             }
         }
 
-        try {
-            $this->buhClient->send($calling);
-        } catch (Exception $e) {
-
-        }
     }
 
     public function handleAcceptedStatus(Calling $calling): void
