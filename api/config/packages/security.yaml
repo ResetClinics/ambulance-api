@@ -95,8 +95,7 @@ security:
         - { path: ^/api/permissions, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/partners, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/administrator_reports, roles: IS_AUTHENTICATED_FULLY }
-        - { path: ^/api/v1/files/, roles: PUBLIC_ACCESS, methods: POST }
-        - { path: ^/api/v1/files/, roles: IS_AUTHENTICATED_FULLY, methods: GET }
+        - { path: ^/api/v1/files/, roles: PUBLIC_ACCESS }
         - { path: ^/api/v1/block_descriptions, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/v1/payroll, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/v1/files, roles: IS_AUTHENTICATED_FULLY }
