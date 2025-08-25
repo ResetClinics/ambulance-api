@@ -27,11 +27,19 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     types: ['https://schema.org/MediaObject'],
     operations: [
         new Get(
+            routePrefix: '/api/v1',
             controller: GetAction::class,
         ),
-        new GetCollection(),
+        new Get(
+            routePrefix: '/exchange',
+            controller: GetAction::class,
+        ),
+        new GetCollection(
+            routePrefix: '/api/v1',
+        ),
         new Post(
             inputFormats: ['multipart' => ['multipart/form-data']],
+            routePrefix: '/api/v1',
             openapi: new Model\Operation(
                 requestBody: new Model\RequestBody(
                     content: new ArrayObject([
@@ -50,12 +58,13 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                 )
             )
         ),
-        new Delete(),
+        new Delete(
+            routePrefix: '/api/v1',
+        ),
     ],
     outputFormats: [
         'json' => ['application/json'],
     ],
-    routePrefix: '/api/v1',
     normalizationContext: ['groups' => ['media_object:read:image']]
 )]
 class FileObject
