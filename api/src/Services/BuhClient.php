@@ -4,22 +4,36 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Entity\ApiCallLog;
 use App\Entity\Calling\Calling;
+use App\Flusher;
+use App\Repository\ApiCallLogRepository;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class BuhClient
+readonly class BuhClient
 {
     public function __construct(
-        readonly private HttpClientInterface $client,
-        readonly private SerializerInterface $serializer,
-        readonly private string $buhUsername,
-        readonly private string $buhPassword
+        private HttpClientInterface $client,
+        private SerializerInterface $serializer,
+        private string $buhUsername,
+        private string $buhPassword,
+        private ApiCallLogRepository $logs,
+        private Flusher $flusher,
     ) {}
 
     /**
+     * @param Calling $call
      * @throws TransportExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
      */
     public function send(Calling $call): void
     {
@@ -34,7 +48,7 @@ class BuhClient
             ],
         ]);
 
-        $this->client->request(
+        $response = $this->client->request(
             'POST',
             'https://f2df32f2-787f-4a0a-b0b2-f31d3dc32464.wc.ru-3.1c.selcloud.ru/umc_union/hs/calls/UploadCalls',
             [
@@ -49,5 +63,16 @@ class BuhClient
                 ],
             ]
         );
+
+        $result = $response->toArray(false);
+        $status = $response->getStatusCode();
+
+        $log = new ApiCallLog();
+        $log->setCallId($call->getId());
+        $log->setData($data);
+        $log->setResponseStatus($status);
+        $log->setResponseData($result);
+        $this->logs->add($log);
+        $this->flusher->flush();
     }
 }
