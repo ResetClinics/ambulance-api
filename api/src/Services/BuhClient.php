@@ -8,6 +8,7 @@ use App\Entity\ApiCallLog;
 use App\Entity\Calling\Calling;
 use App\Flusher;
 use App\Repository\ApiCallLogRepository;
+use DateTimeImmutable;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
@@ -68,6 +69,7 @@ readonly class BuhClient
         $status = $response->getStatusCode();
 
         $log = new ApiCallLog();
+        $log->setCreatedAt(new DateTimeImmutable());
         $log->setCallId($call->getId());
         $log->setData($data);
         $log->setResponseStatus($status);
