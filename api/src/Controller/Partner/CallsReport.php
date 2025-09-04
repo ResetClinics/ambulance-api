@@ -48,8 +48,12 @@ class CallsReport extends AbstractController
         $partners = [];
 
         $debit = 0;
+        $callEntranceCash = 0;
+        $callEntranceCashless = 0;
         $callEntrance = 0;
         $callAccrued = 0;
+        $hospitalEntranceCash = 0;
+        $hospitalEntranceCashless = 0;
         $hospitalEntrance = 0;
         $hospitalAccrued = 0;
         $stationaryEntrance = 0;
@@ -72,8 +76,12 @@ class CallsReport extends AbstractController
                     'isOur' => $call->getPartner()->isOur(),
                     'calls' => [],
                     'debit' => 0,
+                    'callEntranceCash' => 0,
+                    'callEntranceCashless' => 0,
                     'callEntrance' => 0,
                     'callAccrued' => 0,
+                    'hospitalEntranceCash' => 0,
+                    'hospitalEntranceCashless' => 0,
                     'hospitalEntrance' => 0,
                     'hospitalAccrued' => 0,
                     'stationaryEntrance' => 0,
@@ -89,8 +97,12 @@ class CallsReport extends AbstractController
                 'city' => $call->getCity()?->getName(),
                 'name' => $call->getFio(),
                 'debit' => 0,
+                'callEntranceCash' => 0,
+                'callEntranceCashless' => 0,
                 'callEntrance' => 0,
                 'callAccrued' => 0,
+                'hospitalEntranceCash' => 0,
+                'hospitalEntranceCashless' => 0,
                 'hospitalEntrance' => 0,
                 'hospitalAccrued' => 0,
                 'clinic' => '',
@@ -114,7 +126,19 @@ class CallsReport extends AbstractController
                         += $service->getPrice();
                     $partners[$call->getPartner()->getId()]['hospitalAccrued']
                         += $service->getPartnerReward();
-
+                    if ($service->getInCash()){
+                        $hospitalEntranceCash += $service->getPrice();
+                        $partners[$call->getPartner()->getId()]['calls'][$id]['hospitalEntranceCash']
+                            += $service->getPrice();
+                        $partners[$call->getPartner()->getId()]['hospitalEntranceCash']
+                            += $service->getPrice();
+                    }else{
+                        $hospitalEntranceCashless += $service->getPrice();
+                        $partners[$call->getPartner()->getId()]['calls'][$id]['hospitalEntranceCashless']
+                            += $service->getPrice();
+                        $partners[$call->getPartner()->getId()]['hospitalEntranceCashless']
+                            += $service->getPrice();
+                    }
                     $hospitalEntrance  += $service->getPrice();
                     $hospitalAccrued += $service->getPartnerReward();
                 } elseif ($service->isTherapy()) {
@@ -130,6 +154,19 @@ class CallsReport extends AbstractController
 
                     $callEntrance  += $service->getPrice();
                     $callAccrued += $service->getPartnerReward();
+                    if ($service->getInCash()){
+                        $callEntranceCash += $service->getPrice();
+                        $partners[$call->getPartner()->getId()]['calls'][$id]['callEntranceCash']
+                            += $service->getPrice();
+                        $partners[$call->getPartner()->getId()]['callEntranceCash']
+                            += $service->getPrice();
+                    }else{
+                        $callEntranceCashless += $service->getPrice();
+                        $partners[$call->getPartner()->getId()]['calls'][$id]['callEntranceCashless']
+                            += $service->getPrice();
+                        $partners[$call->getPartner()->getId()]['callEntranceCashless']
+                            += $service->getPrice();
+                    }
                 }
 
                 $partners[$call->getPartner()->getId()]['calls'][$id]['debit'] = $call->getPrice();
@@ -150,8 +187,12 @@ class CallsReport extends AbstractController
                     'isOur' => $hospital->getPartner()->isOur(),
                     'calls' => [],
                     'debit' => 0,
+                    'callEntranceCash' => 0,
+                    'callEntranceCashless' => 0,
                     'callEntrance' => 0,
                     'callAccrued' => 0,
+                    'hospitalEntranceCash' => 0,
+                    'hospitalEntranceCashless' => 0,
                     'hospitalEntrance' => 0,
                     'hospitalAccrued' => 0,
                     'stationaryEntrance' => 0,
@@ -174,6 +215,8 @@ class CallsReport extends AbstractController
                 'external' => $hospital->getExternal(),
                 'name' => $hospital->getFio(),
                 'debit' => 0,
+                'callEntranceCash' => 0,
+                'callEntranceCashless' => 0,
                 'callEntrance' => 0,
                 'callAccrued' => 0,
                 'hospitalEntrance' => 0,
@@ -204,8 +247,12 @@ class CallsReport extends AbstractController
         return $this->json([
             'items' => $partners,
             'debit' => $debit,
+            'callEntranceCash' => $callEntranceCash,
+            'callEntranceCashless' => $callEntranceCashless,
             'callEntrance' => $callEntrance,
             'callAccrued' => $callAccrued,
+            'hospitalEntranceCash' => $hospitalEntranceCash,
+            'hospitalEntranceCashless' => $hospitalEntranceCashless,
             'hospitalEntrance' => $hospitalEntrance,
             'hospitalAccrued' => $hospitalAccrued,
             'stationaryEntrance' => $stationaryEntrance,
