@@ -123,6 +123,10 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
                 'groups' => [
                     'v1-call:read',
                     'client:item:read',
+                    'exchange_calling:read',
+                    'partner:item:read',
+                    'user:item:read',
+                    'service:item:read',
                 ]],
         ),
         new Post(
