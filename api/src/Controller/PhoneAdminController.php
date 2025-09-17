@@ -47,6 +47,27 @@ class PhoneAdminController extends AbstractController
             ];
         }
 
+
+        $users = $this->users->findAllByPermission('can_be-smp_paramedic');
+
+        /** @var User $user */
+        foreach ($users as $user) {
+            $data['CiscoIPPhoneDirectory']['DirectoryEntry'][] = [
+                'Name' => $user->getName(),
+                'Telephone' => '+' . $user->getPhone(),
+            ];
+        }
+
+        $users = $this->users->findAllByPermission('can_be-smp_doctor');
+
+        /** @var User $user */
+        foreach ($users as $user) {
+            $data['CiscoIPPhoneDirectory']['DirectoryEntry'][] = [
+                'Name' => $user->getName(),
+                'Telephone' => '+' . $user->getPhone(),
+            ];
+        }
+
         $xml = $this->serializer->serialize($data, 'xml');
 
         $response = new Response($xml);
