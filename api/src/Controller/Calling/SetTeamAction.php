@@ -53,10 +53,14 @@ class SetTeamAction extends AbstractController
 
                 $this->handle($call);
 
-                $message = "‼️️️️ ВНИМАНИЕ ‼️\nУ вас новый вызов, зайдите в приложение";
-                $this->tgSender->send($call->getAdmin(), $message);
-                $this->tgSender->send($call->getDoctor(), $message);
-                $this->tgSender->send($call->getTeam()->getDriver(), $message);
+                try {
+                    $message = "‼️️️️ ВНИМАНИЕ ‼️\nУ вас новый вызов, зайдите в приложение";
+                    $this->tgSender->send($call->getAdmin(), $message);
+                    $this->tgSender->send($call->getDoctor(), $message);
+                    $this->tgSender->send($call->getTeam()->getDriver(), $message);
+                }catch (Exception $e) {
+                }
+
 
                 $this->sender->sendToAdmin(
                     $call,
