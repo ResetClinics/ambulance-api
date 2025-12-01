@@ -65,9 +65,14 @@ class PartnerHospitalsAction extends AbstractController
                         'number' => $hospital->getExternal(),
                         'amount' => $hospital->getMainAmount(),
                         'fio' => $hospital->getFio(),
+                        'phone' => $hospital->getPhone(),
                         'status' => $hospital->getStatus(),
                         'hospitalizedAt' => $hospital->getHospitalized()?->format('d.m.Y H:i'),
                         'dischargedAt' => $hospital->getDischarged()?->format('d.m.Y H:i'),
+                        'clinic' => $hospital->getClinic() ? null : [
+                            'id' => $hospital->getClinic()->getId(),
+                            'name' => $hospital->getClinic()->getName(),
+                        ],
                     ];
                 }, $pagination->getItems()),
                 'pagination' => PaginationSerializer::toArray($pagination),

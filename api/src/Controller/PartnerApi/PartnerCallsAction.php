@@ -65,6 +65,7 @@ class PartnerCallsAction extends AbstractController
                     return [
                         'id' => $call->getId(),
                         'fio' => $call->getFio(),
+                        'phone' => $call->getPhone(),
                         'number' => $call->getNumberCalling(),
                         'address' => $call->getAddress(),
                         'price' => $call->getPrice(),
