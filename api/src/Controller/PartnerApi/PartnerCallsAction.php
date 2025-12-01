@@ -72,6 +72,7 @@ class PartnerCallsAction extends AbstractController
                         'reward' => $call->getPartnerReward(),
                         'comment' => $call->getCommentForPartner(),
                         'status' => $call->getStatus(),
+                        'mkadDistance' => $call->getMkadDistance(),
                         'dateTime' => $call->getDateTime()?->format('d.m.Y H:i'),
                         'createdAt' => $call->getCreatedAt()?->format('d.m.Y H:i'),
                         'completedAt' => $call->getCompletedAt()?->format('d.m.Y H:i'),
