@@ -35,11 +35,19 @@ readonly class AmbulanceApiClient
     ): ResponseInterface {
         $url = rtrim($this->baseUrl, '/') . '/' . ltrim($endpoint, '/');
 
+        // Преобразуем все значения параметров в строки для корректной передачи
+        $normalizedParams = [];
+        foreach ($queryParams as $key => $value) {
+            if ($value !== null && $value !== '') {
+                $normalizedParams[$key] = (string) $value;
+            }
+        }
+
         return $this->client->request(
             $method,
             $url,
             [
-                'query' => $queryParams,
+                'query' => $normalizedParams,
                 'auth_basic' => [$this->username, $this->password],
             ]
         );

@@ -42,21 +42,22 @@ class PartnerCallsAction extends AbstractController
             return $this->json(['error' => 'Partner not found'], 400);
         }
 
-        // Собираем параметры запроса
-        $queryParams = $request->query->all();
-        
-        // Добавляем обязательный параметр partner
-        $queryParams['partner'] = $partner->getId();
-        
         // Устанавливаем обязательные параметры с значениями по умолчанию
-        $queryParams['page'] = $request->query->getInt('page', 1);
+        $queryParams = [
+            'partner' => $partner->getId(),
+            'page' => $request->query->getInt('page', 1),
+            'perPage' => $request->query->getInt('per_page', 20),
+        ];
         
-        // Переименовываем per_page в perPage для внешнего API
-        if (isset($queryParams['per_page'])) {
-            $queryParams['perPage'] = (int) $queryParams['per_page'];
-            unset($queryParams['per_page']);
-        } else {
-            $queryParams['perPage'] = 20;
+        // Добавляем остальные параметры из запроса, исключая пустые значения и уже обработанные
+        $allParams = $request->query->all();
+        $excludedKeys = ['per_page', 'page', 'partner']; // Уже обработаны выше
+        
+        foreach ($allParams as $key => $value) {
+            // Пропускаем уже обработанные параметры и пустые значения
+            if (!in_array($key, $excludedKeys, true) && $value !== '' && $value !== null) {
+                $queryParams[$key] = $value;
+            }
         }
 
         // Выполняем запрос к внешнему API через сервис
