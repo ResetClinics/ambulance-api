@@ -25,13 +25,15 @@ readonly class AmbulanceApiClient
      * @param string $endpoint Путь к эндпоинту (например, "calls" или "calls/stats/status")
      * @param array<string, mixed> $queryParams Параметры запроса
      * @param string $method HTTP метод (по умолчанию GET)
+     * @param array<string, mixed>|null $body Тело запроса (для POST/PUT запросов)
      * @return ResponseInterface
      * @throws TransportExceptionInterface
      */
     public function request(
         string $endpoint,
         array $queryParams = [],
-        string $method = 'GET'
+        string $method = 'GET',
+        ?array $body = null
     ): ResponseInterface {
         $url = rtrim($this->baseUrl, '/') . '/' . ltrim($endpoint, '/');
 
@@ -49,12 +51,22 @@ readonly class AmbulanceApiClient
             $url .= '?' . $queryString;
         }
 
+        $options = [
+            'auth_basic' => [$this->username, $this->password],
+        ];
+
+        // Добавляем JSON body для POST/PUT запросов
+        if ($body !== null && \in_array($method, ['POST', 'PUT', 'PATCH'], true)) {
+            $options['json'] = $body;
+            $options['headers'] = [
+                'Content-Type' => 'application/json',
+            ];
+        }
+
         return $this->client->request(
             $method,
             $url,
-            [
-                'auth_basic' => [$this->username, $this->password],
-            ]
+            $options
         );
     }
 
@@ -62,6 +74,7 @@ readonly class AmbulanceApiClient
      * @param string $endpoint Путь к эндпоинту
      * @param array<string, mixed> $queryParams Параметры запроса
      * @param string $method HTTP метод
+     * @param array<string, mixed>|null $body Тело запроса (для POST/PUT запросов)
      * @return array{statusCode: int, data: mixed}
      * @throws ClientExceptionInterface
      * @throws DecodingExceptionInterface
@@ -72,9 +85,10 @@ readonly class AmbulanceApiClient
     public function requestAndGetResponse(
         string $endpoint,
         array $queryParams = [],
-        string $method = 'GET'
+        string $method = 'GET',
+        ?array $body = null
     ): array {
-        $response = $this->request($endpoint, $queryParams, $method);
+        $response = $this->request($endpoint, $queryParams, $method, $body);
         $statusCode = $response->getStatusCode();
 
         try {
