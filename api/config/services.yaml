@@ -86,6 +86,12 @@ services:
             $buhUsername: '%env(BUH_USERNAME)%'
             $buhPassword: '%env(BUH_PASSWORD)%'
 
+    App\Services\AmbulanceApiClient:
+        arguments:
+            $baseUrl: '%env(AMBULANCE_API_BASE_URL)%'
+            $username: '%env(AMBULANCE_API_USERNAME)%'
+            $password: '%env(AMBULANCE_API_PASSWORD)%'
+
     App\EventSubscriber\AmbulanceCallSubscriber:
         tags:
             - { name: doctrine.event_subscriber }

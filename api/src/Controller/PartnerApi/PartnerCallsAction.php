@@ -4,82 +4,59 @@ declare(strict_types=1);
 
 namespace App\Controller\PartnerApi;
 
-use App\Controller\PaginationSerializer;
-use App\Entity\Calling\Calling;
 use App\Entity\Partner\PartnerUser;
-use App\Repository\CallingRepository;
-use Knp\Component\Pager\PaginatorInterface;
+use App\Services\AmbulanceApiClient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class PartnerCallsAction extends AbstractController
 {
-    private const PER_PAGE = 50;
-
     public function __construct(
         private readonly Security $security,
-        private readonly CallingRepository $calls,
-        private readonly PaginatorInterface $paginator,
+        private readonly AmbulanceApiClient $ambulanceApiClient,
     ) {}
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     */
     #[Route('/partner/calls', name: 'partner-api.calls.index', methods: ['GET'])]
     public function calls(Request $request): JsonResponse
     {
         /** @var PartnerUser $user */
         $user = $this->security->getUser();
+        $partner = $user->getPartner();
 
-        $page = $request->query->getInt('page', 1);
-        $perPage = $request->query->getInt('per_page', self::PER_PAGE);
+        if (!$partner) {
+            return $this->json(['error' => 'Partner not found'], 400);
+        }
 
-        /** @var string $sort */
-        $sort = $request->query->get('sort', 'dateTime');
-        /** @var string $direction */
-        $direction = $request->query->get('direction', 'desc');
+        // Собираем параметры запроса
+        $queryParams = $request->query->all();
+        
+        // Добавляем обязательный параметр partner
+        $queryParams['partner'] = $partner->getId();
+        
+        // Переименовываем per_page в perPage для внешнего API
+        if (isset($queryParams['per_page'])) {
+            $queryParams['perPage'] = $queryParams['per_page'];
+            unset($queryParams['per_page']);
+        }
 
-        $search = $request->query->get('search');
+        // Выполняем запрос к внешнему API через сервис
+        $result = $this->ambulanceApiClient->requestAndGetResponse('calls', $queryParams);
 
-        $statuses = $request->query->get('status');
-
-        $query = $request->query->all();
-        $completedAtAfter = $query['completedAt']['after'] ?? null;
-        $completedAtAtBefore = $query['completedAt']['before'] ?? null;
-
-        $calls = $this->calls->findAllForPartnerApi(
-            $user->getPartner(),
-            $sort,
-            $direction,
-            $search,
-            $statuses,
-            $completedAtAfter,
-            $completedAtAtBefore
-        );
-
-        $pagination = $this->paginator->paginate($calls, $page, $perPage);
-
-        return $this->json(
-            [
-                'items' => array_map(static function (Calling $call) {
-                    return [
-                        'id' => $call->getId(),
-                        'fio' => $call->getFio(),
-                        'phone' => $call->getPhone(),
-                        'number' => $call->getNumberCalling(),
-                        'address' => $call->getAddress(),
-                        'price' => $call->getPrice(),
-                        'reward' => $call->getPartnerReward(),
-                        'comment' => $call->getCommentForPartner(),
-                        'status' => $call->getStatus(),
-                        'mkadDistance' => $call->getMkadDistance(),
-                        'dateTime' => $call->getDateTime()?->format('d.m.Y H:i'),
-                        'createdAt' => $call->getCreatedAt()?->format('d.m.Y H:i'),
-                        'completedAt' => $call->getCompletedAt()?->format('d.m.Y H:i'),
-                        'location' => $call->getLon() && $call->getLat() ? [$call->getLat(), $call->getLon()] : null, ];
-                }, $pagination->getItems()),
-                'pagination' => PaginationSerializer::toArray($pagination),
-            ]
-        );
+        return new JsonResponse($result['data'], $result['statusCode']);
     }
 }
