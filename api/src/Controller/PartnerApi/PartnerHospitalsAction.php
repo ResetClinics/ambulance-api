@@ -8,6 +8,7 @@ use App\Controller\PaginationSerializer;
 use App\Entity\Hospital\Hospital;
 use App\Entity\Partner\PartnerUser;
 use App\Repository\Hospital\HospitalRepository;
+use App\Services\AmbulanceApiClient;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,8 +22,7 @@ class PartnerHospitalsAction extends AbstractController
 
     public function __construct(
         private readonly Security $security,
-        private readonly HospitalRepository $hospitals,
-        private readonly PaginatorInterface $paginator,
+        private readonly AmbulanceApiClient $ambulanceApiClient,
     ) {}
 
     #[Route('/partner/hospitals', name: 'partner-api.hospitals.index', methods: ['GET'])]
@@ -30,53 +30,33 @@ class PartnerHospitalsAction extends AbstractController
     {
         /** @var PartnerUser $user */
         $user = $this->security->getUser();
+        $partner = $user->getPartner();
 
-        $page = $request->query->getInt('page', 1);
-        $perPage = $request->query->getInt('per_page', self::PER_PAGE);
+        if (!$partner) {
+            return $this->json(['error' => 'Partner not found'], 400);
+        }
 
-        /** @var string $sort */
-        $sort = $request->query->get('sort', 'createdAt');
-        /** @var string $direction */
-        $direction = $request->query->get('direction', 'desc');
-        $search = $request->query->get('search');
-        $statuses = $request->query->get('status');
+        // Устанавливаем обязательные параметры с значениями по умолчанию
+        $queryParams = [
+            'partner' => $partner->getId(),
+            'page' => $request->query->getInt('page', 1),
+            'perPage' => $request->query->getInt('per_page', 20),
+        ];
 
-        $query = $request->query->all();
-        $dischargedAtAfter = $query['dischargedAt']['after'] ?? null;
-        $dischargedAtBefore = $query['dischargedAt']['before'] ?? null;
+        // Добавляем остальные параметры из запроса, исключая пустые значения и уже обработанные
+        $allParams = $request->query->all();
+        $excludedKeys = ['per_page', 'page', 'partner']; // Уже обработаны выше
 
-        $hospitals = $this->hospitals->findAllForPartnerApi(
-            $user->getPartner(),
-            $sort,
-            $direction,
-            $search,
-            $statuses,
-            $dischargedAtAfter,
-            $dischargedAtBefore
-        );
+        foreach ($allParams as $key => $value) {
+            // Пропускаем уже обработанные параметры и пустые значения
+            if (!in_array($key, $excludedKeys, true) && $value !== '' && $value !== null) {
+                $queryParams[$key] = $value;
+            }
+        }
 
-        $pagination = $this->paginator->paginate($hospitals, $page, $perPage);
+        // Выполняем запрос к внешнему API через сервис
+        $result = $this->ambulanceApiClient->requestAndGetResponse('placements', $queryParams);
 
-        return $this->json(
-            [
-                'items' => array_map(static function (Hospital $hospital) {
-                    return [
-                        'id' => $hospital->getId(),
-                        'number' => $hospital->getExternal(),
-                        'amount' => $hospital->getMainAmount(),
-                        'fio' => $hospital->getFio(),
-                        'phone' => $hospital->getPhone(),
-                        'status' => $hospital->getStatus(),
-                        'hospitalizedAt' => $hospital->getHospitalized()?->format('d.m.Y H:i'),
-                        'dischargedAt' => $hospital->getDischarged()?->format('d.m.Y H:i'),
-                        'clinic' => $hospital->getClinic() ? null : [
-                            'id' => $hospital->getClinic()->getId(),
-                            'name' => $hospital->getClinic()->getName(),
-                        ],
-                    ];
-                }, $pagination->getItems()),
-                'pagination' => PaginationSerializer::toArray($pagination),
-            ]
-        );
+        return new JsonResponse($result['data'], $result['statusCode']);
     }
 }
