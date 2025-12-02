@@ -62,6 +62,9 @@ class PartnerCallsAction extends AbstractController
         // Выполняем запрос к внешнему API через сервис
         $result = $this->ambulanceApiClient->requestAndGetResponse('calls', $queryParams);
 
-        return new JsonResponse($result['data'], $result['statusCode']);
+        return new JsonResponse([
+            'data' => $result['data'],
+            'params' => $queryParams,
+        ], $result['statusCode']);
     }
 }
