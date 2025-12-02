@@ -52,7 +52,7 @@ class PartnerCallsCreateAction extends AbstractController
             return new JsonResponse($json, 424, [], true);
         }
 
-        $this->handler->handle($command);
+        //$this->handler->handle($command);
 
         // Отправляем POST запрос в Ambulance API
         try {
