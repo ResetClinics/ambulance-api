@@ -48,10 +48,15 @@ class PartnerCallsAction extends AbstractController
         // Добавляем обязательный параметр partner
         $queryParams['partner'] = $partner->getId();
         
+        // Устанавливаем обязательные параметры с значениями по умолчанию
+        $queryParams['page'] = $request->query->getInt('page', 1);
+        
         // Переименовываем per_page в perPage для внешнего API
         if (isset($queryParams['per_page'])) {
-            $queryParams['perPage'] = $queryParams['per_page'];
+            $queryParams['perPage'] = (int) $queryParams['per_page'];
             unset($queryParams['per_page']);
+        } else {
+            $queryParams['perPage'] = 20;
         }
 
         // Выполняем запрос к внешнему API через сервис
