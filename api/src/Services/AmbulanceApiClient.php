@@ -49,6 +49,8 @@ readonly class AmbulanceApiClient
             $url .= '?' . $queryString;
         }
 
+        dd($url);
+
         return $this->client->request(
             $method,
             $url,
