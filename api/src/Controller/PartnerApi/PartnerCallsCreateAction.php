@@ -46,12 +46,12 @@ class PartnerCallsCreateAction extends AbstractController
             [AbstractNormalizer::OBJECT_TO_POPULATE => $command]
         );
 
-        //$violations = $this->validator->validate($command);
-        //if (\count($violations)) {
-        //    $json = $this->serializer->serialize($violations, 'json');
-        //    return new JsonResponse($json, 424, [], true);
-        //}
-//
+        $violations = $this->validator->validate($command);
+        if (\count($violations)) {
+            $json = $this->serializer->serialize($violations, 'json');
+            return new JsonResponse($json, 424, [], true);
+        }
+
         //$this->handler->handle($command);
 
         // Отправляем POST запрос в Ambulance API
@@ -64,6 +64,8 @@ class PartnerCallsCreateAction extends AbstractController
                     'note' => $command->description,
                     'phone' => $command->phone,
                     'utm_source' => (string) $command->partnerId,
+                    'type' => $command->type,
+                    'client' => $command->client
                 ]
             );
         } catch (HttpExceptionInterface $e) {

@@ -11,11 +11,11 @@ class Command
 {
     public int $partnerId;
     #[Assert\NotBlank]
-    #[UniqueCallPhone]
     public ?string $phone = null;
     #[Assert\NotBlank]
     public ?string $description = null;
-
+    public ?string $type = null;
+    public ?string $client = null;
     public function __construct(int $partnerId)
     {
         $this->partnerId = $partnerId;
