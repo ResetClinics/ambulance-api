@@ -334,6 +334,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 #[ApiFilter(
     SearchFilter::class,
     properties: [
+        'id' => 'exact',
         'team.id' => 'exact',
         'services.service.id' => 'exact',
         'type' => 'exact',
