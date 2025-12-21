@@ -48,7 +48,7 @@ class CallsGetAction extends AbstractController
         ];
 
         // Выполняем запрос к внешнему API через сервис
-        $result = $this->ambulanceApiClient->requestAndGetResponse('calls', $queryParams);
+        $result = $this->ambulanceApiClient->requestAndGetResponse('call', $queryParams);
 
         return new JsonResponse($result['data'], $result['statusCode']);
     }
