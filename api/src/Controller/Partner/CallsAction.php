@@ -36,6 +36,7 @@ class CallsAction extends AbstractController
             'partner' => $id,
             'page' => $request->query->getInt('page', 1),
             'perPage' => $request->query->getInt('per_page', 20),
+            'amounts' => true
         ];
         
         // Добавляем остальные параметры из запроса, исключая пустые значения и уже обработанные
