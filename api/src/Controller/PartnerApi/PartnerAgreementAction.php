@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\PartnerApi;
 
-use App\Entity\Partner\PartnerUser;
+use App\Security\PartnerUserIdentity;
 use App\Repository\Partner\Agreement\AgreementRepository;
 use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,17 +26,15 @@ class PartnerAgreementAction extends AbstractController
     #[Route('/partner/agreement', name: 'partner-api.agreement.index', methods: ['GET'])]
     public function agreement(Request $request): JsonResponse
     {
-        /** @var PartnerUser $user */
+        /** @var PartnerUserIdentity $user */
         $user = $this->security->getUser();
-        $partner = $user->getPartner();
-
-        if (!$partner) {
+        if (!$user instanceof PartnerUserIdentity) {
             return $this->json(['error' => 'Partner not found'], 400);
         }
 
         $startsAt = new DateTimeImmutable();
         $agreement = $this->agreementRepository->findCurrentByPartnerId(
-            $partner->getId(),
+            $user->getPartnerId(),
             $startsAt
         );
 

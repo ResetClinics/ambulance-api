@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\PartnerApi;
 
-use App\Entity\Partner\PartnerUser;
+use App\Security\PartnerUserIdentity;
 use App\Services\AmbulanceApiClient;
 use App\UseCase\Call\AddForPartner\Command;
 use App\UseCase\Call\AddForPartner\Handler;
@@ -34,10 +34,13 @@ class PartnerCallsCreateAction extends AbstractController
     #[Route('/partner/calls', name: 'partner-api.calls.create', methods: ['POST'])]
     public function calls(Request $request): JsonResponse
     {
-        /** @var PartnerUser $user */
+        /** @var PartnerUserIdentity $user */
         $user = $this->security->getUser();
+        if (!$user instanceof PartnerUserIdentity) {
+            return $this->json(['error' => 'Partner not found'], 400);
+        }
 
-        $command = new Command($user->getPartner()->getId());
+        $command = new Command($user->getPartnerId());
 
         $this->serializer->deserialize(
             $request->getContent(),

@@ -6,7 +6,7 @@ namespace App\Controller\PartnerApi;
 
 use App\Controller\PaginationSerializer;
 use App\Entity\Hospital\Hospital;
-use App\Entity\Partner\PartnerUser;
+use App\Security\PartnerUserIdentity;
 use App\Repository\Hospital\HospitalRepository;
 use App\Services\AmbulanceApiClient;
 use Knp\Component\Pager\PaginatorInterface;
@@ -28,17 +28,15 @@ class PartnerHospitalsAction extends AbstractController
     #[Route('/partner/hospitals', name: 'partner-api.hospitals.index', methods: ['GET'])]
     public function hospitals(Request $request): JsonResponse
     {
-        /** @var PartnerUser $user */
+        /** @var PartnerUserIdentity $user */
         $user = $this->security->getUser();
-        $partner = $user->getPartner();
-
-        if (!$partner) {
+        if (!$user instanceof PartnerUserIdentity) {
             return $this->json(['error' => 'Partner not found'], 400);
         }
 
         // Устанавливаем обязательные параметры с значениями по умолчанию
         $queryParams = [
-            'partner' => $partner->getId(),
+            'partner' => $user->getPartnerId(),
             'page' => $request->query->getInt('page', 1),
             'perPage' => $request->query->getInt('per_page', 20),
         ];

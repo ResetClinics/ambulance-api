@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\PartnerApi;
 
-use App\Entity\Partner\PartnerUser;
+use App\Security\PartnerUserIdentity;
 use App\Services\AmbulanceApiClient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -34,17 +34,15 @@ class PartnerCallsAction extends AbstractController
     #[Route('/partner/calls', name: 'partner-api.calls.index', methods: ['GET'])]
     public function calls(Request $request): JsonResponse
     {
-        /** @var PartnerUser $user */
+        /** @var PartnerUserIdentity $user */
         $user = $this->security->getUser();
-        $partner = $user->getPartner();
-
-        if (!$partner) {
+        if (!$user instanceof PartnerUserIdentity) {
             return $this->json(['error' => 'Partner not found'], 400);
         }
 
         // Устанавливаем обязательные параметры с значениями по умолчанию
         $queryParams = [
-            'partner' => $partner->getId(),
+            'partner' => $user->getPartnerId(),
             'page' => $request->query->getInt('page', 1),
             'perPage' => $request->query->getInt('per_page', 20),
         ];

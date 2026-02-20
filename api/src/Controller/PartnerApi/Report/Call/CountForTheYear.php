@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\PartnerApi\Report\Call;
 
-use App\Entity\Partner\PartnerUser;
+use App\Security\PartnerUserIdentity;
 use App\Query\Report\Partner\Call\CountForTheYear\Fetcher;
 use App\Query\Report\Partner\Call\CountForTheYear\Query;
 use DateTime;
@@ -28,11 +28,14 @@ class CountForTheYear extends AbstractController
      */
     public function __invoke(Fetcher $fetcher): JsonResponse
     {
-        /** @var PartnerUser $user */
+        /** @var PartnerUserIdentity $user */
         $user = $this->security->getUser();
+        if (!$user instanceof PartnerUserIdentity) {
+            throw $this->createAccessDeniedException('Partner not found');
+        }
 
         $data = $fetcher->fetch(new Query(
-            $user->getPartner()->getId(),
+            $user->getPartnerId(),
             (new DateTimeImmutable())->modify('-1 year')->format('Y-m-d'),
             (new DateTimeImmutable())->format('Y-m-d')
         ));
