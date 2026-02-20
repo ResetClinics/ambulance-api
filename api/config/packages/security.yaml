@@ -10,9 +10,7 @@ security:
         app_user_provider:
             id: App\Security\UserProvider
         app_partner_user_provider:
-            entity:
-                class: App\Entity\Partner\PartnerUser
-                property: phone
+            id: App\Security\PartnerUserProvider
         app_exchange_user_provider:
             entity:
                 class: App\Entity\ApiUser
