@@ -39,6 +39,8 @@ WORKDIR /app
 COPY --from=builder /app ./
 COPY ./ ./
 
+RUN echo 'APP_ENV=prod' > .env.local
+
 RUN php bin/console cache:warmup --env=prod --no-debug 2>/dev/null || true
 
 EXPOSE 10000
