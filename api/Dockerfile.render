@@ -31,6 +31,9 @@ RUN apk add --no-cache postgresql-dev icu-dev libpng-dev libjpeg-turbo-dev freet
 
 RUN mv $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 
+ENV APP_ENV=prod
+ENV APP_DEBUG=0
+
 WORKDIR /app
 
 COPY --from=builder /app ./
