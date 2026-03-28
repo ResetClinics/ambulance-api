@@ -1,6 +1,6 @@
 FROM php:8.3-cli-alpine AS builder
 
-RUN apk add --no-cache postgresql-dev icu-dev libpng-dev libjpeg-turbo-dev freetype-dev libzip-dev \
+RUN apk add --no-cache postgresql-dev icu-dev libpng-dev libjpeg-turbo-dev freetype-dev libzip-dev zlib-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-configure intl \
     && docker-php-ext-install pdo_pgsql pdo_mysql opcache intl gd zip
@@ -22,9 +22,8 @@ RUN composer install --no-dev --prefer-dist --no-scripts --no-progress --optimiz
 
 FROM php:8.3-cli-alpine
 
-RUN apk add --no-cache postgresql-dev icu-dev libpng libjpeg-turbo freetype libzip
-
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+RUN apk add --no-cache postgresql-dev icu-dev libpng libjpeg-turbo freetype libzip zlib-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-configure intl \
     && docker-php-ext-install pdo_pgsql opcache intl gd zip
 
