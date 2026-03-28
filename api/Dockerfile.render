@@ -54,6 +54,6 @@ RUN php bin/console cache:warmup --env=prod --no-debug 2>/dev/null || true
 
 EXPOSE 10000
 
-# Run migrations on startup, then start server
-CMD php bin/console doctrine:schema:update --force --no-interaction 2>/dev/null; \
-    php -S 0.0.0.0:10000 -t public
+RUN chmod +x /app/startup.sh
+
+CMD ["/app/startup.sh"]
