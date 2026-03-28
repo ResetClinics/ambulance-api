@@ -95,3 +95,7 @@ services:
     App\EventSubscriber\AmbulanceCallSubscriber:
         tags:
             - { name: doctrine.event_subscriber }
+
+    App\Services\SmsRuService:
+        arguments:
+            $smsRuApiId: '%env(SMSRU_API_ID)%'
