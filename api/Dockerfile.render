@@ -1,8 +1,9 @@
-FROM php:8.1-cli-alpine AS builder
+FROM php:8.3-cli-alpine AS builder
 
-RUN apk add --no-cache postgresql-dev \
-    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
-    && docker-php-ext-install pdo_pgsql pdo_mysql opcache
+RUN apk add --no-cache postgresql-dev icu-dev libpng-dev libjpeg-turbo-dev freetype-dev libzip-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install pdo_pgsql pdo_mysql opcache intl gd zip
 
 RUN apk add --no-cache unzip
 
@@ -19,12 +20,13 @@ RUN composer install --no-dev --prefer-dist --no-scripts --no-progress --optimiz
 
 ### Production image ###
 
-FROM php:8.1-cli-alpine
+FROM php:8.3-cli-alpine
 
-RUN apk add --no-cache postgresql-dev
+RUN apk add --no-cache postgresql-dev icu-dev libpng libjpeg-turbo freetype libzip
 
-RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
-    && docker-php-ext-install pdo_pgsql opcache
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install pdo_pgsql opcache intl gd zip
 
 RUN mv $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 
