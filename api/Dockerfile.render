@@ -42,7 +42,7 @@ WORKDIR /app
 COPY --from=builder /app ./
 COPY ./ ./
 
-RUN printf 'APP_ENV=prod\nDB_DRIVER=pdo_pgsql\nDB_PORT=5432\n' > .env.local
+RUN printf 'APP_ENV=prod\nDB_DRIVER=pdo_pgsql\nDB_PORT=5432\nCORS_ALLOW_ORIGIN=^https?://.*$$\n' > .env.local
 
 # Generate JWT keys
 RUN mkdir -p config/jwt \
