@@ -22,10 +22,12 @@ RUN composer install --no-dev --prefer-dist --no-scripts --no-progress --optimiz
 
 FROM php:8.3-cli-alpine
 
-RUN apk add --no-cache postgresql-dev icu-dev libpng libjpeg-turbo freetype libzip zlib-dev \
+RUN apk add --no-cache postgresql-dev icu-dev libpng-dev libjpeg-turbo-dev freetype-dev libzip-dev zlib-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-configure intl \
-    && docker-php-ext-install pdo_pgsql opcache intl gd zip
+    && docker-php-ext-install pdo_pgsql opcache intl gd zip \
+    && apk del --no-cache libpng-dev libjpeg-turbo-dev freetype-dev libzip-dev zlib-dev \
+    && apk add --no-cache libpng libjpeg-turbo freetype libzip zlib
 
 RUN mv $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 
