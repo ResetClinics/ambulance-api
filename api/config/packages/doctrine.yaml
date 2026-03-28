@@ -3,9 +3,9 @@ doctrine:
         default_connection: default
         connections:
             default:
-                driver: pdo_mysql
+                driver: '%env(DB_DRIVER)%'
                 host: '%env(DB_HOST)%'
-                port: 3306
+                port: '%env(int:DB_PORT)%'
                 dbname: '%env(DB_NAME)%'
                 user: '%env(DB_USER)%'
                 password: '%env(DB_PASSWORD)%'
