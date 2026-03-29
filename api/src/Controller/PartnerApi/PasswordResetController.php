@@ -8,6 +8,7 @@ use App\Entity\Partner\PartnerUser;
 use App\Entity\PasswordResetCode;
 use App\Services\SmsRuService;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,6 +22,7 @@ class PasswordResetController extends AbstractController
         private readonly EntityManagerInterface $em,
         private readonly SmsRuService $smsRu,
         private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -35,16 +37,21 @@ class PasswordResetController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $phone = preg_replace('/\D/', '', $data['phone'] ?? '');
 
+        $this->logger->warning('RESET: forgot-password called', ['phone' => $phone]);
+
         if (strlen($phone) !== 11) {
+            $this->logger->warning('RESET: invalid phone format', ['phone' => $phone]);
             return $this->json(['error' => 'Неверный формат телефона'], Response::HTTP_BAD_REQUEST);
         }
 
         // Проверяем что пользователь с таким телефоном существует
         $user = $this->em->getRepository(PartnerUser::class)->findOneBy(['phone' => $phone]);
         if (!$user) {
-            // Не раскрываем существование пользователя — возвращаем успех
+            $this->logger->warning('RESET: user NOT found', ['phone' => $phone]);
             return $this->json(['success' => true]);
         }
+
+        $this->logger->warning('RESET: user found', ['phone' => $phone, 'name' => $user->getName()]);
 
         // Ограничение: не чаще 1 раза в 60 секунд
         $recent = $this->em->createQueryBuilder()
@@ -58,6 +65,7 @@ class PasswordResetController extends AbstractController
             ->getResult();
 
         if (!empty($recent)) {
+            $this->logger->warning('RESET: rate limited', ['phone' => $phone]);
             return $this->json(
                 ['error' => 'Подождите минуту перед повторной отправкой'],
                 Response::HTTP_TOO_MANY_REQUESTS
@@ -71,8 +79,12 @@ class PasswordResetController extends AbstractController
         $this->em->persist($resetCode);
         $this->em->flush();
 
+        $this->logger->warning('RESET: code saved, sending SMS', ['phone' => $phone, 'code' => $code]);
+
         // Отправляем SMS
-        $this->smsRu->send($phone, "Код для сброса пароля: {$code}");
+        $result = $this->smsRu->send($phone, "Код для сброса пароля: {$code}");
+
+        $this->logger->warning('RESET: SMS result', ['result' => $result]);
 
         return $this->json(['success' => true]);
     }
