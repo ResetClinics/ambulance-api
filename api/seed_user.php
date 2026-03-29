@@ -20,32 +20,67 @@ try {
         exit(1);
     }
 
+    // List columns for debugging
+    $cols = $pdo->query("SELECT column_name, data_type, is_nullable, column_default FROM information_schema.columns WHERE table_name = 'partner' ORDER BY ordinal_position")->fetchAll(PDO::FETCH_ASSOC);
+    echo "Partner columns:\n";
+    foreach ($cols as $c) {
+        echo "  {$c['column_name']} ({$c['data_type']}) nullable={$c['is_nullable']} default={$c['column_default']}\n";
+    }
+
+    $cols2 = $pdo->query("SELECT column_name, data_type, is_nullable, column_default FROM information_schema.columns WHERE table_name = 'partner_users' ORDER BY ordinal_position")->fetchAll(PDO::FETCH_ASSOC);
+    echo "Partner_users columns:\n";
+    foreach ($cols2 as $c) {
+        echo "  {$c['column_name']} ({$c['data_type']}) nullable={$c['is_nullable']} default={$c['column_default']}\n";
+    }
+
     // Create partner if not exists
     $stmt = $pdo->query("SELECT COUNT(*) FROM partner WHERE id = 1");
     if ($stmt->fetchColumn() == 0) {
-        $pdo->exec("INSERT INTO partner (id, name, ambulance_commission, partner_commission, has_pharmacy) VALUES (1, 'Test Partner', 0, 0, 0)");
-        echo "Partner created\n";
+        try {
+            $pdo->exec("INSERT INTO partner (id, name) VALUES (1, 'Test Partner')");
+            echo "Partner created OK\n";
+        } catch (Exception $e) {
+            echo "Partner INSERT failed: " . $e->getMessage() . "\n";
+            // Try with more columns based on NOT NULL constraints
+            echo "Trying minimal insert with sequence...\n";
+            $pdo->exec("INSERT INTO partner (name) VALUES ('Test Partner')");
+            $partnerId = $pdo->lastInsertId();
+            echo "Partner created with id=$partnerId\n";
+        }
     } else {
-        echo "Partner already exists\n";
+        echo "Partner id=1 already exists\n";
     }
+
+    // Get actual partner id
+    $partnerId = $pdo->query("SELECT id FROM partner ORDER BY id LIMIT 1")->fetchColumn();
+    echo "Using partner_id=$partnerId\n";
 
     // Create user if not exists
     $stmt = $pdo->query("SELECT COUNT(*) FROM partner_users WHERE phone = '79998312232'");
     if ($stmt->fetchColumn() == 0) {
         $hash = password_hash('111111', PASSWORD_BCRYPT);
-        $sql = "INSERT INTO partner_users (phone, name, roles, password, partner_id) VALUES (:phone, :name, :roles, :password, :partner_id)";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([
-            'phone' => '79998312232',
-            'name' => 'Test User',
-            'roles' => '["ROLE_PARTNER_OWNER"]',
-            'password' => $hash,
-            'partner_id' => 1,
-        ]);
-        echo "User created with phone 79998312232\n";
+        try {
+            $sql = "INSERT INTO partner_users (phone, name, roles, password, partner_id) VALUES (:phone, :name, :roles, :password, :partner_id)";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                'phone' => '79998312232',
+                'name' => 'Test User',
+                'roles' => '["ROLE_PARTNER_OWNER"]',
+                'password' => $hash,
+                'partner_id' => $partnerId,
+            ]);
+            echo "User created OK with phone 79998312232\n";
+        } catch (Exception $e) {
+            echo "User INSERT failed: " . $e->getMessage() . "\n";
+        }
     } else {
         echo "User already exists\n";
     }
+
+    // Verify
+    $count = $pdo->query("SELECT COUNT(*) FROM partner_users WHERE phone = '79998312232'")->fetchColumn();
+    echo "Verification: partner_users with phone 79998312232 count=$count\n";
+
 } catch (Exception $e) {
-    echo "ERROR: " . $e->getMessage() . "\n";
+    echo "FATAL ERROR: " . $e->getMessage() . "\n";
 }
