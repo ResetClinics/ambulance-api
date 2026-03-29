@@ -4,6 +4,17 @@ echo "========================================"
 echo "==> STARTUP SCRIPT RUNNING"
 echo "========================================"
 
+# Write runtime env vars to .env.local so Symfony picks them up
+echo "==> Writing .env.local with runtime env vars..."
+cat > .env.local <<ENVEOF
+APP_ENV=prod
+DB_DRIVER=pdo_pgsql
+DB_PORT=5432
+CORS_ALLOW_ORIGIN=^https?://.*$
+SMSRU_API_ID=${SMSRU_API_ID}
+ENVEOF
+echo "SMSRU_API_ID length: ${#SMSRU_API_ID}"
+
 echo "==> Running schema update..."
 php bin/console doctrine:schema:update --force --no-interaction 2>&1 || echo "Schema update failed (non-fatal)"
 
