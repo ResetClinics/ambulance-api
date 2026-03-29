@@ -59,17 +59,23 @@ try {
     $stmt = $pdo->query("SELECT COUNT(*) FROM partner_users WHERE phone = '79998312232'");
     if ($stmt->fetchColumn() == 0) {
         $hash = password_hash('111111', PASSWORD_BCRYPT);
+
+        // Get next ID (no auto-increment on this table)
+        $nextId = (int) $pdo->query("SELECT COALESCE(MAX(id), 0) + 1 FROM partner_users")->fetchColumn();
+        echo "Next partner_users id=$nextId\n";
+
         try {
-            $sql = "INSERT INTO partner_users (phone, name, roles, password, partner_id) VALUES (:phone, :name, :roles, :password, :partner_id)";
+            $sql = "INSERT INTO partner_users (id, phone, name, roles, password, partner_id) VALUES (:id, :phone, :name, :roles, :password, :partner_id)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
+                'id' => $nextId,
                 'phone' => '79998312232',
                 'name' => 'Test User',
                 'roles' => '["ROLE_PARTNER_OWNER"]',
                 'password' => $hash,
                 'partner_id' => $partnerId,
             ]);
-            echo "User created OK with phone 79998312232\n";
+            echo "User created OK with id=$nextId phone=79998312232\n";
         } catch (Exception $e) {
             echo "User INSERT failed: " . $e->getMessage() . "\n";
         }
