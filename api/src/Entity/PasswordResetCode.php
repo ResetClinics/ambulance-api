@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'password_reset_codes')]
-#[ORM\Index(columns: ['phone', 'code'], name: 'idx_phone_code')]
+#[ORM\Index(columns: ['phone', 'check_id'], name: 'idx_phone_check')]
 class PasswordResetCode
 {
     #[ORM\Id]
@@ -19,22 +19,26 @@ class PasswordResetCode
     #[ORM\Column(type: 'string', length: 11)]
     private string $phone;
 
-    #[ORM\Column(type: 'string', length: 6)]
-    private string $code;
+    /** sms.ru callcheck ID */
+    #[ORM\Column(type: 'string', length: 255)]
+    private string $checkId;
 
-    #[ORM\Column(type: 'datetime_immutable')]
-    private \DateTimeImmutable $expiresAt;
+    #[ORM\Column(type: 'boolean')]
+    private bool $confirmed = false;
 
     #[ORM\Column(type: 'boolean')]
     private bool $used = false;
 
     #[ORM\Column(type: 'datetime_immutable')]
+    private \DateTimeImmutable $expiresAt;
+
+    #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $createdAt;
 
-    public function __construct(string $phone, string $code, int $ttlMinutes = 10)
+    public function __construct(string $phone, string $checkId, int $ttlMinutes = 5)
     {
         $this->phone = $phone;
-        $this->code = $code;
+        $this->checkId = $checkId;
         $this->createdAt = new \DateTimeImmutable();
         $this->expiresAt = $this->createdAt->modify("+{$ttlMinutes} minutes");
     }
@@ -49,14 +53,19 @@ class PasswordResetCode
         return $this->phone;
     }
 
-    public function getCode(): string
+    public function getCheckId(): string
     {
-        return $this->code;
+        return $this->checkId;
     }
 
-    public function getExpiresAt(): \DateTimeImmutable
+    public function isConfirmed(): bool
     {
-        return $this->expiresAt;
+        return $this->confirmed;
+    }
+
+    public function markConfirmed(): void
+    {
+        $this->confirmed = true;
     }
 
     public function isUsed(): bool

@@ -49,7 +49,7 @@ security:
             jwt:
                 provider: app_user_provider
         partner_password_reset:
-            pattern: ^/partner/(forgot|reset)-password
+            pattern: ^/partner/(forgot|reset)-password|^/partner/check-call-status
             stateless: true
             security: false
         partner:
@@ -81,6 +81,7 @@ security:
         - { path: ^/partner/login, roles: PUBLIC_ACCESS }
         - { path: ^/partner/forgot-password, roles: PUBLIC_ACCESS }
         - { path: ^/partner/reset-password, roles: PUBLIC_ACCESS }
+        - { path: ^/partner/check-call-status, roles: PUBLIC_ACCESS }
         - { path: ^/partner, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/exchange/login, roles: PUBLIC_ACCESS }
         - { path: ^/exchange, roles: IS_AUTHENTICATED_FULLY }

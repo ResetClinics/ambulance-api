@@ -8,10 +8,9 @@ use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
- * Отправка SMS через SMS.ru API.
+ * Интеграция с SMS.ru — авторизация по звонку (callcheck).
  *
- * Требуется переменная окружения SMSRU_API_ID.
- * @see https://sms.ru/api
+ * @see https://sms.ru/api/callcheck
  */
 class SmsRuService
 {
@@ -29,80 +28,90 @@ class SmsRuService
         $this->logger = $logger;
     }
 
-    public function send(string $phone, string $message): bool
+    /**
+     * Запросить авторизацию по звонку.
+     * Пользователь должен позвонить на возвращённый номер.
+     *
+     * @return array{check_id: string, call_phone: string, call_phone_pretty: string}|null
+     */
+    public function callcheckAdd(string $phone): ?array
     {
-        // Формат телефона: 79991234567 (11 цифр)
         $phone = preg_replace('/\D/', '', $phone);
 
         try {
-            $response = $this->httpClient->request('GET', 'https://sms.ru/sms/send', [
+            $response = $this->httpClient->request('GET', 'https://sms.ru/callcheck/add', [
                 'query' => [
                     'api_id' => $this->apiId,
-                    'to'     => $phone,
-                    'msg'    => $message,
+                    'phone'  => $phone,
                     'json'   => 1,
                 ],
             ]);
 
             $data = $response->toArray();
 
-            if (($data['status'] ?? null) === 'OK') {
-                $this->logger->info('SMS sent', ['phone' => $phone]);
-                return true;
-            }
-
-            $this->logger->error('SMS.ru error', ['response' => $data]);
-            return false;
-        } catch (\Throwable $e) {
-            $this->logger->error('SMS sending failed', [
-                'phone'   => $phone,
-                'error'   => $e->getMessage(),
-            ]);
-            return false;
-        }
-    }
-
-    /**
-     * Отправить 4-значный код звонком через sms.ru /code/call.
-     * Возвращает код (4 цифры) или null при ошибке.
-     *
-     * @see https://sms.ru/api/code_call
-     */
-    public function callCode(string $phone, string $ip = ''): ?string
-    {
-        $phone = preg_replace('/\D/', '', $phone);
-
-        $query = [
-            'api_id' => $this->apiId,
-            'phone'  => $phone,
-            'json'   => 1,
-        ];
-
-        if ($ip !== '') {
-            $query['ip'] = $ip;
-        }
-
-        try {
-            $response = $this->httpClient->request('GET', 'https://sms.ru/code/call', [
-                'query' => $query,
+            $this->logger->warning('SmsRu callcheck/add response', [
+                'phone' => $phone,
+                'response' => $data,
             ]);
 
-            $data = $response->toArray();
-
-            $this->logger->warning('SmsRu callCode response', ['phone' => $phone, 'response' => $data]);
-
             if (($data['status'] ?? null) === 'OK') {
-                return (string) $data['code'];
+                return [
+                    'check_id'          => (string) $data['check_id'],
+                    'call_phone'        => (string) $data['call_phone'],
+                    'call_phone_pretty' => (string) ($data['call_phone_pretty'] ?? $data['call_phone']),
+                ];
             }
 
-            $this->logger->error('SmsRu callCode error', ['response' => $data]);
+            $this->logger->error('SmsRu callcheck/add error', ['response' => $data]);
             return null;
         } catch (\Throwable $e) {
-            $this->logger->error('SmsRu callCode failed', [
+            $this->logger->error('SmsRu callcheck/add failed', [
                 'phone' => $phone,
                 'error' => $e->getMessage(),
             ]);
             return null;
+        }
+    }
+
+    /**
+     * Проверить статус авторизации по check_id.
+     *
+     * @return string "confirmed"|"pending"|"error"
+     */
+    public function callcheckStatus(string $checkId): string
+    {
+        try {
+            $response = $this->httpClient->request('GET', 'https://sms.ru/callcheck/status', [
+                'query' => [
+                    'api_id'   => $this->apiId,
+                    'check_id' => $checkId,
+                    'json'     => 1,
+                ],
+            ]);
+
+            $data = $response->toArray();
+
+            $this->logger->info('SmsRu callcheck/status response', [
+                'check_id' => $checkId,
+                'response' => $data,
+            ]);
+
+            if (($data['status'] ?? null) === 'OK') {
+                // check_status: 401 = ожидание, 402 = звонок получен (подтверждён)
+                $checkStatus = (int) ($data['check_status'] ?? 0);
+                if ($checkStatus === 402) {
+                    return 'confirmed';
+                }
+                return 'pending';
+            }
+
+            return 'error';
+        } catch (\Throwable $e) {
+            $this->logger->error('SmsRu callcheck/status failed', [
+                'check_id' => $checkId,
+                'error'    => $e->getMessage(),
+            ]);
+            return 'error';
         }
     }
 }
