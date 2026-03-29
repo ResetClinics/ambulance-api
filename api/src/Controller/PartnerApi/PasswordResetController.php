@@ -72,19 +72,18 @@ class PasswordResetController extends AbstractController
             );
         }
 
-        // Генерируем 4-значный код
-        $code = str_pad((string) random_int(0, 9999), 4, '0', STR_PAD_LEFT);
+        // Звоним пользователю — sms.ru возвращает 4-значный код
+        $code = $this->smsRu->callCode($phone);
+
+        $this->logger->warning('RESET: callCode result', ['phone' => $phone, 'code' => $code]);
+
+        if ($code === null) {
+            return $this->json(['error' => 'Не удалось совершить звонок. Попробуйте позже.'], Response::HTTP_SERVICE_UNAVAILABLE);
+        }
 
         $resetCode = new PasswordResetCode($phone, $code, 10);
         $this->em->persist($resetCode);
         $this->em->flush();
-
-        $this->logger->warning('RESET: code saved, sending SMS', ['phone' => $phone, 'code' => $code]);
-
-        // Отправляем SMS
-        $result = $this->smsRu->send($phone, "Код для сброса пароля: {$code}");
-
-        $this->logger->warning('RESET: SMS result', ['result' => $result]);
 
         return $this->json(['success' => true]);
     }

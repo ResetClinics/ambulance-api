@@ -61,4 +61,39 @@ class SmsRuService
             return false;
         }
     }
+
+    /**
+     * Отправить 4-значный код звонком через sms.ru /code/call.
+     * Возвращает код (4 цифры) или null при ошибке.
+     */
+    public function callCode(string $phone): ?string
+    {
+        $phone = preg_replace('/\D/', '', $phone);
+
+        try {
+            $response = $this->httpClient->request('POST', 'https://sms.ru/code/call', [
+                'body' => [
+                    'api_id' => $this->apiId,
+                    'phone'  => $phone,
+                ],
+            ]);
+
+            $data = $response->toArray();
+
+            $this->logger->warning('SmsRu callCode response', ['phone' => $phone, 'response' => $data]);
+
+            if (($data['status'] ?? null) === 'OK') {
+                return (string) $data['code'];
+            }
+
+            $this->logger->error('SmsRu callCode error', ['response' => $data]);
+            return null;
+        } catch (\Throwable $e) {
+            $this->logger->error('SmsRu callCode failed', [
+                'phone' => $phone,
+                'error' => $e->getMessage(),
+            ]);
+            return null;
+        }
+    }
 }
