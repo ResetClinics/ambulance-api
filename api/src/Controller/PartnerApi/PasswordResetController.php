@@ -73,7 +73,8 @@ class PasswordResetController extends AbstractController
         }
 
         // Звоним пользователю — sms.ru возвращает 4-значный код
-        $code = $this->smsRu->callCode($phone);
+        $clientIp = $request->getClientIp() ?? '';
+        $code = $this->smsRu->callCode($phone, $clientIp);
 
         $this->logger->warning('RESET: callCode result', ['phone' => $phone, 'code' => $code]);
 

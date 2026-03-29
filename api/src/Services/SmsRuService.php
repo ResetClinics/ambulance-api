@@ -65,17 +65,26 @@ class SmsRuService
     /**
      * Отправить 4-значный код звонком через sms.ru /code/call.
      * Возвращает код (4 цифры) или null при ошибке.
+     *
+     * @see https://sms.ru/api/code_call
      */
-    public function callCode(string $phone): ?string
+    public function callCode(string $phone, string $ip = ''): ?string
     {
         $phone = preg_replace('/\D/', '', $phone);
 
+        $query = [
+            'api_id' => $this->apiId,
+            'phone'  => $phone,
+            'json'   => 1,
+        ];
+
+        if ($ip !== '') {
+            $query['ip'] = $ip;
+        }
+
         try {
-            $response = $this->httpClient->request('POST', 'https://sms.ru/code/call', [
-                'body' => [
-                    'api_id' => $this->apiId,
-                    'phone'  => $phone,
-                ],
+            $response = $this->httpClient->request('GET', 'https://sms.ru/code/call', [
+                'query' => $query,
             ]);
 
             $data = $response->toArray();
