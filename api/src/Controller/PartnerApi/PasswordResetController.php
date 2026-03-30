@@ -102,7 +102,13 @@ class PasswordResetController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $checkId = $data['check_id'] ?? '';
 
+        $this->logger->warning('CHECK-CALL-STATUS: called', [
+            'check_id' => $checkId,
+            'raw_body' => $request->getContent(),
+        ]);
+
         if (empty($checkId)) {
+            $this->logger->warning('CHECK-CALL-STATUS: empty check_id');
             return $this->json(['error' => 'check_id обязателен'], Response::HTTP_BAD_REQUEST);
         }
 
@@ -110,17 +116,30 @@ class PasswordResetController extends AbstractController
         $resetCode = $this->em->getRepository(PasswordResetCode::class)
             ->findOneBy(['checkId' => $checkId]);
 
-        if (!$resetCode || !$resetCode->isValid()) {
+        if (!$resetCode) {
+            $this->logger->warning('CHECK-CALL-STATUS: record NOT found in DB', ['check_id' => $checkId]);
+            return $this->json(['status' => 'expired']);
+        }
+
+        if (!$resetCode->isValid()) {
+            $this->logger->warning('CHECK-CALL-STATUS: record invalid (used or expired)', [
+                'check_id' => $checkId,
+                'isUsed' => $resetCode->isUsed(),
+                'isExpired' => $resetCode->isExpired(),
+            ]);
             return $this->json(['status' => 'expired']);
         }
 
         // Если уже подтверждён — сразу возвращаем
         if ($resetCode->isConfirmed()) {
+            $this->logger->warning('CHECK-CALL-STATUS: already confirmed');
             return $this->json(['status' => 'confirmed']);
         }
 
         // Проверяем через sms.ru API
         $status = $this->smsRu->callcheckStatus($checkId);
+
+        $this->logger->warning('CHECK-CALL-STATUS: smsru result', ['status' => $status]);
 
         if ($status === 'confirmed') {
             $resetCode->markConfirmed();
