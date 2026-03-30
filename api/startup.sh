@@ -12,6 +12,9 @@ DB_DRIVER=pdo_pgsql
 DB_PORT=5432
 CORS_ALLOW_ORIGIN=^https?://.*$
 SMSRU_API_ID=${SMSRU_API_ID}
+JWT_PASSPHRASE=testpassphrase123
+JWT_SECRET_KEY=%kernel.project_dir%/config/jwt/private.pem
+JWT_PUBLIC_KEY=%kernel.project_dir%/config/jwt/public.pem
 ENVEOF
 echo "SMSRU_API_ID length: ${#SMSRU_API_ID}"
 
