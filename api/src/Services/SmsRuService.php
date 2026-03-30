@@ -97,9 +97,9 @@ class SmsRuService
             ]);
 
             if (($data['status'] ?? null) === 'OK') {
-                // check_status: 401 = ожидание, 402 = звонок получен (подтверждён)
                 $checkStatus = (int) ($data['check_status'] ?? 0);
-                if ($checkStatus === 402) {
+                // 401 = номер подтверждён (звонок получен)
+                if ($checkStatus === 401) {
                     return 'confirmed';
                 }
                 return 'pending';
