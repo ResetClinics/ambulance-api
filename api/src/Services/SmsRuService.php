@@ -91,7 +91,7 @@ class SmsRuService
 
             $data = $response->toArray();
 
-            $this->logger->info('SmsRu callcheck/status response', [
+            $this->logger->warning('SmsRu callcheck/status response', [
                 'check_id' => $checkId,
                 'response' => $data,
             ]);
