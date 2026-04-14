@@ -23,7 +23,8 @@ class AbstractCallCalculator implements CallCalculatorInterface
     ): void {
         $amount = $this->getAmount($call);
 
-        $reward = $amount * (float)$payrollCalculator->getValue();
+        $calculationDate = $call->getCompletedAt() ?? new \DateTimeImmutable('today');
+        $reward = $amount * (float)$payrollCalculator->getValueForDate($calculationDate);
 
         if ($reward === 0) {
             return;

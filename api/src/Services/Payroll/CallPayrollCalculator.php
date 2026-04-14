@@ -12,6 +12,7 @@ use App\Repository\Payroll\PayrollCalculatorRepository;
 use App\Repository\Payroll\ServicePayrollRepository;
 use App\Services\Payroll\CallCalculator\CallCalculatorStrategy;
 use App\Services\Payroll\ServiceCalculator\ServiceCalculatorStrategy;
+use DateTimeImmutable;
 
 readonly class CallPayrollCalculator
 {
@@ -39,6 +40,8 @@ readonly class CallPayrollCalculator
 
     private function calculateService(Calling $call): void
     {
+        $calculationDate = $call->getCompletedAt() ?? new DateTimeImmutable('today');
+
         foreach ($call->getServices() as $callService) {
             /** @var string|null $calculator */
             $calculator = $callService->getService()?->getEmployeePayrollCalculator()?->getProcessor();
@@ -47,7 +50,7 @@ readonly class CallPayrollCalculator
             }
 
             /** @var mixed $value */
-            $value = $callService->getService()?->getEmployeePayrollCalculator()?->getValue();
+            $value = $callService->getService()?->getEmployeePayrollCalculator()?->getValueForDate($calculationDate);
 
             // TODO убрать удаление в калькулятор
             $this->servicePayrolls->removeByCallServiceId($callService->getId());

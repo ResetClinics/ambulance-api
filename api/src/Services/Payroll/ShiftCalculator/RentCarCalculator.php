@@ -38,7 +38,7 @@ readonly class RentCarCalculator implements ShiftCalculatorInterface
         $diff = $shift->getPlannedFinishAt()->diff($shift->getPlannedStartAt());
         $hours = $diff->days * 24 + $diff->h;
 
-        $rate = (float)$payrollCalculator->getValue();
+        $rate = (float)$payrollCalculator->getValueForDate($accruedAt);
 
         $accrued = new Money(
             (int)(((float)$hours * $rate) * 100)
