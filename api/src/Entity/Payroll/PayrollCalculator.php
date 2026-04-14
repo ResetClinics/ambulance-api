@@ -12,6 +12,9 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use App\Repository\Payroll\PayrollCalculatorRepository;
+use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -95,6 +98,18 @@ class PayrollCalculator
     #[Groups(['payroll_calculator:read', 'payroll_calculator:write'])]
     private ?int $weight = null;
 
+    /**
+     * @var Collection<int, PayrollCalculatorValueHistory>
+     */
+    #[ORM\OneToMany(mappedBy: 'calculator', targetEntity: PayrollCalculatorValueHistory::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['effectiveFrom' => 'ASC', 'id' => 'ASC'])]
+    private Collection $valueHistories;
+
+    public function __construct()
+    {
+        $this->valueHistories = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -115,6 +130,23 @@ class PayrollCalculator
     public function getValue(): ?string
     {
         return $this->value;
+    }
+
+    public function getValueForDate(DateTimeImmutable $date): ?string
+    {
+        $targetDate = $date->setTime(0, 0);
+        $resolvedValue = $this->value;
+
+        foreach ($this->valueHistories as $valueHistory) {
+            if ($valueHistory->getEffectiveFrom() <= $targetDate) {
+                $resolvedValue = $valueHistory->getValue();
+                continue;
+            }
+
+            break;
+        }
+
+        return $resolvedValue;
     }
 
     public function setValue(?string $value): static
@@ -221,5 +253,40 @@ class PayrollCalculator
         );
 
         return (float)(reset($rate)['rate'] ?? 0);
+    }
+
+    public function getRatesForDate(DateTimeImmutable $date): array
+    {
+        $value = json_decode($this->getValueForDate($date), true);
+
+        if (!is_array($value)) {
+            return [];
+        }
+
+        return array_map(static function ($item) {
+            return [
+                'min' => (float)$item['min'],
+                'max' => (float)$item['max'],
+                'rate' => (float)$item['rate'],
+            ];
+        }, $value);
+    }
+
+    /**
+     * @return Collection<int, PayrollCalculatorValueHistory>
+     */
+    public function getValueHistories(): Collection
+    {
+        return $this->valueHistories;
+    }
+
+    public function addValueHistory(PayrollCalculatorValueHistory $valueHistory): self
+    {
+        if (!$this->valueHistories->contains($valueHistory)) {
+            $this->valueHistories->add($valueHistory);
+            $valueHistory->setCalculator($this);
+        }
+
+        return $this;
     }
 }

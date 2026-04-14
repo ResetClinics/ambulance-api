@@ -95,3 +95,7 @@ services:
     App\EventSubscriber\AmbulanceCallSubscriber:
         tags:
             - { name: doctrine.event_subscriber }
+
+    App\EventSubscriber\PayrollCalculatorValueHistorySubscriber:
+        tags:
+            - { name: doctrine.event_subscriber }

@@ -40,7 +40,7 @@ readonly class ParkingCalculator implements ShiftCalculatorInterface
             return;
         }
 
-        $rate = (float)$payrollCalculator->getValue();
+        $rate = (float)$payrollCalculator->getValueForDate($accruedAt);
 
         $sum = (float)$report->getParkingFees() + (float)$report->getToolRoad();
 

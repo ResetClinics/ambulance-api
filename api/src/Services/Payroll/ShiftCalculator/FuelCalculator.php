@@ -40,7 +40,7 @@ readonly class FuelCalculator implements ShiftCalculatorInterface
             return;
         }
 
-        $rate = (float)$payrollCalculator->getValue();
+        $rate = (float)$payrollCalculator->getValueForDate($accruedAt);
 
         $accrued = new Money(
             (int)(((float)$report->getMileage() * $rate) * 100)

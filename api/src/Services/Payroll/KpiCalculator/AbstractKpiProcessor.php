@@ -25,7 +25,7 @@ abstract readonly class AbstractKpiProcessor implements KpiProcessorInterface
     {
         $kpiResult = $this->getKPI($kpiRecord);
 
-        $rates = $this->getRates($calculator);
+        $rates = $this->getRates($calculator, $kpiRecord);
 
         $rate = $this->getRate($rates, $kpiResult->kpi);
 
@@ -79,16 +79,8 @@ abstract readonly class AbstractKpiProcessor implements KpiProcessorInterface
         return $servicesPayrollSum + $callsPayrollSum;
     }
 
-    protected function getRates(PayrollCalculator $calculator): array
+    protected function getRates(PayrollCalculator $calculator, KpiRecord $kpiRecord): array
     {
-        $value = json_decode($calculator->getValue(), true);
-
-        return array_map(static function ($item) {
-            return [
-                'min' => (float)$item['min'],
-                'max' => (float)$item['max'],
-                'rate' => (float)$item['rate'],
-            ];
-        }, $value);
+        return $calculator->getRatesForDate($kpiRecord->getDocument()->getPeriodEnd());
     }
 }
