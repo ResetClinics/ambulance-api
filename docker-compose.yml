@@ -87,7 +87,7 @@ services:
       MYSQL_USER: ambulance
       MYSQL_PASSWORD: secret
     ports:
-      - "3306:3306"
+      - "3307:3306"
     command: mysqld --sql_mode=""
 
   asterisk-postgres:

@@ -7,6 +7,7 @@ parameters:
     app.min_version: '%env(MIN_VERSION)%'
     app.target_version: '%env(TARGET_VERSION)%'
     telegram_route_secret: '%env(TELEGRAM_BOT_TOKEN)%'
+    onec_ambulance_amounts_enabled_default: false
 
 services:
     # default configuration for services in *this* file
@@ -91,6 +92,16 @@ services:
             $baseUrl: '%env(AMBULANCE_API_BASE_URL)%'
             $username: '%env(AMBULANCE_API_USERNAME)%'
             $password: '%env(AMBULANCE_API_PASSWORD)%'
+
+    App\Services\OneCAmbulanceApiClient:
+        arguments:
+            $baseUrl: '%env(ONEC_AMBULANCE_BASE_URL)%'
+            $username: '%env(ONEC_AMBULANCE_USERNAME)%'
+            $password: '%env(ONEC_AMBULANCE_PASSWORD)%'
+
+    App\Controller\PartnerApi\PartnerLeadsAction:
+        arguments:
+            $amountsEnabled: '%env(default:onec_ambulance_amounts_enabled_default:bool:ONEC_AMBULANCE_AMOUNTS_ENABLED)%'
 
     App\EventSubscriber\AmbulanceCallSubscriber:
         tags:
